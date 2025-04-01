@@ -1,3 +1,4 @@
+
 import React from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -5,6 +6,8 @@ import GoldButton from "@/components/GoldButton";
 import PodcastCard from "@/components/podcasts/PodcastCard";
 import NewPodcastForm from "@/components/podcasts/NewPodcastForm";
 import PodcastPlayer from "@/components/podcasts/PodcastPlayer";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 import { usePartnerPodcasts } from "@/hooks/usePartnerPodcasts";
 
 const PartnerPodcasts = () => {
@@ -18,6 +21,8 @@ const PartnerPodcasts = () => {
     newPodcast,
     audioFileName,
     imageFileName,
+    searchQuery,
+    setSearchQuery,
     handleChange,
     handleSelectChange,
     handleAudioFileChange,
@@ -32,6 +37,19 @@ const PartnerPodcasts = () => {
   return (
     <DashboardLayout type="partner">
       <h1 className="text-2xl font-bold mb-6">Mes Podcasts</h1>
+      
+      <div className="mb-6">
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-vip-gray-500" size={18} />
+          <Input
+            type="search"
+            placeholder="Rechercher un podcast par titre ou catégorie..."
+            className="pl-10 bg-vip-gray-900 border-vip-gray-800"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
       
       <Tabs defaultValue="list" className="w-full">
         <TabsList className="mb-6">

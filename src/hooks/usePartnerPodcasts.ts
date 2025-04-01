@@ -28,6 +28,7 @@ export const usePartnerPodcasts = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPodcast, setCurrentPodcast] = useState<Podcast | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [newPodcast, setNewPodcast] = useState<NewPodcast>({
     title: "",
     description: "",
@@ -66,6 +67,18 @@ export const usePartnerPodcasts = () => {
 
   const [audioFileName, setAudioFileName] = useState("");
   const [imageFileName, setImageFileName] = useState("");
+
+  // Filter podcasts based on search query
+  const filteredPodcasts = podcasts.filter(podcast => {
+    if (!searchQuery.trim()) return true;
+    
+    const query = searchQuery.toLowerCase();
+    return (
+      podcast.title.toLowerCase().includes(query) ||
+      podcast.category.toLowerCase().includes(query) ||
+      podcast.description.toLowerCase().includes(query)
+    );
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
@@ -185,8 +198,8 @@ export const usePartnerPodcasts = () => {
   };
 
   // Podcasts filtrés par statut
-  const approvedPodcasts = podcasts.filter(p => p.status === "approved");
-  const pendingPodcasts = podcasts.filter(p => p.status === "pending");
+  const approvedPodcasts = filteredPodcasts.filter(p => p.status === "approved");
+  const pendingPodcasts = filteredPodcasts.filter(p => p.status === "pending");
 
   // Fonction pour naviguer vers l'onglet "new"
   const navigateToNewTab = () => {
@@ -197,7 +210,7 @@ export const usePartnerPodcasts = () => {
   };
 
   return {
-    podcasts,
+    podcasts: filteredPodcasts,
     approvedPodcasts,
     pendingPodcasts,
     isLoading,
@@ -206,6 +219,8 @@ export const usePartnerPodcasts = () => {
     newPodcast,
     audioFileName,
     imageFileName,
+    searchQuery,
+    setSearchQuery,
     handleChange,
     handleSelectChange,
     handleAudioFileChange,
