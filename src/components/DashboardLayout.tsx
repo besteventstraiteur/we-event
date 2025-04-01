@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import { Button } from "@/components/ui/button";
-import { LogOut, User, Users, FileText, Headphones, BarChart, CreditCard } from "lucide-react";
+import { LogOut, User, Users, FileText, Headphones, BarChart, CreditCard, Video } from "lucide-react";
 
 interface NavItemProps {
   href: string;
@@ -81,6 +81,13 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
               >
                 Podcasts
               </NavItem>
+              <NavItem
+                href="/client/talkshows"
+                icon={<Video size={18} />}
+                active={location.pathname === "/client/talkshows"}
+              >
+                Talkshows
+              </NavItem>
             </>
           )}
 
@@ -114,6 +121,13 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
               >
                 Mes Podcasts
               </NavItem>
+              <NavItem
+                href="/partner/talkshows"
+                icon={<Video size={18} />}
+                active={location.pathname === "/partner/talkshows"}
+              >
+                Mes Talkshows
+              </NavItem>
             </>
           )}
 
@@ -146,6 +160,13 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
                 active={location.pathname === "/admin/podcasts"}
               >
                 Podcasts
+              </NavItem>
+              <NavItem
+                href="/admin/talkshows"
+                icon={<Video size={18} />}
+                active={location.pathname === "/admin/talkshows"}
+              >
+                Talkshows
               </NavItem>
             </>
           )}
