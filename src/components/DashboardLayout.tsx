@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import { Button } from "@/components/ui/button";
-import { LogOut, User, Users, FileText, Headphones, BarChart } from "lucide-react";
+import { LogOut, User, Users, FileText, Headphones, BarChart, CreditCard } from "lucide-react";
 
 interface NavItemProps {
   href: string;

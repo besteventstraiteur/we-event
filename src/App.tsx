@@ -12,6 +12,9 @@ import ClientDashboard from "./pages/client/ClientDashboard";
 import ClientPartners from "./pages/client/ClientPartners";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminPartners from "./pages/admin/AdminPartners";
+import AdminClients from "./pages/admin/AdminClients";
+import AdminPodcasts from "./pages/admin/AdminPodcasts";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +41,9 @@ const App = () => (
           
           {/* Dashboard Admin */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/partners" element={<AdminPartners />} />
+          <Route path="/admin/clients" element={<AdminClients />} />
+          <Route path="/admin/podcasts" element={<AdminPodcasts />} />
           
           {/* Page 404 */}
           <Route path="*" element={<NotFound />} />
