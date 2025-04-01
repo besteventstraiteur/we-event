@@ -13,4 +13,8 @@ export default defineConfig({
   },
   // Ajout de la base URL pour le déploiement mobile
   base: './',
+  // Configuration du serveur avec port spécifié
+  server: {
+    port: 8080
+  }
 })
