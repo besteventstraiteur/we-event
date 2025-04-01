@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { PodcastRepository } from "@/services/PodcastRepository";
@@ -5,6 +6,9 @@ import { usePodcastPlayer } from "./usePodcastPlayer";
 import { usePodcastForm } from "./usePodcastForm";
 import { formatErrorMessage } from "@/utils/errorHandling";
 import { Podcast, NewPodcast } from "@/models/podcast";
+
+// Réexporter les types pour qu'ils soient accessibles aux composants qui utilisent ce hook
+export type { Podcast, NewPodcast };
 
 /**
  * Custom hook for managing partner podcasts
