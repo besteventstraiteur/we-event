@@ -104,7 +104,7 @@ export class TalkshowRepository {
     const talkshow = this.talkshows.find(t => t.id === id);
     
     if (!talkshow) {
-      throw new PodcastError(`Talkshow avec l'ID ${id} non trouvé`, 404);
+      throw new PodcastError(`Talkshow avec l'ID ${id} non trouvé`, 'FETCH_ERROR');
     }
     
     return { ...talkshow };
@@ -119,15 +119,15 @@ export class TalkshowRepository {
     try {
       // Valider les données
       if (!newTalkshow.title.trim()) {
-        throw new PodcastError("Le titre du talkshow est requis", 400);
+        throw new PodcastError("Le titre du talkshow est requis", 'VALIDATION_ERROR');
       }
       
       if (!newTalkshow.category) {
-        throw new PodcastError("La catégorie est requise", 400);
+        throw new PodcastError("La catégorie est requise", 'VALIDATION_ERROR');
       }
       
       if (!newTalkshow.videoFile) {
-        throw new PodcastError("Le fichier vidéo est requis", 400);
+        throw new PodcastError("Le fichier vidéo est requis", 'FILE_ERROR');
       }
       
       // Simuler l'upload de fichiers
@@ -170,7 +170,7 @@ export class TalkshowRepository {
       if (error instanceof PodcastError) {
         throw error;
       }
-      throw new PodcastError("Erreur lors de l'ajout du talkshow", 500);
+      throw new PodcastError("Erreur lors de l'ajout du talkshow", 'SAVE_ERROR');
     }
   }
 
@@ -183,7 +183,7 @@ export class TalkshowRepository {
     const index = this.talkshows.findIndex(t => t.id === id);
     
     if (index === -1) {
-      throw new PodcastError(`Talkshow avec l'ID ${id} non trouvé`, 404);
+      throw new PodcastError(`Talkshow avec l'ID ${id} non trouvé`, 'DELETE_ERROR');
     }
     
     this.talkshows.splice(index, 1);
