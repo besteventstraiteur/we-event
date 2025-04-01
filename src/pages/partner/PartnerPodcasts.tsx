@@ -80,8 +80,15 @@ const PartnerPodcasts = () => {
       // Prévisualisation de l'image (optionnelle)
       const reader = new FileReader();
       reader.onload = function(event) {
-        document.getElementById('image-preview').src = event.target.result;
-        document.getElementById('image-preview-container').classList.remove('hidden');
+        const imgPreview = document.getElementById('image-preview') as HTMLImageElement;
+        if (imgPreview && event.target) {
+          imgPreview.src = event.target.result as string;
+        }
+        
+        const previewContainer = document.getElementById('image-preview-container');
+        if (previewContainer) {
+          previewContainer.classList.remove('hidden');
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -130,7 +137,11 @@ const PartnerPodcasts = () => {
       });
       setAudioFileName("");
       setImageFileName("");
-      document.getElementById('image-preview-container').classList.add('hidden');
+      
+      const previewContainer = document.getElementById('image-preview-container');
+      if (previewContainer) {
+        previewContainer.classList.add('hidden');
+      }
       
       toast({
         title: "Podcast ajouté",
@@ -173,6 +184,14 @@ const PartnerPodcasts = () => {
     }
   };
 
+  // Fonction pour naviguer vers l'onglet "new"
+  const navigateToNewTab = () => {
+    const newTabTrigger = document.querySelector('[data-value="new"]') as HTMLElement;
+    if (newTabTrigger) {
+      newTabTrigger.click();
+    }
+  };
+
   // Podcasts filtrés par statut
   const approvedPodcasts = podcasts.filter(p => p.status === "approved");
   const pendingPodcasts = podcasts.filter(p => p.status === "pending");
@@ -193,7 +212,7 @@ const PartnerPodcasts = () => {
           {podcasts.length === 0 ? (
             <div className="text-center py-10">
               <p className="text-vip-gray-400 mb-4">Vous n'avez pas encore de podcasts</p>
-              <GoldButton onClick={() => document.querySelector('[data-value="new"]').click()}>
+              <GoldButton onClick={navigateToNewTab}>
                 Créer mon premier podcast
               </GoldButton>
             </div>

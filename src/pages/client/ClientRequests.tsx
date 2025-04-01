@@ -112,6 +112,14 @@ const ClientRequests = () => {
     }
   };
 
+  // Fonction pour naviguer vers l'onglet "new"
+  const navigateToNewTab = () => {
+    const newTabTrigger = document.querySelector('[data-value="new"]') as HTMLElement;
+    if (newTabTrigger) {
+      newTabTrigger.click();
+    }
+  };
+
   return (
     <DashboardLayout type="client">
       <h1 className="text-2xl font-bold mb-6">Mes Demandes</h1>
@@ -126,7 +134,7 @@ const ClientRequests = () => {
           {requests.length === 0 ? (
             <div className="text-center py-10">
               <p className="text-vip-gray-400 mb-4">Vous n'avez pas encore de demandes</p>
-              <GoldButton onClick={() => document.querySelector('[data-value="new"]').click()}>
+              <GoldButton onClick={navigateToNewTab}>
                 Créer ma première demande
               </GoldButton>
             </div>
