@@ -2,7 +2,7 @@
 import { Podcast, NewPodcast } from "@/models/podcast";
 import { toast } from "@/hooks/use-toast";
 
-// Mock data for now
+// Mock data for testing and development
 const mockPodcasts: Podcast[] = [
   {
     id: 1,
@@ -30,12 +30,24 @@ const mockPodcasts: Podcast[] = [
   }
 ];
 
+/**
+ * Repository class for managing podcast data
+ * Implements the Singleton pattern for global access
+ */
 export class PodcastRepository {
+  /** The singleton instance */
   private static instance: PodcastRepository;
+  /** In-memory podcast storage */
   private podcasts: Podcast[] = [...mockPodcasts];
 
+  /** Private constructor to prevent direct instantiation */
   private constructor() {}
 
+  /**
+   * Gets the singleton instance of the repository
+   * 
+   * @returns The PodcastRepository singleton instance
+   */
   public static getInstance(): PodcastRepository {
     if (!PodcastRepository.instance) {
       PodcastRepository.instance = new PodcastRepository();
@@ -43,16 +55,34 @@ export class PodcastRepository {
     return PodcastRepository.instance;
   }
 
+  /**
+   * Retrieves all podcasts
+   * 
+   * @returns A copy of all podcasts in the repository
+   */
   public getAllPodcasts(): Podcast[] {
     return [...this.podcasts];
   }
 
+  /**
+   * Filters podcasts by their approval status
+   * 
+   * @param status - The status to filter by (approved, pending, rejected)
+   * @returns Array of podcasts matching the specified status
+   */
   public getPodcastsByStatus(status: Podcast["status"]): Podcast[] {
     return this.podcasts.filter(p => p.status === status);
   }
 
+  /**
+   * Adds a new podcast to the repository
+   * 
+   * @param newPodcast - The podcast data to add
+   * @returns Promise resolving to the newly created podcast
+   */
   public addPodcast(newPodcast: NewPodcast): Promise<Podcast> {
     return new Promise((resolve) => {
+      // Simulate network delay
       setTimeout(() => {
         const newId = this.podcasts.length > 0 ? Math.max(...this.podcasts.map(p => p.id)) + 1 : 1;
         const podcast: Podcast = {
@@ -60,7 +90,7 @@ export class PodcastRepository {
           title: newPodcast.title,
           description: newPodcast.description,
           category: newPodcast.category,
-          duration: "12:34", // Durée arbitraire pour la simulation
+          duration: "12:34", // Arbitrary duration for simulation
           date: new Date().toISOString().split('T')[0],
           status: "pending",
           views: 0,
@@ -74,10 +104,21 @@ export class PodcastRepository {
     });
   }
 
+  /**
+   * Deletes a podcast by its ID
+   * 
+   * @param id - The ID of the podcast to delete
+   */
   public deletePodcast(id: number): void {
     this.podcasts = this.podcasts.filter(podcast => podcast.id !== id);
   }
 
+  /**
+   * Searches podcasts by a query string
+   * 
+   * @param query - The search query to match against podcast fields
+   * @returns Array of podcasts matching the search query
+   */
   public searchPodcasts(query: string): Podcast[] {
     if (!query.trim()) return this.getAllPodcasts();
     
