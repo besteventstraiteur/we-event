@@ -2,24 +2,44 @@
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://best-events-vip.com/sitemap.xml
+# Pages publiques
+Allow: /$
+Allow: /contact$
+Allow: /privacy$
+Allow: /terms$
 
-# Specific bots
+# Pages privées
+Disallow: /login$
+Disallow: /register-client$
+Disallow: /register-partner$
+Disallow: /client/
+Disallow: /partner/
+Disallow: /admin/
+
+# Bots spécifiques
 User-agent: Googlebot
 Allow: /
+Allow: /contact$
+Allow: /privacy$
+Allow: /terms$
 
 User-agent: Bingbot
 Allow: /
+Allow: /contact$
+Allow: /privacy$
+Allow: /terms$
 
 User-agent: Twitterbot
 Allow: /
+Allow: /contact$
+Allow: /privacy$
+Allow: /terms$
 
 User-agent: facebookexternalhit
 Allow: /
+Allow: /contact$
+Allow: /privacy$
+Allow: /terms$
 
-# Disallow
-Disallow: /admin/
-Disallow: /login/
-Disallow: /register-client/private/
-Disallow: /register-partner/private/
+# Sitemap
+Sitemap: https://best-events-vip.com/sitemap.xml

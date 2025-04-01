@@ -10,12 +10,20 @@ import RegisterClientPage from "./pages/RegisterClientPage";
 import RegisterPartnerPage from "./pages/RegisterPartnerPage";
 import ClientDashboard from "./pages/client/ClientDashboard";
 import ClientPartners from "./pages/client/ClientPartners";
+import ClientRequests from "./pages/client/ClientRequests";
+import ClientPodcasts from "./pages/client/ClientPodcasts";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
+import PartnerRequests from "./pages/partner/PartnerRequests";
+import PartnerStats from "./pages/partner/PartnerStats";
+import PartnerPodcasts from "./pages/partner/PartnerPodcasts";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPartners from "./pages/admin/AdminPartners";
 import AdminClients from "./pages/admin/AdminClients";
 import AdminPodcasts from "./pages/admin/AdminPodcasts";
 import NotFound from "./pages/NotFound";
+import PrivacyPage from "./pages/PrivacyPage";
+import TermsPage from "./pages/TermsPage";
+import ContactPage from "./pages/ContactPage";
 
 const queryClient = new QueryClient();
 
@@ -31,13 +39,21 @@ const App = () => (
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register-client" element={<RegisterClientPage />} />
           <Route path="/register-partner" element={<RegisterPartnerPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           
           {/* Dashboard Client */}
           <Route path="/client/dashboard" element={<ClientDashboard />} />
           <Route path="/client/partners" element={<ClientPartners />} />
+          <Route path="/client/requests" element={<ClientRequests />} />
+          <Route path="/client/podcasts" element={<ClientPodcasts />} />
           
           {/* Dashboard Partenaire */}
           <Route path="/partner/dashboard" element={<PartnerDashboard />} />
+          <Route path="/partner/requests" element={<PartnerRequests />} />
+          <Route path="/partner/stats" element={<PartnerStats />} />
+          <Route path="/partner/podcasts" element={<PartnerPodcasts />} />
           
           {/* Dashboard Admin */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />

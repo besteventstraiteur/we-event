@@ -1,13 +1,18 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
-const Logo = ({ className = "" }: { className?: string }) => {
+const Logo = () => {
   return (
-    <Link to="/" className={`font-serif font-bold text-xl ${className} hover:opacity-90 transition-opacity`}>
+    <Link to="/" className="flex items-center">
       <div className="flex items-center">
-        <span className="text-vip-white">Best Events</span>
-        <span className="text-vip-gold ml-1">VIP</span>
+        <div className="text-2xl font-bold">
+          <span className="text-white">Best</span>
+          <span className="text-vip-gold">Events</span>
+        </div>
+        <div className="ml-1 px-1.5 py-0.5 bg-vip-gold text-vip-black text-xs font-bold rounded-sm">
+          VIP
+        </div>
       </div>
     </Link>
   );
