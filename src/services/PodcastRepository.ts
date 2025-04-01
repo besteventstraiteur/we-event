@@ -1,6 +1,6 @@
 
 import { Podcast, NewPodcast } from "@/models/podcast";
-import { toast } from "@/hooks/use-toast";
+import { PodcastError, withErrorHandling } from "@/utils/errorHandling";
 
 // Mock data for testing and development
 const mockPodcasts: Podcast[] = [
@@ -59,9 +59,18 @@ export class PodcastRepository {
    * Retrieves all podcasts
    * 
    * @returns A copy of all podcasts in the repository
+   * @throws {PodcastError} If an error occurs while retrieving podcasts
    */
   public getAllPodcasts(): Podcast[] {
-    return [...this.podcasts];
+    try {
+      return [...this.podcasts];
+    } catch (error) {
+      throw new PodcastError(
+        "Impossible de récupérer les podcasts",
+        "FETCH_ERROR",
+        error
+      );
+    }
   }
 
   /**
@@ -69,9 +78,18 @@ export class PodcastRepository {
    * 
    * @param status - The status to filter by (approved, pending, rejected)
    * @returns Array of podcasts matching the specified status
+   * @throws {PodcastError} If an error occurs while filtering podcasts
    */
   public getPodcastsByStatus(status: Podcast["status"]): Podcast[] {
-    return this.podcasts.filter(p => p.status === status);
+    try {
+      return this.podcasts.filter(p => p.status === status);
+    } catch (error) {
+      throw new PodcastError(
+        `Impossible de filtrer les podcasts par statut: ${status}`,
+        "FETCH_ERROR",
+        error
+      );
+    }
   }
 
   /**
@@ -79,38 +97,72 @@ export class PodcastRepository {
    * 
    * @param newPodcast - The podcast data to add
    * @returns Promise resolving to the newly created podcast
+   * @throws {PodcastError} If an error occurs while adding the podcast
    */
   public addPodcast(newPodcast: NewPodcast): Promise<Podcast> {
-    return new Promise((resolve) => {
-      // Simulate network delay
-      setTimeout(() => {
-        const newId = this.podcasts.length > 0 ? Math.max(...this.podcasts.map(p => p.id)) + 1 : 1;
-        const podcast: Podcast = {
-          id: newId,
-          title: newPodcast.title,
-          description: newPodcast.description,
-          category: newPodcast.category,
-          duration: "12:34", // Arbitrary duration for simulation
-          date: new Date().toISOString().split('T')[0],
-          status: "pending",
-          views: 0,
-          imageUrl: newPodcast.imageFile ? URL.createObjectURL(newPodcast.imageFile) : "https://via.placeholder.com/300x200",
-          audioUrl: "https://example.com/podcast-simulation.mp3"
-        };
-        
-        this.podcasts = [podcast, ...this.podcasts];
-        resolve(podcast);
-      }, 2000);
-    });
+    // Validate required fields
+    if (!newPodcast.title || !newPodcast.category || !newPodcast.audioFile) {
+      return Promise.reject(
+        new PodcastError(
+          "Champs obligatoires manquants",
+          "VALIDATION_ERROR"
+        )
+      );
+    }
+
+    return withErrorHandling(
+      new Promise((resolve) => {
+        // Simulate network delay
+        setTimeout(() => {
+          const newId = this.podcasts.length > 0 ? Math.max(...this.podcasts.map(p => p.id)) + 1 : 1;
+          const podcast: Podcast = {
+            id: newId,
+            title: newPodcast.title,
+            description: newPodcast.description,
+            category: newPodcast.category,
+            duration: "12:34", // Arbitrary duration for simulation
+            date: new Date().toISOString().split('T')[0],
+            status: "pending",
+            views: 0,
+            imageUrl: newPodcast.imageFile ? URL.createObjectURL(newPodcast.imageFile) : "https://via.placeholder.com/300x200",
+            audioUrl: "https://example.com/podcast-simulation.mp3"
+          };
+          
+          this.podcasts = [podcast, ...this.podcasts];
+          resolve(podcast);
+        }, 2000);
+      }),
+      "SAVE_ERROR",
+      "Erreur lors de l'ajout du podcast"
+    );
   }
 
   /**
    * Deletes a podcast by its ID
    * 
    * @param id - The ID of the podcast to delete
+   * @throws {PodcastError} If an error occurs while deleting the podcast
    */
   public deletePodcast(id: number): void {
-    this.podcasts = this.podcasts.filter(podcast => podcast.id !== id);
+    try {
+      const podcastExists = this.podcasts.some(podcast => podcast.id === id);
+      if (!podcastExists) {
+        throw new PodcastError(
+          `Podcast avec l'ID ${id} non trouvé`,
+          "DELETE_ERROR"
+        );
+      }
+      this.podcasts = this.podcasts.filter(podcast => podcast.id !== id);
+    } catch (error) {
+      if (error instanceof PodcastError) {
+        throw error;
+      }
+      throw new PodcastError(
+        `Erreur lors de la suppression du podcast: ${id}`,
+        "DELETE_ERROR",
+        error
+      );
+    }
   }
 
   /**
@@ -118,15 +170,24 @@ export class PodcastRepository {
    * 
    * @param query - The search query to match against podcast fields
    * @returns Array of podcasts matching the search query
+   * @throws {PodcastError} If an error occurs while searching podcasts
    */
   public searchPodcasts(query: string): Podcast[] {
-    if (!query.trim()) return this.getAllPodcasts();
-    
-    const normalizedQuery = query.toLowerCase();
-    return this.podcasts.filter(podcast => 
-      podcast.title.toLowerCase().includes(normalizedQuery) ||
-      podcast.category.toLowerCase().includes(normalizedQuery) ||
-      podcast.description.toLowerCase().includes(normalizedQuery)
-    );
+    try {
+      if (!query.trim()) return this.getAllPodcasts();
+      
+      const normalizedQuery = query.toLowerCase();
+      return this.podcasts.filter(podcast => 
+        podcast.title.toLowerCase().includes(normalizedQuery) ||
+        podcast.category.toLowerCase().includes(normalizedQuery) ||
+        podcast.description.toLowerCase().includes(normalizedQuery)
+      );
+    } catch (error) {
+      throw new PodcastError(
+        "Erreur lors de la recherche de podcasts",
+        "FETCH_ERROR",
+        error
+      );
+    }
   }
 }

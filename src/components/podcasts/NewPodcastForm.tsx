@@ -1,11 +1,11 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import GoldButton from "@/components/GoldButton";
-import { Upload } from 'lucide-react';
+import { Upload, AlertCircle } from 'lucide-react';
 import { NewPodcast } from '@/hooks/usePartnerPodcasts';
 
 interface NewPodcastFormProps {
@@ -13,6 +13,7 @@ interface NewPodcastFormProps {
   audioFileName: string;
   imageFileName: string;
   isLoading: boolean;
+  error?: string | null;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onSelectChange: (value: string) => void;
@@ -25,6 +26,7 @@ const NewPodcastForm: React.FC<NewPodcastFormProps> = ({
   audioFileName,
   imageFileName,
   isLoading,
+  error,
   onSubmit,
   onChange,
   onSelectChange,
@@ -39,6 +41,18 @@ const NewPodcastForm: React.FC<NewPodcastFormProps> = ({
           Partagez votre expertise avec la communauté Best Events VIP
         </CardDescription>
       </CardHeader>
+      
+      {error && (
+        <div className="px-6">
+          <Alert variant="destructive" className="bg-red-900/20 border-red-900 mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="text-red-400">
+              {error}
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
+      
       <form onSubmit={onSubmit}>
         <CardContent className="space-y-4">
           <div>
