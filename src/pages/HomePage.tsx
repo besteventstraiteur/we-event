@@ -6,8 +6,8 @@ import GoldButton from "@/components/GoldButton";
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen bg-vip-black flex flex-col">
-      <header className="border-b border-vip-gray-800 py-4">
+    <div className="min-h-screen bg-white flex flex-col">
+      <header className="border-b border-vip-gray-200 py-4">
         <div className="container flex items-center justify-between">
           <Logo />
           <div className="flex items-center space-x-4">
@@ -22,15 +22,15 @@ const HomePage = () => {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="py-20 relative overflow-hidden">
+        <section className="py-20 relative overflow-hidden bg-white">
           <div className="absolute inset-0 z-0 opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-vip-gold via-transparent to-transparent"></div>
           <div className="container relative z-10">
             <div className="max-w-3xl mx-auto text-center space-y-8">
               <h1 className="text-5xl md:text-6xl font-bold leading-tight">
                 <span className="gold-gradient">Club Privé</span>{" "}
-                <span className="text-vip-white">Best Events VIP</span>
+                <span className="text-vip-black">Best Events VIP</span>
               </h1>
-              <p className="text-xl text-vip-gray-300 leading-relaxed">
+              <p className="text-xl text-vip-gray-700 leading-relaxed">
                 Accédez à des avantages exclusifs, des conseils gratuits, des tarifs négociés et 
                 un réseau de partenaires sélectionnés pour vos événements exceptionnels.
               </p>
@@ -51,29 +51,29 @@ const HomePage = () => {
         </section>
 
         {/* Features Section */}
-        <section className="py-16 bg-vip-gray-900">
+        <section className="py-16 bg-vip-gray-100">
           <div className="container">
             <h2 className="text-3xl font-bold text-center mb-12">
               <span className="gold-gradient">Avantages Exclusifs</span>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-vip-black p-6 rounded-lg border border-vip-gray-800 shadow-lg">
+              <div className="bg-white p-6 rounded-lg border border-vip-gray-200 shadow-lg">
                 <h3 className="text-xl font-semibold text-vip-gold mb-4">Conseils Gratuits</h3>
-                <p className="text-vip-gray-400">
+                <p className="text-vip-gray-600">
                   Accédez à des conseils d'experts pour l'organisation de vos événements 
                   exceptionnels avec nos podcasts exclusifs.
                 </p>
               </div>
-              <div className="bg-vip-black p-6 rounded-lg border border-vip-gray-800 shadow-lg">
+              <div className="bg-white p-6 rounded-lg border border-vip-gray-200 shadow-lg">
                 <h3 className="text-xl font-semibold text-vip-gold mb-4">Tarifs Négociés</h3>
-                <p className="text-vip-gray-400">
+                <p className="text-vip-gray-600">
                   Bénéficiez de réductions exceptionnelles chez nos partenaires 
                   triés sur le volet pour chaque aspect de votre événement.
                 </p>
               </div>
-              <div className="bg-vip-black p-6 rounded-lg border border-vip-gray-800 shadow-lg">
+              <div className="bg-white p-6 rounded-lg border border-vip-gray-200 shadow-lg">
                 <h3 className="text-xl font-semibold text-vip-gold mb-4">Réseau Premium</h3>
-                <p className="text-vip-gray-400">
+                <p className="text-vip-gray-600">
                   Accédez à un réseau de partenaires d'exception, sélectionnés pour 
                   leur professionnalisme et la qualité de leurs services.
                 </p>
@@ -83,21 +83,21 @@ const HomePage = () => {
         </section>
 
         {/* Testimonials Section */}
-        <section className="py-16">
+        <section className="py-16 bg-white">
           <div className="container">
             <h2 className="text-3xl font-bold text-center mb-12">
               <span className="gold-gradient">Ils nous font confiance</span>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div className="bg-vip-gray-900 p-6 rounded-lg border border-vip-gray-800">
-                <p className="text-vip-gray-300 italic mb-4">
+              <div className="bg-vip-gray-100 p-6 rounded-lg border border-vip-gray-200">
+                <p className="text-vip-gray-700 italic mb-4">
                   "Grâce au Club VIP Best Events, nous avons économisé plus de 20% sur 
                   l'organisation de notre mariage tout en bénéficiant de prestataires exceptionnels."
                 </p>
                 <p className="text-vip-gold font-semibold">Sophie & Thomas</p>
               </div>
-              <div className="bg-vip-gray-900 p-6 rounded-lg border border-vip-gray-800">
-                <p className="text-vip-gray-300 italic mb-4">
+              <div className="bg-vip-gray-100 p-6 rounded-lg border border-vip-gray-200">
+                <p className="text-vip-gray-700 italic mb-4">
                   "Devenir partenaire VIP nous a permis d'augmenter notre visibilité et 
                   d'acquérir une clientèle fidèle et qualifiée. Un investissement rentabilisé en quelques mois!"
                 </p>
@@ -108,7 +108,7 @@ const HomePage = () => {
         </section>
       </main>
 
-      <footer className="py-8 border-t border-vip-gray-800">
+      <footer className="py-8 border-t border-vip-gray-200">
         <div className="container">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <Logo />
@@ -116,10 +116,10 @@ const HomePage = () => {
               © {new Date().getFullYear()} Best Events VIP. Tous droits réservés.
             </p>
             <div className="flex gap-4">
-              <Link to="/privacy" className="text-vip-gray-400 hover:text-vip-gold text-sm">
+              <Link to="/privacy" className="text-vip-gray-600 hover:text-vip-gold text-sm">
                 Politique de confidentialité
               </Link>
-              <Link to="/terms" className="text-vip-gray-400 hover:text-vip-gold text-sm">
+              <Link to="/terms" className="text-vip-gray-600 hover:text-vip-gold text-sm">
                 Conditions d'utilisation
               </Link>
             </div>
