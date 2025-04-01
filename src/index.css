@@ -72,7 +72,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-vip-black text-white;
+    @apply bg-white text-vip-black;
   }
 }
 

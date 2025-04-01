@@ -13,14 +13,14 @@ const config: CapacitorConfig = {
   ios: {
     contentInset: 'always',
     // Configuration du status bar
-    statusBarStyle: 'dark'
+    statusBarStyle: 'light'
   },
   // Configuration spécifique pour Android
   android: {
     // Configuration du status bar
-    backgroundColor: '#000000',
-    // Utilisation des couleurs sombres pour les icônes de status bar
-    statusBarStyle: 'dark'
+    backgroundColor: '#FFFFFF',
+    // Utilisation des couleurs claires pour les icônes de status bar
+    statusBarStyle: 'light'
   }
 };
 
