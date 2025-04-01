@@ -18,7 +18,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
     <div className={`app-container ${isNative ? 'native-app' : 'web-app'}`}>
       {/* Ajout d'une barre de statut pour l'application mobile */}
       {isNative && (
-        <div className="status-bar-spacer h-6 bg-vip-gold w-full"></div>
+        <div className="status-bar-spacer h-6 bg-white w-full"></div>
       )}
       {children}
     </div>

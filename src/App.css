@@ -51,3 +51,33 @@
   display: inline-block;
 }
 
+/* Styles spécifiques pour l'application mobile */
+.native-app {
+  /* Optimisations pour les appareils mobiles */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  
+  /* Gestion des marges de sécurité iOS */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Ajustements pour les boutons sur mobile */
+.native-app button, 
+.native-app a.btn {
+  min-height: 44px; /* Taille minimale recommandée pour les cibles tactiles */
+}
+
+/* Désactiver le zoom sur les inputs dans iOS */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px !important; /* Empêche le zoom automatique sur iOS */
+  }
+}

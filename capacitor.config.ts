@@ -1,5 +1,5 @@
 
-import { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/core';
 
 const config: CapacitorConfig = {
   appId: 'app.lovable.ca616c0b2d17467885719db03e397c9e',
@@ -13,14 +13,14 @@ const config: CapacitorConfig = {
   ios: {
     contentInset: 'always',
     // Configuration du status bar
-    statusBarStyle: 'light'
+    statusBarStyle: 'dark'
   },
   // Configuration spécifique pour Android
   android: {
     // Configuration du status bar
     backgroundColor: '#FFFFFF',
-    // Utilisation des couleurs claires pour les icônes de status bar
-    statusBarStyle: 'light'
+    // Utilisation des couleurs foncées pour les icônes de status bar
+    statusBarStyle: 'dark'
   }
 };
 
