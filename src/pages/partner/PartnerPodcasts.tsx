@@ -11,6 +11,7 @@ import { Search } from "lucide-react";
 import { usePartnerPodcasts } from "@/hooks/usePartnerPodcasts";
 
 const PartnerPodcasts = () => {
+  // No changes needed here, as we've maintained the same API
   const {
     podcasts,
     approvedPodcasts,
