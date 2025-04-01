@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Podcast } from "@/models/podcast";
 import { useToast } from "@/hooks/use-toast";
@@ -6,8 +5,8 @@ import { PodcastRepository } from "@/services/PodcastRepository";
 import { usePodcastPlayer } from "./usePodcastPlayer";
 import { usePodcastForm } from "./usePodcastForm";
 
-export { Podcast } from "@/models/podcast";
-export { NewPodcast } from "@/models/podcast";
+export type { Podcast } from "@/models/podcast";
+export type { NewPodcast } from "@/models/podcast";
 
 export const usePartnerPodcasts = () => {
   const { toast } = useToast();
