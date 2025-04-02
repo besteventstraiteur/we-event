@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectStats from "@/components/project-dashboard/ProjectStats";
 import TaskList from "@/components/project-dashboard/TaskList";
 import TaskKanban from "@/components/project-dashboard/TaskKanban";
+import TaskTimeline from "@/components/project-dashboard/TaskTimeline";
 import { useProjectTasks } from "@/hooks/useProjectTasks";
 
 const ClientProjectDashboard = () => {
@@ -62,9 +63,7 @@ const ClientProjectDashboard = () => {
           </TabsContent>
           
           <TabsContent value="timeline">
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <p className="text-center text-gray-500">Chronologie des tâches en cours de développement</p>
-            </div>
+            <TaskTimeline tasks={tasks} />
           </TabsContent>
         </Tabs>
       </div>
