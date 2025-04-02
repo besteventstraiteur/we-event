@@ -29,10 +29,10 @@ export type TaskFormValues = z.infer<typeof taskFormSchema>;
 interface TaskData {
   title?: string;
   description?: string;
-  assignedTo?: AssigneeType;
+  assignedTo?: AssigneeType | string;
   dueDate?: Date | string;
-  priority?: PriorityType;
-  category?: CategoryType;
+  priority?: PriorityType | string;
+  category?: CategoryType | string;
 }
 
 export const getDefaultValues = (initialTask?: TaskData): TaskFormValues => {
@@ -40,19 +40,33 @@ export const getDefaultValues = (initialTask?: TaskData): TaskFormValues => {
     return {
       [TaskFormField.Title]: initialTask.title || '',
       [TaskFormField.Description]: initialTask.description || '',
-      [TaskFormField.AssignedTo]: (initialTask.assignedTo as AssigneeType) || 'couple',
+      [TaskFormField.AssignedTo]: isValidAssignee(initialTask.assignedTo) ? initialTask.assignedTo as AssigneeType : 'couple',
       [TaskFormField.DueDate]: initialTask.dueDate ? new Date(initialTask.dueDate) : undefined,
-      [TaskFormField.Priority]: (initialTask.priority as PriorityType) || 'medium',
-      [TaskFormField.Category]: (initialTask.category as CategoryType) || 'other'
+      [TaskFormField.Priority]: isValidPriority(initialTask.priority) ? initialTask.priority as PriorityType : 'medium',
+      [TaskFormField.Category]: isValidCategory(initialTask.category) ? initialTask.category as CategoryType : 'other'
     };
   }
   
   return {
     [TaskFormField.Title]: '',
     [TaskFormField.Description]: '',
-    [TaskFormField.AssignedTo]: 'couple' as AssigneeType,
+    [TaskFormField.AssignedTo]: 'couple',
     [TaskFormField.DueDate]: undefined,
-    [TaskFormField.Priority]: 'medium' as PriorityType,
-    [TaskFormField.Category]: 'other' as CategoryType
+    [TaskFormField.Priority]: 'medium',
+    [TaskFormField.Category]: 'other'
   };
 };
+
+// Helper functions to validate enum values
+function isValidAssignee(value?: string): boolean {
+  return value === 'couple' || value === 'witness' || value === 'both';
+}
+
+function isValidPriority(value?: string): boolean {
+  return value === 'low' || value === 'medium' || value === 'high';
+}
+
+function isValidCategory(value?: string): boolean {
+  const validCategories = ['venue', 'catering', 'decoration', 'attire', 'ceremony', 'reception', 'other'];
+  return !!value && validCategories.includes(value);
+}
