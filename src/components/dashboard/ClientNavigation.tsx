@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { User, Users, FileText, LayoutDashboard, Headphones, Video, Image, CheckSquare, UtensilsCrossed, ClipboardCheck, GalleryHorizontal } from "lucide-react";
+import { User, Users, FileText, LayoutDashboard, Headphones, Video, Image, CheckSquare, UtensilsCrossed, ClipboardCheck, GalleryHorizontal, Music } from "lucide-react";
 
 const ClientNavigation = () => {
   const location = useLocation();
@@ -50,6 +50,13 @@ const ClientNavigation = () => {
         active={location.pathname === "/client/floorplans"}
       >
         Plan de salle & Invités
+      </NavItem>
+      <NavItem
+        href="/client/music"
+        icon={<Music size={18} />}
+        active={location.pathname === "/client/music"}
+      >
+        Playlists Musicales
       </NavItem>
       <NavItem
         href="/client/menus"

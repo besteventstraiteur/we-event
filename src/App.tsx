@@ -21,6 +21,7 @@ import ClientPhotos from "./pages/client/ClientPhotos";
 import ClientPinterbest from "./pages/client/ClientPinterbest";
 import ClientMenus from "./pages/client/ClientMenus";
 import ClientTodoList from "./pages/client/ClientTodoList";
+import ClientMusicPlaylists from "./pages/client/ClientMusicPlaylists";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerRequests from "./pages/partner/PartnerRequests";
 import PartnerStats from "./pages/partner/PartnerStats";
@@ -28,6 +29,7 @@ import PartnerPodcasts from "./pages/partner/PartnerPodcasts";
 import PartnerTalkshows from "./pages/partner/PartnerTalkshows";
 import PartnerRecommendations from "./pages/partner/PartnerRecommendations";
 import PartnerPhotos from "./pages/partner/PartnerPhotos";
+import PartnerMusicPlaylists from "./pages/partner/PartnerMusicPlaylists";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPartners from "./pages/admin/AdminPartners";
 import AdminClients from "./pages/admin/AdminClients";
@@ -75,6 +77,7 @@ const App = () => (
             <Route path="/client/pinterbest" element={<ClientPinterbest />} />
             <Route path="/client/menus" element={<ClientMenus />} />
             <Route path="/client/todolist" element={<ClientTodoList />} />
+            <Route path="/client/music" element={<ClientMusicPlaylists />} />
             
             {/* Dashboard Prestataire */}
             <Route path="/partner/dashboard" element={<PartnerDashboard />} />
@@ -84,6 +87,7 @@ const App = () => (
             <Route path="/partner/talkshows" element={<PartnerTalkshows />} />
             <Route path="/partner/recommendations" element={<PartnerRecommendations />} />
             <Route path="/partner/photos" element={<PartnerPhotos />} />
+            <Route path="/partner/music" element={<PartnerMusicPlaylists />} />
             
             {/* Dashboard Admin */}
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
