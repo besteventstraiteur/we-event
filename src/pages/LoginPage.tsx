@@ -1,14 +1,16 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "@/components/AuthLayout";
 import GoldButton from "@/components/GoldButton";
 import InputField from "@/components/InputField";
 import { useToast } from "@/components/ui/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
@@ -16,11 +18,31 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Load saved credentials if available
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("weddingPlannerEmail");
+    const savedRememberMe = localStorage.getItem("weddingPlannerRememberMe") === "true";
+    
+    if (savedEmail && savedRememberMe) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
+      // Save or remove credentials based on remember me
+      if (rememberMe) {
+        localStorage.setItem("weddingPlannerEmail", email);
+        localStorage.setItem("weddingPlannerRememberMe", "true");
+      } else {
+        localStorage.removeItem("weddingPlannerEmail");
+        localStorage.removeItem("weddingPlannerRememberMe");
+      }
+
       // Simulation de connexion réussie
       setTimeout(() => {
         // Déterminer où rediriger l'utilisateur (client ou partenaire)
@@ -105,14 +127,27 @@ const LoginPage = () => {
             required
           />
           
-          <div className="flex justify-end">
-            <button 
-              type="button" 
-              onClick={() => setForgotPassword(true)}
-              className="text-sm text-vip-gold hover:underline"
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="remember-me" 
+              checked={rememberMe}
+              onCheckedChange={(checked) => setRememberMe(checked === true)}
+            />
+            <label 
+              htmlFor="remember-me" 
+              className="text-sm text-gray-600 cursor-pointer"
             >
-              Mot de passe oublié?
-            </button>
+              Se souvenir de moi
+            </label>
+            <div className="flex-1 text-right">
+              <button 
+                type="button" 
+                onClick={() => setForgotPassword(true)}
+                className="text-sm text-vip-gold hover:underline"
+              >
+                Mot de passe oublié?
+              </button>
+            </div>
           </div>
           
           <GoldButton type="submit" className="w-full" disabled={isLoading}>
