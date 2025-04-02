@@ -38,6 +38,7 @@ import AdminTalkshows from "./pages/admin/AdminTalkshows";
 import AdminVenues from "./pages/admin/AdminVenues";
 import AdminRecommendations from "./pages/admin/AdminRecommendations";
 import AdminBackup from "./pages/admin/AdminBackup";
+import GuestDashboard from "./pages/GuestDashboard";
 import GuestMenuSelection from "./pages/GuestMenuSelection";
 import NotFound from "./pages/NotFound";
 import PrivacyPage from "./pages/PrivacyPage";
@@ -64,6 +65,9 @@ const App = () => (
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            
+            {/* Espace invité */}
+            <Route path="/guest" element={<GuestDashboard />} />
             <Route path="/guest-menu-selection" element={<GuestMenuSelection />} />
             
             {/* Dashboard Client */}
