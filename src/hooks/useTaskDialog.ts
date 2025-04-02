@@ -18,6 +18,7 @@ export const useTaskDialog = () => {
 
   const closeDialog = () => {
     setIsOpen(false);
+    setCurrentTask(undefined);
   };
 
   return {
@@ -26,6 +27,7 @@ export const useTaskDialog = () => {
     openAddDialog,
     openEditDialog,
     closeDialog,
+    isEditing: !!currentTask,
     setIsOpen
   };
 };

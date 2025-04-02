@@ -10,6 +10,7 @@ interface TaskDialogProps {
   currentTask?: Task;
   onSave: (task: Omit<Task, "id" | "completed">) => void;
   onCancel: () => void;
+  isEditing?: boolean;
 }
 
 const TaskDialog: React.FC<TaskDialogProps> = ({
@@ -17,14 +18,15 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
   onOpenChange,
   currentTask,
   onSave,
-  onCancel
+  onCancel,
+  isEditing = !!currentTask
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="bg-white max-w-2xl">
         <DialogHeader>
           <DialogTitle>
-            {currentTask ? "Modifier la tâche" : "Ajouter une nouvelle tâche"}
+            {isEditing ? "Modifier la tâche" : "Ajouter une nouvelle tâche"}
           </DialogTitle>
         </DialogHeader>
         <TaskForm 

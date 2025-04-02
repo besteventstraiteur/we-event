@@ -52,6 +52,13 @@ const ClientNavigation = () => {
         Plan de salle & Invités
       </NavItem>
       <NavItem
+        href="/client/guests"
+        icon={<Users size={18} />}
+        active={location.pathname === "/client/guests"}
+      >
+        Gestion des Invités
+      </NavItem>
+      <NavItem
         href="/client/music"
         icon={<Music size={18} />}
         active={location.pathname === "/client/music"}

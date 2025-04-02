@@ -22,6 +22,7 @@ import ClientPinterbest from "./pages/client/ClientPinterbest";
 import ClientMenus from "./pages/client/ClientMenus";
 import ClientTodoList from "./pages/client/ClientTodoList";
 import ClientMusicPlaylists from "./pages/client/ClientMusicPlaylists";
+import ClientGuests from "./pages/client/ClientGuests";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerRequests from "./pages/partner/PartnerRequests";
 import PartnerStats from "./pages/partner/PartnerStats";
@@ -69,6 +70,7 @@ const App = () => (
             
             {/* Espace invité */}
             <Route path="/guest" element={<GuestDashboard />} />
+            <Route path="/guest/menu/:eventId/:guestId" element={<GuestMenuSelection />} />
             <Route path="/guest-menu-selection" element={<GuestMenuSelection />} />
             
             {/* Dashboard Client */}
@@ -83,6 +85,7 @@ const App = () => (
             <Route path="/client/menus" element={<ClientMenus />} />
             <Route path="/client/todolist" element={<ClientTodoList />} />
             <Route path="/client/music" element={<ClientMusicPlaylists />} />
+            <Route path="/client/guests" element={<ClientGuests />} />
             
             {/* Dashboard Prestataire */}
             <Route path="/partner/dashboard" element={<PartnerDashboard />} />
