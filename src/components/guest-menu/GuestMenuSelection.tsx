@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -84,8 +83,8 @@ const GuestMenuSelection: React.FC = () => {
                 id: "starter",
                 name: "Option entrée",
                 description: "Ajouter une entrée à votre menu",
-                type: 'starter'
-              }}
+                type: "starter"
+              } as MenuOption}
               isSelected={selectedOption === 'starter'}
               onSelect={handleOptionSelect}
               type="starter"
@@ -95,8 +94,8 @@ const GuestMenuSelection: React.FC = () => {
                 id: "dessert",
                 name: "Option dessert",
                 description: "Ajouter un dessert spécial à votre menu",
-                type: 'dessert'
-              }}
+                type: "dessert"
+              } as MenuOption}
               isSelected={selectedOption === 'dessert'}
               onSelect={handleOptionSelect}
               type="dessert"
