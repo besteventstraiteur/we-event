@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Table, 
@@ -90,6 +91,7 @@ const TaskList: React.FC<TaskListProps> = ({
   };
 
   const filteredTasks = tasks.filter(task => {
+    // Safe access to properties that might be undefined
     const taskTitle = task.title || "";
     const taskDescription = task.description || "";
     const searchTermLower = searchTerm.toLowerCase();
@@ -114,8 +116,8 @@ const TaskList: React.FC<TaskListProps> = ({
       const orderB = priorityOrder[b.priority];
       return sortDirection === "asc" ? orderA - orderB : orderB - orderA;
     } else {
-      const valueA = String(a[sortField]).toLowerCase();
-      const valueB = String(b[sortField]).toLowerCase();
+      const valueA = String(a[sortField] || "").toLowerCase();
+      const valueB = String(b[sortField] || "").toLowerCase();
       return sortDirection === "asc" 
         ? valueA.localeCompare(valueB)
         : valueB.localeCompare(valueA);
