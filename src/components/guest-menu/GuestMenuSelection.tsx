@@ -65,11 +65,15 @@ const GuestMenuSelection: React.FC = () => {
           {menuChoices.map((menu) => (
             <MenuOptionCard
               key={menu.id}
-              id={menu.id}
-              title={menu.name}
-              description={menu.description}
-              selected={selectedMenu === menu.id}
+              option={{
+                id: menu.id,
+                name: menu.name,
+                description: menu.description,
+                type: 'main'
+              }}
+              isSelected={selectedMenu === menu.id}
               onSelect={handleMenuSelect}
+              type="main"
             />
           ))}
         </div>
@@ -80,18 +84,26 @@ const GuestMenuSelection: React.FC = () => {
           <h2 className="text-xl font-semibold text-gray-800">Options supplémentaires</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <MenuOptionCard
-              id="starter"
-              title="Option entrée"
-              description="Ajouter une entrée à votre menu"
-              selected={selectedOption === 'starter'}
+              option={{
+                id: "starter",
+                name: "Option entrée",
+                description: "Ajouter une entrée à votre menu",
+                type: 'starter'
+              }}
+              isSelected={selectedOption === 'starter'}
               onSelect={handleOptionSelect}
+              type="starter"
             />
             <MenuOptionCard
-              id="dessert"
-              title="Option dessert"
-              description="Ajouter un dessert spécial à votre menu"
-              selected={selectedOption === 'dessert'}
+              option={{
+                id: "dessert",
+                name: "Option dessert",
+                description: "Ajouter un dessert spécial à votre menu",
+                type: 'dessert'
+              }}
+              isSelected={selectedOption === 'dessert'}
               onSelect={handleOptionSelect}
+              type="dessert"
             />
           </div>
         </div>
