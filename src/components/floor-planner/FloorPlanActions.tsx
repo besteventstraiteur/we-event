@@ -7,12 +7,36 @@ import { Save, Upload, Trash2 } from 'lucide-react';
 interface FloorPlanActionsProps {
   createRoomPlan: () => void;
   savePlan: () => void;
+  isMobile?: boolean;
 }
 
 const FloorPlanActions: React.FC<FloorPlanActionsProps> = ({
   createRoomPlan,
-  savePlan
+  savePlan,
+  isMobile = false
 }) => {
+  if (isMobile) {
+    // Version simplifiée pour mobile
+    return (
+      <div className="flex justify-between mt-4">
+        <Button
+          variant="outline"
+          className="border-gray-200 text-gray-600 h-11 px-3"
+          onClick={createRoomPlan}
+        >
+          <Trash2 size={18} />
+        </Button>
+        <GoldButton 
+          onClick={savePlan}
+          className="h-11"
+        >
+          <Save size={18} />
+        </GoldButton>
+      </div>
+    );
+  }
+  
+  // Version desktop
   return (
     <div className="flex justify-between mt-4">
       <div className="flex gap-2">
@@ -28,15 +52,6 @@ const FloorPlanActions: React.FC<FloorPlanActionsProps> = ({
         >
           <Upload size={18} className="mr-2" /> Importer
         </Button>
-        <input
-          id="import-plan"
-          type="file"
-          accept=".json"
-          className="hidden"
-          onChange={(e) => {
-            // This is handled in the parent component
-          }}
-        />
         <Button
           variant="outline"
           className="border-gray-200 text-gray-600 hover:text-gray-900"

@@ -89,22 +89,65 @@
   touch-action: pan-x pan-y;
 }
 
+/* Classe spéciale pour la vue mobile */
+.mobile-view {
+  /* Amélioration de l'expérience tactile */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Ajustements pour les petits écrans de mobile */
 @media (max-width: 640px) {
-  .native-app {
+  .native-app, .mobile-view {
     font-size: 14px;
   }
   
-  .native-app h1 {
+  .native-app h1, .mobile-view h1 {
     font-size: 1.75rem;
   }
   
-  .native-app h2 {
+  .native-app h2, .mobile-view h2 {
     font-size: 1.5rem;
   }
   
   /* Rendre les boutons plus grands pour une meilleure expérience tactile */
-  .native-app button, .native-app a {
+  .native-app button, 
+  .native-app a,
+  .mobile-view button,
+  .mobile-view a {
     min-height: 44px;
+  }
+  
+  /* Augmenter la taille des inputs pour mobile */
+  .native-app input,
+  .mobile-view input,
+  .native-app select,
+  .mobile-view select,
+  .native-app textarea,
+  .mobile-view textarea {
+    font-size: 16px !important; /* Empêche le zoom automatique sur iOS */
+    min-height: 44px;
+  }
+  
+  /* Ajustements pour les composants d'éditeur de plan */
+  .canvas-container {
+    touch-action: none; /* Désactive les gestes de navigation du navigateur */
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Optimisations pour le dashboard sur mobile */
+  .mobile-view .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Améliorations des animations pour les interactions tactiles */
+@media (hover: none) {
+  .mobile-view button:active,
+  .native-app button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s;
   }
 }

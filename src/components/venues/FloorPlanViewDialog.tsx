@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import FloorPlanner from '@/components/floor-planner/FloorPlanner';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Venue {
   id: string;
@@ -32,17 +33,19 @@ const FloorPlanViewDialog: React.FC<FloorPlanViewDialogProps> = ({
   onOpenChange,
   venue
 }) => {
+  const isMobile = useIsMobile();
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-vip-gray-900 border-vip-gray-800 text-vip-white max-w-5xl">
+      <DialogContent className={`bg-vip-gray-900 border-vip-gray-800 text-vip-white ${isMobile ? 'max-w-[95vw] max-h-[90vh] p-3' : 'max-w-5xl'}`}>
         <DialogHeader>
-          <DialogTitle>Plan de salle: {venue?.name}</DialogTitle>
-          <DialogDescription className="text-vip-gray-400">
+          <DialogTitle className="text-base sm:text-lg">Plan: {venue?.name}</DialogTitle>
+          <DialogDescription className="text-vip-gray-400 text-xs sm:text-sm">
             Capacité: {venue?.capacity} personnes | Partenaire: {venue?.partner}
           </DialogDescription>
         </DialogHeader>
         
-        <div className="py-4">
+        <div className={`${isMobile ? 'py-2' : 'py-4'} h-full overflow-auto`}>
           {venue?.floorPlan ? (
             <FloorPlanner initialData={venue.floorPlan} readOnly={true} />
           ) : (
@@ -55,7 +58,7 @@ const FloorPlanViewDialog: React.FC<FloorPlanViewDialogProps> = ({
         <DialogFooter>
           <Button 
             variant="outline" 
-            className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
+            className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white h-11"
             onClick={() => onOpenChange(false)}
           >
             Fermer

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { LogOut } from "lucide-react";
+import { LogOut, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Logo from "../Logo";
 import ClientNavigation from "./ClientNavigation";
@@ -10,13 +10,20 @@ import AdminNavigation from "./AdminNavigation";
 interface SidebarProps {
   type: "client" | "partner" | "admin";
   onLogout: () => void;
+  mobile?: boolean;
+  onMenuClose?: () => void;
 }
 
-const Sidebar = ({ type, onLogout }: SidebarProps) => {
+const Sidebar = ({ type, onLogout, mobile = false, onMenuClose }: SidebarProps) => {
   return (
-    <div className="hidden md:flex flex-col w-64 border-r border-vip-gray-200 bg-white p-4">
-      <div className="mb-8 pl-3">
+    <div className={`flex flex-col ${mobile ? 'w-full h-full' : 'hidden md:flex w-64'} border-r border-vip-gray-200 bg-white p-4`}>
+      <div className="flex items-center justify-between mb-8 pl-3">
         <Logo />
+        {mobile && onMenuClose && (
+          <Button variant="ghost" size="sm" onClick={onMenuClose} className="p-0 h-8 w-8">
+            <X size={20} />
+          </Button>
+        )}
       </div>
 
       <nav className="space-y-1 flex-1">
@@ -27,7 +34,7 @@ const Sidebar = ({ type, onLogout }: SidebarProps) => {
 
       <Button
         variant="outline"
-        className="text-vip-gray-700 hover:text-vip-black hover:bg-vip-gray-100 w-full justify-start mt-auto border-vip-gray-200"
+        className="text-vip-gray-700 hover:text-vip-black hover:bg-vip-gray-100 w-full justify-start mt-auto border-vip-gray-200 h-11"
         onClick={onLogout}
       >
         <LogOut size={18} className="mr-2" />

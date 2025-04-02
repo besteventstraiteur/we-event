@@ -13,14 +13,36 @@ const config: CapacitorConfig = {
   ios: {
     contentInset: 'always',
     // Configuration du status bar
-    statusBarStyle: 'dark'
+    statusBarStyle: 'dark',
+    // Améliorer la performance tactile
+    preferredContentMode: 'mobile',
+    allowsLinkPreview: false,
+    // Désactiver l'élasticité de défilement
+    scrollEnabled: true,
+    // Style de formulaire pour éviter les zooms indésirables
+    formFactor: 'handset',
   },
   // Configuration spécifique pour Android
   android: {
     // Configuration du status bar
     backgroundColor: '#FFFFFF',
     // Utilisation des couleurs foncées pour les icônes de status bar
-    statusBarStyle: 'dark'
+    statusBarStyle: 'dark',
+    // Optimisations pour meilleure performance
+    captureInput: true,
+    webContentsDebuggingEnabled: false,
+  },
+  // Options générales
+  plugins: {
+    SplashScreen: {
+      launchAutoHide: true,
+      showSpinner: false,
+    },
+    Keyboard: {
+      resize: 'body',
+      style: 'dark',
+      resizeOnFullScreen: true,
+    },
   }
 };
 

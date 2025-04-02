@@ -19,7 +19,7 @@ const InputField = ({ label, id, error, className, ...props }: InputFieldProps) 
       <Input
         id={id}
         className={cn(
-          "bg-white border-vip-gray-300 text-vip-gray-900 placeholder:text-vip-gray-500 focus:border-vip-gold focus:ring-vip-gold/20",
+          "bg-white border-vip-gray-300 text-vip-gray-900 placeholder:text-vip-gray-500 focus:border-vip-gold focus:ring-vip-gold/20 h-11",
           error && "border-red-500",
           className
         )}

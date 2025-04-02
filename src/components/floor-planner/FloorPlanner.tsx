@@ -12,6 +12,7 @@ import FloorPlanSettings from './FloorPlanSettings';
 import FloorPlanToolbar from './FloorPlanToolbar';
 import FloorPlanActions from './FloorPlanActions';
 import { createRoomPlan, addObjectToCanvas } from './floorPlannerUtils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface FloorPlannerProps {
   onSave?: (data: string) => void;
@@ -28,13 +29,18 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
   const [roomWidth, setRoomWidth] = useState<number>(700);
   const [roomHeight, setRoomHeight] = useState<number>(500);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
-  // Initialize canvas
+  // Initialize canvas with responsive dimensions
   useEffect(() => {
     if (canvasRef.current) {
+      // Determine canvas size based on device
+      const containerWidth = isMobile ? window.innerWidth - 40 : 800;
+      const containerHeight = isMobile ? 400 : 600;
+      
       const fabricCanvas = new fabric.Canvas(canvasRef.current, {
-        width: 800,
-        height: 600,
+        width: containerWidth,
+        height: containerHeight,
         backgroundColor: '#f5f5f5',
         selection: !readOnly,
         preserveObjectStacking: true,
@@ -67,11 +73,24 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
         });
       }
 
+      // Handle window resize for responsiveness
+      const handleResize = () => {
+        if (isMobile) {
+          const newWidth = window.innerWidth - 40;
+          fabricCanvas.setWidth(newWidth);
+          fabricCanvas.setHeight(400);
+          fabricCanvas.renderAll();
+        }
+      };
+
+      window.addEventListener('resize', handleResize);
+      
       return () => {
+        window.removeEventListener('resize', handleResize);
         fabricCanvas.dispose();
       };
     }
-  }, [initialData, readOnly, toast]);
+  }, [initialData, readOnly, toast, isMobile]);
 
   // Update room dimensions
   const updateRoomDimensions = () => {
@@ -116,7 +135,7 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
     }
   };
 
-  // Zoom in/out
+  // Zoom in/out with touch friendly controls
   const handleZoom = (zoomIn: boolean) => {
     if (!canvas) return;
 
@@ -202,7 +221,7 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
           <FloorPlanHeader handleZoom={handleZoom} readOnly={readOnly} />
         </CardHeader>
         <CardContent>
-          {!readOnly && (
+          {!readOnly && !isMobile && (
             <FloorPlanSettings
               planName={planName}
               setPlanName={setPlanName}
@@ -222,6 +241,7 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
               setSelectedTool={setSelectedTool}
               addObject={addObject}
               deleteSelected={deleteSelected}
+              isMobile={isMobile}
             />
           )}
 
@@ -233,6 +253,7 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
             <FloorPlanActions
               createRoomPlan={resetRoomPlan}
               savePlan={savePlan}
+              isMobile={isMobile}
             />
           )}
           
