@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trash2, Edit, Check, Calendar, User } from "lucide-react";
+import { Trash2, Edit, Check, Calendar, User, Star } from "lucide-react";
 import { Task } from "@/hooks/useTaskList";
 
 interface TaskCardProps {
@@ -11,13 +11,15 @@ interface TaskCardProps {
   onToggleCompletion: (id: string) => void;
   onEdit: (task: Task) => void;
   onDelete: (id: string) => void;
+  onToggleFavorite?: (id: string) => void;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({
   task,
   onToggleCompletion,
   onEdit,
-  onDelete
+  onDelete,
+  onToggleFavorite
 }) => {
   const getPriorityBadge = (priority: Task["priority"]) => {
     switch (priority) {
@@ -66,6 +68,9 @@ const TaskCard: React.FC<TaskCardProps> = ({
               </h3>
               {getPriorityBadge(task.priority)}
               {getCategoryBadge(task.category)}
+              {task.isFavorite && (
+                <Star size={16} className="text-amber-500 fill-amber-500" />
+              )}
             </div>
             
             <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
@@ -94,6 +99,17 @@ const TaskCard: React.FC<TaskCardProps> = ({
             >
               <Check size={18} />
             </Button>
+            
+            {onToggleFavorite && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={`p-2 h-8 ${task.isFavorite ? 'text-amber-500' : 'text-gray-600'}`}
+                onClick={() => onToggleFavorite(task.id)}
+              >
+                <Star size={18} className={task.isFavorite ? "fill-amber-500" : ""} />
+              </Button>
+            )}
             
             <Button 
               variant="ghost" 

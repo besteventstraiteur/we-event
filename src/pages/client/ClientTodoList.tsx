@@ -21,7 +21,8 @@ const initialTasks: Task[] = [
     priority: "high",
     completed: false,
     category: "venue",
-    assignedTo: "Sophie"
+    assignedTo: "Sophie",
+    isFavorite: true
   },
   {
     id: "2",
@@ -41,7 +42,8 @@ const initialTasks: Task[] = [
     priority: "high",
     completed: true,
     category: "other",
-    assignedTo: "Sophie et Thomas"
+    assignedTo: "Sophie et Thomas",
+    isFavorite: true
   },
 ];
 
@@ -52,10 +54,12 @@ const ClientTodoList = () => {
   
   const {
     tasks,
+    favoriteTasks,
     addTask,
     updateTask,
     deleteTask,
     toggleTaskCompletion,
+    toggleFavorite,
     filter,
     setFilter
   } = useTaskList(initialTasks);
@@ -110,6 +114,24 @@ const ClientTodoList = () => {
     }
   };
 
+  const handleToggleFavorite = (id: string) => {
+    toggleFavorite(id);
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+      toast({
+        title: task.isFavorite ? "Retirée des importantes" : "Ajoutée aux importantes",
+        description: `La tâche "${task.title}" a été ${task.isFavorite ? "retirée des" : "ajoutée aux"} tâches importantes.`
+      });
+    }
+  };
+
+  const handleTaskClick = (taskId: string) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+      handleEditTask(task);
+    }
+  };
+
   return (
     <DashboardLayout type="client">
       <div className="space-y-6">
@@ -128,7 +150,11 @@ const ClientTodoList = () => {
           </Button>
         </div>
         
-        <TaskStats tasks={tasks} />
+        <TaskStats 
+          tasks={tasks} 
+          favoriteTasks={favoriteTasks}
+          onTaskClick={handleTaskClick}
+        />
         
         <TaskFilter filter={filter} onFilterChange={setFilter} />
         
@@ -141,6 +167,7 @@ const ClientTodoList = () => {
                 onToggleCompletion={handleToggleTaskCompletion}
                 onEdit={handleEditTask}
                 onDelete={handleDeleteTask}
+                onToggleFavorite={handleToggleFavorite}
               />
             ))
           ) : (

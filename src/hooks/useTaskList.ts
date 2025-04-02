@@ -10,6 +10,7 @@ export interface Task {
   completed: boolean;
   category: "venue" | "catering" | "decoration" | "music" | "photography" | "clothing" | "other";
   assignedTo: string;
+  isFavorite?: boolean;
 }
 
 export const useTaskList = (initialTasks: Task[] = []) => {
@@ -59,6 +60,12 @@ export const useTaskList = (initialTasks: Task[] = []) => {
     ));
   };
 
+  const toggleFavorite = (id: string) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, isFavorite: !task.isFavorite } : task
+    ));
+  };
+
   const filteredTasks = tasks.filter(task => {
     // Filter by status
     if (filter.status === "completed" && !task.completed) return false;
@@ -76,12 +83,16 @@ export const useTaskList = (initialTasks: Task[] = []) => {
     return true;
   });
 
+  const favoriteTasks = tasks.filter(task => task.isFavorite && !task.completed);
+
   return {
     tasks: filteredTasks,
+    favoriteTasks,
     addTask,
     updateTask,
     deleteTask,
     toggleTaskCompletion,
+    toggleFavorite,
     filter,
     setFilter
   };
