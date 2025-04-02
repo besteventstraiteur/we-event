@@ -12,11 +12,11 @@ interface HeaderProps {
 
 const Header = ({ type, isMobile = false, onMenuClick }: HeaderProps) => {
   return (
-    <header className="border-b border-vip-gray-200 py-4 px-4 sm:px-6 bg-white sticky top-0 z-10">
+    <header className="border-b border-vip-gray-200 py-3 px-3 sm:px-6 bg-white sticky top-0 z-10">
       <div className="flex items-center justify-between">
         {isMobile ? (
-          <Button variant="ghost" size="sm" className="h-10 w-10 p-0" onClick={onMenuClick}>
-            <Menu size={24} />
+          <Button variant="ghost" size="sm" className="h-9 w-9 p-0" onClick={onMenuClick}>
+            <Menu size={22} />
           </Button>
         ) : (
           <div className="w-10"></div>
@@ -32,7 +32,7 @@ const Header = ({ type, isMobile = false, onMenuClick }: HeaderProps) => {
             {type === "partner" && "Espace Partenaire VIP"}
             {type === "admin" && "Administration"}
           </div>
-          <div className="sm:hidden w-10"></div>
+          <div className="sm:hidden w-9"></div>
         </div>
       </div>
     </header>

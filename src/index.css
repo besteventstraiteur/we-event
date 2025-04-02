@@ -105,11 +105,11 @@
   }
   
   .native-app h1, .mobile-view h1 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
   
   .native-app h2, .mobile-view h2 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
   
   /* Rendre les boutons plus grands pour une meilleure expérience tactile */
@@ -117,7 +117,7 @@
   .native-app a,
   .mobile-view button,
   .mobile-view a {
-    min-height: 44px;
+    min-height: 40px;
   }
   
   /* Augmenter la taille des inputs pour mobile */
@@ -128,7 +128,7 @@
   .native-app textarea,
   .mobile-view textarea {
     font-size: 16px !important; /* Empêche le zoom automatique sur iOS */
-    min-height: 44px;
+    min-height: 40px;
   }
   
   /* Ajustements pour les composants d'éditeur de plan */
@@ -140,8 +140,8 @@
   
   /* Optimisations pour le dashboard sur mobile */
   .mobile-view .container {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
   
   /* Optimisations pour les tableaux sur mobile */
@@ -159,12 +159,12 @@
   
   /* Optimisations pour les cards sur mobile */
   .mobile-view .card {
-    padding: 0.75rem;
+    padding: 0.5rem;
   }
   
   /* Améliorer la lisibilité des dialogues sur mobile */
   .mobile-view [role="dialog"] {
-    padding: 0.75rem;
+    padding: 0.5rem;
   }
 }
 
@@ -172,6 +172,38 @@
 @media (max-width: 480px) {
   .mobile-view .grid {
     grid-template-columns: 1fr !important;
+  }
+  
+  /* Réduire les marges et paddings */
+  .mobile-view {
+    --card-padding: 0.75rem;
+  }
+  
+  /* Améliorer la lisibilité des onglets */
+  .mobile-view .tabs-list {
+    gap: 0.25rem;
+  }
+  
+  /* Modifier les tailles des polices */
+  .mobile-view .text-lg {
+    font-size: 1rem;
+  }
+  
+  .mobile-view .text-xl {
+    font-size: 1.1rem;
+  }
+  
+  .mobile-view .text-2xl {
+    font-size: 1.25rem;
+  }
+  
+  /* Ajuster les espacements des contrôles du planificateur de salle */
+  .mobile-view .floor-planner-toolbar {
+    gap: 0.25rem;
+  }
+  
+  .mobile-view .floor-planner-toolbar button {
+    padding: 0.25rem;
   }
 }
 

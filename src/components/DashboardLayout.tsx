@@ -39,14 +39,16 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
         {/* Menu mobile */}
         {isMobile && (
           <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-            <SheetContent side="left" className="p-0 w-[80vw] sm:max-w-xs">
+            <SheetContent side="left" className="p-0 w-[85vw] max-w-[290px]">
               <Sidebar type={type} onLogout={handleLogout} mobile={true} onMenuClose={() => setSidebarOpen(false)} />
             </SheetContent>
           </Sheet>
         )}
         
-        <main className={`flex-1 overflow-auto ${isMobile ? 'p-3' : 'p-6'} bg-white`}>
-          {children}
+        <main className={`flex-1 overflow-auto ${isMobile ? 'px-2 py-3' : 'p-6'} bg-white`}>
+          <div className={`${isMobile ? 'mobile-view' : ''}`}>
+            {children}
+          </div>
         </main>
       </div>
     </div>

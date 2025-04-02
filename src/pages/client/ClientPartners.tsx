@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import GoldButton from "@/components/GoldButton";
 import { Search } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Données fictives de partenaires
 const partnerCategories = [
@@ -44,6 +45,7 @@ const ClientPartners = () => {
   const [contactMessage, setContactMessage] = useState("");
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   // Filtrer les partenaires en fonction de la catégorie active et de la recherche
   const filteredPartners = allPartners.filter((partner) => {
@@ -78,27 +80,27 @@ const ClientPartners = () => {
 
   return (
     <DashboardLayout type="client">
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div>
-          <h1 className="text-3xl font-bold">Nos Partenaires VIP</h1>
-          <p className="text-vip-gray-400">
+          <h1 className={`font-bold ${isMobile ? 'text-xl' : 'text-3xl'}`}>Nos Partenaires VIP</h1>
+          <p className="text-vip-gray-400 text-sm sm:text-base">
             Découvrez nos partenaires exclusifs et bénéficiez de tarifs préférentiels
           </p>
         </div>
 
-        <div className="bg-vip-gold/10 border border-vip-gold/30 rounded-md p-4">
-          <p className="text-vip-gold font-medium">
+        <div className="bg-vip-gold/10 border border-vip-gold/30 rounded-md p-3">
+          <p className="text-vip-gold font-medium text-sm">
             En tant que membre VIP, vous bénéficiez des réductions exclusives indiquées pour chaque partenaire.
           </p>
         </div>
 
         <div className="flex justify-between items-center">
-          <div className="relative w-full max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-vip-gray-500" size={18} />
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-vip-gray-500" size={16} />
             <Input
               type="search"
               placeholder="Rechercher un partenaire..."
-              className="pl-10 bg-vip-gray-900 border-vip-gray-800"
+              className="pl-9 bg-vip-gray-900 border-vip-gray-800 h-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -106,47 +108,52 @@ const ClientPartners = () => {
         </div>
 
         <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory}>
-          <TabsList className="bg-vip-gray-900 border border-vip-gray-800 overflow-x-auto flex w-full space-x-2 p-1">
-            <TabsTrigger value="all" className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black">
-              Tous
-            </TabsTrigger>
-            {partnerCategories.map((category) => (
-              <TabsTrigger
-                key={category.id}
-                value={category.id}
-                className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black whitespace-nowrap"
+          <div className="overflow-x-auto -mx-2 px-2">
+            <TabsList className="bg-vip-gray-900 border border-vip-gray-800 flex w-full space-x-1 p-1">
+              <TabsTrigger 
+                value="all" 
+                className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black text-xs flex-shrink-0"
               >
-                {category.name}
+                Tous
               </TabsTrigger>
-            ))}
-          </TabsList>
+              {partnerCategories.map((category) => (
+                <TabsTrigger
+                  key={category.id}
+                  value={category.id}
+                  className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black whitespace-nowrap text-xs flex-shrink-0"
+                >
+                  {category.name}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
 
-          <TabsContent value={activeCategory} className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TabsContent value={activeCategory} className="mt-4">
+            <div className="grid grid-cols-1 gap-3">
               {filteredPartners.length > 0 ? (
                 filteredPartners.map((partner) => (
                   <Card key={partner.id} className="bg-vip-gray-900 border-vip-gray-800 overflow-hidden">
-                    <CardContent className="p-6">
+                    <CardContent className={`${isMobile ? 'p-3' : 'p-6'}`}>
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-xl font-semibold text-vip-white">{partner.name}</h3>
+                          <h3 className="text-lg font-semibold text-vip-white">{partner.name}</h3>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-sm text-vip-gray-400">
+                            <span className="text-xs text-vip-gray-400">
                               {partnerCategories.find(c => c.id === partner.category)?.name}
                             </span>
                             <span className="inline-block w-1.5 h-1.5 rounded-full bg-vip-gray-600"></span>
-                            <span className="text-sm text-vip-gold font-medium">
+                            <span className="text-xs text-vip-gold font-medium">
                               Réduction: {partner.discount}
                             </span>
                           </div>
                         </div>
-                        <div className="flex-shrink-0 w-12 h-12 bg-vip-gray-800 rounded-full flex items-center justify-center text-vip-gold font-bold border border-vip-gray-700">
+                        <div className="flex-shrink-0 w-10 h-10 bg-vip-gray-800 rounded-full flex items-center justify-center text-vip-gold font-bold border border-vip-gray-700">
                           {partner.name.charAt(0)}
                         </div>
                       </div>
-                      <p className="mt-4 text-vip-gray-300 text-sm line-clamp-3">{partner.description}</p>
-                      <div className="mt-4 flex justify-end">
-                        <GoldButton onClick={() => handleContact(partner)}>
+                      <p className="mt-3 text-vip-gray-300 text-xs line-clamp-2">{partner.description}</p>
+                      <div className="mt-3 flex justify-end">
+                        <GoldButton size="sm" onClick={() => handleContact(partner)}>
                           Contacter
                         </GoldButton>
                       </div>
@@ -154,7 +161,7 @@ const ClientPartners = () => {
                   </Card>
                 ))
               ) : (
-                <div className="col-span-2 text-center py-12">
+                <div className="text-center py-8">
                   <p className="text-vip-gray-400">Aucun partenaire ne correspond à votre recherche.</p>
                 </div>
               )}
@@ -164,33 +171,33 @@ const ClientPartners = () => {
       </div>
 
       <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
-        <DialogContent className="bg-vip-gray-900 border-vip-gray-800">
+        <DialogContent className="bg-vip-gray-900 border-vip-gray-800 sm:max-w-md max-w-[calc(100%-32px)]">
           <DialogHeader>
-            <DialogTitle>Contacter {selectedPartner?.name}</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-base">Contacter {selectedPartner?.name}</DialogTitle>
+            <DialogDescription className="text-xs">
               Envoyez votre demande directement au partenaire. Il recevra vos coordonnées et votre message.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
+          <div className="space-y-3 py-2">
             <div className="bg-vip-gray-800 p-3 rounded-md">
-              <div className="font-medium text-vip-white">Avantage Club VIP</div>
+              <div className="font-medium text-vip-white text-sm">Avantage Club VIP</div>
               <div className="text-vip-gold font-bold">Réduction de {selectedPartner?.discount}</div>
             </div>
             
             <Textarea
               placeholder="Décrivez votre projet, vos besoins et questions..."
-              className="bg-vip-gray-800 border-vip-gray-700 min-h-[120px]"
+              className="bg-vip-gray-800 border-vip-gray-700 min-h-[100px]"
               value={contactMessage}
               onChange={(e) => setContactMessage(e.target.value)}
             />
           </div>
 
-          <DialogFooter>
-            <GoldButton variant="outline" onClick={() => setContactDialogOpen(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <GoldButton variant="outline" size="sm" onClick={() => setContactDialogOpen(false)} className="w-full sm:w-auto">
               Annuler
             </GoldButton>
-            <GoldButton onClick={handleSendMessage}>
+            <GoldButton size="sm" onClick={handleSendMessage} className="w-full sm:w-auto">
               Envoyer la demande
             </GoldButton>
           </DialogFooter>

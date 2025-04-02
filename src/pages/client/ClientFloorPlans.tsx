@@ -6,6 +6,7 @@ import FloorPlanner from '@/components/floor-planner/FloorPlanner';
 import GuestList from '@/components/guests/GuestList';
 import VenuesList from '@/components/venues/VenuesList';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Exemple de données pour les salles partenaires
 const partnerVenues = [
@@ -103,6 +104,7 @@ const ClientFloorPlans: React.FC = () => {
   const [savedFloorPlan, setSavedFloorPlan] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('plan');
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   // Charger le plan de salle sauvegardé depuis le localStorage
   useEffect(() => {
@@ -123,37 +125,48 @@ const ClientFloorPlans: React.FC = () => {
 
   return (
     <DashboardLayout type="client">
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Organisation de votre événement</h1>
-          <p className="text-gray-500">Planifiez votre salle de réception et gérez vos invités</p>
+          <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-xl' : 'text-3xl'}`}>Organisation de votre événement</h1>
+          <p className="text-gray-500 text-sm sm:text-base">Planifiez votre salle de réception et gérez vos invités</p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="bg-white border border-gray-200">
-            <TabsTrigger value="plan" className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black">
-              Plan de salle
-            </TabsTrigger>
-            <TabsTrigger value="guests" className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black">
-              Liste d'invités
-            </TabsTrigger>
-            <TabsTrigger value="venues" className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black">
-              Salles partenaires
-            </TabsTrigger>
-          </TabsList>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-3">
+          <div className="overflow-x-auto -mx-2 px-2">
+            <TabsList className="bg-white border border-gray-200 w-full">
+              <TabsTrigger 
+                value="plan" 
+                className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black text-xs sm:text-sm"
+              >
+                Plan de salle
+              </TabsTrigger>
+              <TabsTrigger 
+                value="guests" 
+                className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black text-xs sm:text-sm"
+              >
+                Liste d'invités
+              </TabsTrigger>
+              <TabsTrigger 
+                value="venues" 
+                className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black text-xs sm:text-sm"
+              >
+                Salles partenaires
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="plan" className="space-y-4">
+          <TabsContent value="plan" className="space-y-3 mt-2">
             <FloorPlanner 
               initialData={savedFloorPlan || undefined} 
               onSave={handleSaveFloorPlan} 
             />
           </TabsContent>
 
-          <TabsContent value="guests" className="space-y-4">
+          <TabsContent value="guests" className="space-y-3 mt-2">
             <GuestList />
           </TabsContent>
 
-          <TabsContent value="venues" className="space-y-4">
+          <TabsContent value="venues" className="space-y-3 mt-2">
             <VenuesList venues={partnerVenues} />
           </TabsContent>
         </Tabs>
