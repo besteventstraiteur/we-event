@@ -1,3 +1,4 @@
+
 import React from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -155,11 +156,11 @@ const PartnerPodcasts = () => {
               newPodcast={newPodcast}
               audioFileName={audioFileName}
               imageFileName={imageFileName}
-              handleChange={handleChange}
-              handleSelectChange={handleSelectChange}
-              handleAudioFileChange={handleAudioFileChange}
-              handleImageFileChange={handleImageFileChange}
-              handleSubmit={handleSubmit}
+              onChange={handleChange}
+              onSelectChange={handleSelectChange}
+              onAudioFileChange={handleAudioFileChange}
+              onImageFileChange={handleImageFileChange}
+              onSubmit={handleSubmit}
             />
           </div>
         </TabsContent>
@@ -169,7 +170,7 @@ const PartnerPodcasts = () => {
         <PodcastPlayer
           podcast={currentPodcast}
           isPlaying={isPlaying}
-          onTogglePlay={togglePlay}
+          onTogglePlay={() => currentPodcast && togglePlay(currentPodcast)}
         />
       )}
     </DashboardLayout>

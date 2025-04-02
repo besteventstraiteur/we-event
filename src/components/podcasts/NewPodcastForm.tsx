@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import GoldButton from "@/components/GoldButton";
 import { Upload, AlertCircle } from 'lucide-react';
-import { NewPodcast } from '@/hooks/usePartnerPodcasts';
+import { NewPodcast } from '@/models/podcast';
 
 interface NewPodcastFormProps {
   newPodcast: NewPodcast;
