@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,7 +18,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Search, Eye, Download } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Search, Eye, Download, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import FloorPlanner from '../floor-planner/FloorPlanner';
 
@@ -29,23 +30,50 @@ interface Venue {
   location: string;
   capacity: number;
   floorPlan: string;
+  price?: string;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+  imageUrl?: string;
 }
 
 interface VenuesListProps {
   venues: Venue[];
+  selectedVenueId?: string | null;
 }
 
-const VenuesList: React.FC<VenuesListProps> = ({ venues = [] }) => {
+const VenuesList: React.FC<VenuesListProps> = ({ venues = [], selectedVenueId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
   const [viewFloorPlan, setViewFloorPlan] = useState(false);
   const { toast } = useToast();
 
+  // Filtrer les salles selon le terme de recherche
   const filteredVenues = venues.filter(venue => 
     venue.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     venue.partner.toLowerCase().includes(searchTerm.toLowerCase()) ||
     venue.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Effet pour sélectionner la salle quand selectedVenueId change
+  useEffect(() => {
+    if (selectedVenueId) {
+      const venue = venues.find(v => v.id === selectedVenueId);
+      if (venue) {
+        // Faire défiler jusqu'à la carte de la salle sélectionnée
+        const element = document.getElementById(`venue-card-${selectedVenueId}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Ajouter une classe pour mettre en évidence brièvement la carte
+          element.classList.add('ring-2', 'ring-vip-gold', 'ring-opacity-70');
+          setTimeout(() => {
+            element.classList.remove('ring-2', 'ring-vip-gold', 'ring-opacity-70');
+          }, 2000);
+        }
+      }
+    }
+  }, [selectedVenueId, venues]);
 
   return (
     <div className="flex flex-col">
@@ -75,17 +103,40 @@ const VenuesList: React.FC<VenuesListProps> = ({ venues = [] }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredVenues.length > 0 ? (
               filteredVenues.map((venue) => (
-                <Card key={venue.id} className="bg-vip-gray-800 border-vip-gray-700 overflow-hidden">
-                  <div className="h-40 bg-vip-gray-700 flex items-center justify-center">
-                    <svg className="h-12 w-12 text-vip-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
+                <Card 
+                  key={venue.id} 
+                  id={`venue-card-${venue.id}`}
+                  className={`bg-vip-gray-800 border-vip-gray-700 overflow-hidden transition-all duration-300 ${
+                    selectedVenueId === venue.id ? 'ring-2 ring-vip-gold' : ''
+                  }`}
+                >
+                  <div className="h-40 bg-vip-gray-700 flex items-center justify-center relative overflow-hidden">
+                    {venue.imageUrl ? (
+                      <img 
+                        src={venue.imageUrl} 
+                        alt={venue.name}
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                      />
+                    ) : (
+                      <svg className="h-12 w-12 text-vip-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    )}
+                    
+                    {venue.price && (
+                      <Badge className="absolute top-2 right-2 bg-vip-gold text-vip-black">
+                        {venue.price}
+                      </Badge>
+                    )}
                   </div>
                   <CardContent className="p-4">
                     <h3 className="text-lg font-bold text-vip-white mb-1">{venue.name}</h3>
                     <p className="text-sm text-vip-gray-400 mb-2">{venue.partner}</p>
-                    <div className="flex justify-between items-center text-sm text-vip-gray-400">
-                      <span>{venue.location}</span>
+                    <div className="flex justify-between items-center text-sm text-vip-gray-400 mb-3">
+                      <div className="flex items-center">
+                        <MapPin size={12} className="mr-1" />
+                        <span>{venue.location}</span>
+                      </div>
                       <span>{venue.capacity} personnes</span>
                     </div>
                     <div className="flex mt-4 justify-between">
@@ -146,6 +197,7 @@ const VenuesList: React.FC<VenuesListProps> = ({ venues = [] }) => {
             <DialogTitle>Plan de salle: {selectedVenue?.name}</DialogTitle>
             <DialogDescription className="text-vip-gray-400">
               Capacité: {selectedVenue?.capacity} personnes | Prestataire: {selectedVenue?.partner}
+              {selectedVenue?.price && ` | Tarif: ${selectedVenue.price}`}
             </DialogDescription>
           </DialogHeader>
           
