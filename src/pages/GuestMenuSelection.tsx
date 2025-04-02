@@ -1,18 +1,35 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Logo from '@/components/Logo';
 import GuestMenuSelectionComponent from '@/components/guest-menu/GuestMenuSelection';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 const GuestMenuSelection: React.FC = () => {
   const { eventId, guestId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [menuSubmitted, setMenuSubmitted] = useState(false);
+
+  useEffect(() => {
+    const handleMenuSubmitted = () => {
+      setMenuSubmitted(true);
+    };
+
+    const container = document.querySelector('.menu-selection-container');
+    if (container) {
+      container.addEventListener('menuSubmitted', handleMenuSubmitted);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener('menuSubmitted', handleMenuSubmitted);
+      }
+    };
+  }, []);
 
   const handleBackToDashboard = () => {
     navigate(`/guest/${eventId}/${guestId}`);
