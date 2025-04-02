@@ -5,17 +5,18 @@ import { useToast } from '@/hooks/use-toast';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import MenuOptionCard from './MenuOptionCard';
+import { MenuOption } from '@/hooks/useGuestMenu';
 
 const GuestMenuSelection: React.FC = () => {
   const [selectedMenu, setSelectedMenu] = useState<string>('');
   const [selectedOption, setSelectedOption] = useState<string>('');
   const { toast } = useToast();
 
-  const menuChoices = [
-    { id: 'standard', name: 'Menu Standard', description: 'Notre menu traditionnel avec des options variées.' },
-    { id: 'vegetarien', name: 'Menu Végétarien', description: 'Options sans viande, à base de légumes frais et protéines végétales.' },
-    { id: 'allergies', name: 'Menu Allergies', description: 'Adapté pour les personnes ayant des allergies alimentaires courantes.' },
-    { id: 'enfant', name: 'Menu Enfant', description: 'Spécialement conçu pour les plus jeunes invités.' },
+  const menuChoices: MenuOption[] = [
+    { id: 'standard', name: 'Menu Standard', description: 'Notre menu traditionnel avec des options variées.', type: 'main' },
+    { id: 'vegetarien', name: 'Menu Végétarien', description: 'Options sans viande, à base de légumes frais et protéines végétales.', type: 'main' },
+    { id: 'allergies', name: 'Menu Allergies', description: 'Adapté pour les personnes ayant des allergies alimentaires courantes.', type: 'main' },
+    { id: 'enfant', name: 'Menu Enfant', description: 'Spécialement conçu pour les plus jeunes invités.', type: 'main' },
   ];
 
   const handleMenuSelect = (menuId: string) => {
@@ -65,15 +66,10 @@ const GuestMenuSelection: React.FC = () => {
           {menuChoices.map((menu) => (
             <MenuOptionCard
               key={menu.id}
-              option={{
-                id: menu.id,
-                name: menu.name,
-                description: menu.description,
-                type: 'main'
-              }}
+              option={menu}
               isSelected={selectedMenu === menu.id}
               onSelect={handleMenuSelect}
-              type="main"
+              type={menu.type}
             />
           ))}
         </div>
