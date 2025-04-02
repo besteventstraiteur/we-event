@@ -97,8 +97,8 @@ const FloorPlanSettings: React.FC<FloorPlanSettingsProps> = ({
           <div className="flex gap-4 items-center">
             <Slider
               id="room-width-slider"
-              min={200}
-              max={2000}
+              min={100}
+              max={5000}
               step={50}
               value={[roomWidth]}
               onValueChange={(values) => handleWidthChange(values[0])}
@@ -107,8 +107,8 @@ const FloorPlanSettings: React.FC<FloorPlanSettingsProps> = ({
             <Input
               id="room-width"
               type="number"
-              min="200"
-              max="2000"
+              min="100"
+              max="5000"
               value={roomWidth}
               onChange={(e) => handleWidthChange(parseInt(e.target.value) || 700)}
               className="w-24 bg-white border-gray-200 text-gray-900"
@@ -123,8 +123,8 @@ const FloorPlanSettings: React.FC<FloorPlanSettingsProps> = ({
           <div className="flex gap-4 items-center">
             <Slider
               id="room-height-slider"
-              min={200}
-              max={2000}
+              min={100}
+              max={5000}
               step={50}
               value={[roomHeight]}
               onValueChange={(values) => handleHeightChange(values[0])}
@@ -133,8 +133,8 @@ const FloorPlanSettings: React.FC<FloorPlanSettingsProps> = ({
             <Input
               id="room-height"
               type="number"
-              min="200"
-              max="2000"
+              min="100"
+              max="5000"
               value={roomHeight}
               onChange={(e) => handleHeightChange(parseInt(e.target.value) || 500)}
               className="w-24 bg-white border-gray-200 text-gray-900"
