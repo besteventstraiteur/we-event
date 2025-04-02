@@ -74,7 +74,13 @@
     @apply border-border;
   }
   body {
-    @apply bg-white text-vip-black;
+    @apply bg-white text-vip-black overflow-x-hidden;
+  }
+  
+  /* Prevent horizontal scrolling for all elements */
+  html, body, #root, .app-container {
+    max-width: 100vw;
+    overflow-x: hidden;
   }
 }
 
@@ -89,6 +95,10 @@
   
   /* Désactiver le zoom pinch */
   touch-action: pan-x pan-y;
+  
+  /* Empêcher défilement horizontal */
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 /* Classe spéciale pour la vue mobile */
@@ -96,12 +106,18 @@
   /* Amélioration de l'expérience tactile */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  
+  /* Suppression du défilement horizontal */
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Ajustements pour les petits écrans de mobile */
 @media (max-width: 640px) {
   .native-app, .mobile-view {
     font-size: 14px;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
   
   .native-app h1, .mobile-view h1 {
@@ -142,6 +158,8 @@
   .mobile-view .container {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+    max-width: 100%;
+    width: 100%;
   }
   
   /* Optimisations pour les tableaux sur mobile */
@@ -160,11 +178,20 @@
   /* Optimisations pour les cards sur mobile */
   .mobile-view .card {
     padding: 0.5rem;
+    width: 100%;
+    max-width: 100%;
   }
   
   /* Améliorer la lisibilité des dialogues sur mobile */
   .mobile-view [role="dialog"] {
     padding: 0.5rem;
+    max-width: 100vw;
+  }
+  
+  /* Optimisations pour les grilles sur mobile */
+  .mobile-view .grid {
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -172,16 +199,21 @@
 @media (max-width: 480px) {
   .mobile-view .grid {
     grid-template-columns: 1fr !important;
+    width: 100%;
   }
   
   /* Réduire les marges et paddings */
   .mobile-view {
     --card-padding: 0.75rem;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
   
   /* Améliorer la lisibilité des onglets */
   .mobile-view .tabs-list {
     gap: 0.25rem;
+    max-width: 100%;
+    overflow-x: auto;
   }
   
   /* Modifier les tailles des polices */
@@ -200,6 +232,8 @@
   /* Ajuster les espacements des contrôles du planificateur de salle */
   .mobile-view .floor-planner-toolbar {
     gap: 0.25rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   
   .mobile-view .floor-planner-toolbar button {
@@ -221,5 +255,7 @@
   .mobile-view .split-view {
     display: flex;
     flex-direction: column;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 }

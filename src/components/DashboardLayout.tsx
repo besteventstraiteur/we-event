@@ -22,14 +22,14 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-white">
+    <div className="flex min-h-screen w-full bg-white overflow-x-hidden">
       {/* Sidebar pour desktop */}
       {!isMobile && (
         <Sidebar type={type} onLogout={handleLogout} />
       )}
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col w-full overflow-hidden">
         <Header 
           type={type} 
           isMobile={isMobile} 
@@ -45,8 +45,8 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
           </Sheet>
         )}
         
-        <main className={`flex-1 overflow-auto ${isMobile ? 'px-2 py-3' : 'p-6'} bg-white`}>
-          <div className={`${isMobile ? 'mobile-view' : ''}`}>
+        <main className={`flex-1 overflow-hidden ${isMobile ? 'px-2 py-3' : 'p-6'} bg-white`}>
+          <div className={`${isMobile ? 'mobile-view w-full overflow-x-hidden' : ''}`}>
             {children}
           </div>
         </main>

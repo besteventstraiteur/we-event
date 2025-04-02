@@ -16,7 +16,7 @@ interface SidebarProps {
 
 const Sidebar = ({ type, onLogout, mobile = false, onMenuClose }: SidebarProps) => {
   return (
-    <div className={`flex flex-col ${mobile ? 'w-full h-full' : 'hidden md:flex w-64'} border-r border-vip-gray-200 bg-white p-4`}>
+    <div className={`flex flex-col ${mobile ? 'w-full h-full' : 'hidden md:flex w-64'} border-r border-vip-gray-200 bg-white p-4 overflow-hidden`}>
       <div className="flex items-center justify-between mb-8 pl-3">
         <Logo />
         {mobile && onMenuClose && (
@@ -26,7 +26,7 @@ const Sidebar = ({ type, onLogout, mobile = false, onMenuClose }: SidebarProps) 
         )}
       </div>
 
-      <nav className="space-y-1 flex-1">
+      <nav className="space-y-1 flex-1 overflow-y-auto overflow-x-hidden">
         {type === "client" && <ClientNavigation />}
         {type === "partner" && <PartnerNavigation />}
         {type === "admin" && <AdminNavigation />}
