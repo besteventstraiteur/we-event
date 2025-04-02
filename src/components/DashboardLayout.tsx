@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
@@ -17,8 +18,8 @@ const NavItem = ({ href, icon, children, active }: NavItemProps) => {
       to={href}
       className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
         active
-          ? "bg-vip-gray-800 text-vip-gold"
-          : "text-vip-gray-400 hover:text-vip-white hover:bg-vip-gray-800"
+          ? "bg-vip-gray-100 text-vip-black font-medium"
+          : "text-vip-gray-600 hover:text-vip-black hover:bg-vip-gray-100"
       }`}
     >
       {icon}
@@ -42,9 +43,9 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-vip-black">
+    <div className="flex min-h-screen w-full bg-white">
       {/* Sidebar */}
-      <div className="hidden md:flex flex-col w-64 border-r border-vip-gray-800 bg-vip-gray-900 p-4">
+      <div className="hidden md:flex flex-col w-64 border-r border-vip-gray-200 bg-white p-4">
         <div className="mb-8 pl-3">
           <Logo />
         </div>
@@ -186,8 +187,8 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
         </nav>
 
         <Button
-          variant="ghost"
-          className="text-vip-gray-400 hover:text-vip-white w-full justify-start mt-auto"
+          variant="outline"
+          className="text-vip-gray-700 hover:text-vip-black hover:bg-vip-gray-100 w-full justify-start mt-auto border-vip-gray-200"
           onClick={handleLogout}
         >
           <LogOut size={18} className="mr-2" />
@@ -197,13 +198,13 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <header className="border-b border-vip-gray-800 py-4 px-6">
+        <header className="border-b border-vip-gray-200 py-4 px-6 bg-white">
           <div className="flex items-center justify-between">
             <div className="md:hidden">
               <Logo />
             </div>
             <div className="flex items-center gap-4">
-              <div className="text-sm text-vip-gray-400">
+              <div className="text-sm text-vip-gray-600">
                 {type === "client" && "Espace Client VIP"}
                 {type === "partner" && "Espace Partenaire VIP"}
                 {type === "admin" && "Administration"}
@@ -212,7 +213,7 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto p-6">{children}</main>
+        <main className="flex-1 overflow-auto p-6 bg-white">{children}</main>
       </div>
     </div>
   );
