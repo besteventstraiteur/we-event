@@ -31,7 +31,7 @@ const VenuesTab: React.FC<VenuesTabProps> = ({ venues }) => {
   const handleVenueSelect = (venueId: string) => {
     setSelectedVenueId(venueId);
     if (activeTab !== "list") {
-      // Basculer sur la liste pour afficher les détails de la salle sélectionnée
+      // Switch to list tab to show selected venue details
       setActiveTab("list");
     }
   };
