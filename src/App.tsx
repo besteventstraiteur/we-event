@@ -25,6 +25,7 @@ import ClientMusicPlaylists from "./pages/client/ClientMusicPlaylists";
 import ClientGuests from "./pages/client/ClientGuests";
 import ClientBudget from "./pages/client/ClientBudget";
 import ClientTwoFactorSetup from "./pages/client/TwoFactorSetup";
+import ClientPayments from "./pages/client/ClientPayments"; // New import
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerRequests from "./pages/partner/PartnerRequests";
 import PartnerStats from "./pages/partner/PartnerStats";
@@ -90,6 +91,7 @@ const App = () => (
             <Route path="/client/guests" element={<ClientGuests />} />
             <Route path="/client/budget" element={<ClientBudget />} />
             <Route path="/client/security" element={<ClientTwoFactorSetup />} />
+            <Route path="/client/payments" element={<ClientPayments />} /> {/* New route */}
             
             {/* Dashboard Prestataire */}
             <Route path="/partner/dashboard" element={<PartnerDashboard />} />
@@ -122,3 +124,4 @@ const App = () => (
 );
 
 export default App;
+

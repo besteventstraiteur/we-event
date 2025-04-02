@@ -16,7 +16,8 @@ import {
   GalleryHorizontal, 
   Music, 
   PiggyBank,
-  Shield
+  Shield,
+  CreditCard
 } from "lucide-react";
 
 const ClientNavigation = () => {
@@ -51,6 +52,13 @@ const ClientNavigation = () => {
         active={location.pathname === "/client/budget"}
       >
         Budget
+      </NavItem>
+      <NavItem
+        href="/client/payments"
+        icon={<CreditCard size={18} />}
+        active={location.pathname === "/client/payments"}
+      >
+        Paiements
       </NavItem>
       <NavItem
         href="/client/photos"
