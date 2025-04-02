@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
 import GoldButton from "@/components/GoldButton";
-import BudgetPlanner from "@/components/budget/BudgetPlanner";
 
 const HomePage = () => {
   return (
@@ -50,18 +49,6 @@ const HomePage = () => {
                   </GoldButton>
                 </Link>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Budget Planner Section */}
-        <section className="py-16 bg-vip-gray-50">
-          <div className="container">
-            <h2 className="text-3xl font-bold text-center mb-8">
-              <span className="gold-gradient">Planifiez votre budget</span>
-            </h2>
-            <div className="max-w-4xl mx-auto">
-              <BudgetPlanner />
             </div>
           </div>
         </section>
