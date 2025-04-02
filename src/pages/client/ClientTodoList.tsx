@@ -1,15 +1,13 @@
 
-import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import React from "react";
 import DashboardLayout from "@/components/DashboardLayout";
-import TaskCard from "@/components/client-todo/TaskCard";
-import TaskForm from "@/components/client-todo/TaskForm";
-import TaskFilter from "@/components/client-todo/TaskFilter";
 import TaskStats from "@/components/client-todo/TaskStats";
+import TaskFilter from "@/components/client-todo/TaskFilter";
+import TaskCardList from "@/components/client-todo/TaskCardList";
+import TodoListHeader from "@/components/client-todo/TodoListHeader";
+import TaskDialog from "@/components/client-todo/TaskDialog";
 import { useTaskList, Task } from "@/hooks/useTaskList";
-import { useToast } from "@/components/ui/use-toast";
+import { useTaskDialog } from "@/hooks/useTaskDialog";
 
 // Données initiales pour la démo
 const initialTasks: Task[] = [
@@ -48,10 +46,6 @@ const initialTasks: Task[] = [
 ];
 
 const ClientTodoList = () => {
-  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
-  const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined);
-  const { toast } = useToast();
-  
   const {
     tasks,
     favoriteTasks,
@@ -63,92 +57,36 @@ const ClientTodoList = () => {
     filter,
     setFilter
   } = useTaskList(initialTasks);
-
-  const handleAddNewTask = () => {
-    setCurrentTask(undefined);
-    setIsAddTaskOpen(true);
-  };
-
-  const handleEditTask = (task: Task) => {
-    setCurrentTask(task);
-    setIsAddTaskOpen(true);
-  };
+  
+  const {
+    isOpen,
+    currentTask,
+    openAddDialog,
+    openEditDialog,
+    closeDialog,
+    setIsOpen
+  } = useTaskDialog();
 
   const handleSaveTask = (taskData: Omit<Task, "id" | "completed">) => {
     if (currentTask) {
       updateTask(currentTask.id, taskData);
-      toast({
-        title: "Tâche mise à jour",
-        description: `La tâche "${taskData.title}" a été mise à jour avec succès.`
-      });
     } else {
       addTask(taskData);
-      toast({
-        title: "Tâche ajoutée",
-        description: `La tâche "${taskData.title}" a été ajoutée avec succès.`
-      });
     }
-    setIsAddTaskOpen(false);
-  };
-
-  const handleDeleteTask = (id: string) => {
-    const taskToDelete = tasks.find(task => task.id === id);
-    if (taskToDelete) {
-      deleteTask(id);
-      toast({
-        title: "Tâche supprimée",
-        description: `La tâche "${taskToDelete.title}" a été supprimée.`,
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleToggleTaskCompletion = (id: string) => {
-    toggleTaskCompletion(id);
-    const task = tasks.find(t => t.id === id);
-    if (task) {
-      toast({
-        title: task.completed ? "Tâche marquée comme en cours" : "Tâche terminée",
-        description: `La tâche "${task.title}" a été ${task.completed ? "marquée comme en cours" : "marquée comme terminée"}.`
-      });
-    }
-  };
-
-  const handleToggleFavorite = (id: string) => {
-    toggleFavorite(id);
-    const task = tasks.find(t => t.id === id);
-    if (task) {
-      toast({
-        title: task.isFavorite ? "Retirée des importantes" : "Ajoutée aux importantes",
-        description: `La tâche "${task.title}" a été ${task.isFavorite ? "retirée des" : "ajoutée aux"} tâches importantes.`
-      });
-    }
+    closeDialog();
   };
 
   const handleTaskClick = (taskId: string) => {
     const task = tasks.find(t => t.id === taskId);
     if (task) {
-      handleEditTask(task);
+      openEditDialog(task);
     }
   };
 
   return (
     <DashboardLayout type="client">
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold mb-1">Liste de tâches</h1>
-            <p className="text-gray-500">
-              Gérez les tâches de votre événement et suivez leur avancement
-            </p>
-          </div>
-          <Button 
-            onClick={handleAddNewTask}
-            className="bg-amber-500 hover:bg-amber-600"
-          >
-            <Plus size={16} className="mr-2" /> Ajouter une tâche
-          </Button>
-        </div>
+        <TodoListHeader onAddTask={openAddDialog} />
         
         <TaskStats 
           tasks={tasks} 
@@ -158,47 +96,23 @@ const ClientTodoList = () => {
         
         <TaskFilter filter={filter} onFilterChange={setFilter} />
         
-        <div className="space-y-4">
-          {tasks.length > 0 ? (
-            tasks.map(task => (
-              <TaskCard 
-                key={task.id}
-                task={task}
-                onToggleCompletion={handleToggleTaskCompletion}
-                onEdit={handleEditTask}
-                onDelete={handleDeleteTask}
-                onToggleFavorite={handleToggleFavorite}
-              />
-            ))
-          ) : (
-            <div className="text-center py-10 bg-white rounded-lg border border-gray-200">
-              <p className="text-gray-500 mb-4">Aucune tâche à afficher.</p>
-              <Button 
-                onClick={handleAddNewTask}
-                variant="outline"
-                className="border-amber-200 text-amber-600 hover:bg-amber-50"
-              >
-                <Plus size={16} className="mr-2" /> Créer votre première tâche
-              </Button>
-            </div>
-          )}
-        </div>
+        <TaskCardList 
+          tasks={tasks}
+          onToggleCompletion={toggleTaskCompletion}
+          onEdit={openEditDialog}
+          onDelete={deleteTask}
+          onToggleFavorite={toggleFavorite}
+          onAddTask={openAddDialog}
+        />
       </div>
       
-      <Dialog open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
-        <DialogContent className="bg-white max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>
-              {currentTask ? "Modifier la tâche" : "Ajouter une nouvelle tâche"}
-            </DialogTitle>
-          </DialogHeader>
-          <TaskForm 
-            initialTask={currentTask} 
-            onSave={handleSaveTask} 
-            onCancel={() => setIsAddTaskOpen(false)} 
-          />
-        </DialogContent>
-      </Dialog>
+      <TaskDialog 
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        currentTask={currentTask}
+        onSave={handleSaveTask}
+        onCancel={closeDialog}
+      />
     </DashboardLayout>
   );
 };
