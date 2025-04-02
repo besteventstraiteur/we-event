@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { User, FileText, BarChart, Headphones, Video } from "lucide-react";
+import { User, FileText, BarChart, Headphones, Video, Share2 } from "lucide-react";
 
 const PartnerNavigation = () => {
   const location = useLocation();
@@ -22,6 +22,13 @@ const PartnerNavigation = () => {
         active={location.pathname === "/partner/requests"}
       >
         Demandes Clients
+      </NavItem>
+      <NavItem
+        href="/partner/recommendations"
+        icon={<Share2 size={18} />}
+        active={location.pathname === "/partner/recommendations"}
+      >
+        Recommandations
       </NavItem>
       <NavItem
         href="/partner/stats"
