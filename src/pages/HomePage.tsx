@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
@@ -11,6 +10,9 @@ const HomePage = () => {
         <div className="container flex items-center justify-between">
           <Logo />
           <div className="flex items-center space-x-4">
+            <Link to="/partners" className="text-vip-gray-700 hover:text-vip-gold">
+              Nos Partenaires
+            </Link>
             <Link to="/login">
               <GoldButton variant="outline" size="sm">
                 Connexion
@@ -79,6 +81,13 @@ const HomePage = () => {
                 </p>
               </div>
             </div>
+            <div className="mt-8 text-center">
+              <Link to="/partners">
+                <GoldButton variant="outline">
+                  Découvrir nos partenaires
+                </GoldButton>
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -116,6 +125,9 @@ const HomePage = () => {
               © {new Date().getFullYear()} Best Events VIP. Tous droits réservés.
             </p>
             <div className="flex gap-4">
+              <Link to="/partners" className="text-vip-gray-600 hover:text-vip-gold text-sm">
+                Nos Partenaires
+              </Link>
               <Link to="/privacy" className="text-vip-gray-600 hover:text-vip-gold text-sm">
                 Politique de confidentialité
               </Link>

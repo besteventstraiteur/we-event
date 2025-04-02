@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import LoginPage from "./pages/LoginPage";
 import RegisterClientPage from "./pages/RegisterClientPage";
 import RegisterPartnerPage from "./pages/RegisterPartnerPage";
+import PartnersPage from "./pages/PartnersPage";
 import ClientDashboard from "./pages/client/ClientDashboard";
 import ClientPartners from "./pages/client/ClientPartners";
 import ClientRequests from "./pages/client/ClientRequests";
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register-client" element={<RegisterClientPage />} />
             <Route path="/register-partner" element={<RegisterPartnerPage />} />
+            <Route path="/partners" element={<PartnersPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/contact" element={<ContactPage />} />

@@ -13,6 +13,9 @@ const Index = () => {
             <Logo />
           </Link>
           <div className="flex items-center space-x-4">
+            <Link to="/partners" className="text-vip-gray-700 hover:text-vip-gold">
+              Nos Partenaires
+            </Link>
             <Link to="/login">
               <GoldButton variant="outline" size="sm">
                 Connexion
@@ -29,7 +32,7 @@ const Index = () => {
             La plateforme exclusive qui connecte clients VIP et partenaires événementiels de prestige.
           </p>
           
-          <div className="flex flex-col md:flex-row gap-4 justify-center">
+          <div className="flex flex-col md:flex-row gap-4 justify-center mb-8">
             <Link to="/register-client">
               <GoldButton size="lg">
                 Devenir client VIP
@@ -38,6 +41,14 @@ const Index = () => {
             <Link to="/register-partner">
               <GoldButton variant="outline" size="lg">
                 Devenir partenaire
+              </GoldButton>
+            </Link>
+          </div>
+          
+          <div className="mt-12">
+            <Link to="/partners">
+              <GoldButton variant="outline">
+                Découvrir nos partenaires
               </GoldButton>
             </Link>
           </div>
@@ -54,6 +65,9 @@ const Index = () => {
               © {new Date().getFullYear()} Best Events VIP. Tous droits réservés.
             </p>
             <div className="flex gap-4">
+              <Link to="/partners" className="text-vip-gray-600 hover:text-vip-gold text-sm">
+                Nos Partenaires
+              </Link>
               <Link to="/privacy" className="text-vip-gray-600 hover:text-vip-gold text-sm">
                 Politique de confidentialité
               </Link>

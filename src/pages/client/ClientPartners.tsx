@@ -4,7 +4,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import GoldButton from "@/components/GoldButton";
 import { Search } from "lucide-react";
@@ -83,6 +83,12 @@ const ClientPartners = () => {
           <h1 className="text-3xl font-bold">Nos Partenaires VIP</h1>
           <p className="text-vip-gray-400">
             Découvrez nos partenaires exclusifs et bénéficiez de tarifs préférentiels
+          </p>
+        </div>
+
+        <div className="bg-vip-gold/10 border border-vip-gold/30 rounded-md p-4">
+          <p className="text-vip-gold font-medium">
+            En tant que membre VIP, vous bénéficiez des réductions exclusives indiquées pour chaque partenaire.
           </p>
         </div>
 
