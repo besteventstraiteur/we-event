@@ -1,10 +1,11 @@
 
 import { useState } from 'react';
-import { Guest } from '@/types/floorPlanTypes';
+import type { Guest } from '@/types/floorPlanTypes';
 import { useTableManagement } from './useTableManagement';
 import { useSeatAssignment } from './useSeatAssignment';
 
-export { Guest } from '@/types/floorPlanTypes';
+// Use 'export type' instead of 'export' for re-exporting types
+export type { Guest } from '@/types/floorPlanTypes';
 
 export const useGuestAssignment = (initialGuests: Guest[] = []) => {
   const [guests, setGuests] = useState<Guest[]>(initialGuests);

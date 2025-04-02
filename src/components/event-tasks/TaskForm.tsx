@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -52,7 +51,16 @@ const TaskForm: React.FC<TaskFormProps> = ({ initialTask, onSave, onCancel }) =>
   });
 
   const onSubmit = (values: TaskFormValues) => {
-    onSave(values);
+    const taskData: Omit<EventTask, 'id' | 'completed'> = {
+      title: values.title,
+      description: values.description,
+      assignedTo: values.assignedTo,
+      dueDate: values.dueDate,
+      priority: values.priority,
+      category: values.category
+    };
+    
+    onSave(taskData);
   };
 
   return (
