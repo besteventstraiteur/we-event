@@ -3,7 +3,7 @@ import React from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { UseFormReturn } from 'react-hook-form';
-import { TaskFormValues } from './taskFormSchema';
+import { TaskFormValues, TaskFormField } from './taskFormSchema';
 
 interface SelectOption {
   value: string;
@@ -12,7 +12,7 @@ interface SelectOption {
 
 interface SelectFieldProps {
   form: UseFormReturn<TaskFormValues>;
-  name: 'assignedTo' | 'priority' | 'category';
+  name: TaskFormField.AssignedTo | TaskFormField.Priority | TaskFormField.Category;
   label: string;
   options: SelectOption[];
   placeholder: string;

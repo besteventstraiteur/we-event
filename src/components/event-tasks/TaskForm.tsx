@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
 import { EventTask } from '@/hooks/useEventTasks';
-import { taskFormSchema, TaskFormValues, getDefaultValues } from './form/taskFormSchema';
+import { taskFormSchema, TaskFormValues, getDefaultValues, TaskFormField } from './form/taskFormSchema';
 import TitleField from './form/TitleField';
 import DescriptionField from './form/DescriptionField';
 import SelectField from './form/SelectField';
@@ -46,7 +46,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ initialTask, onSave, onCancel }) =>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SelectField 
             form={form}
-            name="assignedTo"
+            name={TaskFormField.AssignedTo}
             label="Assignée à"
             options={assigneeOptions}
             placeholder="Sélectionner l'assigné"
@@ -54,7 +54,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ initialTask, onSave, onCancel }) =>
 
           <SelectField 
             form={form}
-            name="priority"
+            name={TaskFormField.Priority}
             label="Priorité"
             options={priorityOptions}
             placeholder="Sélectionner la priorité"
@@ -64,7 +64,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ initialTask, onSave, onCancel }) =>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SelectField 
             form={form}
-            name="category"
+            name={TaskFormField.Category}
             label="Catégorie"
             options={categoryOptions}
             placeholder="Sélectionner la catégorie"
