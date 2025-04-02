@@ -5,8 +5,19 @@ interface Guest {
   id: string;
   nom: string;
   prenom: string;
+  email: string;
+  telephone: string;
+  ceremonie: boolean;
+  vin: boolean;
+  repas: boolean;
+  brunch: boolean;
+  conjoint: boolean;
+  enfants: number;
   table: string;
   seat?: string;
+  notes: string;
+  menuChoice?: string;
+  menuOption?: string;
 }
 
 interface Table {

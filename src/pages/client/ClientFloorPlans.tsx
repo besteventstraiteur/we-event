@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from "@/components/DashboardLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useGuestAssignment } from '@/hooks/useGuestAssignment';
 
-// Liste d'invités initiale
+// Liste d'invités initiale - Now with complete properties matching both interfaces
 const initialGuests = [
   {
     id: "1",
