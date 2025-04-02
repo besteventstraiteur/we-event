@@ -9,7 +9,7 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit, Trash2, Check, X, ArrowUpDown } from "lucide-react";
+import { Plus, Edit, Trash2, Check, X, ArrowUpDown, Info, Star, StarOff, Calendar, User, Tag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ProjectTask, TaskCategory, TaskPriority, TaskStatus } from "@/hooks/useProjectTasks";
 import TaskDialog from "./TaskDialog";
@@ -18,6 +18,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
@@ -27,6 +28,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 interface TaskListProps {
   tasks: ProjectTask[];
@@ -50,6 +64,8 @@ const TaskList: React.FC<TaskListProps> = ({
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [sortField, setSortField] = useState<keyof ProjectTask>("dueDate");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [favoriteTaskIds, setFavoriteTaskIds] = useState<string[]>([]);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
   const handleAddClick = () => {
     setCurrentTask(null);
@@ -79,6 +95,22 @@ const TaskList: React.FC<TaskListProps> = ({
   const handleToggleStatus = (task: ProjectTask) => {
     const newStatus = task.status === "completed" ? "pending" : "completed";
     onUpdateTask(task.id, { status: newStatus });
+  };
+
+  const handleToggleFavorite = (taskId: string) => {
+    setFavoriteTaskIds(prev => 
+      prev.includes(taskId) 
+        ? prev.filter(id => id !== taskId)
+        : [...prev, taskId]
+    );
+  };
+
+  const handleQuickStatusChange = (taskId: string, status: TaskStatus) => {
+    onUpdateTask(taskId, { status });
+  };
+
+  const handleQuickPriorityChange = (taskId: string, priority: TaskPriority) => {
+    onUpdateTask(taskId, { priority });
   };
 
   const handleSort = (field: keyof ProjectTask) => {
@@ -148,6 +180,42 @@ const TaskList: React.FC<TaskListProps> = ({
     }
   };
 
+  const isTaskOverdue = (task: ProjectTask) => {
+    if (task.status === "completed") return false;
+    const dueDate = new Date(task.dueDate);
+    const today = new Date();
+    return dueDate < today;
+  };
+
+  const getTaskRowClass = (task: ProjectTask) => {
+    if (task.status === "completed") return "bg-gray-50";
+    if (isTaskOverdue(task)) return "bg-red-50";
+    if (task.status === "blocked") return "bg-red-50/50";
+    if (favoriteTaskIds.includes(task.id)) return "bg-amber-50/50";
+    return "";
+  };
+
+  const formatDueDate = (dueDate: string | Date) => {
+    const date = new Date(dueDate);
+    return format(date, 'dd MMM yyyy', { locale: fr });
+  };
+
+  const getDueDateWithStyle = (task: ProjectTask) => {
+    const isOverdue = isTaskOverdue(task);
+    
+    return (
+      <div className={`flex items-center ${isOverdue ? 'text-red-600 font-medium' : ''}`}>
+        <Calendar size={14} className={`mr-1 ${isOverdue ? 'text-red-600' : 'text-gray-500'}`} />
+        <span>{formatDueDate(task.dueDate)}</span>
+        {isOverdue && 
+          <Badge variant="outline" className="ml-2 text-red-600 border-red-600 text-xs">
+            En retard
+          </Badge>
+        }
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
@@ -199,6 +267,9 @@ const TaskList: React.FC<TaskListProps> = ({
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-10">
+                <span className="sr-only">Favori</span>
+              </TableHead>
               <TableHead className="w-12">Statut</TableHead>
               <TableHead>
                 <div 
@@ -244,58 +315,191 @@ const TaskList: React.FC<TaskListProps> = ({
                   )}
                 </div>
               </TableHead>
-              <TableHead className="w-[100px]">Actions</TableHead>
+              <TableHead className="w-[150px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {sortedTasks.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                <TableCell colSpan={7} className="text-center py-8 text-gray-500">
                   Aucune tâche trouvée
                 </TableCell>
               </TableRow>
             ) : (
               sortedTasks.map((task) => (
-                <TableRow key={task.id}>
+                <TableRow key={task.id} className={getTaskRowClass(task)}>
                   <TableCell>
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleToggleStatus(task)}
-                      className={task.status === "completed" ? "text-green-600" : "text-gray-400"}
+                      onClick={() => handleToggleFavorite(task.id)}
+                      className={favoriteTaskIds.includes(task.id) ? "text-amber-500" : "text-gray-400"}
                     >
-                      {task.status === "completed" ? <Check size={18} /> : <X size={18} />}
+                      {favoriteTaskIds.includes(task.id) ? 
+                        <Star size={18} className="fill-amber-500" /> : <Star size={18} />}
                     </Button>
+                  </TableCell>
+                  <TableCell>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleToggleStatus(task)}
+                            className={task.status === "completed" ? "text-green-600" : "text-gray-400"}
+                          >
+                            {task.status === "completed" ? <Check size={18} /> : <X size={18} />}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {task.status === "completed" ? "Marquer comme non terminée" : "Marquer comme terminée"}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </TableCell>
                   <TableCell>
                     <div className="font-medium">{task.title}</div>
                     <div className="text-sm text-gray-500 truncate max-w-xs">
                       {task.description}
                     </div>
+                    {task.assignedTo && (
+                      <div className="flex items-center mt-1 text-xs text-gray-500">
+                        <User size={12} className="mr-1" />
+                        <span>{task.assignedTo}</span>
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell>
-                    {categories.find(c => c.value === task.category)?.label || task.category}
+                    <div className="flex items-center space-x-1">
+                      <Tag size={14} className="text-gray-500" />
+                      <span>{categories.find(c => c.value === task.category)?.label || task.category}</span>
+                    </div>
                   </TableCell>
                   <TableCell>
-                    {getPriorityBadge(task.priority)}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-8 data-[state=open]:bg-gray-100">
+                          {getPriorityBadge(task.priority)}
+                          <ArrowUpDown size={14} className="ml-1" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start">
+                        <DropdownMenuItem onClick={() => handleQuickPriorityChange(task.id, "high")}>
+                          <Badge variant="destructive" className="mr-2">Haute</Badge>
+                          <span>Priorité haute</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleQuickPriorityChange(task.id, "medium")}>
+                          <Badge variant="default" className="mr-2">Moyenne</Badge>
+                          <span>Priorité moyenne</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleQuickPriorityChange(task.id, "low")}>
+                          <Badge variant="secondary" className="mr-2">Basse</Badge>
+                          <span>Priorité basse</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                   <TableCell>
-                    {new Date(task.dueDate).toLocaleDateString('fr-FR')}
+                    {getDueDateWithStyle(task)}
                   </TableCell>
                   <TableCell>
                     <div className="flex space-x-1">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-8 px-2">
+                            {getStatusBadge(task.status)}
+                            <ArrowUpDown size={14} className="ml-1" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleQuickStatusChange(task.id, "pending")}>
+                            <Badge variant="outline" className="bg-gray-100 mr-2">En attente</Badge>
+                            <span>À faire</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleQuickStatusChange(task.id, "in-progress")}>
+                            <Badge variant="outline" className="bg-blue-100 text-blue-800 mr-2">En cours</Badge>
+                            <span>En cours</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleQuickStatusChange(task.id, "completed")}>
+                            <Badge variant="outline" className="bg-green-100 text-green-800 mr-2">Terminée</Badge>
+                            <span>Terminée</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleQuickStatusChange(task.id, "blocked")}>
+                            <Badge variant="outline" className="bg-red-100 text-red-800 mr-2">Bloquée</Badge>
+                            <span>Bloquée</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+
+                      <Popover open={selectedTaskId === task.id} onOpenChange={(open) => setSelectedTaskId(open ? task.id : null)}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                          >
+                            <Info size={16} />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80 p-4" align="end">
+                          <div className="space-y-2">
+                            <h3 className="font-semibold">{task.title}</h3>
+                            <p className="text-sm text-gray-600">{task.description || "Aucune description"}</p>
+                            
+                            <div className="flex flex-col gap-1 mt-2">
+                              <div className="flex justify-between">
+                                <span className="text-sm text-gray-500">Statut:</span>
+                                <span>{getStatusBadge(task.status)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-sm text-gray-500">Priorité:</span>
+                                <span>{getPriorityBadge(task.priority)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-sm text-gray-500">Catégorie:</span>
+                                <span>{categories.find(c => c.value === task.category)?.label || task.category}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-sm text-gray-500">Échéance:</span>
+                                <span className={`${isTaskOverdue(task) ? 'text-red-600' : ''}`}>
+                                  {formatDueDate(task.dueDate)}
+                                </span>
+                              </div>
+                              {task.assignedTo && (
+                                <div className="flex justify-between">
+                                  <span className="text-sm text-gray-500">Assignée à:</span>
+                                  <span>{task.assignedTo}</span>
+                                </div>
+                              )}
+                            </div>
+                            
+                            <div className="flex gap-2 mt-4 justify-end">
+                              <Button size="sm" variant="outline" onClick={() => setSelectedTaskId(null)}>
+                                Fermer
+                              </Button>
+                              <Button size="sm" onClick={() => handleEditClick(task)}>
+                                Modifier
+                              </Button>
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => handleEditClick(task)}
+                        className="h-8 w-8"
                       >
                         <Edit size={16} />
                       </Button>
+                      
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDeleteClick(task.id)}
-                        className="text-red-600"
+                        className="text-red-600 h-8 w-8"
                       >
                         <Trash2 size={16} />
                       </Button>
