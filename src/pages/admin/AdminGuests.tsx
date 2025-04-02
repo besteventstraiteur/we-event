@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
+import { Dialog } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 import { Guest } from "@/types/floorPlanTypes";
 
 import GuestSearchBar from "@/components/admin/guests/GuestSearchBar";
 import GuestListTable from "@/components/admin/guests/GuestListTable";
 import GuestStatsSummary from "@/components/admin/guests/GuestStatsSummary";
+import GuestFormDialog from "@/components/admin/guests/GuestFormDialog";
 import { mockGuestsData } from "@/data/mockGuestsData";
 
 const AdminGuests = () => {
@@ -120,54 +121,13 @@ const AdminGuests = () => {
           onSendReminder={handleSendReminder}
         />
 
-        {/* Guest Edit Dialog - in a real app, this would be a separate component */}
+        {/* Guest Edit Dialog */}
         <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>
-                {currentGuest ? "Modifier un invité" : "Ajouter un invité"}
-              </DialogTitle>
-            </DialogHeader>
-            <div className="py-4">
-              <p className="text-gray-500">
-                Formulaire à implémenter pour éditer/ajouter un invité
-              </p>
-              <div className="flex justify-end mt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowEditDialog(false)}
-                  className="mr-2"
-                >
-                  Annuler
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() =>
-                    handleSaveGuest(
-                      currentGuest || {
-                        id: "",
-                        nom: "Nouveau",
-                        prenom: "Invité",
-                        email: "nouveau@exemple.com",
-                        telephone: "",
-                        ceremonie: false,
-                        vin: false,
-                        repas: false,
-                        brunch: false,
-                        conjoint: false,
-                        enfants: 0,
-                        table: "",
-                        notes: "",
-                      }
-                    )
-                  }
-                >
-                  Enregistrer
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
+          <GuestFormDialog 
+            guest={currentGuest}
+            onSave={handleSaveGuest}
+            onCancel={() => setShowEditDialog(false)}
+          />
         </Dialog>
       </div>
     </DashboardLayout>

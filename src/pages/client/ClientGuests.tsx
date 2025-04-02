@@ -5,13 +5,46 @@ import DashboardLayout from "@/components/DashboardLayout";
 import GuestInvitationManager from "@/components/guests/GuestInvitationManager";
 import GuestStatistics from "@/components/guests/GuestStatistics";
 import GuestInvitationActions from "@/components/guests/GuestInvitationActions";
+import GuestInvitationSender from "@/components/guests/GuestInvitationSender";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog } from "@/components/ui/dialog";
 import { mockGuestsData } from "@/data/mockGuestsData";
+import GuestFormDialog from "@/components/admin/guests/GuestFormDialog";
+import { useToast } from "@/hooks/use-toast";
+import { Guest } from "@/types/floorPlanTypes";
 
 const ClientGuests = () => {
   const [activeTab, setActiveTab] = useState("invites");
+  const [showGuestForm, setShowGuestForm] = useState(false);
+  const [currentGuest, setCurrentGuest] = useState<Guest | null>(null);
+  const [guests, setGuests] = useState(mockGuestsData);
+  const { toast } = useToast();
+  
+  const handleAddGuest = () => {
+    setCurrentGuest(null);
+    setShowGuestForm(true);
+  };
+  
+  const handleSaveGuest = (guest: Guest) => {
+    if (currentGuest) {
+      // Update existing guest
+      setGuests(guests.map(g => g.id === guest.id ? guest : g));
+      toast({
+        title: "Invité mis à jour",
+        description: "L'invité a été mis à jour avec succès"
+      });
+    } else {
+      // Add new guest
+      setGuests([...guests, {...guest, id: Date.now().toString()}]);
+      toast({
+        title: "Invité ajouté",
+        description: "L'invité a été ajouté avec succès"
+      });
+    }
+    setShowGuestForm(false);
+  };
 
   return (
     <DashboardLayout type="client">
@@ -23,13 +56,15 @@ const ClientGuests = () => {
               Invitez vos proches et suivez leurs réponses
             </p>
           </div>
-          <Button className="gap-2 sm:self-start">
+          <Button className="gap-2 sm:self-start" onClick={handleAddGuest}>
             <PlusCircle size={16} />
             Ajouter un invité
           </Button>
         </div>
         
-        <GuestStatistics guests={mockGuestsData} />
+        <GuestStatistics guests={guests} />
+        
+        <GuestInvitationSender guests={guests} />
         
         <GuestInvitationActions />
         
@@ -74,6 +109,14 @@ const ClientGuests = () => {
             </Card>
           </TabsContent>
         </Tabs>
+        
+        <Dialog open={showGuestForm} onOpenChange={setShowGuestForm}>
+          <GuestFormDialog
+            guest={currentGuest}
+            onSave={handleSaveGuest}
+            onCancel={() => setShowGuestForm(false)}
+          />
+        </Dialog>
       </div>
     </DashboardLayout>
   );

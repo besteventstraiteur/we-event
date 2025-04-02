@@ -1,13 +1,14 @@
 
 import React, { useState } from 'react';
-import { CheckCircle, Info, AlertCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import MenuOptionCard from './MenuOptionCard';
 import { MenuOption } from '@/hooks/useGuestMenu';
+
+import MenuConfirmation from './MenuConfirmation';
+import MainMenuOptions from './MainMenuOptions';
+import AdditionalOptions from './AdditionalOptions';
+import AllergiesSection from './AllergiesSection';
 
 const GuestMenuSelection: React.FC = () => {
   const [selectedMenu, setSelectedMenu] = useState<string>('');
@@ -22,14 +23,6 @@ const GuestMenuSelection: React.FC = () => {
     { id: 'vegetarien', name: 'Menu Végétarien', description: 'Options sans viande, à base de légumes frais et protéines végétales.', type: 'main' },
     { id: 'allergies', name: 'Menu Allergies', description: 'Adapté pour les personnes ayant des allergies alimentaires courantes.', type: 'main' },
     { id: 'enfant', name: 'Menu Enfant', description: 'Spécialement conçu pour les plus jeunes invités.', type: 'main' },
-  ];
-
-  const commonAllergies = [
-    { id: 'gluten', label: 'Gluten' },
-    { id: 'arachides', label: 'Arachides' },
-    { id: 'lactose', label: 'Lactose' },
-    { id: 'fruits_mer', label: 'Fruits de mer' },
-    { id: 'oeufs', label: 'Œufs' },
   ];
 
   const handleMenuSelect = (menuId: string) => {
@@ -96,119 +89,33 @@ const GuestMenuSelection: React.FC = () => {
 
   return (
     <div className="space-y-8 menu-selection-container">
-      {isConfirmed && (
-        <Card className="bg-green-50 border-green-200">
-          <div className="p-4 flex items-start gap-3">
-            <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
-            <div>
-              <h3 className="font-medium text-green-800">Choix confirmé</h3>
-              <p className="text-green-700 text-sm mt-1">
-                Vous avez sélectionné le {menuChoices.find(m => m.id === selectedMenu)?.name}
-                {selectedOption && (
-                  <> avec l'option {selectedOption === 'starter' ? 'entrée' : 'dessert'}</>
-                )}
-                {allergies.length > 0 && (
-                  <> en tenant compte de vos allergies</>
-                )}
-              </p>
-            </div>
-          </div>
-        </Card>
-      )}
+      <MenuConfirmation 
+        isConfirmed={isConfirmed}
+        selectedMenu={selectedMenu}
+        selectedOption={selectedOption}
+        allergies={allergies}
+        menuChoices={menuChoices}
+      />
 
-      <div className="space-y-6">
-        <h2 className="text-xl font-semibold text-gray-800">Sélectionnez votre menu</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {menuChoices.map((menu) => (
-            <MenuOptionCard
-              key={menu.id}
-              option={menu}
-              isSelected={selectedMenu === menu.id}
-              onSelect={handleMenuSelect}
-              type={menu.type}
-            />
-          ))}
-        </div>
-      </div>
+      <MainMenuOptions 
+        menuChoices={menuChoices}
+        selectedMenu={selectedMenu}
+        onMenuSelect={handleMenuSelect}
+      />
 
-      {selectedMenu && (
-        <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-gray-800">Options supplémentaires</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <MenuOptionCard
-              option={{
-                id: "starter",
-                name: "Option entrée",
-                description: "Ajouter une entrée à votre menu",
-                type: "starter"
-              } as MenuOption}
-              isSelected={selectedOption === 'starter'}
-              onSelect={handleOptionSelect}
-              type="starter"
-            />
-            <MenuOptionCard
-              option={{
-                id: "dessert",
-                name: "Option dessert",
-                description: "Ajouter un dessert spécial à votre menu",
-                type: "dessert"
-              } as MenuOption}
-              isSelected={selectedOption === 'dessert'}
-              onSelect={handleOptionSelect}
-              type="dessert"
-            />
-          </div>
-        </div>
-      )}
+      <AdditionalOptions 
+        selectedMenu={selectedMenu}
+        selectedOption={selectedOption}
+        onOptionSelect={handleOptionSelect}
+      />
 
-      {selectedMenu && (
-        <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-gray-800">Allergies et restrictions alimentaires</h2>
-          
-          <Card className="border-amber-200 bg-amber-50">
-            <div className="p-4 flex items-start gap-3">
-              <Info className="h-5 w-5 text-amber-500 mt-0.5" />
-              <div>
-                <h3 className="font-medium text-amber-800">Information importante</h3>
-                <p className="text-amber-700 text-sm mt-1">
-                  Indiquez toutes vos allergies ou restrictions alimentaires pour que notre chef puisse adapter votre menu.
-                </p>
-              </div>
-            </div>
-          </Card>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {commonAllergies.map((allergy) => (
-              <div key={allergy.id} className="flex items-center space-x-2">
-                <Checkbox 
-                  id={`allergy-${allergy.id}`} 
-                  checked={allergies.includes(allergy.id)}
-                  onCheckedChange={() => handleAllergyToggle(allergy.id)}
-                />
-                <label
-                  htmlFor={`allergy-${allergy.id}`}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {allergy.label}
-                </label>
-              </div>
-            ))}
-          </div>
-          
-          <div className="space-y-2">
-            <label htmlFor="otherAllergy" className="text-sm font-medium">
-              Autres allergies ou restrictions (optionnel)
-            </label>
-            <Textarea
-              id="otherAllergy"
-              placeholder="Précisez vos autres allergies ou restrictions alimentaires..."
-              value={otherAllergy}
-              onChange={(e) => setOtherAllergy(e.target.value)}
-              className="min-h-[80px]"
-            />
-          </div>
-        </div>
-      )}
+      <AllergiesSection 
+        selectedMenu={selectedMenu}
+        allergies={allergies}
+        otherAllergy={otherAllergy}
+        onAllergyToggle={handleAllergyToggle}
+        onOtherAllergyChange={setOtherAllergy}
+      />
 
       <div className="flex justify-end">
         <Button 
