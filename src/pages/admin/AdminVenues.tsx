@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Plus } from 'lucide-react';
@@ -175,14 +175,16 @@ const AdminVenues: React.FC = () => {
             selectedVenue={selectedVenue}
             onSave={handleSaveVenue}
           />
-          <DialogTrigger asChild>
-            <GoldButton onClick={() => {
-              setSelectedVenue(null);
-              setIsAddDialogOpen(true);
-            }}>
-              <Plus className="mr-2 h-4 w-4" /> Ajouter une salle
-            </GoldButton>
-          </DialogTrigger>
+          <Dialog>
+            <DialogTrigger asChild>
+              <GoldButton onClick={() => {
+                setSelectedVenue(null);
+                setIsAddDialogOpen(true);
+              }}>
+                <Plus className="mr-2 h-4 w-4" /> Ajouter une salle
+              </GoldButton>
+            </DialogTrigger>
+          </Dialog>
         </div>
 
         <Card className="bg-vip-gray-900 border-vip-gray-800">
