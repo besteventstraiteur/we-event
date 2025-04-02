@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { BarChart, Users, User, Map, Headphones, Video, Share2 } from "lucide-react";
+import { BarChart, Users, User, Map, Headphones, Video, Share2, Download } from "lucide-react";
 
 const AdminNavigation = () => {
   const location = useLocation();
@@ -57,6 +57,13 @@ const AdminNavigation = () => {
         active={location.pathname === "/admin/talkshows"}
       >
         Talkshows
+      </NavItem>
+      <NavItem
+        href="/admin/backup"
+        icon={<Download size={18} />}
+        active={location.pathname === "/admin/backup"}
+      >
+        Sauvegarde
       </NavItem>
     </>
   );

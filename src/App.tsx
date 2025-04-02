@@ -30,6 +30,7 @@ import AdminPodcasts from "./pages/admin/AdminPodcasts";
 import AdminTalkshows from "./pages/admin/AdminTalkshows";
 import AdminVenues from "./pages/admin/AdminVenues";
 import AdminRecommendations from "./pages/admin/AdminRecommendations";
+import AdminBackup from "./pages/admin/AdminBackup";
 import NotFound from "./pages/NotFound";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
@@ -80,6 +81,7 @@ const App = () => (
             <Route path="/admin/talkshows" element={<AdminTalkshows />} />
             <Route path="/admin/venues" element={<AdminVenues />} />
             <Route path="/admin/recommendations" element={<AdminRecommendations />} />
+            <Route path="/admin/backup" element={<AdminBackup />} />
             
             {/* Page 404 */}
             <Route path="*" element={<NotFound />} />
