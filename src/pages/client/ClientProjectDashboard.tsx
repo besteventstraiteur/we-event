@@ -63,7 +63,10 @@ const ClientProjectDashboard = () => {
           </TabsContent>
           
           <TabsContent value="timeline">
-            <TaskTimeline tasks={tasks} />
+            <TaskTimeline 
+              tasks={tasks} 
+              categories={categories} 
+            />
           </TabsContent>
         </Tabs>
       </div>
