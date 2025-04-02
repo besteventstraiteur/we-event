@@ -60,6 +60,10 @@ const FloorPlanSettings: React.FC<FloorPlanSettingsProps> = ({
     setIsDimensionsChanged(false);
   };
 
+  // Conversion des centimètres en mètres pour l'affichage
+  const widthInMeters = (roomWidth / 100).toFixed(2);
+  const heightInMeters = (roomHeight / 100).toFixed(2);
+
   return (
     <div className="space-y-4 bg-gray-50 p-4 rounded-md border border-gray-100 mb-4">
       <div className="flex flex-col md:flex-row gap-4">
@@ -92,7 +96,7 @@ const FloorPlanSettings: React.FC<FloorPlanSettingsProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="room-width">Largeur (cm): {roomWidth}</Label>
+            <Label htmlFor="room-width">Largeur (m): {widthInMeters}</Label>
           </div>
           <div className="flex gap-4 items-center">
             <Slider
@@ -118,7 +122,7 @@ const FloorPlanSettings: React.FC<FloorPlanSettingsProps> = ({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="room-height">Longueur (cm): {roomHeight}</Label>
+            <Label htmlFor="room-height">Longueur (m): {heightInMeters}</Label>
           </div>
           <div className="flex gap-4 items-center">
             <Slider
