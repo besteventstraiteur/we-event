@@ -12,7 +12,7 @@ import GoldButton from "@/components/GoldButton";
 const AdminPartners = () => {
   const [searchTerm, setSearchTerm] = useState("");
   
-  // Exemple de données partenaires
+  // Exemple de données prestataires
   const activePartners = [
     { id: 1, name: "Domaine du Château", category: "Domaine", date: "15/04/2023", status: "active", views: 128, contacts: 15, revenue: "890 €" },
     { id: 2, name: "Fleurs Élégance", category: "Fleuriste", date: "03/02/2023", status: "active", views: 87, contacts: 9, revenue: "890 €" },
@@ -39,8 +39,8 @@ const AdminPartners = () => {
     <DashboardLayout type="admin">
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Gestion des Partenaires</h1>
-          <p className="text-vip-gray-400">Gérez les partenaires inscrits, validez les nouveaux et suivez leur activité</p>
+          <h1 className="text-3xl font-bold">Gestion des Prestataires</h1>
+          <p className="text-vip-gray-400">Gérez les prestataires inscrits, validez les nouveaux et suivez leur activité</p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
@@ -48,7 +48,7 @@ const AdminPartners = () => {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-vip-gray-400" />
             <Input
               type="search"
-              placeholder="Rechercher un partenaire..."
+              placeholder="Rechercher un prestataire..."
               className="pl-9 bg-vip-gray-900 border-vip-gray-800 text-vip-white"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -65,7 +65,7 @@ const AdminPartners = () => {
         <Tabs defaultValue="active" className="w-full">
           <TabsList className="bg-vip-gray-900 border border-vip-gray-800 mb-4">
             <TabsTrigger value="active" className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black">
-              Partenaires actifs ({activePartners.length})
+              Prestataires actifs ({activePartners.length})
             </TabsTrigger>
             <TabsTrigger value="pending" className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black">
               En attente ({pendingPartners.length})
@@ -75,8 +75,8 @@ const AdminPartners = () => {
           <TabsContent value="active" className="mt-0">
             <Card className="bg-vip-gray-900 border-vip-gray-800">
               <CardHeader>
-                <CardTitle>Partenaires actifs</CardTitle>
-                <CardDescription>Liste des partenaires ayant un abonnement actif</CardDescription>
+                <CardTitle>Prestataires actifs</CardTitle>
+                <CardDescription>Liste des prestataires ayant un abonnement actif</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -141,8 +141,8 @@ const AdminPartners = () => {
           <TabsContent value="pending" className="mt-0">
             <Card className="bg-vip-gray-900 border-vip-gray-800">
               <CardHeader>
-                <CardTitle>Partenaires en attente</CardTitle>
-                <CardDescription>Liste des partenaires en attente de validation</CardDescription>
+                <CardTitle>Prestataires en attente</CardTitle>
+                <CardDescription>Liste des prestataires en attente de validation</CardDescription>
               </CardHeader>
               <CardContent>
                 {filterPartners(pendingPartners).map((partner) => (
@@ -167,7 +167,7 @@ const AdminPartners = () => {
                   </div>
                 ))}
                 {filterPartners(pendingPartners).length === 0 && (
-                  <p className="text-center py-8 text-vip-gray-400">Aucun partenaire en attente</p>
+                  <p className="text-center py-8 text-vip-gray-400">Aucun prestataire en attente</p>
                 )}
               </CardContent>
             </Card>

@@ -42,7 +42,7 @@ const AdminVenuesList: React.FC<AdminVenuesListProps> = ({
         <TableHeader>
           <TableRow className="border-b-vip-gray-800 hover:bg-transparent">
             <TableHead className="text-vip-gray-400">Nom</TableHead>
-            <TableHead className="text-vip-gray-400">Partenaire</TableHead>
+            <TableHead className="text-vip-gray-400">Prestataire</TableHead>
             <TableHead className="text-vip-gray-400">Emplacement</TableHead>
             <TableHead className="text-vip-gray-400">Capacité</TableHead>
             <TableHead className="text-vip-gray-400">Plan</TableHead>

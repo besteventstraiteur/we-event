@@ -8,7 +8,7 @@ import GoldButton from "@/components/GoldButton";
 import Logo from "@/components/Logo";
 import { Search } from "lucide-react";
 
-// Données fictives de partenaires
+// Données fictives de prestataires
 const partnerCategories = [
   { id: "domaine", name: "Domaines" },
   { id: "dj", name: "DJs" },
@@ -19,7 +19,7 @@ const partnerCategories = [
   { id: "other", name: "Autres" },
 ];
 
-// Liste des partenaires
+// Liste des prestataires
 const allPartners = [
   { id: 1, name: "Château des Merveilles", category: "domaine", description: "Un domaine d'exception niché dans un parc de 5 hectares avec une vue imprenable sur la vallée. Capacité de 200 personnes assises." },
   { id: 2, name: "Manoir des Roses", category: "domaine", description: "Manoir historique du 18ème siècle avec ses jardins à la française, idéal pour vos séances photos et cérémonies en extérieur." },
@@ -39,7 +39,7 @@ const PartnersPage = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Filtrer les partenaires en fonction de la catégorie active et de la recherche
+  // Filtrer les prestataires en fonction de la catégorie active et de la recherche
   const filteredPartners = allPartners.filter((partner) => {
     const matchesCategory = activeCategory === "all" || partner.category === activeCategory;
     const matchesSearch = partner.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -72,7 +72,7 @@ const PartnersPage = () => {
       <main className="flex-1 container py-8">
         <div className="space-y-6">
           <div>
-            <h1 className="text-3xl font-bold">Nos Partenaires</h1>
+            <h1 className="text-3xl font-bold">Nos Prestataires</h1>
             <p className="text-vip-gray-600">
               Découvrez notre réseau de prestataires de qualité pour vos événements exceptionnels
             </p>
@@ -83,7 +83,7 @@ const PartnersPage = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-vip-gray-500" size={18} />
               <Input
                 type="search"
-                placeholder="Rechercher un partenaire..."
+                placeholder="Rechercher un prestataire..."
                 className="pl-10 border-vip-gray-300"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -93,7 +93,7 @@ const PartnersPage = () => {
 
           <div className="bg-vip-gray-100 p-4 rounded-lg">
             <p className="text-vip-gray-800 italic text-sm">
-              <span className="font-semibold text-vip-gold">Avantage Club VIP :</span> Devenez membre pour accéder à des réductions exclusives auprès de tous nos partenaires.
+              <span className="font-semibold text-vip-gold">Avantage Club VIP :</span> Devenez membre pour accéder à des réductions exclusives auprès de tous nos prestataires.
               <Link to="/register-client" className="ml-2 text-vip-gold hover:underline">
                 S'inscrire
               </Link>
@@ -148,7 +148,7 @@ const PartnersPage = () => {
                   ))
                 ) : (
                   <div className="col-span-3 text-center py-12">
-                    <p className="text-vip-gray-500">Aucun partenaire ne correspond à votre recherche.</p>
+                    <p className="text-vip-gray-500">Aucun prestataire ne correspond à votre recherche.</p>
                   </div>
                 )}
               </div>
@@ -159,7 +159,7 @@ const PartnersPage = () => {
         <div className="mt-16 bg-vip-gray-100 p-6 rounded-lg">
           <h2 className="text-2xl font-bold text-center mb-4">Devenez membre du Club VIP</h2>
           <p className="text-center text-vip-gray-700 mb-6">
-            Accédez à des avantages exclusifs et des réductions chez tous nos partenaires.
+            Accédez à des avantages exclusifs et des réductions chez tous nos prestataires.
           </p>
           <div className="flex justify-center">
             <Link to="/register-client">

@@ -83,7 +83,7 @@ const RegisterPartnerPage = () => {
       setTimeout(() => {
         toast({
           title: "Inscription réussie!",
-          description: "Votre compte partenaire VIP a été créé avec succès.",
+          description: "Votre compte prestataire VIP a été créé avec succès.",
         });
         navigate("/partner/dashboard");
       }, 2000);
@@ -98,7 +98,7 @@ const RegisterPartnerPage = () => {
     }
   };
 
-  // Catégories de partenaires
+  // Catégories de prestataires
   const categories = [
     { value: "domaine", label: "Domaine" },
     { value: "dj", label: "DJ" },
@@ -111,8 +111,8 @@ const RegisterPartnerPage = () => {
 
   return (
     <AuthLayout
-      title="Inscription Partenaire VIP"
-      subtitle="Rejoignez notre réseau de partenaires premium"
+      title="Inscription Prestataire VIP"
+      subtitle="Rejoignez notre réseau de prestataires premium"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         {step === 1 ? (

@@ -42,7 +42,7 @@ const formSchema = z.object({
   eventDate: z.date({ required_error: "Une date est requise" }),
   budget: z.string().min(1, { message: "Le budget est requis" }),
   details: z.string().min(10, { message: "Plus de détails sont requis" }),
-  partners: z.array(z.string()).min(1, { message: "Sélectionnez au moins un partenaire" }),
+  partners: z.array(z.string()).min(1, { message: "Sélectionnez au moins un prestataire" }),
 });
 
 const categories = [
@@ -174,7 +174,7 @@ const RecommendationForm = () => {
       
       toast({
         title: "Recommandation envoyée",
-        description: `La recommandation a été envoyée à ${values.partners.length} partenaire(s)`,
+        description: `La recommandation a été envoyée à ${values.partners.length} prestataire(s)`,
       });
       
       // Réinitialiser le formulaire
@@ -316,7 +316,7 @@ const RecommendationForm = () => {
         </div>
         
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Partenaires</h2>
+          <h2 className="text-lg font-semibold">Prestataires</h2>
           
           <FormField
             control={form.control}
@@ -325,7 +325,7 @@ const RecommendationForm = () => {
               <FormItem className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <FormLabel>Catégorie de partenaires</FormLabel>
+                    <FormLabel>Catégorie de prestataires</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
@@ -370,7 +370,7 @@ const RecommendationForm = () => {
                   {selectedCategory && (
                     <div>
                       <div className="flex items-center justify-between">
-                        <FormLabel>Partenaires</FormLabel>
+                        <FormLabel>Prestataires</FormLabel>
                         <Button
                           type="button"
                           variant="outline"
@@ -404,11 +404,11 @@ const RecommendationForm = () => {
                 </div>
                 
                 <div>
-                  <div className="text-sm font-medium mb-2">Partenaires sélectionnés</div>
+                  <div className="text-sm font-medium mb-2">Prestataires sélectionnés</div>
                   <div className="flex flex-wrap gap-2 min-h-[40px] p-2 border rounded-md">
                     {selectedPartners.length === 0 ? (
                       <div className="text-sm text-gray-500 flex items-center">
-                        <UserPlus size={14} className="mr-1" /> Sélectionnez des partenaires
+                        <UserPlus size={14} className="mr-1" /> Sélectionnez des prestataires
                       </div>
                     ) : (
                       selectedPartners.map(partnerId => (

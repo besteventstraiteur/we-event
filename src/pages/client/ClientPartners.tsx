@@ -11,7 +11,7 @@ import { Search } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Données fictives de partenaires
+// Données fictives de prestataires
 const partnerCategories = [
   { id: "domaine", name: "Domaines" },
   { id: "dj", name: "DJs" },
@@ -22,7 +22,7 @@ const partnerCategories = [
   { id: "other", name: "Autres" },
 ];
 
-// Liste des partenaires
+// Liste des prestataires
 const allPartners = [
   { id: 1, name: "Château des Merveilles", category: "domaine", discount: "15%", description: "Un domaine d'exception niché dans un parc de 5 hectares avec une vue imprenable sur la vallée. Capacité de 200 personnes assises." },
   { id: 2, name: "Manoir des Roses", category: "domaine", discount: "10%", description: "Manoir historique du 18ème siècle avec ses jardins à la française, idéal pour vos séances photos et cérémonies en extérieur." },
@@ -47,7 +47,7 @@ const ClientPartners = () => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
-  // Filtrer les partenaires en fonction de la catégorie active et de la recherche
+  // Filtrer les prestataires en fonction de la catégorie active et de la recherche
   const filteredPartners = allPartners.filter((partner) => {
     const matchesCategory = activeCategory === "all" || partner.category === activeCategory;
     const matchesSearch = partner.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -82,15 +82,15 @@ const ClientPartners = () => {
     <DashboardLayout type="client">
       <div className="space-y-4">
         <div>
-          <h1 className={`font-bold ${isMobile ? 'text-xl' : 'text-3xl'}`}>Nos Partenaires VIP</h1>
+          <h1 className={`font-bold ${isMobile ? 'text-xl' : 'text-3xl'}`}>Nos Prestataires VIP</h1>
           <p className="text-vip-gray-400 text-sm sm:text-base">
-            Découvrez nos partenaires exclusifs et bénéficiez de tarifs préférentiels
+            Découvrez nos prestataires exclusifs et bénéficiez de tarifs préférentiels
           </p>
         </div>
 
         <div className="bg-vip-gold/10 border border-vip-gold/30 rounded-md p-3">
           <p className="text-vip-gold font-medium text-sm">
-            En tant que membre VIP, vous bénéficiez des réductions exclusives indiquées pour chaque partenaire.
+            En tant que membre VIP, vous bénéficiez des réductions exclusives indiquées pour chaque prestataire.
           </p>
         </div>
 
@@ -99,7 +99,7 @@ const ClientPartners = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-vip-gray-500" size={16} />
             <Input
               type="search"
-              placeholder="Rechercher un partenaire..."
+              placeholder="Rechercher un prestataire..."
               className="pl-9 bg-vip-gray-900 border-vip-gray-800 h-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -162,7 +162,7 @@ const ClientPartners = () => {
                 ))
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-vip-gray-400">Aucun partenaire ne correspond à votre recherche.</p>
+                  <p className="text-vip-gray-400">Aucun prestataire ne correspond à votre recherche.</p>
                 </div>
               )}
             </div>
@@ -175,7 +175,7 @@ const ClientPartners = () => {
           <DialogHeader>
             <DialogTitle className="text-base">Contacter {selectedPartner?.name}</DialogTitle>
             <DialogDescription className="text-xs">
-              Envoyez votre demande directement au partenaire. Il recevra vos coordonnées et votre message.
+              Envoyez votre demande directement au prestataire. Il recevra vos coordonnées et votre message.
             </DialogDescription>
           </DialogHeader>
 

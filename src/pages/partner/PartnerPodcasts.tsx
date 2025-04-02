@@ -1,4 +1,3 @@
-
 import React from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -148,27 +147,29 @@ const PartnerPodcasts = () => {
         </TabsContent>
         
         <TabsContent value="new">
-          <NewPodcastForm
-            newPodcast={newPodcast}
-            audioFileName={audioFileName}
-            imageFileName={imageFileName}
-            isLoading={isLoading}
-            error={formError}
-            onSubmit={handleSubmit}
-            onChange={handleChange}
-            onSelectChange={handleSelectChange}
-            onAudioFileChange={handleAudioFileChange}
-            onImageFileChange={handleImageFileChange}
-          />
+          <div className="bg-vip-gray-900 rounded-lg border border-vip-gray-800 p-4 sm:p-6">
+            <h2 className="text-xl font-bold mb-4">Créer un nouveau podcast</h2>
+            <NewPodcastForm
+              isLoading={isLoading}
+              error={formError}
+              newPodcast={newPodcast}
+              audioFileName={audioFileName}
+              imageFileName={imageFileName}
+              handleChange={handleChange}
+              handleSelectChange={handleSelectChange}
+              handleAudioFileChange={handleAudioFileChange}
+              handleImageFileChange={handleImageFileChange}
+              handleSubmit={handleSubmit}
+            />
+          </div>
         </TabsContent>
       </Tabs>
       
-      {/* Lecteur de podcast fixe en bas de page (si un podcast est sélectionné) */}
       {currentPodcast && (
         <PodcastPlayer
           podcast={currentPodcast}
           isPlaying={isPlaying}
-          onTogglePlay={() => setIsPlaying(!isPlaying)}
+          onTogglePlay={togglePlay}
         />
       )}
     </DashboardLayout>

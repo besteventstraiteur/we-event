@@ -53,9 +53,9 @@ const VenuesList: React.FC<VenuesListProps> = ({ venues = [] }) => {
         <CardHeader>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
-              <CardTitle className="text-vip-white">Salles de réception partenaires</CardTitle>
+              <CardTitle className="text-vip-white">Salles de réception prestataires</CardTitle>
               <CardDescription className="text-vip-gray-400">
-                Explorez les plans des salles de nos partenaires
+                Explorez les plans des salles de nos prestataires
               </CardDescription>
             </div>
           </div>
@@ -145,7 +145,7 @@ const VenuesList: React.FC<VenuesListProps> = ({ venues = [] }) => {
           <DialogHeader>
             <DialogTitle>Plan de salle: {selectedVenue?.name}</DialogTitle>
             <DialogDescription className="text-vip-gray-400">
-              Capacité: {selectedVenue?.capacity} personnes | Partenaire: {selectedVenue?.partner}
+              Capacité: {selectedVenue?.capacity} personnes | Prestataire: {selectedVenue?.partner}
             </DialogDescription>
           </DialogHeader>
           

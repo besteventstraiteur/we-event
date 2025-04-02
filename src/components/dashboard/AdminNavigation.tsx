@@ -21,7 +21,7 @@ const AdminNavigation = () => {
         icon={<Users size={18} />}
         active={location.pathname === "/admin/partners"}
       >
-        Partenaires
+        Prestataires
       </NavItem>
       <NavItem
         href="/admin/clients"

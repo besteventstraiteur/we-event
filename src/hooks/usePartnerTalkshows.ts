@@ -11,7 +11,7 @@ import { Talkshow, NewTalkshow } from "@/models/talkshow";
 export type { Talkshow, NewTalkshow };
 
 /**
- * Hook personnalisé pour gérer les talkshows des partenaires
+ * Hook personnalisé pour gérer les talkshows des prestataires
  * 
  * Centralise les fonctionnalités liées aux talkshows:
  * - Liste et recherche de talkshows

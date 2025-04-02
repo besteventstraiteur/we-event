@@ -11,7 +11,7 @@ import { Podcast, NewPodcast } from "@/models/podcast";
 export type { Podcast, NewPodcast };
 
 /**
- * Custom hook for managing partner podcasts
+ * Custom hook for managing prestataire podcasts
  * 
  * Centralizes podcast-related functionality including:
  * - Listing and searching podcasts
