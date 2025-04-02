@@ -1,69 +1,53 @@
 
-import React from 'react';
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
-import { useToast } from '@/hooks/use-toast';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useEventTasks } from '@/hooks/useEventTasks';
-import TaskList from '@/components/event-tasks/TaskList';
-import TaskStats from '@/components/event-tasks/TaskStats';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import TaskCard from "@/components/client-todo/TaskCard";
+import TaskForm from "@/components/client-todo/TaskForm";
+import TaskFilter from "@/components/client-todo/TaskFilter";
+import TaskStats from "@/components/client-todo/TaskStats";
+import { useTaskList, Task } from "@/hooks/useTaskList";
+import { useToast } from "@/components/ui/use-toast";
 
-// Initial to-do list to get users started
-const initialTasks = [
+// Données initiales pour la démo
+const initialTasks: Task[] = [
   {
     id: "1",
-    title: "Choisir la date et le lieu",
-    description: "Définir la date et réserver le lieu de la cérémonie et de la réception",
-    assignedTo: "couple" as const,
-    dueDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+    title: "Réserver le lieu de réception",
+    description: "Contacter les 3 lieux présélectionnés et confirmer les disponibilités pour la date choisie",
+    dueDate: "2024-06-15",
+    priority: "high",
     completed: false,
-    priority: "high" as const,
-    category: "venue" as const
+    category: "venue",
+    assignedTo: "Sophie"
   },
   {
     id: "2",
-    title: "Sélectionner les témoins",
-    description: "Choisir les témoins et leur demander officiellement",
-    assignedTo: "couple" as const,
-    dueDate: new Date(new Date().setDate(new Date().getDate() + 14)),
+    title: "Sélectionner le menu avec le traiteur",
+    description: "Organiser une dégustation et finaliser les choix de menu pour la réception",
+    dueDate: "2024-07-20",
+    priority: "medium",
     completed: false,
-    priority: "medium" as const,
-    category: "ceremony" as const
+    category: "catering",
+    assignedTo: "Thomas"
   },
   {
     id: "3",
-    title: "Établir la liste d'invités préliminaire",
-    description: "Créer une première liste d'invités et collecter leurs adresses",
-    assignedTo: "both" as const,
-    dueDate: new Date(new Date().setDate(new Date().getDate() + 30)),
-    completed: false,
-    priority: "medium" as const,
-    category: "other" as const
-  },
-  {
-    id: "4",
-    title: "Organiser la dégustation de menu",
-    description: "Prendre rendez-vous avec le traiteur pour une dégustation",
-    assignedTo: "witness" as const,
-    dueDate: new Date(new Date().setDate(new Date().getDate() + 20)),
-    completed: false,
-    priority: "low" as const,
-    category: "catering" as const
-  },
-  {
-    id: "5",
-    title: "Choisir le thème et les couleurs du mariage",
-    description: "Définir le thème, les couleurs et le style général de la décoration",
-    assignedTo: "couple" as const,
-    dueDate: undefined,
+    title: "Envoyer les invitations",
+    description: "Finaliser la liste des invités et envoyer les invitations",
+    dueDate: "2024-05-10",
+    priority: "high",
     completed: true,
-    priority: "medium" as const,
-    category: "decoration" as const
-  }
+    category: "other",
+    assignedTo: "Sophie et Thomas"
+  },
 ];
 
-const ClientTodoList: React.FC = () => {
-  const isMobile = useIsMobile();
+const ClientTodoList = () => {
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+  const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined);
   const { toast } = useToast();
   
   const {
@@ -71,80 +55,123 @@ const ClientTodoList: React.FC = () => {
     addTask,
     updateTask,
     deleteTask,
-    toggleTaskCompletion
-  } = useEventTasks(initialTasks);
+    toggleTaskCompletion,
+    filter,
+    setFilter
+  } = useTaskList(initialTasks);
 
-  const handleAddTask = (task: Omit<typeof tasks[0], 'id' | 'completed'>) => {
-    const id = addTask(task);
-    toast({
-      title: "Tâche ajoutée",
-      description: "La nouvelle tâche a été ajoutée avec succès."
-    });
-    return id;
+  const handleAddNewTask = () => {
+    setCurrentTask(undefined);
+    setIsAddTaskOpen(true);
   };
 
-  const handleUpdateTask = (taskId: string, updates: Partial<Omit<typeof tasks[0], 'id'>>) => {
-    updateTask(taskId, updates);
-    toast({
-      title: "Tâche mise à jour",
-      description: "La tâche a été mise à jour avec succès."
-    });
+  const handleEditTask = (task: Task) => {
+    setCurrentTask(task);
+    setIsAddTaskOpen(true);
   };
 
-  const handleDeleteTask = (taskId: string) => {
-    deleteTask(taskId);
-    toast({
-      title: "Tâche supprimée",
-      description: "La tâche a été supprimée avec succès."
-    });
+  const handleSaveTask = (taskData: Omit<Task, "id" | "completed">) => {
+    if (currentTask) {
+      updateTask(currentTask.id, taskData);
+      toast({
+        title: "Tâche mise à jour",
+        description: `La tâche "${taskData.title}" a été mise à jour avec succès.`
+      });
+    } else {
+      addTask(taskData);
+      toast({
+        title: "Tâche ajoutée",
+        description: `La tâche "${taskData.title}" a été ajoutée avec succès.`
+      });
+    }
+    setIsAddTaskOpen(false);
   };
 
-  const handleToggleCompletion = (taskId: string) => {
-    toggleTaskCompletion(taskId);
-    
-    const task = tasks.find(t => t.id === taskId);
+  const handleDeleteTask = (id: string) => {
+    const taskToDelete = tasks.find(task => task.id === id);
+    if (taskToDelete) {
+      deleteTask(id);
+      toast({
+        title: "Tâche supprimée",
+        description: `La tâche "${taskToDelete.title}" a été supprimée.`,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleToggleTaskCompletion = (id: string) => {
+    toggleTaskCompletion(id);
+    const task = tasks.find(t => t.id === id);
     if (task) {
       toast({
-        title: task.completed ? "Tâche marquée comme à faire" : "Tâche terminée",
-        description: task.completed 
-          ? "La tâche a été marquée comme à faire." 
-          : "La tâche a été marquée comme terminée."
+        title: task.completed ? "Tâche marquée comme en cours" : "Tâche terminée",
+        description: `La tâche "${task.title}" a été ${task.completed ? "marquée comme en cours" : "marquée comme terminée"}.`
       });
     }
   };
 
   return (
     <DashboardLayout type="client">
-      <div className="space-y-4">
-        <div>
-          <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-xl' : 'text-3xl'}`}>
-            Checklist de préparation
-          </h1>
-          <p className="text-gray-500 text-sm sm:text-base">
-            Gérez toutes les tâches pour votre événement
-          </p>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold mb-1">Liste de tâches</h1>
+            <p className="text-gray-500">
+              Gérez les tâches de votre événement et suivez leur avancement
+            </p>
+          </div>
+          <Button 
+            onClick={handleAddNewTask}
+            className="bg-amber-500 hover:bg-amber-600"
+          >
+            <Plus size={16} className="mr-2" /> Ajouter une tâche
+          </Button>
         </div>
-
+        
         <TaskStats tasks={tasks} />
-
-        <Card className="bg-white border-gray-200">
-          <CardHeader>
-            <CardTitle>Liste des tâches</CardTitle>
-            <CardDescription>
-              Suivez et organisez les tâches pour vous et vos témoins
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <TaskList 
-              tasks={tasks}
-              onAddTask={handleAddTask}
-              onUpdateTask={handleUpdateTask}
-              onDeleteTask={handleDeleteTask}
-              onToggleCompletion={handleToggleCompletion}
-            />
-          </CardContent>
-        </Card>
+        
+        <TaskFilter filter={filter} onFilterChange={setFilter} />
+        
+        <div className="space-y-4">
+          {tasks.length > 0 ? (
+            tasks.map(task => (
+              <TaskCard 
+                key={task.id}
+                task={task}
+                onToggleCompletion={handleToggleTaskCompletion}
+                onEdit={handleEditTask}
+                onDelete={handleDeleteTask}
+              />
+            ))
+          ) : (
+            <div className="text-center py-10 bg-white rounded-lg border border-gray-200">
+              <p className="text-gray-500 mb-4">Aucune tâche à afficher.</p>
+              <Button 
+                onClick={handleAddNewTask}
+                variant="outline"
+                className="border-amber-200 text-amber-600 hover:bg-amber-50"
+              >
+                <Plus size={16} className="mr-2" /> Créer votre première tâche
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
+      
+      <Dialog open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
+        <DialogContent className="bg-white max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {currentTask ? "Modifier la tâche" : "Ajouter une nouvelle tâche"}
+            </DialogTitle>
+          </DialogHeader>
+          <TaskForm 
+            initialTask={currentTask} 
+            onSave={handleSaveTask} 
+            onCancel={() => setIsAddTaskOpen(false)} 
+          />
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 };
