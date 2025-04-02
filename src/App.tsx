@@ -24,7 +24,6 @@ import ClientTodoList from "./pages/client/ClientTodoList";
 import ClientMusicPlaylists from "./pages/client/ClientMusicPlaylists";
 import ClientGuests from "./pages/client/ClientGuests";
 import ClientBudget from "./pages/client/ClientBudget";
-import ProjectDashboard from "./pages/client/ProjectDashboard";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerRequests from "./pages/partner/PartnerRequests";
 import PartnerStats from "./pages/partner/PartnerStats";
@@ -89,7 +88,6 @@ const App = () => (
             <Route path="/client/music" element={<ClientMusicPlaylists />} />
             <Route path="/client/guests" element={<ClientGuests />} />
             <Route path="/client/budget" element={<ClientBudget />} />
-            <Route path="/client/project" element={<ProjectDashboard />} />
             
             {/* Dashboard Prestataire */}
             <Route path="/partner/dashboard" element={<PartnerDashboard />} />

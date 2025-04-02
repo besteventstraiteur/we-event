@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { User, Users, FileText, LayoutDashboard, Headphones, Video, Image, CheckSquare, UtensilsCrossed, ClipboardCheck, GalleryHorizontal, Music, PiggyBank, ListTodo } from "lucide-react";
+import { User, Users, FileText, LayoutDashboard, Headphones, Video, Image, CheckSquare, UtensilsCrossed, ClipboardCheck, GalleryHorizontal, Music, PiggyBank } from "lucide-react";
 
 const ClientNavigation = () => {
   const location = useLocation();
@@ -36,20 +36,6 @@ const ClientNavigation = () => {
         active={location.pathname === "/client/budget"}
       >
         Budget
-      </NavItem>
-      <NavItem
-        href="/client/todolist"
-        icon={<ClipboardCheck size={18} />}
-        active={location.pathname === "/client/todolist"}
-      >
-        Checklist
-      </NavItem>
-      <NavItem
-        href="/client/project"
-        icon={<ListTodo size={18} />}
-        active={location.pathname === "/client/project"}
-      >
-        Suivi de Projet
       </NavItem>
       <NavItem
         href="/client/photos"
@@ -92,6 +78,13 @@ const ClientNavigation = () => {
         active={location.pathname === "/client/menus"}
       >
         Gestion des Menus
+      </NavItem>
+      <NavItem
+        href="/client/todolist"
+        icon={<ClipboardCheck size={18} />}
+        active={location.pathname === "/client/todolist"}
+      >
+        Checklist
       </NavItem>
       <NavItem
         href="/client/podcasts"
