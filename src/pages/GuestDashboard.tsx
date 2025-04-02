@@ -47,7 +47,7 @@ const GuestDashboard = () => {
       <header className="bg-white border-b border-gray-200 py-4">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Logo size="small" />
+            <Logo />
             <div className="text-xl font-semibold text-gray-900">Espace Invité</div>
           </div>
           <div className="text-right">
