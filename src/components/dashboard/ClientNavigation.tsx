@@ -15,8 +15,7 @@ import {
   ClipboardCheck, 
   GalleryHorizontal, 
   Music, 
-  PiggyBank,
-  BarChart3
+  PiggyBank
 } from "lucide-react";
 
 const ClientNavigation = () => {
@@ -100,13 +99,6 @@ const ClientNavigation = () => {
         active={location.pathname === "/client/todolist"}
       >
         Checklist
-      </NavItem>
-      <NavItem
-        href="/client/project"
-        icon={<BarChart3 size={18} />}
-        active={location.pathname === "/client/project"}
-      >
-        Suivi du Projet
       </NavItem>
       <NavItem
         href="/client/podcasts"
