@@ -23,7 +23,7 @@ const Header = ({ type, isMobile = false, onMenuClick }: HeaderProps) => {
         )}
         
         <div className="flex justify-center flex-1 overflow-hidden">
-          <Logo />
+          <Logo asButton={true} />
         </div>
         
         <div className="flex items-center flex-shrink-0">
