@@ -6,6 +6,7 @@ import GoldButton from "@/components/GoldButton";
 import InputField from "@/components/InputField";
 import { useToast } from "@/components/ui/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import TwoFactorVerification from "@/components/auth/TwoFactorVerification";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ const LoginPage = () => {
   const [forgotPassword, setForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [resetSent, setResetSent] = useState(false);
+  const [showTwoFactor, setShowTwoFactor] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -43,28 +45,23 @@ const LoginPage = () => {
         localStorage.removeItem("weddingPlannerRememberMe");
       }
 
-      // Simulation de connexion réussie
+      // Simuler la vérification des identifiants
       setTimeout(() => {
-        // Déterminer où rediriger l'utilisateur (client ou partenaire)
-        const isClient = email.includes("client");
-        const isPartner = email.includes("partner");
-        const isAdmin = email.includes("admin");
-
-        if (isClient) {
-          navigate("/client/dashboard");
-        } else if (isPartner) {
-          navigate("/partner/dashboard");
-        } else if (isAdmin) {
-          navigate("/admin/dashboard");
+        // Pour les besoins de la démo, supposons que les comptes avec "secure" 
+        // dans l'email ont le 2FA activé
+        const requires2FA = email.includes("secure");
+        
+        if (requires2FA) {
+          setShowTwoFactor(true);
+          setIsLoading(false);
+          toast({
+            title: "Vérification supplémentaire requise",
+            description: "Veuillez entrer le code de sécurité envoyé à votre appareil.",
+          });
         } else {
-          // Par défaut, rediriger vers le dashboard client
-          navigate("/client/dashboard");
+          // Redirection normale
+          redirectAfterLogin();
         }
-
-        toast({
-          title: "Connexion réussie",
-          description: "Bienvenue sur votre espace VIP",
-        });
       }, 1000);
     } catch (error) {
       toast({
@@ -72,7 +69,6 @@ const LoginPage = () => {
         title: "Erreur de connexion",
         description: "Identifiants incorrects. Veuillez réessayer.",
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -100,6 +96,66 @@ const LoginPage = () => {
       setIsLoading(false);
     }
   };
+
+  const handleVerifyOTP = async (code: string): Promise<boolean> => {
+    // Pour la démonstration, considérons que 123456 est le code valide
+    const isValid = code === "123456";
+    
+    if (isValid) {
+      setTimeout(() => {
+        redirectAfterLogin();
+      }, 500);
+    }
+    
+    return isValid;
+  };
+
+  const redirectAfterLogin = () => {
+    // Déterminer où rediriger l'utilisateur (client, partenaire ou admin)
+    const isClient = email.includes("client");
+    const isPartner = email.includes("partner");
+    const isAdmin = email.includes("admin");
+
+    if (isClient) {
+      navigate("/client/dashboard");
+    } else if (isPartner) {
+      navigate("/partner/dashboard");
+    } else if (isAdmin) {
+      navigate("/admin/dashboard");
+    } else {
+      // Par défaut, rediriger vers le dashboard client
+      navigate("/client/dashboard");
+    }
+
+    toast({
+      title: "Connexion réussie",
+      description: "Bienvenue sur votre espace VIP",
+    });
+  };
+
+  // Si l'écran de 2FA est affiché
+  if (showTwoFactor) {
+    return (
+      <AuthLayout 
+        title="Vérification en deux étapes" 
+        subtitle="Un code de vérification a été envoyé à votre appareil"
+      >
+        <TwoFactorVerification 
+          onVerify={handleVerifyOTP}
+          onCancel={() => setShowTwoFactor(false)}
+          onResend={async () => {
+            toast({
+              title: "Code renvoyé",
+              description: "Un nouveau code a été envoyé à votre appareil.",
+            });
+          }}
+        />
+        <div className="text-center text-sm text-gray-500 mt-4">
+          <p>Pour les besoins de la démo, le code valide est: 123456</p>
+        </div>
+      </AuthLayout>
+    );
+  }
 
   return (
     <AuthLayout 

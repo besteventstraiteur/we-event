@@ -15,7 +15,8 @@ import {
   ClipboardCheck, 
   GalleryHorizontal, 
   Music, 
-  PiggyBank
+  PiggyBank,
+  Shield
 } from "lucide-react";
 
 const ClientNavigation = () => {
@@ -113,6 +114,13 @@ const ClientNavigation = () => {
         active={location.pathname === "/client/talkshows"}
       >
         Talkshows
+      </NavItem>
+      <NavItem
+        href="/client/security"
+        icon={<Shield size={18} />}
+        active={location.pathname === "/client/security"}
+      >
+        Sécurité
       </NavItem>
     </>
   );
