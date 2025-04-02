@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { User, Users, FileText, LayoutDashboard, Headphones, Video, Image, CheckSquare } from "lucide-react";
+import { User, Users, FileText, LayoutDashboard, Headphones, Video, Image, CheckSquare, UtensilsCrossed } from "lucide-react";
 
 const ClientNavigation = () => {
   const location = useLocation();
@@ -43,6 +43,13 @@ const ClientNavigation = () => {
         active={location.pathname === "/client/floorplans"}
       >
         Plan de salle & Invités
+      </NavItem>
+      <NavItem
+        href="/client/menus"
+        icon={<UtensilsCrossed size={18} />}
+        active={location.pathname === "/client/menus"}
+      >
+        Gestion des Menus
       </NavItem>
       <NavItem
         href="/client/podcasts"

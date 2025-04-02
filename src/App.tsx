@@ -18,6 +18,7 @@ import ClientPodcasts from "./pages/client/ClientPodcasts";
 import ClientTalkshows from "./pages/client/ClientTalkshows";
 import ClientFloorPlans from "./pages/client/ClientFloorPlans";
 import ClientPhotos from "./pages/client/ClientPhotos";
+import ClientMenus from "./pages/client/ClientMenus";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerRequests from "./pages/partner/PartnerRequests";
 import PartnerStats from "./pages/partner/PartnerStats";
@@ -33,6 +34,7 @@ import AdminTalkshows from "./pages/admin/AdminTalkshows";
 import AdminVenues from "./pages/admin/AdminVenues";
 import AdminRecommendations from "./pages/admin/AdminRecommendations";
 import AdminBackup from "./pages/admin/AdminBackup";
+import GuestMenuSelection from "./pages/GuestMenuSelection";
 import NotFound from "./pages/NotFound";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
@@ -58,6 +60,7 @@ const App = () => (
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/guest-menu-selection" element={<GuestMenuSelection />} />
             
             {/* Dashboard Client */}
             <Route path="/client/dashboard" element={<ClientDashboard />} />
@@ -67,6 +70,7 @@ const App = () => (
             <Route path="/client/talkshows" element={<ClientTalkshows />} />
             <Route path="/client/floorplans" element={<ClientFloorPlans />} />
             <Route path="/client/photos" element={<ClientPhotos />} />
+            <Route path="/client/menus" element={<ClientMenus />} />
             
             {/* Dashboard Prestataire */}
             <Route path="/partner/dashboard" element={<PartnerDashboard />} />

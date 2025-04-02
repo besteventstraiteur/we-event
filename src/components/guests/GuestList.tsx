@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import {
@@ -58,16 +57,27 @@ interface Guest {
   conjoint: boolean;
   enfants: number;
   table: string;
+  seat?: string;
   notes: string;
   menuChoice?: string;
+  menuOption?: string;
 }
 
 interface GuestListProps {
   initialGuests?: Guest[];
   onSave?: (guests: Guest[]) => void;
+  onGuestUpdate?: (guest: Guest) => void;
+  tables?: { id: string, name: string }[];
+  menuOptions?: { id: string, name: string, menuName: string }[];
 }
 
-const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => {
+const GuestList: React.FC<GuestListProps> = ({ 
+  initialGuests = [], 
+  onSave, 
+  onGuestUpdate,
+  tables = [],
+  menuOptions = []
+}) => {
   const [guests, setGuests] = useState<Guest[]>(initialGuests);
   const [searchTerm, setSearchTerm] = useState('');
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
@@ -89,36 +99,22 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
       conjoint: false,
       enfants: 0,
       table: '',
+      seat: '',
       notes: '',
-      menuChoice: 'standard'
+      menuChoice: 'standard',
+      menuOption: ''
     }
   });
 
-  // Reset form with new values when editing a guest
-  React.useEffect(() => {
-    if (editingGuest) {
-      form.reset(editingGuest);
-    } else {
-      form.reset({
-        id: '',
-        nom: '',
-        prenom: '',
-        email: '',
-        telephone: '',
-        ceremonie: true,
-        vin: true,
-        repas: true,
-        brunch: false,
-        conjoint: false,
-        enfants: 0,
-        table: '',
-        notes: '',
-        menuChoice: 'standard'
-      });
-    }
-  }, [editingGuest, form]);
+  const defaultMenuOptions = [
+    { id: "1-1", name: "Bœuf Wellington", menuName: "Menu Standard" },
+    { id: "1-2", name: "Saumon en croûte d'herbes", menuName: "Menu Standard" },
+    { id: "2-1", name: "Risotto aux champignons", menuName: "Menu Végétarien" },
+    { id: "2-2", name: "Wellington végétarien", menuName: "Menu Végétarien" },
+  ];
 
-  // Filter guests based on search term and active tab
+  const allMenuOptions = menuOptions.length > 0 ? menuOptions : defaultMenuOptions;
+
   const filteredGuests = guests.filter(guest => {
     const matchesSearch = 
       guest.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -142,7 +138,6 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
     }
   });
 
-  // Calculate statistics
   const stats = {
     total: guests.length,
     ceremonie: guests.filter(g => g.ceremonie).length,
@@ -157,6 +152,33 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
     }, 0)
   };
 
+  React.useEffect(() => {
+    if (editingGuest) {
+      form.reset({
+        ...editingGuest
+      });
+    } else {
+      form.reset({
+        id: '',
+        nom: '',
+        prenom: '',
+        email: '',
+        telephone: '',
+        ceremonie: true,
+        vin: true,
+        repas: true,
+        brunch: false,
+        conjoint: false,
+        enfants: 0,
+        table: '',
+        seat: '',
+        notes: '',
+        menuChoice: 'standard',
+        menuOption: ''
+      });
+    }
+  }, [editingGuest, form]);
+
   const addGuest = (data: Guest) => {
     const newGuest = {
       ...data,
@@ -164,14 +186,12 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
     };
     
     if (editingGuest) {
-      // Update existing guest
       setGuests(guests.map(g => g.id === newGuest.id ? newGuest : g));
       toast({
         title: "Invité mis à jour",
         description: `${newGuest.prenom} ${newGuest.nom} a été mis à jour avec succès`
       });
     } else {
-      // Add new guest
       setGuests([...guests, newGuest]);
       toast({
         title: "Invité ajouté",
@@ -183,7 +203,11 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
     setIsAddDialogOpen(false);
     
     if (onSave) {
-      onSave([...guests, newGuest]);
+      onSave(editingGuest ? [...guests.filter(g => g.id !== newGuest.id), newGuest] : [...guests, newGuest]);
+    }
+
+    if (onGuestUpdate) {
+      onGuestUpdate(newGuest);
     }
   };
 
@@ -203,7 +227,7 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
     const headers = [
       "Nom", "Prénom", "Email", "Téléphone", 
       "Cérémonie", "Vin d'honneur", "Repas", "Brunch", 
-      "Avec conjoint", "Nombre d'enfants", "Table", "Menu", "Notes"
+      "Avec conjoint", "Nombre d'enfants", "Table / Siège", "Menu", "Notes"
     ];
     
     const csvRows = [
@@ -219,8 +243,8 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
         guest.brunch ? 'Oui' : 'Non',
         guest.conjoint ? 'Oui' : 'Non',
         guest.enfants,
-        `"${guest.table}"`,
-        `"${guest.menuChoice || 'Standard'}"`,
+        `"${guest.table ? guest.table : "-"}"`,
+        `"${guest.menuOption ? allMenuOptions.find(o => o.id === guest.menuOption)?.name || "Option inconnue" : guest.menuChoice === 'standard' ? 'Standard' : guest.menuChoice === 'vegetarien' ? 'Végétarien' : guest.menuChoice === 'enfant' ? 'Enfant' : guest.menuChoice === 'allergies' ? 'Allergies' : 'Non choisi'}"`,
         `"${guest.notes.replace(/"/g, '""')}"`
       ].join(','))
     ];
@@ -453,12 +477,22 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Table assignée</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  className="bg-vip-gray-800 border-vip-gray-700 text-vip-white" 
-                                  {...field} 
-                                />
-                              </FormControl>
+                              <Select 
+                                onValueChange={field.onChange} 
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
+                                    <SelectValue placeholder="Choisir une table" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
+                                  <SelectItem value="">Non assigné</SelectItem>
+                                  {tables.map(table => (
+                                    <SelectItem key={table.id} value={table.name}>{table.name}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
                               <FormMessage />
                             </FormItem>
                           )}
@@ -466,24 +500,26 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
                         
                         <FormField
                           control={form.control}
-                          name="menuChoice"
+                          name="menuOption"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Menu</FormLabel>
+                              <FormLabel>Choix du plat</FormLabel>
                               <Select 
                                 onValueChange={field.onChange} 
                                 defaultValue={field.value}
                               >
                                 <FormControl>
                                   <SelectTrigger className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
-                                    <SelectValue placeholder="Sélectionnez un menu" />
+                                    <SelectValue placeholder="Sélectionner une option" />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
-                                  <SelectItem value="standard">Menu Standard</SelectItem>
-                                  <SelectItem value="vegetarien">Menu Végétarien</SelectItem>
-                                  <SelectItem value="enfant">Menu Enfant</SelectItem>
-                                  <SelectItem value="allergies">Allergies/Restrictions</SelectItem>
+                                  <SelectItem value="">Non choisi</SelectItem>
+                                  {allMenuOptions.map(option => (
+                                    <SelectItem key={option.id} value={option.id}>
+                                      {option.name} ({option.menuName})
+                                    </SelectItem>
+                                  ))}
                                 </SelectContent>
                               </Select>
                               <FormMessage />
@@ -638,7 +674,7 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
                   <TableHead className="text-vip-gray-400">Contact</TableHead>
                   <TableHead className="text-vip-gray-400">Événements</TableHead>
                   <TableHead className="text-vip-gray-400">Personnes</TableHead>
-                  <TableHead className="text-vip-gray-400">Table</TableHead>
+                  <TableHead className="text-vip-gray-400">Table / Siège</TableHead>
                   <TableHead className="text-vip-gray-400">Menu</TableHead>
                   <TableHead className="text-vip-gray-400 text-right">Actions</TableHead>
                 </TableRow>
@@ -686,14 +722,31 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
                         {guest.enfants > 0 && ` (+ ${guest.enfants} enfant${guest.enfants > 1 ? 's' : ''})`}
                       </TableCell>
                       <TableCell className="text-vip-white">
-                        {guest.table || "-"}
+                        {guest.table ? (
+                          <div>
+                            <span className="font-medium">{guest.table}</span>
+                            {guest.seat && <span className="ml-1 text-vip-gray-400">/ Siège {guest.seat}</span>}
+                          </div>
+                        ) : (
+                          "-"
+                        )}
                       </TableCell>
                       <TableCell className="text-vip-white">
-                        {guest.menuChoice === 'standard' && 'Standard'}
-                        {guest.menuChoice === 'vegetarien' && 'Végétarien'}
-                        {guest.menuChoice === 'enfant' && 'Enfant'}
-                        {guest.menuChoice === 'allergies' && 'Allergies'}
-                        {!guest.menuChoice && 'Standard'}
+                        {guest.menuOption ? (
+                          <div>
+                            <div className="font-medium">
+                              {allMenuOptions.find(o => o.id === guest.menuOption)?.name || "Option inconnue"}
+                            </div>
+                            <div className="text-xs text-vip-gray-400">
+                              {allMenuOptions.find(o => o.id === guest.menuOption)?.menuName || "Menu standard"}
+                            </div>
+                          </div>
+                        ) : (
+                          guest.menuChoice === 'standard' ? 'Standard' :
+                          guest.menuChoice === 'vegetarien' ? 'Végétarien' :
+                          guest.menuChoice === 'enfant' ? 'Enfant' :
+                          guest.menuChoice === 'allergies' ? 'Allergies' : 'Non choisi'
+                        )}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end space-x-2">
@@ -732,6 +785,292 @@ const GuestList: React.FC<GuestListProps> = ({ initialGuests = [], onSave }) => 
           </div>
         </CardContent>
       </Card>
+      
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="bg-vip-gray-900 border-vip-gray-800 text-vip-white">
+          <DialogHeader>
+            <DialogTitle>{editingGuest ? 'Modifier un invité' : 'Ajouter un invité'}</DialogTitle>
+            <DialogDescription className="text-vip-gray-400">
+              {editingGuest 
+                ? 'Modifiez les informations de votre invité' 
+                : 'Ajoutez un nouvel invité à votre liste'}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(addGuest)} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="nom"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nom</FormLabel>
+                      <FormControl>
+                        <Input 
+                          className="bg-vip-gray-800 border-vip-gray-700 text-vip-white" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="prenom"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prénom</FormLabel>
+                      <FormControl>
+                        <Input 
+                          className="bg-vip-gray-800 border-vip-gray-700 text-vip-white" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="email" 
+                          className="bg-vip-gray-800 border-vip-gray-700 text-vip-white" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="telephone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Téléphone</FormLabel>
+                      <FormControl>
+                        <Input 
+                          className="bg-vip-gray-800 border-vip-gray-700 text-vip-white" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <FormField
+                  control={form.control}
+                  name="ceremonie"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                      <FormControl>
+                        <Checkbox 
+                          checked={field.value} 
+                          onCheckedChange={field.onChange} 
+                        />
+                      </FormControl>
+                      <FormLabel>Cérémonie</FormLabel>
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="vin"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                      <FormControl>
+                        <Checkbox 
+                          checked={field.value} 
+                          onCheckedChange={field.onChange} 
+                        />
+                      </FormControl>
+                      <FormLabel>Vin d'honneur</FormLabel>
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="repas"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                      <FormControl>
+                        <Checkbox 
+                          checked={field.value} 
+                          onCheckedChange={field.onChange} 
+                        />
+                      </FormControl>
+                      <FormLabel>Repas</FormLabel>
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="brunch"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                      <FormControl>
+                        <Checkbox 
+                          checked={field.value} 
+                          onCheckedChange={field.onChange} 
+                        />
+                      </FormControl>
+                      <FormLabel>Brunch</FormLabel>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="conjoint"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                      <FormControl>
+                        <Checkbox 
+                          checked={field.value} 
+                          onCheckedChange={field.onChange} 
+                        />
+                      </FormControl>
+                      <FormLabel>Avec conjoint</FormLabel>
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="enfants"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nombre d'enfants</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          className="bg-vip-gray-800 border-vip-gray-700 text-vip-white" 
+                          {...field}
+                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="table"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Table assignée</FormLabel>
+                      <Select 
+                        onValueChange={field.onChange} 
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
+                            <SelectValue placeholder="Choisir une table" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
+                          <SelectItem value="">Non assigné</SelectItem>
+                          {tables.map(table => (
+                            <SelectItem key={table.id} value={table.name}>{table.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="menuOption"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Choix du plat</FormLabel>
+                      <Select 
+                        onValueChange={field.onChange} 
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
+                            <SelectValue placeholder="Sélectionner une option" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
+                          <SelectItem value="">Non choisi</SelectItem>
+                          {allMenuOptions.map(option => (
+                            <SelectItem key={option.id} value={option.id}>
+                              {option.name} ({option.menuName})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Notes</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        className="bg-vip-gray-800 border-vip-gray-700 text-vip-white min-h-[100px]" 
+                        placeholder="Allergies, préférences, restrictions alimentaires..."
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <DialogFooter>
+                <Button 
+                  type="button"
+                  variant="outline" 
+                  className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
+                  onClick={() => {
+                    setIsAddDialogOpen(false);
+                    setEditingGuest(null);
+                  }}
+                >
+                  Annuler
+                </Button>
+                <GoldButton type="submit">
+                  {editingGuest ? 'Mettre à jour' : 'Ajouter'}
+                </GoldButton>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
