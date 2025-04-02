@@ -112,9 +112,11 @@ const GuestDashboard = () => {
                 ) : (
                   <div className="bg-gray-50 p-4 rounded-lg mb-6 border">
                     <div className="flex items-center gap-2">
-                      <Badge variant={attending ? "success" : "destructive"}>
-                        {attending ? "Présent(e)" : "Absent(e)"}
-                      </Badge>
+                      {attending ? (
+                        <Badge variant="success">Présent(e)</Badge>
+                      ) : (
+                        <Badge variant="destructive">Absent(e)</Badge>
+                      )}
                       <p className="text-sm text-gray-600">
                         {attending 
                           ? "Vous avez confirmé votre présence à cet événement." 

@@ -9,11 +9,11 @@ interface PodcastStatusBadgeProps {
 const PodcastStatusBadge: React.FC<PodcastStatusBadgeProps> = ({ status }) => {
   switch(status) {
     case "approved":
-      return <Badge className="bg-green-500">Approuvé</Badge>;
+      return <Badge variant="success">Approuvé</Badge>;
     case "pending":
-      return <Badge className="bg-amber-500">En attente</Badge>;
+      return <Badge variant="secondary" className="bg-amber-500">En attente</Badge>;
     case "rejected":
-      return <Badge className="bg-red-500">Refusé</Badge>;
+      return <Badge variant="destructive">Refusé</Badge>;
     default:
       return <Badge>Inconnu</Badge>;
   }

@@ -9,11 +9,11 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   switch (status) {
     case 'accepted':
-      return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">Acceptée</Badge>;
+      return <Badge variant="success" className="bg-green-100 text-green-800 border-green-300">Acceptée</Badge>;
     case 'pending':
-      return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">En attente</Badge>;
+      return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-300">En attente</Badge>;
     case 'declined':
-      return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-300">Refusée</Badge>;
+      return <Badge variant="destructive" className="bg-red-100 text-red-800 border-red-300">Refusée</Badge>;
     default:
       return <Badge variant="outline">Inconnue</Badge>;
   }
