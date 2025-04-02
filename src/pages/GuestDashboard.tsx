@@ -1,16 +1,20 @@
 
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Calendar, Check, MapPin, MenuSquare, User } from "lucide-react";
+import { Calendar, Check, MapPin, MenuSquare, User, Gift, Heart } from "lucide-react";
 import Logo from "@/components/Logo";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import GuestBook from "@/components/guests/GuestBook";
+import GiftFund from "@/components/guests/GiftFund";
 
 const GuestDashboard = () => {
   const { eventId, guestId } = useParams();
   const [attending, setAttending] = useState<boolean | null>(null);
+  const [activeTab, setActiveTab] = useState("info");
 
   // Mock data - in a real app, this would be fetched from an API
   const eventDetails = {
@@ -48,96 +52,120 @@ const GuestDashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
-            <p className="text-center text-gray-700 mb-4">
-              {eventDetails.description}
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="flex items-center gap-3">
-                <Calendar className="h-5 w-5 text-vip-gold" />
-                <div>
-                  <div className="text-sm text-gray-500">Date</div>
-                  <div className="font-medium">{eventDetails.date}</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <MapPin className="h-5 w-5 text-vip-gold" />
-                <div>
-                  <div className="text-sm text-gray-500">Lieu</div>
-                  <div className="font-medium">{eventDetails.location}</div>
-                </div>
-              </div>
-            </div>
-
-            {attending === null ? (
-              <div className="bg-amber-50 p-4 rounded-lg mb-6">
-                <h3 className="font-medium text-vip-gold mb-2">Confirmer votre présence</h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  Merci de nous indiquer si vous serez présent à cet événement.
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-2">
+              <TabsList className="grid grid-cols-3 w-full">
+                <TabsTrigger value="info" className="flex items-center gap-1">
+                  <Calendar className="h-4 w-4" /> Informations
+                </TabsTrigger>
+                <TabsTrigger value="guestbook" className="flex items-center gap-1">
+                  <Heart className="h-4 w-4" /> Livre d'or
+                </TabsTrigger>
+                <TabsTrigger value="giftfund" className="flex items-center gap-1">
+                  <Gift className="h-4 w-4" /> Cagnotte
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="info" className="pt-4">
+                <p className="text-center text-gray-700 mb-4">
+                  {eventDetails.description}
                 </p>
-                <div className="flex gap-3">
-                  <Button 
-                    onClick={() => handleAttendance(true)}
-                    className="bg-vip-gold hover:bg-vip-gold/90 text-white"
-                  >
-                    Je serai présent
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    onClick={() => handleAttendance(false)}
-                    className="border-vip-gold text-vip-gold hover:bg-vip-gold/10"
-                  >
-                    Je ne pourrai pas venir
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div className="bg-gray-50 p-4 rounded-lg mb-6 border">
-                <div className="flex items-center gap-2">
-                  <Badge variant={attending ? "success" : "destructive"}>
-                    {attending ? "Présent(e)" : "Absent(e)"}
-                  </Badge>
-                  <p className="text-sm text-gray-600">
-                    {attending 
-                      ? "Vous avez confirmé votre présence à cet événement." 
-                      : "Vous avez indiqué que vous ne pourrez pas assister à cet événement."}
-                  </p>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setAttending(null)}
-                    className="ml-auto text-xs"
-                  >
-                    Modifier
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {attending && eventDetails.menuSelection && (
-              <>
-                <Separator className="my-4" />
-                <div className="mt-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <MenuSquare className="h-5 w-5 text-vip-gold" />
-                      <h3 className="font-medium">Choix de menu</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="h-5 w-5 text-vip-gold" />
+                    <div>
+                      <div className="text-sm text-gray-500">Date</div>
+                      <div className="font-medium">{eventDetails.date}</div>
                     </div>
-                    <Badge variant="outline" className="text-gray-600">
-                      Date limite : {eventDetails.menuDeadline}
-                    </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Veuillez sélectionner votre menu pour cet événement
-                  </p>
-                  <Link to={`/guest/menu/${eventId || "event"}/${guestId || "guest"}`}>
-                    <Button className="w-full bg-vip-gold hover:bg-vip-gold/90 text-white">
-                      Choisir mon menu
-                    </Button>
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <MapPin className="h-5 w-5 text-vip-gold" />
+                    <div>
+                      <div className="text-sm text-gray-500">Lieu</div>
+                      <div className="font-medium">{eventDetails.location}</div>
+                    </div>
+                  </div>
                 </div>
-              </>
-            )}
+
+                {attending === null ? (
+                  <div className="bg-amber-50 p-4 rounded-lg mb-6">
+                    <h3 className="font-medium text-vip-gold mb-2">Confirmer votre présence</h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Merci de nous indiquer si vous serez présent à cet événement.
+                    </p>
+                    <div className="flex gap-3">
+                      <Button 
+                        onClick={() => handleAttendance(true)}
+                        className="bg-vip-gold hover:bg-vip-gold/90 text-white"
+                      >
+                        Je serai présent
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => handleAttendance(false)}
+                        className="border-vip-gold text-vip-gold hover:bg-vip-gold/10"
+                      >
+                        Je ne pourrai pas venir
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-gray-50 p-4 rounded-lg mb-6 border">
+                    <div className="flex items-center gap-2">
+                      <Badge variant={attending ? "success" : "destructive"}>
+                        {attending ? "Présent(e)" : "Absent(e)"}
+                      </Badge>
+                      <p className="text-sm text-gray-600">
+                        {attending 
+                          ? "Vous avez confirmé votre présence à cet événement." 
+                          : "Vous avez indiqué que vous ne pourrez pas assister à cet événement."}
+                      </p>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setAttending(null)}
+                        className="ml-auto text-xs"
+                      >
+                        Modifier
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {attending && eventDetails.menuSelection && (
+                  <>
+                    <Separator className="my-4" />
+                    <div className="mt-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <MenuSquare className="h-5 w-5 text-vip-gold" />
+                          <h3 className="font-medium">Choix de menu</h3>
+                        </div>
+                        <Badge variant="outline" className="text-gray-600">
+                          Date limite : {eventDetails.menuDeadline}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-4">
+                        Veuillez sélectionner votre menu pour cet événement
+                      </p>
+                      <Link to={`/guest/menu/${eventId || "event"}/${guestId || "guest"}`}>
+                        <Button className="w-full bg-vip-gold hover:bg-vip-gold/90 text-white">
+                          Choisir mon menu
+                        </Button>
+                      </Link>
+                    </div>
+                  </>
+                )}
+              </TabsContent>
+              
+              <TabsContent value="guestbook" className="pt-4">
+                <GuestBook />
+              </TabsContent>
+              
+              <TabsContent value="giftfund" className="pt-4">
+                <GiftFund />
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
 

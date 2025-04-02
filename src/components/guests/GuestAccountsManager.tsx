@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserPlus, Users, Mail, Link as LinkIcon, Copy } from "lucide-react";
+import { UserPlus, Users, Mail, Link as LinkIcon, Copy, Heart, Gift } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +17,8 @@ interface GuestAccountOptions {
   canSelectMenu: boolean;
   canUploadPhotos: boolean;
   canAddSongs: boolean;
+  canUseGuestbook: boolean;  // Nouvelle option
+  canUseGiftFund: boolean;   // Nouvelle option
 }
 
 interface GuestAccountsManagerProps {
@@ -33,7 +35,9 @@ const GuestAccountsManager: React.FC<GuestAccountsManagerProps> = ({
     canViewFloorPlan: true,
     canSelectMenu: true,
     canUploadPhotos: false,
-    canAddSongs: false
+    canAddSongs: false,
+    canUseGuestbook: true,    // Activé par défaut
+    canUseGiftFund: true      // Activé par défaut
   });
 
   const handleCopyLink = () => {
@@ -95,6 +99,18 @@ const GuestAccountsManager: React.FC<GuestAccountsManagerProps> = ({
                       Activé
                     </Badge>
                     Consultation du plan de salle
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Badge variant="outline" className="bg-green-50 text-green-800 border-green-200">
+                      Activé
+                    </Badge>
+                    Livre d'or
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Badge variant="outline" className="bg-green-50 text-green-800 border-green-200">
+                      Activé
+                    </Badge>
+                    Cagnotte des mariés
                   </li>
                   <li className="flex items-center gap-2">
                     <Badge variant="outline" className="bg-gray-100 text-gray-600 border-gray-200">
@@ -238,6 +254,34 @@ const GuestAccountsManager: React.FC<GuestAccountsManagerProps> = ({
                       checked={accountOptions.canViewFloorPlan}
                       onCheckedChange={(checked) => 
                         setAccountOptions({...accountOptions, canViewFloorPlan: checked})
+                      }
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="opt-guestbook">Livre d'or</Label>
+                      <p className="text-sm text-gray-500">Permettre aux invités de laisser des messages dans le livre d'or</p>
+                    </div>
+                    <Switch 
+                      id="opt-guestbook" 
+                      checked={accountOptions.canUseGuestbook}
+                      onCheckedChange={(checked) => 
+                        setAccountOptions({...accountOptions, canUseGuestbook: checked})
+                      }
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="opt-giftfund">Cagnotte</Label>
+                      <p className="text-sm text-gray-500">Permettre aux invités de participer à la cagnotte</p>
+                    </div>
+                    <Switch 
+                      id="opt-giftfund" 
+                      checked={accountOptions.canUseGiftFund}
+                      onCheckedChange={(checked) => 
+                        setAccountOptions({...accountOptions, canUseGiftFund: checked})
                       }
                     />
                   </div>
