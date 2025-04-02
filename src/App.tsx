@@ -18,6 +18,7 @@ import ClientPodcasts from "./pages/client/ClientPodcasts";
 import ClientTalkshows from "./pages/client/ClientTalkshows";
 import ClientFloorPlans from "./pages/client/ClientFloorPlans";
 import ClientPhotos from "./pages/client/ClientPhotos";
+import ClientPinterbest from "./pages/client/ClientPinterbest";
 import ClientMenus from "./pages/client/ClientMenus";
 import ClientTodoList from "./pages/client/ClientTodoList";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
@@ -71,6 +72,7 @@ const App = () => (
             <Route path="/client/talkshows" element={<ClientTalkshows />} />
             <Route path="/client/floorplans" element={<ClientFloorPlans />} />
             <Route path="/client/photos" element={<ClientPhotos />} />
+            <Route path="/client/pinterbest" element={<ClientPinterbest />} />
             <Route path="/client/menus" element={<ClientMenus />} />
             <Route path="/client/todolist" element={<ClientTodoList />} />
             
