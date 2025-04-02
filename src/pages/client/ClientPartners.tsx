@@ -83,24 +83,24 @@ const ClientPartners = () => {
       <div className="space-y-4">
         <div>
           <h1 className={`font-bold ${isMobile ? 'text-xl' : 'text-3xl'}`}>Nos Prestataires VIP</h1>
-          <p className="text-vip-gray-400 text-sm sm:text-base">
+          <p className="text-gray-500 text-sm sm:text-base">
             Découvrez nos prestataires exclusifs et bénéficiez de tarifs préférentiels
           </p>
         </div>
 
-        <div className="bg-vip-gold/10 border border-vip-gold/30 rounded-md p-3">
-          <p className="text-vip-gold font-medium text-sm">
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-3">
+          <p className="text-amber-700 font-medium text-sm">
             En tant que membre VIP, vous bénéficiez des réductions exclusives indiquées pour chaque prestataire.
           </p>
         </div>
 
         <div className="flex justify-between items-center">
           <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-vip-gray-500" size={16} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
             <Input
               type="search"
               placeholder="Rechercher un prestataire..."
-              className="pl-9 bg-vip-gray-900 border-vip-gray-800 h-10"
+              className="pl-9 bg-white border-gray-200 h-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -109,10 +109,10 @@ const ClientPartners = () => {
 
         <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory}>
           <div className="overflow-x-auto -mx-2 px-2">
-            <TabsList className="bg-vip-gray-900 border border-vip-gray-800 flex w-full space-x-1 p-1">
+            <TabsList className="bg-white border border-gray-200 flex w-full space-x-1 p-1">
               <TabsTrigger 
                 value="all" 
-                className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black text-xs flex-shrink-0"
+                className="data-[state=active]:bg-amber-500 data-[state=active]:text-white text-xs flex-shrink-0"
               >
                 Tous
               </TabsTrigger>
@@ -120,7 +120,7 @@ const ClientPartners = () => {
                 <TabsTrigger
                   key={category.id}
                   value={category.id}
-                  className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black whitespace-nowrap text-xs flex-shrink-0"
+                  className="data-[state=active]:bg-amber-500 data-[state=active]:text-white whitespace-nowrap text-xs flex-shrink-0"
                 >
                   {category.name}
                 </TabsTrigger>
@@ -132,26 +132,26 @@ const ClientPartners = () => {
             <div className="grid grid-cols-1 gap-3">
               {filteredPartners.length > 0 ? (
                 filteredPartners.map((partner) => (
-                  <Card key={partner.id} className="bg-vip-gray-900 border-vip-gray-800 overflow-hidden">
+                  <Card key={partner.id} className="bg-white border-gray-200 overflow-hidden">
                     <CardContent className={`${isMobile ? 'p-3' : 'p-6'}`}>
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-lg font-semibold text-vip-white">{partner.name}</h3>
+                          <h3 className="text-lg font-semibold text-gray-900">{partner.name}</h3>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-xs text-vip-gray-400">
+                            <span className="text-xs text-gray-500">
                               {partnerCategories.find(c => c.id === partner.category)?.name}
                             </span>
-                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-vip-gray-600"></span>
-                            <span className="text-xs text-vip-gold font-medium">
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-gray-300"></span>
+                            <span className="text-xs text-amber-600 font-medium">
                               Réduction: {partner.discount}
                             </span>
                           </div>
                         </div>
-                        <div className="flex-shrink-0 w-10 h-10 bg-vip-gray-800 rounded-full flex items-center justify-center text-vip-gold font-bold border border-vip-gray-700">
+                        <div className="flex-shrink-0 w-10 h-10 bg-amber-50 rounded-full flex items-center justify-center text-amber-600 font-bold border border-amber-200">
                           {partner.name.charAt(0)}
                         </div>
                       </div>
-                      <p className="mt-3 text-vip-gray-300 text-xs line-clamp-2">{partner.description}</p>
+                      <p className="mt-3 text-gray-600 text-xs line-clamp-2">{partner.description}</p>
                       <div className="mt-3 flex justify-end">
                         <GoldButton size="sm" onClick={() => handleContact(partner)}>
                           Contacter
@@ -162,7 +162,7 @@ const ClientPartners = () => {
                 ))
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-vip-gray-400">Aucun prestataire ne correspond à votre recherche.</p>
+                  <p className="text-gray-500">Aucun prestataire ne correspond à votre recherche.</p>
                 </div>
               )}
             </div>
@@ -171,7 +171,7 @@ const ClientPartners = () => {
       </div>
 
       <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
-        <DialogContent className="bg-vip-gray-900 border-vip-gray-800 sm:max-w-md max-w-[calc(100%-32px)]">
+        <DialogContent className="bg-white border-gray-200 sm:max-w-md max-w-[calc(100%-32px)]">
           <DialogHeader>
             <DialogTitle className="text-base">Contacter {selectedPartner?.name}</DialogTitle>
             <DialogDescription className="text-xs">
@@ -180,14 +180,14 @@ const ClientPartners = () => {
           </DialogHeader>
 
           <div className="space-y-3 py-2">
-            <div className="bg-vip-gray-800 p-3 rounded-md">
-              <div className="font-medium text-vip-white text-sm">Avantage Club VIP</div>
-              <div className="text-vip-gold font-bold">Réduction de {selectedPartner?.discount}</div>
+            <div className="bg-amber-50 p-3 rounded-md">
+              <div className="font-medium text-gray-900 text-sm">Avantage Club VIP</div>
+              <div className="text-amber-600 font-bold">Réduction de {selectedPartner?.discount}</div>
             </div>
             
             <Textarea
               placeholder="Décrivez votre projet, vos besoins et questions..."
-              className="bg-vip-gray-800 border-vip-gray-700 min-h-[100px]"
+              className="bg-white border-gray-200 min-h-[100px]"
               value={contactMessage}
               onChange={(e) => setContactMessage(e.target.value)}
             />
