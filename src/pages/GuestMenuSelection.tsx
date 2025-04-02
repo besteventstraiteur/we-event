@@ -14,19 +14,6 @@ const GuestMenuSelection: React.FC = () => {
   const { toast } = useToast();
   const [menuSubmitted, setMenuSubmitted] = useState(false);
 
-  const handleSubmit = (menuChoice: string, menuOption: string) => {
-    // In a real app, we would call an API to save the menu choice
-    console.log(`Guest ${guestId} selected menu: ${menuChoice}, option: ${menuOption}`);
-    
-    // Show success message
-    toast({
-      title: "Menu sélectionné",
-      description: "Votre choix de menu a été enregistré avec succès",
-    });
-    
-    setMenuSubmitted(true);
-  };
-
   const handleBackToDashboard = () => {
     navigate(`/guest/${eventId}/${guestId}`);
   };
@@ -79,7 +66,7 @@ const GuestMenuSelection: React.FC = () => {
               Veuillez sélectionner votre menu pour l'événement.<br />
               <span className="text-sm">Vous pouvez modifier votre choix jusqu'au 01 juin 2024.</span>
             </p>
-            <GuestMenuSelectionComponent onSubmit={handleSubmit} />
+            <GuestMenuSelectionComponent />
           </>
         )}
       </main>

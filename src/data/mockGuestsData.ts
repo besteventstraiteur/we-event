@@ -68,3 +68,6 @@ export const initialGuests: Guest[] = [
     menuChoice: "vegetarien"
   }
 ];
+
+// Export as mockGuestsData for compatibility
+export const mockGuestsData = initialGuests;
