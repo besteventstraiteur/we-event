@@ -125,12 +125,12 @@ const ClientFloorPlans: React.FC = () => {
     <DashboardLayout type="client">
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-vip-white">Organisation de votre événement</h1>
-          <p className="text-vip-gray-400">Planifiez votre salle de réception et gérez vos invités</p>
+          <h1 className="text-3xl font-bold text-gray-900">Organisation de votre événement</h1>
+          <p className="text-gray-500">Planifiez votre salle de réception et gérez vos invités</p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="bg-vip-gray-800">
+          <TabsList className="bg-white border border-gray-200">
             <TabsTrigger value="plan" className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black">
               Plan de salle
             </TabsTrigger>

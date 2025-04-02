@@ -40,6 +40,8 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
   const [selectedTool, setSelectedTool] = useState<string>('select');
   const [planName, setPlanName] = useState<string>('Nouveau plan');
   const [planMode, setPlanMode] = useState<'2d' | '2d'>('2d');
+  const [roomWidth, setRoomWidth] = useState<number>(700);
+  const [roomHeight, setRoomHeight] = useState<number>(500);
   const { toast } = useToast();
 
   // Initialisation du canvas
@@ -69,19 +71,7 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
         }
       } else {
         // Créer un plan par défaut (un rectangle représentant la salle)
-        const room = new fabric.Rect({
-          left: 50,
-          top: 50,
-          width: 700,
-          height: 500,
-          fill: 'white',
-          stroke: '#ccc',
-          strokeWidth: 2,
-          selectable: !readOnly,
-        });
-        fabricCanvas.add(room);
-        fabricCanvas.centerObject(room);
-        fabricCanvas.renderAll();
+        createRoomPlan(fabricCanvas, roomWidth, roomHeight);
       }
 
       // Configurer les limitations si en mode lecture seule
@@ -97,6 +87,35 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
       };
     }
   }, [initialData, readOnly, toast]);
+
+  // Fonction pour créer le plan de la salle
+  const createRoomPlan = (fabricCanvas: fabric.Canvas, width: number, height: number) => {
+    fabricCanvas.clear();
+    const room = new fabric.Rect({
+      left: 50,
+      top: 50,
+      width: width,
+      height: height,
+      fill: 'white',
+      stroke: '#ccc',
+      strokeWidth: 2,
+      selectable: !readOnly,
+    });
+    fabricCanvas.add(room);
+    fabricCanvas.centerObject(room);
+    fabricCanvas.renderAll();
+  };
+
+  // Mettre à jour les dimensions de la salle
+  const updateRoomDimensions = () => {
+    if (!canvas) return;
+    
+    createRoomPlan(canvas, roomWidth, roomHeight);
+    
+    toast({
+      description: "Dimensions de la salle mises à jour",
+    });
+  };
 
   // Ajouter un objet au canvas en fonction de l'outil sélectionné
   const addObject = (type: string) => {
@@ -269,12 +288,12 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
 
   return (
     <div className="flex flex-col">
-      <Card className="bg-vip-gray-900 border-vip-gray-800 mb-4">
+      <Card className="bg-white border-gray-200 mb-4">
         <CardHeader className="pb-3">
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle className="text-vip-white">Éditeur de Plan</CardTitle>
-              <CardDescription className="text-vip-gray-400">
+              <CardTitle className="text-gray-900">Éditeur de Plan</CardTitle>
+              <CardDescription className="text-gray-500">
                 Créez et modifiez le plan de votre salle de réception
               </CardDescription>
             </div>
@@ -283,14 +302,14 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
                 <>
                   <Button
                     variant="outline"
-                    className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
+                    className="border-gray-200 text-gray-600 hover:text-gray-900"
                     onClick={() => handleZoom(true)}
                   >
                     <ZoomIn size={18} />
                   </Button>
                   <Button
                     variant="outline"
-                    className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
+                    className="border-gray-200 text-gray-600 hover:text-gray-900"
                     onClick={() => handleZoom(false)}
                   >
                     <ZoomOut size={18} />
@@ -303,26 +322,59 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
         <CardContent>
           {!readOnly && (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-              <div className="col-span-2">
+              <div>
                 <Label htmlFor="plan-name">Nom du plan</Label>
                 <Input
                   id="plan-name"
                   value={planName}
                   onChange={(e) => setPlanName(e.target.value)}
-                  className="bg-vip-gray-800 border-vip-gray-700 text-vip-white"
+                  className="bg-white border-gray-200 text-gray-900"
                 />
               </div>
               <div>
                 <Label>Mode d'affichage</Label>
                 <Select value={planMode} onValueChange={(value) => setPlanMode(value as '2d' | '2d')}>
-                  <SelectTrigger className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
+                  <SelectTrigger className="bg-white border-gray-200 text-gray-900">
                     <SelectValue placeholder="Mode d'affichage" />
                   </SelectTrigger>
-                  <SelectContent className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
+                  <SelectContent className="bg-white border-gray-200 text-gray-900">
                     <SelectItem value="2d">2D</SelectItem>
                     <SelectItem value="2d">2D amélioré</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div>
+                <Label htmlFor="room-width">Largeur (cm)</Label>
+                <Input
+                  id="room-width"
+                  type="number"
+                  min="100"
+                  max="2000"
+                  value={roomWidth}
+                  onChange={(e) => setRoomWidth(parseInt(e.target.value) || 700)}
+                  className="bg-white border-gray-200 text-gray-900"
+                />
+              </div>
+              <div>
+                <Label htmlFor="room-height">Longueur (cm)</Label>
+                <Input
+                  id="room-height"
+                  type="number"
+                  min="100"
+                  max="2000"
+                  value={roomHeight}
+                  onChange={(e) => setRoomHeight(parseInt(e.target.value) || 500)}
+                  className="bg-white border-gray-200 text-gray-900"
+                />
+              </div>
+              <div className="md:col-span-4">
+                <Button
+                  variant="outline"
+                  className="border-gray-200 text-gray-600 hover:text-gray-900"
+                  onClick={updateRoomDimensions}
+                >
+                  Appliquer les dimensions
+                </Button>
               </div>
             </div>
           )}
@@ -332,49 +384,49 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
               <Button
                 variant={selectedTool === 'select' ? "default" : "outline"} 
                 onClick={() => setSelectedTool('select')}
-                className={selectedTool === 'select' ? "border-vip-gold text-vip-white" : "border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"}
+                className={selectedTool === 'select' ? "border-vip-gold text-vip-black" : "border-gray-200 text-gray-600 hover:text-gray-900"}
               >
                 Sélection
               </Button>
               <Button
                 variant="outline"
                 onClick={() => addObject('tableRonde180')}
-                className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
+                className="border-gray-200 text-gray-600 hover:text-gray-900"
               >
                 <Circle size={18} className="mr-2" /> Table ronde (180cm)
               </Button>
               <Button
                 variant="outline"
                 onClick={() => addObject('tableRonde152')}
-                className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
+                className="border-gray-200 text-gray-600 hover:text-gray-900"
               >
                 <Circle size={16} className="mr-2" /> Table ronde (152cm)
               </Button>
               <Button
                 variant="outline"
                 onClick={() => addObject('tableRectangle')}
-                className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
+                className="border-gray-200 text-gray-600 hover:text-gray-900"
               >
                 <Table size={18} className="mr-2" /> Table rectangle
               </Button>
               <Button
                 variant="outline"
                 onClick={() => addObject('chaise')}
-                className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
+                className="border-gray-200 text-gray-600 hover:text-gray-900"
               >
                 Chaise
               </Button>
               <Button
                 variant="outline"
                 onClick={deleteSelected}
-                className="border-vip-gray-700 text-red-400 hover:text-red-300 hover:border-red-400"
+                className="border-gray-200 text-red-400 hover:text-red-600 hover:border-red-200"
               >
                 <Trash2 size={18} className="mr-2" /> Supprimer
               </Button>
             </div>
           )}
 
-          <div className="canvas-container border border-vip-gray-700 rounded-md overflow-hidden">
+          <div className="canvas-container border border-gray-200 rounded-md overflow-hidden">
             <canvas ref={canvasRef} />
           </div>
 
@@ -383,7 +435,7 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
+                  className="border-gray-200 text-gray-600 hover:text-gray-900"
                   onClick={() => {
                     const fileInput = document.getElementById('import-plan');
                     if (fileInput) {
@@ -402,22 +454,10 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
                 />
                 <Button
                   variant="outline"
-                  className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
+                  className="border-gray-200 text-gray-600 hover:text-gray-900"
                   onClick={() => {
                     if (canvas) {
-                      canvas.clear();
-                      const room = new fabric.Rect({
-                        left: 50,
-                        top: 50,
-                        width: 700,
-                        height: 500,
-                        fill: 'white',
-                        stroke: '#ccc',
-                        strokeWidth: 2,
-                      });
-                      canvas.add(room);
-                      canvas.centerObject(room);
-                      canvas.renderAll();
+                      createRoomPlan(canvas, roomWidth, roomHeight);
                     }
                   }}
                 >
