@@ -1,11 +1,12 @@
 
 import React, { useState } from "react";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Users } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import GuestInvitationManager from "@/components/guests/GuestInvitationManager";
 import GuestStatistics from "@/components/guests/GuestStatistics";
 import GuestInvitationActions from "@/components/guests/GuestInvitationActions";
 import GuestInvitationSender from "@/components/guests/GuestInvitationSender";
+import GuestAccountsManager from "@/components/guests/GuestAccountsManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -77,6 +78,9 @@ const ClientGuests = () => {
             <TabsTrigger value="invites">Liste des invités</TabsTrigger>
             <TabsTrigger value="groups">Groupes</TabsTrigger>
             <TabsTrigger value="seating">Plan de table</TabsTrigger>
+            <TabsTrigger value="guestAccounts" className="flex items-center gap-1">
+              <Users size={14} /> Espace Invités
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="invites" className="space-y-4">
@@ -107,6 +111,10 @@ const ClientGuests = () => {
                 </p>
               </CardContent>
             </Card>
+          </TabsContent>
+          
+          <TabsContent value="guestAccounts" className="space-y-4">
+            <GuestAccountsManager eventTitle="Notre Mariage - Sarah & Thomas" />
           </TabsContent>
         </Tabs>
         
