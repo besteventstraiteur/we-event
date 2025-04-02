@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import { Button } from "@/components/ui/button";
-import { LogOut, User, Users, FileText, Headphones, BarChart, CreditCard, Video } from "lucide-react";
+import { LogOut, User, Users, FileText, Headphones, BarChart, Video, LayoutPlanIcon, ListTodo, Map } from "lucide-react";
 
 interface NavItemProps {
   href: string;
@@ -73,6 +73,13 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
                 active={location.pathname === "/client/requests"}
               >
                 Mes Demandes
+              </NavItem>
+              <NavItem
+                href="/client/floorplans"
+                icon={<LayoutPlanIcon size={18} />}
+                active={location.pathname === "/client/floorplans"}
+              >
+                Plan de salle & Invités
               </NavItem>
               <NavItem
                 href="/client/podcasts"
@@ -153,6 +160,13 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
                 active={location.pathname === "/admin/clients"}
               >
                 Clients
+              </NavItem>
+              <NavItem
+                href="/admin/venues"
+                icon={<Map size={18} />}
+                active={location.pathname === "/admin/venues"}
+              >
+                Salles de réception
               </NavItem>
               <NavItem
                 href="/admin/podcasts"

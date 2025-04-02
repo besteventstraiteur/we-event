@@ -15,6 +15,7 @@ import ClientPartners from "./pages/client/ClientPartners";
 import ClientRequests from "./pages/client/ClientRequests";
 import ClientPodcasts from "./pages/client/ClientPodcasts";
 import ClientTalkshows from "./pages/client/ClientTalkshows";
+import ClientFloorPlans from "./pages/client/ClientFloorPlans";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerRequests from "./pages/partner/PartnerRequests";
 import PartnerStats from "./pages/partner/PartnerStats";
@@ -25,6 +26,7 @@ import AdminPartners from "./pages/admin/AdminPartners";
 import AdminClients from "./pages/admin/AdminClients";
 import AdminPodcasts from "./pages/admin/AdminPodcasts";
 import AdminTalkshows from "./pages/admin/AdminTalkshows";
+import AdminVenues from "./pages/admin/AdminVenues";
 import NotFound from "./pages/NotFound";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
@@ -56,6 +58,7 @@ const App = () => (
             <Route path="/client/requests" element={<ClientRequests />} />
             <Route path="/client/podcasts" element={<ClientPodcasts />} />
             <Route path="/client/talkshows" element={<ClientTalkshows />} />
+            <Route path="/client/floorplans" element={<ClientFloorPlans />} />
             
             {/* Dashboard Partenaire */}
             <Route path="/partner/dashboard" element={<PartnerDashboard />} />
@@ -70,6 +73,7 @@ const App = () => (
             <Route path="/admin/clients" element={<AdminClients />} />
             <Route path="/admin/podcasts" element={<AdminPodcasts />} />
             <Route path="/admin/talkshows" element={<AdminTalkshows />} />
+            <Route path="/admin/venues" element={<AdminVenues />} />
             
             {/* Page 404 */}
             <Route path="*" element={<NotFound />} />
