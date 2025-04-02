@@ -17,12 +17,14 @@ import ClientRequests from "./pages/client/ClientRequests";
 import ClientPodcasts from "./pages/client/ClientPodcasts";
 import ClientTalkshows from "./pages/client/ClientTalkshows";
 import ClientFloorPlans from "./pages/client/ClientFloorPlans";
+import ClientPhotos from "./pages/client/ClientPhotos";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerRequests from "./pages/partner/PartnerRequests";
 import PartnerStats from "./pages/partner/PartnerStats";
 import PartnerPodcasts from "./pages/partner/PartnerPodcasts";
 import PartnerTalkshows from "./pages/partner/PartnerTalkshows";
 import PartnerRecommendations from "./pages/partner/PartnerRecommendations";
+import PartnerPhotos from "./pages/partner/PartnerPhotos";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPartners from "./pages/admin/AdminPartners";
 import AdminClients from "./pages/admin/AdminClients";
@@ -64,6 +66,7 @@ const App = () => (
             <Route path="/client/podcasts" element={<ClientPodcasts />} />
             <Route path="/client/talkshows" element={<ClientTalkshows />} />
             <Route path="/client/floorplans" element={<ClientFloorPlans />} />
+            <Route path="/client/photos" element={<ClientPhotos />} />
             
             {/* Dashboard Prestataire */}
             <Route path="/partner/dashboard" element={<PartnerDashboard />} />
@@ -72,6 +75,7 @@ const App = () => (
             <Route path="/partner/podcasts" element={<PartnerPodcasts />} />
             <Route path="/partner/talkshows" element={<PartnerTalkshows />} />
             <Route path="/partner/recommendations" element={<PartnerRecommendations />} />
+            <Route path="/partner/photos" element={<PartnerPhotos />} />
             
             {/* Dashboard Admin */}
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
