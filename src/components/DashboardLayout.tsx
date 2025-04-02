@@ -1,9 +1,8 @@
-
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import { Button } from "@/components/ui/button";
-import { LogOut, User, Users, FileText, Headphones, BarChart, Video, LayoutPlanIcon, ListTodo, Map } from "lucide-react";
+import { LogOut, User, Users, FileText, Headphones, BarChart, Video, LayoutDashboard, ListTodo, Map } from "lucide-react";
 
 interface NavItemProps {
   href: string;
@@ -76,7 +75,7 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
               </NavItem>
               <NavItem
                 href="/client/floorplans"
-                icon={<LayoutPlanIcon size={18} />}
+                icon={<LayoutDashboard size={18} />}
                 active={location.pathname === "/client/floorplans"}
               >
                 Plan de salle & Invités
