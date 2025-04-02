@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Table, 
@@ -90,10 +89,14 @@ const TaskList: React.FC<TaskListProps> = ({
     }
   };
 
-  // Filter and sort tasks
   const filteredTasks = tasks.filter(task => {
-    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         task.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const taskTitle = task.title || "";
+    const taskDescription = task.description || "";
+    const searchTermLower = searchTerm.toLowerCase();
+    
+    const matchesSearch = searchTerm === "" || 
+                         taskTitle.toLowerCase().includes(searchTermLower) ||
+                         taskDescription.toLowerCase().includes(searchTermLower);
     const matchesCategory = categoryFilter === "all" || task.category === categoryFilter;
     const matchesStatus = statusFilter === "all" || task.status === statusFilter;
     

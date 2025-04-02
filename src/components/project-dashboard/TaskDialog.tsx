@@ -95,7 +95,18 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
   }, [task, isOpen, form, categories]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    onSave(values);
+    // Fix: Ensure all required fields are present
+    const taskData: Omit<ProjectTask, "id"> = {
+      title: values.title,
+      description: values.description || "",
+      category: values.category,
+      priority: values.priority,
+      status: values.status,
+      dueDate: values.dueDate,
+      assignedTo: values.assignedTo
+    };
+    
+    onSave(taskData);
   };
 
   return (
