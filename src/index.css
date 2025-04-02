@@ -34,6 +34,8 @@
     --ring: 222.2 84% 4.9%;
  
     --radius: 0.5rem;
+
+    --sidebar-width: 16rem;
   }
  
   .dark {
@@ -141,6 +143,36 @@
     padding-left: 0.75rem;
     padding-right: 0.75rem;
   }
+  
+  /* Optimisations pour les tableaux sur mobile */
+  .mobile-view table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .mobile-view th, 
+  .mobile-view td {
+    white-space: nowrap;
+    padding: 0.5rem;
+  }
+  
+  /* Optimisations pour les cards sur mobile */
+  .mobile-view .card {
+    padding: 0.75rem;
+  }
+  
+  /* Améliorer la lisibilité des dialogues sur mobile */
+  .mobile-view [role="dialog"] {
+    padding: 0.75rem;
+  }
+}
+
+/* Optimisations pour les petits écrans en orientation portrait */
+@media (max-width: 480px) {
+  .mobile-view .grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* Améliorations des animations pour les interactions tactiles */
@@ -149,5 +181,13 @@
   .native-app button:active {
     transform: scale(0.98);
     transition: transform 0.1s;
+  }
+}
+
+/* Support spécifique pour l'écran divisé sur tablette */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .mobile-view .split-view {
+    display: flex;
+    flex-direction: column;
   }
 }
