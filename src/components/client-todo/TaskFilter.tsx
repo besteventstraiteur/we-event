@@ -1,11 +1,12 @@
 
 import React from "react";
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, Calendar } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Task } from "@/hooks/useTaskList";
+import { Separator } from "@/components/ui/separator";
 
 interface TaskFilterProps {
   filter: {
@@ -13,6 +14,7 @@ interface TaskFilterProps {
     category: "all" | Task["category"];
     priority: "all" | Task["priority"];
     search: string;
+    dueDate: "all" | "today" | "week" | "month" | "overdue";
   };
   onFilterChange: (filter: any) => void;
 }
@@ -34,6 +36,10 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ filter, onFilterChange }) => {
     onFilterChange({ ...filter, priority: value });
   };
 
+  const handleDueDateChange = (value: string) => {
+    onFilterChange({ ...filter, dueDate: value });
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-4">
@@ -48,7 +54,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ filter, onFilterChange }) => {
           />
         </div>
         
-        <div className="flex-shrink-0 flex space-x-2">
+        <div className="flex-shrink-0 flex flex-wrap sm:flex-nowrap gap-2">
           <Select value={filter.category} onValueChange={handleCategoryChange}>
             <SelectTrigger className="w-[140px] border-gray-300">
               <Filter size={16} className="mr-2" />
@@ -75,6 +81,20 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ filter, onFilterChange }) => {
               <SelectItem value="high">Haute</SelectItem>
               <SelectItem value="medium">Moyenne</SelectItem>
               <SelectItem value="low">Basse</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Select value={filter.dueDate} onValueChange={handleDueDateChange}>
+            <SelectTrigger className="w-[140px] border-gray-300">
+              <Calendar size={16} className="mr-2" />
+              <SelectValue placeholder="Échéance" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Toutes dates</SelectItem>
+              <SelectItem value="today">Aujourd'hui</SelectItem>
+              <SelectItem value="week">Cette semaine</SelectItem>
+              <SelectItem value="month">Ce mois</SelectItem>
+              <SelectItem value="overdue">En retard</SelectItem>
             </SelectContent>
           </Select>
         </div>

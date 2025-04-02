@@ -24,11 +24,13 @@ export const useTaskList = (initialTasks: Task[] = []) => {
     category: "all" | Task["category"];
     priority: "all" | Task["priority"];
     search: string;
+    dueDate: "all" | "today" | "week" | "month" | "overdue";
   }>({
     status: "all",
     category: "all",
     priority: "all",
-    search: ""
+    search: "",
+    dueDate: "all"
   });
 
   useEffect(() => {
@@ -79,6 +81,27 @@ export const useTaskList = (initialTasks: Task[] = []) => {
     
     // Filter by search term
     if (filter.search && !task.title.toLowerCase().includes(filter.search.toLowerCase())) return false;
+    
+    // Filter by due date
+    if (filter.dueDate !== "all") {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const taskDate = new Date(task.dueDate);
+      taskDate.setHours(0, 0, 0, 0);
+      
+      // Calculate date ranges
+      const weekFromNow = new Date(today);
+      weekFromNow.setDate(today.getDate() + 7);
+      
+      const monthFromNow = new Date(today);
+      monthFromNow.setMonth(today.getMonth() + 1);
+      
+      if (filter.dueDate === "today" && taskDate.getTime() !== today.getTime()) return false;
+      if (filter.dueDate === "week" && (taskDate < today || taskDate > weekFromNow)) return false;
+      if (filter.dueDate === "month" && (taskDate < today || taskDate > monthFromNow)) return false;
+      if (filter.dueDate === "overdue" && taskDate >= today) return false;
+    }
     
     return true;
   });

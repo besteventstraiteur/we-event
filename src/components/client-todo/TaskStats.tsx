@@ -6,7 +6,8 @@ import {
   Clock, 
   CalendarClock, 
   AlertCircle,
-  Star
+  Star,
+  AlertTriangle
 } from "lucide-react";
 import { Task } from "@/hooks/useTaskList";
 import { Badge } from "@/components/ui/badge";
@@ -44,6 +45,16 @@ const TaskStats: React.FC<TaskStatsProps> = ({ tasks, favoriteTasks = [], onTask
     return dueDate >= today && dueDate <= oneWeekFromNow;
   }).length;
   
+  // Find overdue tasks
+  const overdueTasks = tasks.filter(task => {
+    if (task.completed) return false;
+    
+    const dueDate = new Date(task.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+    
+    return dueDate < today;
+  }).length;
+  
   // Calculate completion percentage
   const completionPercentage = totalTasks === 0 
     ? 0 
@@ -51,7 +62,7 @@ const TaskStats: React.FC<TaskStatsProps> = ({ tasks, favoriteTasks = [], onTask
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card className="bg-white border-gray-200">
           <CardContent className="p-6 flex items-center">
             <div className="rounded-full bg-blue-100 p-3 mr-4">
@@ -96,6 +107,18 @@ const TaskStats: React.FC<TaskStatsProps> = ({ tasks, favoriteTasks = [], onTask
             <div>
               <p className="text-gray-500 text-sm">Tâches urgentes</p>
               <p className="text-2xl font-semibold">{urgentTasks}</p>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white border-gray-200">
+          <CardContent className="p-6 flex items-center">
+            <div className="rounded-full bg-orange-100 p-3 mr-4">
+              <AlertTriangle className="h-6 w-6 text-orange-500" />
+            </div>
+            <div>
+              <p className="text-gray-500 text-sm">Tâches en retard</p>
+              <p className="text-2xl font-semibold">{overdueTasks}</p>
             </div>
           </CardContent>
         </Card>
