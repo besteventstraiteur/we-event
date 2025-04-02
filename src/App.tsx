@@ -38,6 +38,7 @@ import AdminTalkshows from "./pages/admin/AdminTalkshows";
 import AdminVenues from "./pages/admin/AdminVenues";
 import AdminRecommendations from "./pages/admin/AdminRecommendations";
 import AdminBackup from "./pages/admin/AdminBackup";
+import AdminGuests from "./pages/admin/AdminGuests";
 import GuestDashboard from "./pages/GuestDashboard";
 import GuestMenuSelection from "./pages/GuestMenuSelection";
 import NotFound from "./pages/NotFound";
@@ -97,6 +98,7 @@ const App = () => (
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/partners" element={<AdminPartners />} />
             <Route path="/admin/clients" element={<AdminClients />} />
+            <Route path="/admin/guests" element={<AdminGuests />} />
             <Route path="/admin/podcasts" element={<AdminPodcasts />} />
             <Route path="/admin/talkshows" element={<AdminTalkshows />} />
             <Route path="/admin/venues" element={<AdminVenues />} />
