@@ -8,33 +8,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Search, Plus, Edit, Trash2, Eye } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import GoldButton from '@/components/GoldButton';
-import FloorPlanner from '@/components/floor-planner/FloorPlanner';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
-import { Textarea } from '@/components/ui/textarea';
+import VenueFormDialog from '@/components/venues/VenueFormDialog';
+import AdminVenuesList from '@/components/venues/AdminVenuesList';
+import FloorPlanViewDialog from '@/components/venues/FloorPlanViewDialog';
+import FloorPlanEditDialog from '@/components/venues/FloorPlanEditDialog';
 
 interface Venue {
   id: string;
@@ -102,34 +85,6 @@ const AdminVenues: React.FC = () => {
   const [viewFloorPlan, setViewFloorPlan] = useState(false);
   const { toast } = useToast();
 
-  const form = useForm<Venue>({
-    defaultValues: {
-      id: '',
-      name: '',
-      partner: '',
-      location: '',
-      capacity: 0,
-      description: '',
-      floorPlan: undefined
-    }
-  });
-
-  React.useEffect(() => {
-    if (selectedVenue) {
-      form.reset(selectedVenue);
-    } else {
-      form.reset({
-        id: Date.now().toString(),
-        name: '',
-        partner: '',
-        location: '',
-        capacity: 0,
-        description: '',
-        floorPlan: undefined
-      });
-    }
-  }, [selectedVenue, form]);
-
   const filteredVenues = venues.filter(venue => 
     venue.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     venue.partner.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -160,6 +115,16 @@ const AdminVenues: React.FC = () => {
   const handleEditFloorPlan = (venue: Venue) => {
     setSelectedVenue(venue);
     setIsEditingFloorPlan(true);
+  };
+
+  const handleViewFloorPlan = (venue: Venue) => {
+    setSelectedVenue(venue);
+    setViewFloorPlan(true);
+  };
+
+  const handleEditVenue = (venue: Venue) => {
+    setSelectedVenue(venue);
+    setIsAddDialogOpen(true);
   };
 
   const handleSaveFloorPlan = (data: string) => {
@@ -204,135 +169,20 @@ const AdminVenues: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <GoldButton onClick={() => setSelectedVenue(null)}>
-                <Plus className="mr-2 h-4 w-4" /> Ajouter une salle
-              </GoldButton>
-            </DialogTrigger>
-            <DialogContent className="bg-vip-gray-900 border-vip-gray-800 text-vip-white">
-              <DialogHeader>
-                <DialogTitle>{selectedVenue ? 'Modifier une salle' : 'Ajouter une salle'}</DialogTitle>
-                <DialogDescription className="text-vip-gray-400">
-                  {selectedVenue 
-                    ? 'Modifiez les informations de la salle de réception' 
-                    : 'Ajoutez une nouvelle salle de réception partenaire'}
-                </DialogDescription>
-              </DialogHeader>
-              
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSaveVenue)} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Nom de la salle</FormLabel>
-                          <FormControl>
-                            <Input 
-                              className="bg-vip-gray-800 border-vip-gray-700 text-vip-white" 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="partner"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Partenaire</FormLabel>
-                          <FormControl>
-                            <Input 
-                              className="bg-vip-gray-800 border-vip-gray-700 text-vip-white" 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="location"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Emplacement</FormLabel>
-                          <FormControl>
-                            <Input 
-                              className="bg-vip-gray-800 border-vip-gray-700 text-vip-white" 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="capacity"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Capacité (personnes)</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="number"
-                              className="bg-vip-gray-800 border-vip-gray-700 text-vip-white" 
-                              {...field}
-                              onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl>
-                          <Textarea 
-                            className="bg-vip-gray-800 border-vip-gray-700 text-vip-white min-h-[100px]" 
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <DialogFooter>
-                    <Button 
-                      type="button"
-                      variant="outline" 
-                      className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
-                      onClick={() => {
-                        setIsAddDialogOpen(false);
-                        setSelectedVenue(null);
-                      }}
-                    >
-                      Annuler
-                    </Button>
-                    <GoldButton type="submit">
-                      {selectedVenue ? 'Mettre à jour' : 'Ajouter'}
-                    </GoldButton>
-                  </DialogFooter>
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
+          <VenueFormDialog
+            open={isAddDialogOpen}
+            onOpenChange={setIsAddDialogOpen}
+            selectedVenue={selectedVenue}
+            onSave={handleSaveVenue}
+          />
+          <DialogTrigger asChild>
+            <GoldButton onClick={() => {
+              setSelectedVenue(null);
+              setIsAddDialogOpen(true);
+            }}>
+              <Plus className="mr-2 h-4 w-4" /> Ajouter une salle
+            </GoldButton>
+          </DialogTrigger>
         </div>
 
         <Card className="bg-vip-gray-900 border-vip-gray-800">
@@ -341,152 +191,30 @@ const AdminVenues: React.FC = () => {
             <CardDescription>Gérez les salles de réception disponibles pour vos clients VIP</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-b-vip-gray-800 hover:bg-transparent">
-                    <TableHead className="text-vip-gray-400">Nom</TableHead>
-                    <TableHead className="text-vip-gray-400">Partenaire</TableHead>
-                    <TableHead className="text-vip-gray-400">Emplacement</TableHead>
-                    <TableHead className="text-vip-gray-400">Capacité</TableHead>
-                    <TableHead className="text-vip-gray-400">Plan</TableHead>
-                    <TableHead className="text-vip-gray-400 text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredVenues.length > 0 ? (
-                    filteredVenues.map((venue) => (
-                      <TableRow key={venue.id} className="border-b border-vip-gray-800 hover:bg-vip-gray-800/50">
-                        <TableCell className="font-medium text-vip-white">
-                          {venue.name}
-                        </TableCell>
-                        <TableCell className="text-vip-gray-400">
-                          {venue.partner}
-                        </TableCell>
-                        <TableCell className="text-vip-gray-400">
-                          {venue.location}
-                        </TableCell>
-                        <TableCell className="text-vip-white">
-                          {venue.capacity} personnes
-                        </TableCell>
-                        <TableCell className="text-vip-white">
-                          {venue.floorPlan ? (
-                            <span className="text-green-500">Disponible</span>
-                          ) : (
-                            <span className="text-red-500">Non disponible</span>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end space-x-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => {
-                                setSelectedVenue(venue);
-                                setViewFloorPlan(true);
-                              }}
-                              className="h-8 text-vip-gray-400 hover:text-vip-white"
-                              disabled={!venue.floorPlan}
-                            >
-                              <Eye size={16} />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleEditFloorPlan(venue)}
-                              className="h-8 text-vip-gray-400 hover:text-vip-white"
-                            >
-                              <Edit size={16} />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => {
-                                setSelectedVenue(venue);
-                                setIsAddDialogOpen(true);
-                              }}
-                              className="h-8 text-vip-gray-400 hover:text-vip-white"
-                            >
-                              <Edit size={16} />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleRemoveVenue(venue.id)}
-                              className="h-8 text-vip-gray-400 hover:text-red-500"
-                            >
-                              <Trash2 size={16} />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center py-6 text-vip-gray-400">
-                        Aucune salle trouvée
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+            <AdminVenuesList
+              venues={filteredVenues}
+              onViewFloorPlan={handleViewFloorPlan}
+              onEditFloorPlan={handleEditFloorPlan}
+              onEditVenue={handleEditVenue}
+              onRemoveVenue={handleRemoveVenue}
+            />
           </CardContent>
         </Card>
       </div>
 
-      {/* Modal pour visualiser le plan */}
-      <Dialog open={viewFloorPlan} onOpenChange={setViewFloorPlan}>
-        <DialogContent className="bg-vip-gray-900 border-vip-gray-800 text-vip-white max-w-5xl">
-          <DialogHeader>
-            <DialogTitle>Plan de salle: {selectedVenue?.name}</DialogTitle>
-            <DialogDescription className="text-vip-gray-400">
-              Capacité: {selectedVenue?.capacity} personnes | Partenaire: {selectedVenue?.partner}
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="py-4">
-            {selectedVenue?.floorPlan ? (
-              <FloorPlanner initialData={selectedVenue.floorPlan} readOnly={true} />
-            ) : (
-              <div className="text-center py-10 text-vip-gray-400">
-                Plan non disponible pour cette salle
-              </div>
-            )}
-          </div>
-          
-          <DialogFooter>
-            <Button 
-              variant="outline" 
-              className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
-              onClick={() => setViewFloorPlan(false)}
-            >
-              Fermer
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Dialogs for viewing and editing floor plans */}
+      <FloorPlanViewDialog
+        open={viewFloorPlan}
+        onOpenChange={setViewFloorPlan}
+        venue={selectedVenue}
+      />
 
-      {/* Modal pour éditer le plan */}
-      <Dialog open={isEditingFloorPlan} onOpenChange={setIsEditingFloorPlan}>
-        <DialogContent className="bg-vip-gray-900 border-vip-gray-800 text-vip-white max-w-6xl h-[90vh]">
-          <DialogHeader>
-            <DialogTitle>Éditer le plan: {selectedVenue?.name}</DialogTitle>
-            <DialogDescription className="text-vip-gray-400">
-              Créez ou modifiez le plan de cette salle
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="py-4 h-full overflow-auto">
-            {selectedVenue && (
-              <FloorPlanner 
-                initialData={selectedVenue.floorPlan} 
-                onSave={handleSaveFloorPlan} 
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <FloorPlanEditDialog
+        open={isEditingFloorPlan}
+        onOpenChange={setIsEditingFloorPlan}
+        venue={selectedVenue}
+        onSave={handleSaveFloorPlan}
+      />
     </DashboardLayout>
   );
 };
