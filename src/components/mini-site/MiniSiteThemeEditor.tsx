@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -6,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MiniSiteTheme } from "@/types/miniSiteTypes";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Palette, Type, Image as ImageIcon, Upload } from "lucide-react";
+import { Palette, Type, Image as ImageIcon, Upload, Plus, Trash2 } from "lucide-react";
 
 interface MiniSiteThemeEditorProps {
   theme: MiniSiteTheme;
