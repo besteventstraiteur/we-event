@@ -7,16 +7,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Gift, Heart, CreditCard, DollarSign, Landmark, Globe, Euro, ThumbsUp } from "lucide-react";
+import { Gift, Heart, CreditCard, DollarSign, Landmark, Globe, Euro, ThumbsUp, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import StripeProvider from "@/components/payment/StripeProvider";
+import PaymentService from "@/services/PaymentService";
 
 const GiftFund = () => {
   const { toast } = useToast();
   const [amount, setAmount] = useState<string>("50");
   const [message, setMessage] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [paymentProcessing, setPaymentProcessing] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("donation");
+  const [showThankYou, setShowThankYou] = useState<boolean>(false);
   
   // Mock data - in a real app, this would come from the API
   const totalGoal = 5000;
@@ -31,26 +36,52 @@ const GiftFund = () => {
   ];
   
   const handleDonate = () => {
+    if (!name.trim()) {
+      toast({
+        title: "Information manquante",
+        description: "Veuillez indiquer votre nom",
+        variant: "destructive"
+      });
+      return;
+    }
     setShowDialog(true);
   };
   
-  const handleProcessPayment = () => {
+  const handleProcessPayment = async () => {
     setPaymentProcessing(true);
     
-    // Simulate payment processing
-    setTimeout(() => {
-      setPaymentProcessing(false);
-      setShowDialog(false);
+    try {
+      // Convertir le montant en centimes
+      const amountInCents = parseFloat(amount) * 100;
       
-      toast({
-        title: "Participation enregistrée !",
-        description: `Merci pour votre participation de ${amount} €`,
-      });
+      // Appel au service de paiement
+      await PaymentService.processGiftFundContribution(
+        amountInCents,
+        message,
+        name
+      );
+      
+      // Afficher le message de remerciement
+      setShowDialog(false);
+      setShowThankYou(true);
       
       // Reset form
       setAmount("50");
       setMessage("");
-    }, 2000);
+    } catch (error) {
+      console.error("Erreur de paiement:", error);
+      toast({
+        title: "Erreur de paiement",
+        description: "Une erreur est survenue lors du traitement de votre paiement.",
+        variant: "destructive"
+      });
+    } finally {
+      setPaymentProcessing(false);
+    }
+  };
+  
+  const closeThankYou = () => {
+    setShowThankYou(false);
   };
   
   return (
@@ -88,6 +119,24 @@ const GiftFund = () => {
           
           <TabsContent value="donation" className="p-4 space-y-4">
             <div className="space-y-4">
+              <div>
+                <h3 className="text-sm font-medium mb-2">Vos coordonnées</h3>
+                <div className="grid grid-cols-1 gap-3">
+                  <Input
+                    placeholder="Votre nom"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                  <Input
+                    type="email" 
+                    placeholder="Votre email (optionnel)"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+              
               <div>
                 <h3 className="text-sm font-medium mb-2">Choisissez un montant</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -189,37 +238,41 @@ const GiftFund = () => {
           </DialogHeader>
           
           <div className="py-4 space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <Button variant="outline" className="flex flex-col items-center justify-center h-16 gap-1">
-                <CreditCard className="h-5 w-5" />
-                <span className="text-xs">Carte bancaire</span>
-              </Button>
-              <Button variant="outline" className="flex flex-col items-center justify-center h-16 gap-1">
-                <Landmark className="h-5 w-5" />
-                <span className="text-xs">Virement</span>
-              </Button>
-            </div>
-            
-            <div className="space-y-3">
-              <div>
-                <label className="text-sm font-medium">Nom sur la carte</label>
-                <Input placeholder="Jean Dupont" />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Numéro de carte</label>
-                <Input placeholder="1234 5678 9012 3456" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-sm font-medium">Date d'expiration</label>
-                  <Input placeholder="MM/AA" />
+            <StripeProvider>
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-4">
+                  <Button variant="outline" className="flex flex-col items-center justify-center h-16 gap-1">
+                    <CreditCard className="h-5 w-5" />
+                    <span className="text-xs">Carte bancaire</span>
+                  </Button>
+                  <Button variant="outline" className="flex flex-col items-center justify-center h-16 gap-1">
+                    <Landmark className="h-5 w-5" />
+                    <span className="text-xs">Virement</span>
+                  </Button>
                 </div>
-                <div>
-                  <label className="text-sm font-medium">CVC</label>
-                  <Input placeholder="123" />
+                
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-sm font-medium">Nom sur la carte</label>
+                    <Input placeholder="Jean Dupont" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Numéro de carte</label>
+                    <Input placeholder="1234 5678 9012 3456" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-sm font-medium">Date d'expiration</label>
+                      <Input placeholder="MM/AA" />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">CVC</label>
+                      <Input placeholder="123" />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </StripeProvider>
           </div>
           
           <DialogFooter>
@@ -236,7 +289,10 @@ const GiftFund = () => {
               disabled={paymentProcessing}
             >
               {paymentProcessing ? (
-                <>Traitement en cours...</>
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Traitement en cours...
+                </>
               ) : (
                 <>Payer {amount} €</>
               )}
@@ -244,8 +300,62 @@ const GiftFund = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      <Dialog open={showThankYou} onOpenChange={setShowThankYou}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <ThumbsUp className="h-5 w-5 text-green-500" />
+              Merci pour votre participation !
+            </DialogTitle>
+            <DialogDescription>
+              Votre contribution de {amount} € a bien été enregistrée.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-4 text-center space-y-3">
+            <div className="mx-auto bg-green-50 w-16 h-16 flex items-center justify-center rounded-full">
+              <CheckCircle className="h-8 w-8 text-green-500" />
+            </div>
+            <p className="text-gray-600">
+              {name}, votre participation est très appréciée ! Les mariés ont été notifiés de votre généreuse contribution.
+            </p>
+            {message && (
+              <div className="bg-gray-50 p-3 rounded-md italic text-gray-600 text-sm">
+                "{message}"
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <Button 
+              onClick={closeThankYou}
+              className="w-full bg-green-500 hover:bg-green-600"
+            >
+              Fermer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
+
+// Composant manquant pour le badge CheckCircle
+const CheckCircle = ({ className }: { className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    className={className} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+  >
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+  </svg>
+);
 
 export default GiftFund;

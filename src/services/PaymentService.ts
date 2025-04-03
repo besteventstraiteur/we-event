@@ -26,6 +26,15 @@ export interface PaymentMethod {
   };
 }
 
+export interface GiftFundContribution {
+  id: string;
+  amount: number;
+  message?: string;
+  guestName: string;
+  date: string;
+  status: 'pending' | 'succeeded' | 'failed';
+}
+
 class PaymentService {
   // For demo purposes, simulate creating a payment intent
   // In production, this would be a call to your backend API
@@ -79,6 +88,61 @@ class PaymentService {
   // Get Stripe instance
   getStripe() {
     return stripePromise;
+  }
+
+  // Process gift fund contribution
+  async processGiftFundContribution(
+    amount: number, 
+    message: string = '',
+    guestName: string,
+    paymentMethodId?: string
+  ): Promise<GiftFundContribution> {
+    console.log(`Processing gift fund contribution: ${amount} from ${guestName}`);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Mock success (in real implementation, would use Stripe API)
+    return {
+      id: `contrib_${Math.random().toString(36).substring(2, 10)}`,
+      amount,
+      message,
+      guestName,
+      date: new Date().toISOString(),
+      status: 'succeeded'
+    };
+  }
+
+  // Process vendor payment
+  async processVendorPayment(
+    vendorId: string,
+    amount: number,
+    description: string,
+    paymentMethodId?: string
+  ): Promise<PaymentIntent> {
+    console.log(`Processing vendor payment: ${amount} to ${vendorId}`);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Mock success (in real implementation, would use Stripe API)
+    return {
+      id: `pi_vendor_${Math.random().toString(36).substring(2, 10)}`,
+      clientSecret: `pi_${Math.random().toString(36).substring(2, 15)}_secret_${Math.random().toString(36).substring(2, 15)}`,
+      amount,
+      status: 'succeeded'
+    };
+  }
+
+  // Save payment method for future use
+  async savePaymentMethod(paymentMethodId: string, userId: string): Promise<boolean> {
+    console.log(`Saving payment method ${paymentMethodId} for user ${userId}`);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Mock success
+    return true;
   }
 }
 

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,9 +9,10 @@ import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-import { Gift, Link, Share2, PiggyBank, Copy, Check, Edit, Trash2, ExternalLink } from 'lucide-react';
+import { Gift, Link, Share2, PiggyBank, Copy, Check, Edit, Trash2, ExternalLink, Loader2 } from 'lucide-react';
 import StripeProvider from './StripeProvider';
 import PaymentForm from './PaymentForm';
+import PaymentService, { GiftFundContribution } from '@/services/PaymentService';
 
 interface Contribution {
   id: string;
@@ -30,8 +31,13 @@ const GiftFundManager = () => {
   const [linkCopied, setLinkCopied] = useState(false);
   const [amount, setAmount] = useState(5000); // 50€ in cents
   const [customAmount, setCustomAmount] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fundTitle, setFundTitle] = useState('Cagnotte pour notre voyage de noces');
+  const [fundDescription, setFundDescription] = useState(
+    'Votre présence à notre mariage est le plus beau des cadeaux. Cependant, si vous souhaitez nous offrir quelque chose, nous serions heureux de recevoir une contribution pour notre voyage de noces.'
+  );
   
-  // Mock data for contributions
+  // Mock data for contributions with new interface
   const [contributions, setContributions] = useState<Contribution[]>([
     {
       id: 'cont_1',
@@ -87,23 +93,58 @@ const GiftFundManager = () => {
     }
   };
   
-  const handlePaymentSuccess = (paymentIntentId: string) => {
-    // Add the new contribution to the list
-    const newContribution: Contribution = {
-      id: `cont_${new Date().getTime()}`,
-      name: 'Vous (test)',
-      email: 'vous@example.com',
-      amount: amount,
-      message: 'Test de contribution',
-      date: new Date().toISOString().split('T')[0]
-    };
-    
-    setContributions([newContribution, ...contributions]);
-    setShowPaymentForm(false);
-    
+  const handlePaymentSuccess = async (paymentIntentId: string) => {
+    try {
+      setIsSubmitting(true);
+      
+      // Process the gift fund contribution
+      const contribution = await PaymentService.processGiftFundContribution(
+        amount,
+        'Test de contribution',
+        'Vous (test)'
+      );
+      
+      // Add the new contribution to the list
+      const newContribution: Contribution = {
+        id: contribution.id,
+        name: 'Vous (test)',
+        email: 'vous@example.com',
+        amount: amount,
+        message: 'Test de contribution',
+        date: new Date().toISOString().split('T')[0]
+      };
+      
+      setContributions([newContribution, ...contributions]);
+      setShowPaymentForm(false);
+      
+      toast({
+        title: "Contribution ajoutée",
+        description: `Votre contribution de ${(amount / 100).toFixed(2)} € a été ajoutée avec succès.`
+      });
+    } catch (error) {
+      console.error('Erreur lors du traitement de la contribution:', error);
+      toast({
+        title: "Erreur de paiement",
+        description: "Une erreur est survenue lors du traitement de votre contribution.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSaveSettings = () => {
     toast({
-      title: "Contribution ajoutée",
-      description: `Votre contribution de ${(amount / 100).toFixed(2)} € a été ajoutée avec succès.`
+      title: "Paramètres enregistrés",
+      description: "Les paramètres de la cagnotte ont été mis à jour avec succès."
+    });
+  };
+
+  const handleDeleteContribution = (id: string) => {
+    setContributions(contributions.filter(contribution => contribution.id !== id));
+    toast({
+      title: "Contribution supprimée",
+      description: "La contribution a été supprimée avec succès."
     });
   };
   
@@ -148,6 +189,9 @@ const GiftFundManager = () => {
                 <Link size={16} className="mr-2 text-gray-400" />
                 <span className="flex-1 truncate">{giftFundLink}</span>
               </div>
+              <p className="text-sm text-gray-500 mt-1">
+                Partagez ce lien avec vos invités pour qu'ils puissent contribuer à votre cagnotte
+              </p>
             </div>
             
             <div className="pt-2">
@@ -200,7 +244,8 @@ const GiftFundManager = () => {
                     description="Contribution à la cagnotte de mariage"
                     onSuccess={handlePaymentSuccess}
                     onCancel={() => setShowPaymentForm(false)}
-                    buttonText="Contribuer"
+                    buttonText={isSubmitting ? "Traitement en cours..." : "Contribuer"}
+                    isLoading={isSubmitting}
                   />
                 </StripeProvider>
               </div>
@@ -223,14 +268,19 @@ const GiftFundManager = () => {
               
               <div className="space-y-2">
                 <Label htmlFor="fund-title">Titre de la cagnotte</Label>
-                <Input id="fund-title" defaultValue="Cagnotte pour notre voyage de noces" />
+                <Input 
+                  id="fund-title" 
+                  value={fundTitle}
+                  onChange={(e) => setFundTitle(e.target.value)}
+                />
               </div>
               
               <div className="space-y-2">
                 <Label htmlFor="fund-description">Description</Label>
                 <Textarea
                   id="fund-description"
-                  defaultValue="Votre présence à notre mariage est le plus beau des cadeaux. Cependant, si vous souhaitez nous offrir quelque chose, nous serions heureux de recevoir une contribution pour notre voyage de noces."
+                  value={fundDescription}
+                  onChange={(e) => setFundDescription(e.target.value)}
                   rows={4}
                 />
               </div>
@@ -259,7 +309,7 @@ const GiftFundManager = () => {
                 </div>
               </div>
               
-              <Button className="w-full">Enregistrer les modifications</Button>
+              <Button className="w-full" onClick={handleSaveSettings}>Enregistrer les modifications</Button>
             </div>
           </TabsContent>
           
@@ -290,7 +340,12 @@ const GiftFundManager = () => {
                             <span className="sr-only">Modifier</span>
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-8 w-8 p-0"
+                            onClick={() => handleDeleteContribution(contribution.id)}
+                          >
                             <span className="sr-only">Supprimer</span>
                             <Trash2 className="h-4 w-4" />
                           </Button>

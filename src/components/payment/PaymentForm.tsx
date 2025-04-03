@@ -16,6 +16,7 @@ interface PaymentFormProps {
   onSuccess?: (paymentIntentId: string) => void;
   onCancel?: () => void;
   buttonText?: string;
+  isLoading?: boolean;
 }
 
 const PaymentForm: React.FC<PaymentFormProps> = ({
@@ -24,15 +25,17 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   description = '',
   onSuccess,
   onCancel,
-  buttonText = 'Payer'
+  buttonText = 'Payer',
+  isLoading = false
 }) => {
   const stripe = useStripe();
   const elements = useElements();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(isLoading);
   const [error, setError] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -47,7 +50,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       return;
     }
 
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
 
     try {
@@ -66,6 +69,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
           card: cardElement,
           billing_details: {
             email: email,
+            name: name,
           },
         },
       });
@@ -83,7 +87,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       console.error("Payment error:", e);
       setError("Une erreur est survenue lors du traitement du paiement.");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -113,6 +117,18 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
+            <Label htmlFor="name">Nom sur la carte</Label>
+            <Input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Jean Dupont"
+              required
+            />
+          </div>
+          
+          <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
@@ -135,12 +151,12 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         </CardContent>
         <CardFooter className="flex justify-between">
           {onCancel && (
-            <Button variant="outline" onClick={onCancel} disabled={isLoading}>
+            <Button variant="outline" onClick={onCancel} disabled={loading || isLoading}>
               Annuler
             </Button>
           )}
-          <Button type="submit" disabled={isLoading || !stripe}>
-            {isLoading ? (
+          <Button type="submit" disabled={loading || isLoading || !stripe}>
+            {loading || isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Traitement...
