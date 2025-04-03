@@ -15,17 +15,18 @@ const SlidesContainer: React.FC<SlidesContainerProps> = ({
   navigateToFeature
 }) => {
   return (
-    <div className="relative h-[50vh] md:h-[60vh] overflow-hidden">
+    <div className="relative h-[50vh] md:h-[60vh] overflow-hidden bg-white">
       {slides.map((slide, index) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-all duration-500 ${
-            index === currentSlide
-              ? "translate-x-0 opacity-100"
-              : index < currentSlide
-              ? "-translate-x-full opacity-0"
-              : "translate-x-full opacity-0"
+          className={`absolute inset-0 transition-opacity duration-500 ${
+            index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
           }`}
+          style={{
+            transform: index === currentSlide ? 'translateX(0)' : 
+                      index < currentSlide ? 'translateX(-100%)' : 'translateX(100%)',
+            transition: 'opacity 500ms ease, transform 500ms ease'
+          }}
         >
           <SlideContent 
             slide={slide} 
