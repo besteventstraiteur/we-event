@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
@@ -41,7 +42,6 @@ import ClientTodoList from './pages/client/ClientTodoList';
 import ClientPartners from './pages/client/ClientPartners';
 import ClientRequests from './pages/client/ClientRequests';
 import ClientPartnerRatings from './pages/client/ClientPartnerRatings';
-import ClientProjectDashboard from './pages/client/ClientProjectDashboard';
 import ClientFloorPlans from './pages/client/ClientFloorPlans';
 import ClientPhotos from './pages/client/ClientPhotos';
 import ClientTalkshows from './pages/client/ClientTalkshows';
@@ -121,7 +121,6 @@ function App() {
         <Route path="/client/partners" element={<ClientPartners />} />
         <Route path="/client/requests" element={<ClientRequests />} />
         <Route path="/client/ratings" element={<ClientPartnerRatings />} />
-        <Route path="/client/project" element={<ClientProjectDashboard />} />
         <Route path="/client/floor-plans" element={<ClientFloorPlans />} />
         <Route path="/client/photos" element={<ClientPhotos />} />
         <Route path="/client/talkshows" element={<ClientTalkshows />} />
