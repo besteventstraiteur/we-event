@@ -7,7 +7,7 @@ import GoldButton from "@/components/GoldButton";
 const TermsPage = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <header className="border-b border-gray-200 py-4">
+      <header className="border-b border-gray-200 py-4 bg-white">
         <div className="container flex items-center justify-between">
           <Link to="/">
             <Logo />
@@ -22,12 +22,12 @@ const TermsPage = () => {
         </div>
       </header>
 
-      <main className="flex-1 container py-12">
+      <main className="flex-1 container py-12 bg-white">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-8 text-vip-black">Conditions Générales d'Utilisation</h1>
           
           <div className="space-y-8 text-vip-gray-600">
-            <section>
+            <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">1. Acceptation des conditions</h2>
               <p>
                 En accédant et en utilisant le service Best Events VIP, vous acceptez d'être lié par les présentes 
@@ -36,7 +36,7 @@ const TermsPage = () => {
               </p>
             </section>
             
-            <section>
+            <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">2. Description du service</h2>
               <p className="mb-4">
                 Best Events VIP est une plateforme exclusive qui met en relation des clients VIP et des partenaires 
@@ -49,7 +49,7 @@ const TermsPage = () => {
               </p>
             </section>
             
-            <section>
+            <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">3. Inscription et compte utilisateur</h2>
               <p className="mb-4">
                 Pour utiliser notre service, vous devez créer un compte en fournissant des informations complètes et exactes. 
@@ -62,7 +62,7 @@ const TermsPage = () => {
               </p>
             </section>
             
-            <section>
+            <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">4. Abonnement partenaire</h2>
               <p className="mb-4">
                 L'abonnement partenaire est facturé annuellement. Le prix de l'abonnement est clairement indiqué avant 
@@ -78,7 +78,7 @@ const TermsPage = () => {
               </p>
             </section>
             
-            <section>
+            <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">5. Contenu du service</h2>
               <p className="mb-4">
                 Le contenu disponible via notre service, y compris les podcasts, textes, graphiques, logos, images et vidéos, 
@@ -91,7 +91,7 @@ const TermsPage = () => {
               </p>
             </section>
             
-            <section>
+            <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">6. Contenu utilisateur</h2>
               <p className="mb-4">
                 En soumettant du contenu sur notre plateforme (podcasts, descriptions, messages), vous nous accordez une licence 
@@ -104,7 +104,7 @@ const TermsPage = () => {
               </p>
             </section>
             
-            <section>
+            <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">7. Mise en relation</h2>
               <p className="mb-4">
                 Best Events VIP agit uniquement comme intermédiaire entre les clients et les partenaires. Nous ne sommes pas 
@@ -116,7 +116,7 @@ const TermsPage = () => {
               </p>
             </section>
             
-            <section>
+            <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">8. Limitation de responsabilité</h2>
               <p>
                 Dans toute la mesure permise par la loi applicable, Best Events VIP ne sera pas responsable des dommages 
@@ -125,7 +125,7 @@ const TermsPage = () => {
               </p>
             </section>
             
-            <section>
+            <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">9. Modification des conditions</h2>
               <p>
                 Nous nous réservons le droit de modifier ces conditions à tout moment. Les modifications prendront effet 
@@ -133,7 +133,7 @@ const TermsPage = () => {
               </p>
             </section>
             
-            <section>
+            <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">10. Loi applicable</h2>
               <p>
                 Les présentes conditions sont régies et interprétées conformément aux lois françaises, sans égard aux 
@@ -141,7 +141,7 @@ const TermsPage = () => {
               </p>
             </section>
             
-            <section>
+            <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">11. Contact</h2>
               <p>
                 Pour toute question concernant ces conditions, veuillez nous contacter à l'adresse : 
@@ -158,7 +158,7 @@ const TermsPage = () => {
         </div>
       </main>
 
-      <footer className="py-8 border-t border-gray-200">
+      <footer className="py-8 border-t border-gray-200 bg-white">
         <div className="container">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <Link to="/">

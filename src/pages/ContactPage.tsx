@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
@@ -51,7 +52,7 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <header className="border-b border-gray-200 py-4">
+      <header className="border-b border-gray-200 py-4 bg-white">
         <div className="container flex items-center justify-between">
           <Link to="/">
             <Logo />
@@ -66,7 +67,7 @@ const ContactPage = () => {
         </div>
       </header>
 
-      <main className="flex-1 container py-12">
+      <main className="flex-1 container py-12 bg-white">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-3xl font-bold mb-2 text-center text-vip-black">Contactez-nous</h1>
           <p className="text-vip-gray-600 text-center mb-12">
@@ -75,7 +76,7 @@ const ContactPage = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <form onSubmit={handleSubmit} className="space-y-6 bg-vip-gray-100 p-6 rounded-lg border border-gray-200">
+              <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border border-gray-200">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-vip-gray-700 mb-1">
                     Votre nom
@@ -149,7 +150,7 @@ const ContactPage = () => {
             </div>
             
             <div>
-              <div className="bg-vip-gray-100 p-6 rounded-lg border border-gray-200 space-y-6">
+              <div className="bg-white p-6 rounded-lg border border-gray-200 space-y-6">
                 <h2 className="text-xl font-semibold text-vip-gold">Informations de contact</h2>
                 
                 <div className="space-y-4">
@@ -204,7 +205,7 @@ const ContactPage = () => {
                 </div>
               </div>
               
-              <div className="mt-6 bg-vip-gray-100 p-6 rounded-lg border border-gray-200">
+              <div className="mt-6 bg-white p-6 rounded-lg border border-gray-200">
                 <h2 className="text-xl font-semibold text-vip-gold mb-4">Suivez-nous</h2>
                 <div className="flex gap-4">
                   <a href="#" className="p-2 bg-white rounded-full hover:bg-vip-gold/20">
@@ -234,7 +235,7 @@ const ContactPage = () => {
         </div>
       </main>
 
-      <footer className="py-8 border-t border-gray-200">
+      <footer className="py-8 border-t border-gray-200 bg-white">
         <div className="container">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <Link to="/">
