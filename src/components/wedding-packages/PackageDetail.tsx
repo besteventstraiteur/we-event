@@ -5,8 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Camera, Music, Utensils, Paintbrush, Video, Car, MapPin, ShoppingCart, Check, Info } from "lucide-react";
+import { Camera, Music, Utensils, Paintbrush, Video, Car, MapPin, ShoppingCart, Check, Info, Plus } from "lucide-react";
 import GoldButton from "@/components/GoldButton";
+import { useCart } from "@/contexts/CartContext";
 
 interface PackageDetailProps {
   package: WeddingPackage;
@@ -16,6 +17,8 @@ const PackageDetail: React.FC<PackageDetailProps> = ({ package: pkg }) => {
   const [selectedServices, setSelectedServices] = useState<string[]>(
     pkg.services.filter(s => s.included).map(s => s.id)
   );
+  
+  const { addPackageToCart, addServiceToCart } = useCart();
   
   const formatPrice = (price: number) => {
     return (price / 100).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
@@ -58,6 +61,16 @@ const PackageDetail: React.FC<PackageDetailProps> = ({ package: pkg }) => {
   
   const totalPrice = calculateTotal();
 
+  const handleAddCustomPackage = () => {
+    // Create a custom package with selected services
+    const customPkg = {
+      ...pkg,
+      services: pkg.services.filter(service => selectedServices.includes(service.id)),
+      totalPrice: totalPrice,
+    };
+    addPackageToCart(customPkg);
+  };
+
   return (
     <div className="space-y-6 pt-2">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -94,24 +107,35 @@ const PackageDetail: React.FC<PackageDetailProps> = ({ package: pkg }) => {
                             {formatPrice(service.price)}
                           </div>
                         </div>
-                        {service.canBeRemoved && (
-                          <div className="flex items-center">
-                            <Checkbox 
-                              id={`service-${service.id}`}
-                              checked={selectedServices.includes(service.id)}
-                              onCheckedChange={(checked) => 
-                                handleServiceToggle(service.id, checked as boolean)
-                              }
-                              disabled={service.included && !service.canBeRemoved}
-                            />
-                            <Label 
-                              htmlFor={`service-${service.id}`}
-                              className="ml-2 cursor-pointer"
-                            >
-                              Inclure dans mon pack
-                            </Label>
-                          </div>
-                        )}
+                        <div className="flex items-center justify-between">
+                          {service.canBeRemoved && (
+                            <div className="flex items-center">
+                              <Checkbox 
+                                id={`service-${service.id}`}
+                                checked={selectedServices.includes(service.id)}
+                                onCheckedChange={(checked) => 
+                                  handleServiceToggle(service.id, checked as boolean)
+                                }
+                                disabled={service.included && !service.canBeRemoved}
+                              />
+                              <Label 
+                                htmlFor={`service-${service.id}`}
+                                className="ml-2 cursor-pointer"
+                              >
+                                Inclure dans mon pack
+                              </Label>
+                            </div>
+                          )}
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="border-vip-gray-700 text-vip-gray-400 hover:bg-vip-gray-800"
+                            onClick={() => addServiceToCart(service, pkg.id)}
+                          >
+                            <Plus className="h-3 w-3 mr-1" />
+                            Ajouter
+                          </Button>
+                        </div>
                         {service.included && !service.canBeRemoved && (
                           <div className="flex items-center text-sm text-vip-gray-400">
                             <Info size={14} className="mr-1" />
@@ -198,9 +222,9 @@ const PackageDetail: React.FC<PackageDetailProps> = ({ package: pkg }) => {
               </div>
             </div>
             
-            <GoldButton className="w-full">
+            <GoldButton className="w-full" onClick={handleAddCustomPackage}>
               <ShoppingCart className="mr-2 h-4 w-4" />
-              Réserver ce pack
+              Ajouter ce pack au panier
             </GoldButton>
             
             <p className="text-sm text-vip-gray-400 text-center">

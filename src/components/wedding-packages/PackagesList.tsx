@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ShoppingCart, Star, ChevronRight, Calendar, Clock, Camera, Music, Utensils, Paintbrush, Video, Car, MapPin } from "lucide-react";
 import GoldButton from "@/components/GoldButton";
 import PackageDetail from "./PackageDetail";
+import { useCart } from "@/contexts/CartContext";
 
 interface PackagesListProps {
   packages: WeddingPackage[];
@@ -15,6 +16,7 @@ interface PackagesListProps {
 
 const PackagesList: React.FC<PackagesListProps> = ({ packages }) => {
   const [selectedPackage, setSelectedPackage] = React.useState<WeddingPackage | null>(null);
+  const { addPackageToCart } = useCart();
 
   const getServiceIcon = (type: string) => {
     switch (type) {
@@ -118,9 +120,9 @@ const PackagesList: React.FC<PackagesListProps> = ({ packages }) => {
                 >
                   Détails
                 </Button>
-                <GoldButton>
+                <GoldButton onClick={() => addPackageToCart(pkg)}>
                   <ShoppingCart className="mr-2 h-4 w-4" />
-                  Réserver
+                  Ajouter
                 </GoldButton>
               </CardFooter>
             </Card>

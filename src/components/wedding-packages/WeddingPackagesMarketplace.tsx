@@ -6,6 +6,8 @@ import PackageComparisonTable from "./PackageComparisonTable";
 import PackageFilterBar from "./PackageFilterBar";
 import { ServiceType, ComparisonParams, WeddingPackage } from "@/models/weddingPackage";
 import { mockWeddingPackages } from "./mockPackagesData";
+import { CartProvider } from "@/contexts/CartContext";
+import CartSummary from "./CartSummary";
 
 const WeddingPackagesMarketplace = () => {
   const [packages, setPackages] = useState<WeddingPackage[]>(mockWeddingPackages);
@@ -36,32 +38,37 @@ const WeddingPackagesMarketplace = () => {
   });
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Packs Mariage</h1>
-        <p className="text-vip-gray-400">Découvrez nos formules groupées pour simplifier l'organisation de votre mariage</p>
+    <CartProvider>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold">Packs Mariage</h1>
+            <p className="text-vip-gray-400">Découvrez nos formules groupées pour simplifier l'organisation de votre mariage</p>
+          </div>
+          <CartSummary />
+        </div>
+        
+        <PackageFilterBar 
+          onFilterChange={handleFilterChange} 
+          currentFilters={filterParams} 
+        />
+        
+        <Tabs defaultValue="grid" className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="grid">Vignettes</TabsTrigger>
+            <TabsTrigger value="comparison">Tableau comparatif</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="grid" className="mt-0">
+            <PackagesList packages={filteredPackages} />
+          </TabsContent>
+          
+          <TabsContent value="comparison" className="mt-0">
+            <PackageComparisonTable packages={filteredPackages} />
+          </TabsContent>
+        </Tabs>
       </div>
-      
-      <PackageFilterBar 
-        onFilterChange={handleFilterChange} 
-        currentFilters={filterParams} 
-      />
-      
-      <Tabs defaultValue="grid" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="grid">Vignettes</TabsTrigger>
-          <TabsTrigger value="comparison">Tableau comparatif</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="grid" className="mt-0">
-          <PackagesList packages={filteredPackages} />
-        </TabsContent>
-        
-        <TabsContent value="comparison" className="mt-0">
-          <PackageComparisonTable packages={filteredPackages} />
-        </TabsContent>
-      </Tabs>
-    </div>
+    </CartProvider>
   );
 };
 
