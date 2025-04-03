@@ -6,6 +6,22 @@ import { Capacitor } from '@capacitor/core';
  */
 export const isBiometricAvailable = async (): Promise<boolean> => {
   if (!Capacitor.isNativePlatform()) {
+    // Pour les tests sur mobile web, simuler la disponibilité
+    const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobileDevice) {
+      const hasBiometricAPI = 
+        'PublicKeyCredential' in window && 
+        typeof (window as any).PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable === 'function';
+      
+      if (hasBiometricAPI) {
+        try {
+          return await (window as any).PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+        } catch (e) {
+          console.error("Error checking WebAuthn support:", e);
+          return false;
+        }
+      }
+    }
     return false;
   }
 
@@ -18,7 +34,9 @@ export const isBiometricAvailable = async (): Promise<boolean> => {
     return new Promise((resolve) => {
       setTimeout(() => {
         // Simuler que l'authentification biométrique est disponible sur 80% des appareils
-        resolve(Math.random() < 0.8);
+        const isAvailable = Math.random() < 0.8;
+        console.log("Biometric availability (simulated):", isAvailable);
+        resolve(isAvailable);
       }, 500);
     });
   } catch (error) {
@@ -32,6 +50,14 @@ export const isBiometricAvailable = async (): Promise<boolean> => {
  */
 export const setupBiometricAuth = async (userId: string): Promise<boolean> => {
   if (!Capacitor.isNativePlatform()) {
+    // Pour les tests sur mobile web
+    const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobileDevice) {
+      // Stocker un marqueur dans le localStorage
+      localStorage.setItem('biometric_enabled', 'true');
+      localStorage.setItem('biometric_user_id', userId);
+      return true;
+    }
     return false;
   }
 
@@ -49,6 +75,7 @@ export const setupBiometricAuth = async (userId: string): Promise<boolean> => {
         // Stocker un marqueur dans le localStorage pour simuler l'enregistrement biométrique
         localStorage.setItem('biometric_enabled', 'true');
         localStorage.setItem('biometric_user_id', userId);
+        console.log("Biometric setup completed for user:", userId);
         resolve(true);
       }, 1000);
     });
@@ -63,6 +90,19 @@ export const setupBiometricAuth = async (userId: string): Promise<boolean> => {
  */
 export const authenticateWithBiometrics = async (): Promise<{success: boolean, userId?: string}> => {
   if (!Capacitor.isNativePlatform()) {
+    // Pour les tests sur mobile web
+    const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobileDevice) {
+      // Vérifier si la biométrie est activée
+      const isBiometricEnabled = localStorage.getItem('biometric_enabled') === 'true';
+      if (!isBiometricEnabled) {
+        return { success: false };
+      }
+      
+      // Simuler une authentification réussie sur le web mobile
+      const userId = localStorage.getItem('biometric_user_id') || undefined;
+      return { success: true, userId };
+    }
     return { success: false };
   }
 
@@ -87,6 +127,7 @@ export const authenticateWithBiometrics = async (): Promise<{success: boolean, u
         // Simuler une authentification réussie dans 90% des cas
         const success = Math.random() < 0.9;
         const userId = success ? localStorage.getItem('biometric_user_id') || undefined : undefined;
+        console.log("Biometric authentication result:", success ? "Success" : "Failed");
         resolve({ success, userId });
       }, 1500);
     });
@@ -101,7 +142,10 @@ export const authenticateWithBiometrics = async (): Promise<{success: boolean, u
  */
 export const disableBiometricAuth = async (): Promise<boolean> => {
   if (!Capacitor.isNativePlatform()) {
-    return false;
+    // Pour les tests sur mobile web
+    localStorage.removeItem('biometric_enabled');
+    localStorage.removeItem('biometric_user_id');
+    return true;
   }
 
   try {
@@ -115,6 +159,7 @@ export const disableBiometricAuth = async (): Promise<boolean> => {
       setTimeout(() => {
         localStorage.removeItem('biometric_enabled');
         localStorage.removeItem('biometric_user_id');
+        console.log("Biometric authentication disabled");
         resolve(true);
       }, 500);
     });

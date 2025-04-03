@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Capacitor } from "@capacitor/core";
 import { isBiometricAvailable, setupBiometricAuth, disableBiometricAuth } from "@/utils/biometricAuth";
+import { useDeviceType } from "@/hooks/use-mobile";
 
 export function useBiometricAuth() {
   const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
@@ -10,6 +11,8 @@ export function useBiometricAuth() {
   const [isNative, setIsNative] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const deviceType = useDeviceType();
+  const isMobileDevice = deviceType === 'mobile' || deviceType === 'tablet';
 
   useEffect(() => {
     // Vérifier si l'application s'exécute dans un environnement natif
@@ -18,9 +21,15 @@ export function useBiometricAuth() {
 
     // Vérifier si la biométrie est prise en charge
     const checkBiometricSupport = async () => {
-      if (nativePlatform) {
-        const isSupported = await isBiometricAvailable();
-        setIsBiometricSupported(isSupported);
+      if (nativePlatform || isMobileDevice) {
+        try {
+          const isSupported = await isBiometricAvailable();
+          setIsBiometricSupported(isSupported);
+          console.log("Biometric support:", isSupported);
+        } catch (error) {
+          console.error("Error checking biometric availability:", error);
+          setIsBiometricSupported(false);
+        }
       }
     };
 
@@ -32,15 +41,24 @@ export function useBiometricAuth() {
 
     checkBiometricSupport();
     checkBiometricEnabled();
-  }, []);
+  }, [isMobileDevice]);
 
   // Gérer l'activation/désactivation de la biométrie
   const handleToggleBiometric = async () => {
-    if (!isNative || !isBiometricSupported) {
+    if (!isNative && !isMobileDevice) {
       toast({
         variant: "destructive",
         title: "Non disponible",
         description: "L'authentification biométrique n'est pas disponible sur cet appareil."
+      });
+      return;
+    }
+    
+    if (!isBiometricSupported) {
+      toast({
+        variant: "destructive",
+        title: "Non supporté",
+        description: "Votre appareil ne prend pas en charge l'authentification biométrique."
       });
       return;
     }
