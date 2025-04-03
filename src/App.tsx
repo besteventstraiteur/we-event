@@ -36,7 +36,6 @@ import AdminBackup from './pages/admin/AdminBackup';
 import ClientDashboard from './pages/client/ClientDashboard';
 import ClientBudget from './pages/client/ClientBudget';
 import ClientGuests from './pages/client/ClientGuests';
-import ClientTasks from './pages/client/ClientTasks';
 import ClientTodoList from './pages/client/ClientTodoList';
 import ClientPartners from './pages/client/ClientPartners';
 import ClientRequests from './pages/client/ClientRequests';
@@ -109,7 +108,6 @@ function App() {
         <Route path="/client/dashboard" element={<ClientDashboard />} />
         <Route path="/client/budget" element={<ClientBudget />} />
         <Route path="/client/guests" element={<ClientGuests />} />
-        <Route path="/client/tasks" element={<ClientTasks />} />
         <Route path="/client/todo" element={<ClientTodoList />} />
         <Route path="/client/partners" element={<ClientPartners />} />
         <Route path="/client/requests" element={<ClientRequests />} />

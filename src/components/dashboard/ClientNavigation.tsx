@@ -36,11 +36,6 @@ const ClientNavigation = () => {
       />
       <NavItem
         icon={<ListTodo size={20} />}
-        title="Tâches"
-        href="/client/tasks"
-      />
-      <NavItem
-        icon={<ListTodo size={20} />}
         title="To-do list"
         href="/client/todo"
       />
