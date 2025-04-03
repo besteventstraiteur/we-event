@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import GoldButton from "@/components/GoldButton";
 import PartnerCard from "./PartnerCard";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Trophy } from "lucide-react";
 
 interface MyPartnersProps {
   partners: any[];
@@ -32,14 +33,22 @@ const MyPartners: React.FC<MyPartnersProps> = ({
       <div className="grid grid-cols-1 gap-4">
         {partners.length > 0 ? (
           partners.map((partner) => (
-            <PartnerCard 
-              key={partner.id}
-              partner={partner}
-              categoryName={partnerCategories.find(c => c.id === partner.category)?.name || ""}
-              onContact={onContactPartner}
-              onScheduleAppointment={onScheduleAppointment}
-              showAppointmentInfo={true}
-            />
+            <div key={partner.id} className="relative">
+              {partner.bestAwards && (
+                <div className="absolute -top-2 -right-2 z-10">
+                  <Badge className="bg-amber-500 text-white font-semibold px-2 py-1 flex items-center gap-1 shadow-md">
+                    <Trophy className="w-3 h-3" /> Best Awards 2025
+                  </Badge>
+                </div>
+              )}
+              <PartnerCard 
+                partner={partner}
+                categoryName={partnerCategories.find(c => c.id === partner.category)?.name || ""}
+                onContact={onContactPartner}
+                onScheduleAppointment={onScheduleAppointment}
+                showAppointmentInfo={true}
+              />
+            </div>
           ))
         ) : (
           <div className="text-center py-8">

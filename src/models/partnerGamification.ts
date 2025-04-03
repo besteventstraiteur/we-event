@@ -1,4 +1,3 @@
-
 /**
  * Types de badges que peuvent obtenir les prestataires
  */
@@ -162,6 +161,12 @@ export const BADGES = {
     iconName: 'Crown',
     points: 500,
   },
+  bestAwards: {
+    name: 'Best Awards 2025',
+    description: 'A obtenu 10+ avis 5 étoiles validés par notre équipe',
+    iconName: 'Trophy',
+    points: 750,
+  }
 };
 
 /**

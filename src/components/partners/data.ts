@@ -1,34 +1,156 @@
 
-// Liste des catégories de prestataires
+import { BadgeType } from "@/models/partnerGamification";
+
+// Mock data for partner categories
 export const partnerCategories = [
-  { id: "domaine", name: "Domaines" },
-  { id: "dj", name: "DJs" },
-  { id: "fleuriste", name: "Fleuristes" },
-  { id: "photographe", name: "Photographes" },
-  { id: "traiteur", name: "Traiteurs" },
-  { id: "wedding-planner", name: "Wedding Planners" },
-  { id: "other", name: "Autres" },
+  { id: "venue", name: "Domaines & Lieux" },
+  { id: "photo", name: "Photographes" },
+  { id: "catering", name: "Traiteurs" },
+  { id: "music", name: "DJ & Musiciens" },
+  { id: "flowers", name: "Fleuristes" },
+  { id: "decor", name: "Décorateurs" },
+  { id: "cake", name: "Pâtissiers" },
+  { id: "beauty", name: "Coiffure & Maquillage" },
+  { id: "transport", name: "Transport" },
+  { id: "dress", name: "Robes & Costumes" },
+  { id: "animation", name: "Animations" },
+  { id: "planner", name: "Wedding Planners" },
 ];
 
-// Liste des prestataires
+// Mock data for all partners in the directory
 export const allPartners = [
-  { id: 1, name: "Château des Merveilles", category: "domaine", discount: "15%", description: "Un domaine d'exception niché dans un parc de 5 hectares avec une vue imprenable sur la vallée. Capacité de 200 personnes assises.", rating: 4.9 },
-  { id: 2, name: "Manoir des Roses", category: "domaine", discount: "10%", description: "Manoir historique du 18ème siècle avec ses jardins à la française, idéal pour vos séances photos et cérémonies en extérieur.", rating: 4.7 },
-  { id: 3, name: "DJ Platine", category: "dj", discount: "20%", description: "Plus de 15 ans d'expérience, spécialiste des mariages et événements haut de gamme.", rating: 4.8 },
-  { id: 4, name: "Mix & Match", category: "dj", discount: "15%", description: "Duo de DJs offrant une expérience musicale complète et personnalisée pour votre événement.", rating: 4.5 },
-  { id: 5, name: "Fleurs de Luxe", category: "fleuriste", discount: "20%", description: "Fleuriste spécialisé dans les compositions raffinées et élégantes pour des événements prestigieux.", rating: 4.6 },
-  { id: 6, name: "Belle Fleur", category: "fleuriste", discount: "15%", description: "Compositions florales personnalisées avec des fleurs fraîches et de saison.", rating: 4.3 },
-  { id: 7, name: "Objectif Emotion", category: "photographe", discount: "15%", description: "Photographe au style moderne capturant les émotions naturelles et les moments spontanés.", rating: 4.9 },
-  { id: 8, name: "Studio Lumière", category: "photographe", discount: "10%", description: "Équipe de photographes et vidéastes pour immortaliser chaque moment de votre événement sous tous les angles.", rating: 4.8 },
-  { id: 9, name: "Best Events Traiteur", category: "traiteur", discount: "25%", description: "Le meilleur de la gastronomie française revisitée pour vos événements exclusifs.", rating: 4.7 },
-  { id: 10, name: "Saveurs du Monde", category: "traiteur", discount: "20%", description: "Traiteur proposant une cuisine fusion inspirée des quatre coins du monde.", rating: 4.4 },
-  { id: 11, name: "Perfect Day", category: "wedding-planner", discount: "15%", description: "Organisation complète ou partielle de votre événement avec un suivi personnalisé.", rating: 4.9 },
-  { id: 12, name: "Event Designer", category: "wedding-planner", discount: "10%", description: "Spécialiste de la décoration et scénographie événementielle haut de gamme.", rating: 4.6 },
+  {
+    id: "partner-1",
+    name: "Château des Merveilles",
+    category: "venue",
+    description: "Un domaine d'exception niché dans un parc de 5 hectares avec une vue imprenable sur la vallée.",
+    location: "Bordeaux, France",
+    rating: 4.8,
+    reviewCount: 125,
+    image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1498&q=80",
+    availableDate: "2023-09-25",
+    price: "€€€€",
+    tags: ["château", "extérieur", "vue panoramique"],
+    discount: "15%",
+    badges: ["quality", "verified"],
+    bestAwards: true
+  },
+  {
+    id: "partner-2",
+    name: "Fleurs Élégance",
+    category: "flowers",
+    description: "Créations florales uniques pour sublimer votre jour J. Spécialiste des compositions élégantes et raffinées.",
+    location: "Lyon, France",
+    rating: 4.7,
+    reviewCount: 87,
+    image: "https://images.unsplash.com/photo-1596438459194-f275f413d6ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80",
+    availableDate: "2023-09-15",
+    price: "€€",
+    tags: ["bouquets", "décorations", "arches"],
+    discount: "10%",
+    badges: ["speed"]
+  },
+  {
+    id: "partner-3",
+    name: "Studio Photo Elite",
+    category: "photo",
+    description: "Capturez l'émotion de votre mariage à travers notre regard artistique et notre approche naturelle.",
+    location: "Paris, France",
+    rating: 4.9,
+    reviewCount: 142,
+    image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    availableDate: "2023-10-05",
+    price: "€€€",
+    tags: ["reportage", "artistique", "album"],
+    discount: "20%",
+    badges: ["quality", "featured"],
+    bestAwards: true
+  },
+  {
+    id: "partner-4",
+    name: "Pâtisserie Royale",
+    category: "cake",
+    description: "Pièces montées et wedding cakes d'exception. Nous créons des desserts aussi beaux que délicieux.",
+    location: "Marseille, France",
+    rating: 4.6,
+    reviewCount: 68,
+    image: "https://images.unsplash.com/photo-1535254973040-607b474d7f5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    availableDate: "2023-09-22",
+    price: "€€",
+    tags: ["wedding cake", "pièce montée", "desserts"],
+    discount: "15%",
+    badges: ["topRated"]
+  },
+  {
+    id: "partner-5",
+    name: "DJ Mix Master",
+    category: "music",
+    description: "Créez l'ambiance parfaite pour votre mariage avec notre équipe de DJs professionnels et passionnés.",
+    location: "Nice, France",
+    rating: 4.7,
+    reviewCount: 95,
+    image: "https://images.unsplash.com/photo-1605723517503-3cadb5818fb3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    availableDate: "2023-10-15",
+    price: "€€",
+    tags: ["DJ", "animation", "sonorisation"],
+    discount: "10%",
+    badges: ["verified", "popular"],
+    bestAwards: true
+  },
+  {
+    id: "partner-6",
+    name: "Harmony Musique",
+    category: "music",
+    description: "Musiciens classiques pour votre cérémonie ou cocktail. Une ambiance élégante et raffinée.",
+    location: "Toulouse, France",
+    rating: 4.8,
+    reviewCount: 62,
+    image: "https://images.unsplash.com/photo-1471478331149-c72f17e33c73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80",
+    availableDate: "2023-09-28",
+    price: "€€€",
+    tags: ["quatuor", "piano", "violon"],
+    discount: "15%",
+    badges: ["exclusive"]
+  },
+  {
+    id: "partner-7",
+    name: "Décor de Rêve",
+    category: "decor",
+    description: "Transformez votre lieu de réception en un espace féérique. Décorations personnalisées et location de mobilier.",
+    location: "Lille, France",
+    rating: 4.5,
+    reviewCount: 73,
+    image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    availableDate: "2023-10-10",
+    price: "€€",
+    tags: ["décoration", "mobilier", "luminaires"],
+    discount: "20%",
+    badges: ["speed", "verified"]
+  }
 ];
 
-// Données fictives de mes prestataires sélectionnés
+// Mock data for partners selected by the client
 export const myPartners = [
-  { id: 3, name: "DJ Platine", category: "dj", discount: "20%", description: "Plus de 15 ans d'expérience, spécialiste des mariages et événements haut de gamme.", status: "confirmed", appointmentDate: "2023-11-15", rating: 4.8 },
-  { id: 7, name: "Objectif Emotion", category: "photographe", discount: "15%", description: "Photographe au style moderne capturant les émotions naturelles et les moments spontanés.", status: "pending", appointmentDate: null, rating: 4.9 },
-  { id: 9, name: "Best Events Traiteur", category: "traiteur", discount: "25%", description: "Le meilleur de la gastronomie française revisitée pour vos événements exclusifs.", status: "confirmed", appointmentDate: "2023-12-10", rating: 4.7 },
+  allPartners[0], // Château des Merveilles
+  allPartners[2], // Studio Photo Elite
+  allPartners[4], // DJ Mix Master
 ];
+
+// Helper to get the badge icon name
+export const getBadgeIcon = (badgeType: BadgeType): string => {
+  const badgeConfig = {
+    speed: "Zap",
+    quality: "Star",
+    popular: "TrendingUp",
+    reliable: "Shield",
+    exclusive: "Award",
+    recommended: "Users",
+    topRated: "ThumbsUp",
+    seasonal: "Gift",
+    verified: "CheckCircle",
+    featured: "Crown",
+    bestAwards: "Trophy"
+  };
+  
+  return badgeConfig[badgeType] || "Award";
+};
