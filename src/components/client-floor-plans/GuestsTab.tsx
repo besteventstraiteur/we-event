@@ -123,16 +123,21 @@ const GuestsTab: React.FC<GuestsTabProps> = ({ guests, onSave, tables }) => {
         { id: `contact-${Date.now()}-3`, firstName: 'Pierre', lastName: 'Bernard', email: 'pierre.bernard@example.com', phone: '0687654321' }
       ];
       
-      // Convert contacts to guests
+      // Convert contacts to guests using the correct Guest type properties
       const newGuests: Guest[] = mockContacts.map(contact => ({
         id: contact.id,
-        firstName: contact.firstName,
-        lastName: contact.lastName,
+        nom: contact.lastName,
+        prenom: contact.firstName,
         email: contact.email || '',
-        phone: contact.phone || '',
-        status: 'pending',
-        group: 'Amis',
-        tableAssignment: null
+        telephone: contact.phone || '',
+        ceremonie: true,
+        vin: true,
+        repas: true,
+        brunch: false,
+        conjoint: false,
+        enfants: 0,
+        table: '',
+        notes: ''
       }));
       
       // Combine with existing guests
@@ -166,7 +171,7 @@ const GuestsTab: React.FC<GuestsTabProps> = ({ guests, onSave, tables }) => {
         const emailIdx = headers.findIndex(h => h.toLowerCase().includes('email'));
         const phoneIdx = headers.findIndex(h => h.toLowerCase().includes('téléphone') || h.toLowerCase().includes('phone'));
         
-        // Parse guests from CSV
+        // Parse guests from CSV using the correct Guest type properties
         const newGuests: Guest[] = [];
         for (let i = 1; i < lines.length; i++) {
           if (!lines[i].trim()) continue;
@@ -174,13 +179,18 @@ const GuestsTab: React.FC<GuestsTabProps> = ({ guests, onSave, tables }) => {
           const values = lines[i].split(',');
           newGuests.push({
             id: `import-${Date.now()}-${i}`,
-            firstName: firstNameIdx >= 0 ? values[firstNameIdx].trim() : '',
-            lastName: lastNameIdx >= 0 ? values[lastNameIdx].trim() : '',
+            prenom: firstNameIdx >= 0 ? values[firstNameIdx].trim() : '',
+            nom: lastNameIdx >= 0 ? values[lastNameIdx].trim() : '',
             email: emailIdx >= 0 ? values[emailIdx].trim() : '',
-            phone: phoneIdx >= 0 ? values[phoneIdx].trim() : '',
-            status: 'pending',
-            group: 'Importés',
-            tableAssignment: null
+            telephone: phoneIdx >= 0 ? values[phoneIdx].trim() : '',
+            ceremonie: true,
+            vin: true,
+            repas: true,
+            brunch: false,
+            conjoint: false,
+            enfants: 0,
+            table: '',
+            notes: ''
           });
         }
         
@@ -209,14 +219,16 @@ const GuestsTab: React.FC<GuestsTabProps> = ({ guests, onSave, tables }) => {
   // Export to CSV
   const exportToCsv = () => {
     const currentGuests = isOnline ? guests : localGuests;
-    const headers = ['Prénom', 'Nom', 'Email', 'Téléphone', 'Statut', 'Groupe', 'Table'];
+    const headers = ['Prénom', 'Nom', 'Email', 'Téléphone', 'Cérémonie', 'Vin', 'Repas', 'Brunch', 'Table'];
     const rows = currentGuests.map(guest => [
-      guest.firstName || '',
-      guest.lastName || '',
+      guest.prenom || '',
+      guest.nom || '',
       guest.email || '',
-      guest.phone || '',
-      guest.status || '',
-      guest.group || '',
+      guest.telephone || '',
+      guest.ceremonie ? 'Oui' : 'Non',
+      guest.vin ? 'Oui' : 'Non',
+      guest.repas ? 'Oui' : 'Non',
+      guest.brunch ? 'Oui' : 'Non',
       guest.table || ''
     ]);
     
