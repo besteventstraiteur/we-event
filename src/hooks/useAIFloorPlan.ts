@@ -17,14 +17,82 @@ export const useAIFloorPlan = ({
 }: UseAIFloorPlanProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [lastSuggestion, setLastSuggestion] = useState<string | null>(null);
+  const [affinity, setAffinity] = useState<Record<string, string[]>>({});
+
+  // Analyser les affinités entre invités basées sur différents critères
+  const analyzeGuestAffinities = () => {
+    const affinityMap: Record<string, string[]> = {};
+    
+    // Regrouper par famille (nom de famille)
+    const familyGroups: Record<string, Guest[]> = {};
+    guests.forEach(guest => {
+      const familyName = guest.lastName || guest.nom || '';
+      if (familyName) {
+        if (!familyGroups[familyName]) {
+          familyGroups[familyName] = [];
+        }
+        familyGroups[familyName].push(guest);
+      }
+    });
+    
+    // Créer des affinités basées sur la famille
+    Object.values(familyGroups).forEach(group => {
+      if (group.length >= 2) {
+        group.forEach(guest => {
+          if (!affinityMap[guest.id]) {
+            affinityMap[guest.id] = [];
+          }
+          
+          group
+            .filter(g => g.id !== guest.id)
+            .forEach(relative => {
+              if (!affinityMap[guest.id].includes(relative.id)) {
+                affinityMap[guest.id].push(relative.id);
+              }
+            });
+        });
+      }
+    });
+    
+    // Analyser d'autres critères d'affinité (âge, restrictions alimentaires, etc.)
+    const ageGroups: Record<string, Guest[]> = {
+      'enfants': [],
+      'adultes': [],
+      'seniors': []
+    };
+    
+    guests.forEach(guest => {
+      const age = guest.age || 0;
+      if (age < 18) {
+        ageGroups['enfants'].push(guest);
+      } else if (age > 65) {
+        ageGroups['seniors'].push(guest);
+      } else {
+        ageGroups['adultes'].push(guest);
+      }
+    });
+    
+    // Affinités basées sur restrictions alimentaires similaires
+    const dietaryGroups: Record<string, Guest[]> = {};
+    guests.forEach(guest => {
+      const diet = guest.dietaryRestrictions || 'standard';
+      if (!dietaryGroups[diet]) {
+        dietaryGroups[diet] = [];
+      }
+      dietaryGroups[diet].push(guest);
+    });
+    
+    setAffinity(affinityMap);
+    return affinityMap;
+  };
 
   // Generate an optimized seating arrangement based on guest data
   const generateOptimizedSeating = async () => {
     setIsGenerating(true);
     
     try {
-      // In a real implementation, this would make an API call to an AI service
-      // Here we'll simulate the AI's table planning logic
+      // Analyser les affinités entre invités
+      const affinityMap = analyzeGuestAffinities();
       
       // Step 1: Analyze existing tables or create new ones if needed
       const tablesToUse = [...tables];
