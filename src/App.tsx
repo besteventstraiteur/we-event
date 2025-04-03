@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
@@ -31,6 +30,7 @@ import AdminPodcasts from './pages/admin/AdminPodcasts';
 import AdminKpiDashboard from './pages/admin/AdminKpiDashboard';
 import AdminPartnerGamification from './pages/admin/AdminPartnerGamification';
 import AdminBackup from './pages/admin/AdminBackup';
+import AdminPresentationManagement from './pages/admin/AdminPresentationManagement';
 
 // Client Pages
 import ClientDashboard from './pages/client/ClientDashboard';
@@ -104,6 +104,7 @@ function App() {
         <Route path="/admin/kpi-dashboard" element={<AdminKpiDashboard />} />
         <Route path="/admin/partner-gamification" element={<AdminPartnerGamification />} />
         <Route path="/admin/backup" element={<AdminBackup />} />
+        <Route path="/admin/presentation" element={<AdminPresentationManagement />} />
 
         {/* Client Pages */}
         <Route path="/client/dashboard" element={<ClientDashboard />} />
