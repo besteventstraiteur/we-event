@@ -80,7 +80,10 @@ const PartnerLiveStreaming = () => {
             <VideoConferenceForm 
               onSuccess={(conferenceId) => {
                 // Rediriger vers l'onglet "À venir"
-                document.querySelector('[data-state="inactive"][value="upcoming"]')?.click();
+                const upcomingTab = document.querySelector('[data-state="inactive"][value="upcoming"]') as HTMLElement;
+                if (upcomingTab) {
+                  upcomingTab.click();
+                }
               }}
             />
           </TabsContent>

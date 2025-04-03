@@ -28,7 +28,10 @@ export type PodcastErrorCode =
   | 'DELETE_ERROR'
   | 'VALIDATION_ERROR'
   | 'FILE_ERROR'
-  | 'UNKNOWN_ERROR';
+  | 'UNKNOWN_ERROR'
+  | 'NOT_FOUND'  // Added for VideoConferenceService
+  | 'CREATE_ERROR'  // Added for VideoConferenceService
+  | 'UPDATE_ERROR';  // Added for TalkshowRepository
 
 /**
  * Formats an error into a user-friendly message
