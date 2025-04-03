@@ -4,7 +4,8 @@ import {
   UserRole, 
   Permission, 
   AccessControlUser, 
-  userHasPermission 
+  userHasPermission,
+  PartnerType 
 } from "@/utils/accessControl";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -32,6 +33,12 @@ export function useAccessControl(initialUser?: AccessControlUser) {
 
     loadUserFromStorage();
   }, []);
+
+  // Vérifier si l'utilisateur est d'un type de partenaire spécifique
+  const isPartnerType = useCallback((partnerType: PartnerType): boolean => {
+    if (!currentUser || currentUser.role !== UserRole.PARTNER) return false;
+    return currentUser.partnerType === partnerType || currentUser.partnerType === PartnerType.GENERAL;
+  }, [currentUser]);
 
   // Fonction pour vérifier si l'utilisateur actuel a une permission
   const hasPermission = useCallback((permission: Permission, resourceOwnerId?: string): boolean => {
@@ -92,5 +99,6 @@ export function useAccessControl(initialUser?: AccessControlUser) {
     checkAccess,
     updateUserAccess,
     setCurrentUser,
+    isPartnerType
   };
 }

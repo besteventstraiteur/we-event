@@ -1,4 +1,3 @@
-
 import { toast } from "@/components/ui/use-toast";
 
 /**
@@ -10,6 +9,18 @@ export enum UserRole {
   PARTNER = "partner",     // Prestataires
   ADMIN = "admin",         // Administrateurs
   SUPER_ADMIN = "super_admin"  // Super administrateurs
+}
+
+/**
+ * Types de partenaires
+ */
+export enum PartnerType {
+  PHOTOGRAPHER = "photographer", // Photographe
+  DJ = "dj",                   // DJ
+  CATERER = "caterer",         // Traiteur
+  VENUE = "venue",             // Lieu
+  DECORATOR = "decorator",     // Décorateur
+  GENERAL = "general",         // Partenaire général
 }
 
 /**
@@ -37,6 +48,9 @@ export enum Permission {
   MANAGE_SERVICES = "manage:services",
   MANAGE_CALENDAR = "manage:calendar",
   MANAGE_PORTFOLIO = "manage:portfolio",
+  MANAGE_PHOTOS = "manage:photos", // Photos (photographes)
+  MANAGE_PLAYLISTS = "manage:playlists", // Playlists (DJs)
+  MANAGE_MENUS = "manage:menus", // Menus (traiteurs)
   
   // Permissions admin
   MANAGE_USERS = "manage:users",
@@ -87,6 +101,46 @@ const RolePermissions: Record<UserRole, Permission[]> = {
   ]
 };
 
+// Définir les permissions spécifiques par type de partenaire
+const PartnerTypePermissions: Record<PartnerType, Permission[]> = {
+  [PartnerType.PHOTOGRAPHER]: [
+    Permission.MANAGE_PHOTOS,
+    Permission.MANAGE_SERVICES,
+    Permission.MANAGE_CALENDAR,
+    Permission.MANAGE_PORTFOLIO
+  ],
+  [PartnerType.DJ]: [
+    Permission.MANAGE_PLAYLISTS,
+    Permission.MANAGE_SERVICES,
+    Permission.MANAGE_CALENDAR,
+    Permission.MANAGE_PORTFOLIO
+  ],
+  [PartnerType.CATERER]: [
+    Permission.MANAGE_MENUS,
+    Permission.MANAGE_SERVICES,
+    Permission.MANAGE_CALENDAR,
+    Permission.MANAGE_PORTFOLIO
+  ],
+  [PartnerType.VENUE]: [
+    Permission.MANAGE_SERVICES,
+    Permission.MANAGE_CALENDAR,
+    Permission.MANAGE_PORTFOLIO
+  ],
+  [PartnerType.DECORATOR]: [
+    Permission.MANAGE_SERVICES,
+    Permission.MANAGE_CALENDAR,
+    Permission.MANAGE_PORTFOLIO
+  ],
+  [PartnerType.GENERAL]: [
+    Permission.MANAGE_PHOTOS,
+    Permission.MANAGE_PLAYLISTS,
+    Permission.MANAGE_MENUS,
+    Permission.MANAGE_SERVICES,
+    Permission.MANAGE_CALENDAR,
+    Permission.MANAGE_PORTFOLIO
+  ],
+};
+
 /**
  * Vérifie si un rôle a une permission spécifique
  * @param role Rôle de l'utilisateur
@@ -102,6 +156,7 @@ export const hasPermission = (role: UserRole, permission: Permission): boolean =
 export interface AccessControlUser {
   id: string;
   role: UserRole;
+  partnerType?: PartnerType; // Type de partenaire (uniquement pour les partenaires)
   customPermissions?: Permission[];
   eventId?: string; // Pour lier un utilisateur à un événement spécifique
 }
@@ -126,13 +181,19 @@ export const userHasPermission = (
   
   // Vérifier les permissions basées sur le rôle
   const hasRolePermission = hasPermission(user.role, permission);
+
+  // Vérifier les permissions basées sur le type de partenaire
+  let hasPartnerTypePermission = false;
+  if (user.role === UserRole.PARTNER && user.partnerType) {
+    hasPartnerTypePermission = PartnerTypePermissions[user.partnerType]?.includes(permission) || false;
+  }
   
   // Si c'est une opération sur sa propre ressource, vérifier avec l'ID
   if (resourceOwnerId && resourceOwnerId === user.id) {
     return true;
   }
   
-  return hasRolePermission;
+  return hasRolePermission || hasPartnerTypePermission;
 };
 
 /**

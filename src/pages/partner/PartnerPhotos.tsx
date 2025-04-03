@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Upload, Image, Users, Lock } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import PartnerTypeRoute from "@/components/security/PartnerTypeRoute";
+import { PartnerType } from "@/utils/accessControl";
 
 const PartnerPhotos = () => {
   const [selectedClient, setSelectedClient] = useState("");
@@ -271,4 +273,11 @@ const PartnerPhotos = () => {
   );
 };
 
-export default PartnerPhotos;
+// Wrap the component with the PartnerTypeRoute to restrict access
+const ProtectedPartnerPhotos = () => (
+  <PartnerTypeRoute allowedTypes={[PartnerType.PHOTOGRAPHER, PartnerType.GENERAL]}>
+    <PartnerPhotos />
+  </PartnerTypeRoute>
+);
+
+export default ProtectedPartnerPhotos;

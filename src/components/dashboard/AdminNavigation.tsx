@@ -11,7 +11,8 @@ import {
   Radio, 
   Star,
   Headphones,
-  Presentation
+  Presentation,
+  UserCog
 } from "lucide-react";
 
 const AdminNavigation = () => {
@@ -31,6 +32,11 @@ const AdminNavigation = () => {
         icon={<Building2 size={20} />}
         title="Partenaires"
         href="/admin/partners"
+      />
+      <NavItem
+        icon={<UserCog size={20} />}
+        title="Types Partenaires"
+        href="/admin/partner-types"
       />
       <NavItem
         icon={<Users size={20} />}

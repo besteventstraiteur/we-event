@@ -2,10 +2,25 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { BarChart, Map, MessageSquare, Calendar, CheckSquare, Receipt, Image, HeadphonesIcon, Video, Users, Trophy, Award } from "lucide-react";
+import { BarChart, Map, MessageSquare, Calendar, CheckSquare, Receipt, Image, HeadphonesIcon, Video, Users, Trophy, Award, SquareStack } from "lucide-react";
+import { useAccessControl } from "@/hooks/useAccessControl";
+
+// Define partner types
+export enum PartnerType {
+  PHOTOGRAPHER = "photographer",
+  DJ = "dj",
+  CATERER = "caterer",
+  VENUE = "venue",
+  DECORATOR = "decorator",
+  GENERAL = "general",
+}
 
 const PartnerNavigation = () => {
   const location = useLocation();
+  const { currentUser } = useAccessControl();
+  
+  // Get partner type from current user (default to general if not specified)
+  const partnerType = currentUser?.partnerType || PartnerType.GENERAL;
   
   return (
     <>
@@ -79,13 +94,43 @@ const PartnerNavigation = () => {
       >
         Paiements
       </NavItem>
-      <NavItem
-        href="/partner/photos"
-        icon={<Image size={18} />}
-        active={location.pathname === "/partner/photos"}
-      >
-        Photos
-      </NavItem>
+
+      {/* Photo section - only for photographers */}
+      {(partnerType === PartnerType.PHOTOGRAPHER || partnerType === PartnerType.GENERAL) && (
+        <NavItem
+          href="/partner/photos"
+          icon={<Image size={18} />}
+          active={location.pathname === "/partner/photos"}
+        >
+          Photos
+        </NavItem>
+      )}
+
+      {/* Music section - only for DJs */}
+      {(partnerType === PartnerType.DJ || partnerType === PartnerType.GENERAL) && (
+        <>
+          <NavItem
+            href="/partner/playlists"
+            icon={<SquareStack size={18} />}
+            active={location.pathname === "/partner/playlists"}
+          >
+            Playlists
+          </NavItem>
+        </>
+      )}
+
+      {/* Menu section - only for caterers */}
+      {(partnerType === PartnerType.CATERER || partnerType === PartnerType.GENERAL) && (
+        <NavItem
+          href="/partner/menus"
+          icon={<Receipt size={18} />}
+          active={location.pathname === "/partner/menus"}
+        >
+          Menus clients
+        </NavItem>
+      )}
+
+      {/* Media content available to all partners */}
       <NavItem
         href="/partner/podcasts"
         icon={<HeadphonesIcon size={18} />}
