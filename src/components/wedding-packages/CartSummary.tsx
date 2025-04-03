@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import CartItemsList from "./cart/CartItemsList";
 import CartSummaryFooter from "./cart/CartSummaryFooter";
+import CartTriggerButton from "./cart/CartTriggerButton";
 
 const CartSummary = () => {
   const { cart, removeFromCart, clearCart } = useCart();
@@ -21,15 +22,7 @@ const CartSummary = () => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" className="relative">
-          <ShoppingCart className="h-5 w-5 mr-2" />
-          <span>Panier</span>
-          {cart.items.length > 0 && (
-            <Badge className="absolute -top-2 -right-2 bg-vip-gold text-vip-black px-1.5 min-w-5 h-5 flex items-center justify-center rounded-full">
-              {cart.items.length}
-            </Badge>
-          )}
-        </Button>
+        <CartTriggerButton itemCount={cart.items.length} />
       </SheetTrigger>
       <SheetContent className="bg-vip-gray-900 border-vip-gray-800 w-[350px] sm:w-[450px]">
         <SheetHeader>
