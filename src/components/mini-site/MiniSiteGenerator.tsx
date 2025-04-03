@@ -7,7 +7,8 @@ import { WeddingDetails, MiniSiteTheme } from "@/types/miniSiteTypes";
 import MiniSiteDetailsForm from "./MiniSiteDetailsForm";
 import MiniSiteThemeEditor from "./MiniSiteThemeEditor";
 import MiniSitePreview from "./MiniSitePreview";
-import { Link2, Eye, Code, Download, Share2 } from "lucide-react";
+import ScheduleEditor from "./ScheduleEditor";
+import { Link2, Eye, Code, Download, Share2, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const defaultWeddingDetails: WeddingDetails = {
@@ -32,6 +33,7 @@ const defaultWeddingDetails: WeddingDetails = {
   accommodations: [],
   dressCode: "Tenue de cocktail",
   story: "Notre histoire a commencé il y a quelques années...",
+  schedule: []
 };
 
 const defaultTheme: MiniSiteTheme = {
@@ -46,7 +48,16 @@ const defaultTheme: MiniSiteTheme = {
     heading: "Playfair Display",
     body: "Inter"
   },
-  images: {}
+  images: {},
+  layout: {
+    headerStyle: 'centered',
+    sectionStyle: 'boxed',
+    roundedCorners: true
+  },
+  animations: {
+    enabled: true,
+    intensity: 'subtle'
+  }
 };
 
 const MiniSiteGenerator: React.FC = () => {
@@ -100,14 +111,25 @@ const MiniSiteGenerator: React.FC = () => {
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="details">Informations</TabsTrigger>
+              <TabsTrigger value="schedule" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Programme
+              </TabsTrigger>
               <TabsTrigger value="theme">Thème & Design</TabsTrigger>
               <TabsTrigger value="preview">Aperçu</TabsTrigger>
             </TabsList>
             
             <TabsContent value="details" className="space-y-4">
               <MiniSiteDetailsForm 
+                weddingDetails={weddingDetails}
+                setWeddingDetails={setWeddingDetails}
+              />
+            </TabsContent>
+            
+            <TabsContent value="schedule" className="space-y-4">
+              <ScheduleEditor 
                 weddingDetails={weddingDetails}
                 setWeddingDetails={setWeddingDetails}
               />

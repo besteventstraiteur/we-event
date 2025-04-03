@@ -25,6 +25,15 @@ export interface WeddingDetails {
   rsvpDeadline?: Date;
   story?: string;
   contactEmail?: string;
+  schedule?: ScheduleItem[];
+}
+
+export interface ScheduleItem {
+  id: string;
+  time: string;
+  title: string;
+  description?: string;
+  icon?: string;
 }
 
 export interface Accommodation {
@@ -53,6 +62,15 @@ export interface MiniSiteTheme {
     hero?: string;
     gallery?: string[];
     backgroundPattern?: string;
+  };
+  layout?: {
+    headerStyle: 'centered' | 'side-by-side' | 'overlay';
+    sectionStyle: 'boxed' | 'full-width';
+    roundedCorners: boolean;
+  };
+  animations?: {
+    enabled: boolean;
+    intensity: 'subtle' | 'moderate' | 'playful';
   };
 }
 
