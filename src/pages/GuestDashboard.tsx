@@ -10,11 +10,15 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import GuestBook from "@/components/guests/GuestBook";
 import GiftFund from "@/components/guests/GiftFund";
+import MobileAppWrapper from "@/components/mobile/MobileAppWrapper";
+import { useDeviceType } from "@/hooks/use-mobile";
 
 const GuestDashboard = () => {
   const { eventId, guestId } = useParams();
   const [attending, setAttending] = useState<boolean | null>(null);
   const [activeTab, setActiveTab] = useState("info");
+  const deviceType = useDeviceType();
+  const isMobile = deviceType === 'mobile' || deviceType === 'tablet';
 
   // Mock data - in a real app, this would be fetched from an API
   const eventDetails = {
@@ -32,7 +36,7 @@ const GuestDashboard = () => {
     console.log(`Guest ${guestId} will ${value ? 'attend' : 'not attend'} event ${eventId}`);
   };
 
-  return (
+  const content = (
     <div className="min-h-screen bg-white flex flex-col">
       <header className="bg-white p-4 shadow">
         <div className="container mx-auto flex justify-between items-center">
@@ -176,6 +180,12 @@ const GuestDashboard = () => {
         </div>
       </main>
     </div>
+  );
+
+  return isMobile ? (
+    <MobileAppWrapper type="guest">{content}</MobileAppWrapper>
+  ) : (
+    content
   );
 };
 
