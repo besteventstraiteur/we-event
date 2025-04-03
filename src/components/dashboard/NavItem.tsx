@@ -5,11 +5,12 @@ import { Link } from "react-router-dom";
 interface NavItemProps {
   href: string;
   icon: React.ReactNode;
-  children: React.ReactNode;
+  title?: string;
+  children?: React.ReactNode;
   active?: boolean;
 }
 
-const NavItem = ({ href, icon, children, active }: NavItemProps) => {
+const NavItem = ({ href, icon, title, children, active }: NavItemProps) => {
   return (
     <Link
       to={href}
@@ -20,7 +21,7 @@ const NavItem = ({ href, icon, children, active }: NavItemProps) => {
       }`}
     >
       {icon}
-      <span>{children}</span>
+      <span>{title || children}</span>
     </Link>
   );
 };
