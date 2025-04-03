@@ -17,7 +17,8 @@ import {
   User,
   Headphones,
   PanelLeft,
-  Star
+  Star,
+  Building2
 } from "lucide-react";
 
 const ClientNavigation = () => {
@@ -70,7 +71,7 @@ const ClientNavigation = () => {
       />
       <NavItem
         icon={<Heart size={20} />}
-        title="Pinterest"
+        title="Pinterbest"
         href="/client/pinterbest"
       />
       <NavItem
@@ -101,7 +102,7 @@ const ClientNavigation = () => {
       <NavItem
         icon={<Star size={20} />}
         title="Évaluations"
-        href="/client/partners"
+        href="/client/ratings"
       />
       <NavItem
         icon={<PanelLeft size={20} />}
@@ -118,7 +119,3 @@ const ClientNavigation = () => {
 };
 
 export default ClientNavigation;
-
-function Building2(props: React.ComponentProps<typeof Star>) {
-  return <Star {...props} />;
-}
