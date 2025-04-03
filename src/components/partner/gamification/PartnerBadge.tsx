@@ -2,9 +2,8 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import * as LucideIcons from "lucide-react";
 import { PartnerBadge as PartnerBadgeType } from "@/models/partnerGamification";
-import { Award } from "lucide-react";
+import { Award, Star, Shield, Zap, TrendingUp, Users, ThumbsUp, Gift, CheckCircle, Crown } from "lucide-react";
 
 interface BadgeProps {
   badge: PartnerBadgeType;
@@ -21,14 +20,36 @@ const PartnerBadge = ({ badge, size = "md" }: BadgeProps) => {
   
   const { badge: badgeSize, icon: iconSize } = sizeMap[size];
   
-  // Get the icon component more safely
-  let Icon = Award; // Default icon as fallback
+  // Get the correct icon component based on the badge iconName
+  // Instead of dynamic imports, use a map of pre-imported components
+  const getIconComponent = () => {
+    switch (badge.iconName) {
+      case 'Zap':
+        return Zap;
+      case 'Star':
+        return Star;
+      case 'TrendingUp':
+        return TrendingUp;
+      case 'Shield':
+        return Shield;
+      case 'Award':
+        return Award;
+      case 'Users':
+        return Users;
+      case 'ThumbsUp':
+        return ThumbsUp;
+      case 'Gift':
+        return Gift;
+      case 'CheckCircle':
+        return CheckCircle;
+      case 'Crown':
+        return Crown;
+      default:
+        return Award; // Default fallback icon
+    }
+  };
   
-  if (badge.iconName && typeof badge.iconName === 'string' && 
-      badge.iconName in LucideIcons && 
-      typeof LucideIcons[badge.iconName as keyof typeof LucideIcons] === 'function') {
-    Icon = LucideIcons[badge.iconName as keyof typeof LucideIcons];
-  }
+  const IconComponent = getIconComponent();
   
   return (
     <TooltipProvider delayDuration={300}>
@@ -37,7 +58,7 @@ const PartnerBadge = ({ badge, size = "md" }: BadgeProps) => {
           <Badge 
             className={`rounded-full flex items-center justify-center p-0 bg-gradient-to-br from-vip-gold to-yellow-600 hover:from-yellow-500 hover:to-amber-700 cursor-help ${badgeSize}`}
           >
-            <Icon size={iconSize} className="text-vip-black" />
+            <IconComponent size={iconSize} className="text-vip-black" />
           </Badge>
         </TooltipTrigger>
         <TooltipContent side="top" className="max-w-[250px]">
