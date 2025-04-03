@@ -42,7 +42,7 @@ const WeddingPackagesMarketplace = () => {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">Packs Mariage</h1>
+            <h1 className="text-3xl font-bold">Marketplace</h1>
             <p className="text-vip-gray-400">Découvrez nos formules groupées pour simplifier l'organisation de votre mariage</p>
           </div>
           <CartSummary />

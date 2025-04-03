@@ -10,7 +10,7 @@ const AdminWeddingPackages = () => {
     <DashboardLayout type="admin">
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Packs Mariage</h1>
+          <h1 className="text-3xl font-bold">Marketplace</h1>
           <p className="text-vip-gray-400">Gérez les formules groupées proposées aux clients</p>
         </div>
 
