@@ -100,6 +100,11 @@ const ClientNavigation = () => {
         href="/client/ratings"
       />
       <NavItem
+        icon={<Package size={20} />}
+        title="Packs Mariage"
+        href="/client/wedding-packages"
+      />
+      <NavItem
         icon={<PanelLeft size={20} />}
         title="Mini-site"
         href="/client/mini-site"
