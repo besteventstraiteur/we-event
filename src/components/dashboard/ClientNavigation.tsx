@@ -2,25 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { 
-  User, 
-  Users, 
-  FileText, 
-  LayoutDashboard, 
-  Headphones, 
-  Video, 
-  Image, 
-  CheckSquare, 
-  UtensilsCrossed, 
-  ClipboardCheck, 
-  GalleryHorizontal, 
-  Music, 
-  PiggyBank,
-  Shield,
-  CreditCard,
-  VideoIcon,
-  Globe
-} from "lucide-react";
+import { Calendar, CheckSquare, Users, ListMusic, Camera, Video, Receipt, FileText, Home, Map, Utensils, Broadcast, Package } from "lucide-react";
 
 const ClientNavigation = () => {
   const location = useLocation();
@@ -29,122 +11,94 @@ const ClientNavigation = () => {
     <>
       <NavItem
         href="/client/dashboard"
-        icon={<User size={18} />}
+        icon={<Home size={18} />}
         active={location.pathname === "/client/dashboard"}
       >
-        Mon Profil
+        Tableau de bord
       </NavItem>
       <NavItem
-        href="/client/partners"
-        icon={<Users size={18} />}
-        active={location.pathname === "/client/partners"}
+        href="/client/tasks"
+        icon={<CheckSquare size={18} />}
+        active={location.pathname === "/client/tasks"}
       >
-        Prestataires
+        Tâches
       </NavItem>
       <NavItem
         href="/client/requests"
         icon={<FileText size={18} />}
         active={location.pathname === "/client/requests"}
       >
-        Mes Demandes
-      </NavItem>
-      <NavItem
-        href="/client/budget"
-        icon={<PiggyBank size={18} />}
-        active={location.pathname === "/client/budget"}
-      >
-        Budget
-      </NavItem>
-      <NavItem
-        href="/client/payments"
-        icon={<CreditCard size={18} />}
-        active={location.pathname === "/client/payments"}
-      >
-        Paiements
-      </NavItem>
-      <NavItem
-        href="/client/photos"
-        icon={<Image size={18} />}
-        active={location.pathname === "/client/photos"}
-      >
-        Mes Photos
-      </NavItem>
-      <NavItem
-        href="/client/pinterbest"
-        icon={<GalleryHorizontal size={18} />}
-        active={location.pathname === "/client/pinterbest"}
-      >
-        Pinterbest
-      </NavItem>
-      <NavItem
-        href="/client/floorplans"
-        icon={<LayoutDashboard size={18} />}
-        active={location.pathname === "/client/floorplans"}
-      >
-        Plan de salle & Invités
+        Demandes
       </NavItem>
       <NavItem
         href="/client/guests"
         icon={<Users size={18} />}
         active={location.pathname === "/client/guests"}
       >
-        Gestion des Invités
+        Invités
       </NavItem>
       <NavItem
-        href="/client/music"
-        icon={<Music size={18} />}
-        active={location.pathname === "/client/music"}
+        href="/client/partners"
+        icon={<Map size={18} />}
+        active={location.pathname === "/client/partners"}
       >
-        Playlists Musicales
+        Prestataires
+      </NavItem>
+      <NavItem
+        href="/client/wedding-packages"
+        icon={<Package size={18} />}
+        active={location.pathname === "/client/wedding-packages"}
+      >
+        Packs Mariage
+      </NavItem>
+      <NavItem
+        href="/client/payments"
+        icon={<Receipt size={18} />}
+        active={location.pathname === "/client/payments"}
+      >
+        Paiements
+      </NavItem>
+      <NavItem
+        href="/client/floor-plans"
+        icon={<Calendar size={18} />}
+        active={location.pathname === "/client/floor-plans"}
+      >
+        Plans de table
       </NavItem>
       <NavItem
         href="/client/menus"
-        icon={<UtensilsCrossed size={18} />}
+        icon={<Utensils size={18} />}
         active={location.pathname === "/client/menus"}
       >
-        Gestion des Menus
+        Menus
       </NavItem>
       <NavItem
-        href="/client/mini-site"
-        icon={<Globe size={18} />}
-        active={location.pathname === "/client/mini-site"}
+        href="/client/music"
+        icon={<ListMusic size={18} />}
+        active={location.pathname === "/client/music"}
       >
-        Mini-Site Web
+        Musique
       </NavItem>
       <NavItem
-        href="/client/todolist"
-        icon={<ClipboardCheck size={18} />}
-        active={location.pathname === "/client/todolist"}
+        href="/client/photos"
+        icon={<Camera size={18} />}
+        active={location.pathname === "/client/photos"}
       >
-        Checklist
+        Photos
       </NavItem>
       <NavItem
-        href="/client/podcasts"
-        icon={<Headphones size={18} />}
-        active={location.pathname === "/client/podcasts"}
+        href="/client/live"
+        icon={<Broadcast size={18} />}
+        active={location.pathname === "/client/live"}
       >
-        Podcasts
+        Diffusion en direct
       </NavItem>
       <NavItem
-        href="/client/talkshows"
+        href="/client/videos"
         icon={<Video size={18} />}
-        active={location.pathname === "/client/talkshows"}
+        active={location.pathname === "/client/videos"}
       >
-        Talkshows
-      </NavItem>
-      <NavItem
-        href="/client/live-streaming"
-        icon={<VideoIcon size={18} />}
-        active={location.pathname === "/client/live-streaming"}
-      >
-        Visioconférences
-      </NavItem>
-      <NavItem
-        href="/client/security"
-        icon={<Shield size={18} />}
-        active={location.pathname === "/client/security"}
-      >
-        Sécurité
+        Vidéos
       </NavItem>
     </>
   );
