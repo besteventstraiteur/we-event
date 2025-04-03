@@ -11,7 +11,8 @@ export type BadgeType =
   | 'topRated' // Très bien noté
   | 'seasonal' // Badge saisonnier (événement spécial)
   | 'verified' // Identité vérifiée
-  | 'featured'; // Mis en avant par VIP
+  | 'featured' // Mis en avant par VIP
+  | 'bestAwards'; // Best Awards 2025
 
 /**
  * Niveaux de fidélité

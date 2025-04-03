@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { BarChart, Map, MessageSquare, Calendar, CheckSquare, Receipt, Image, HeadphonesIcon, Video, Users, Trophy } from "lucide-react";
+import { BarChart, Map, MessageSquare, Calendar, CheckSquare, Receipt, Image, HeadphonesIcon, Video, Users, Trophy, Award } from "lucide-react";
 
 const PartnerNavigation = () => {
   const location = useLocation();
@@ -50,6 +50,13 @@ const PartnerNavigation = () => {
         active={location.pathname === "/partner/gamification"}
       >
         Programme Fidélité
+      </NavItem>
+      <NavItem
+        href="/partner/best-awards"
+        icon={<Award size={18} />}
+        active={location.pathname === "/partner/best-awards"}
+      >
+        Best Awards 2025
       </NavItem>
       <NavItem
         href="/partner/venues"

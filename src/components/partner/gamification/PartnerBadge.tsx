@@ -3,7 +3,7 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { PartnerBadge as PartnerBadgeType } from "@/models/partnerGamification";
-import { Award, Star, Shield, Zap, TrendingUp, Users, ThumbsUp, Gift, CheckCircle, Crown } from "lucide-react";
+import { Award, Star, Shield, Zap, TrendingUp, Users, ThumbsUp, Gift, CheckCircle, Crown, Trophy } from "lucide-react";
 
 interface BadgeProps {
   badge: PartnerBadgeType;
@@ -44,6 +44,8 @@ const PartnerBadge = ({ badge, size = "md" }: BadgeProps) => {
         return CheckCircle;
       case 'Crown':
         return Crown;
+      case 'Trophy':
+        return Trophy;
       default:
         return Award; // Default fallback icon
     }
