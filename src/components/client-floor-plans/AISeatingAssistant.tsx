@@ -41,7 +41,7 @@ const AISeatingAssistant: React.FC<AISeatingAssistantProps> = ({
   const totalSeats = tables.reduce((acc, table) => acc + table.seats.length, 0);
   const totalTables = tables.length;
   
-  const hasAllergies = guests.filter(g => g.dietaryRestrictions).length;
+  const hasAllergies = guests.filter(g => g.notes?.includes("allergie") || g.dietaryRestrictions).length;
   const needsWheelchairAccess = guests.filter(g => g.needsWheelchairAccess).length;
 
   return (

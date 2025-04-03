@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 interface AIBudgetAssistantProps {
   budgetTotal: number;
@@ -79,12 +80,11 @@ const AIBudgetAssistant: React.FC<AIBudgetAssistantProps> = ({
           </div>
           <Progress 
             value={percentageUsed} 
-            className="h-2" 
-            indicatorClassName={
+            className={cn("h-2", 
               percentageUsed > 90 ? "bg-red-500" : 
               percentageUsed > 75 ? "bg-amber-500" : 
               "bg-green-500"
-            }
+            )}
           />
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>{spentAmount}€ dépensés</span>

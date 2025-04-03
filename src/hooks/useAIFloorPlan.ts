@@ -46,8 +46,8 @@ export const useAIFloorPlan = ({
       const groupedGuests: Record<string, Guest[]> = {};
       
       guestsToAssign.forEach(guest => {
-        // Use family name as group key
-        const familyName = guest.lastName || "Autres";
+        // Use family name as group key - fallback to nom if lastName is not available
+        const familyName = guest.lastName || guest.nom || "Autres";
         if (!groupedGuests[familyName]) {
           groupedGuests[familyName] = [];
         }
@@ -80,7 +80,10 @@ export const useAIFloorPlan = ({
               );
               
               if (assigned) {
-                assignmentResults.push(`${groupGuests[i].firstName} ${groupGuests[i].lastName} à ${targetTable.name}`);
+                // Use firstName/lastName if available, otherwise fallback to prenom/nom
+                const firstName = groupGuests[i].firstName || groupGuests[i].prenom;
+                const lastName = groupGuests[i].lastName || groupGuests[i].nom;
+                assignmentResults.push(`${firstName} ${lastName} à ${targetTable.name}`);
               }
             }
           }

@@ -6,15 +6,18 @@ import FloorPlanner from '@/components/floor-planner/FloorPlanner';
 import TableAssignment from '@/components/floor-planner/TableAssignment';
 import { useIsMobile } from '@/hooks/use-mobile';
 import AISeatingAssistant from './AISeatingAssistant';
+import { Guest, Table } from '@/types/floorPlanTypes';
 
 interface FloorPlanTabProps {
-  guests: any[];
-  tables: any[];
+  guests: Guest[];
+  tables: Table[];
   createTable: (name: string, seatCount: number) => string;
   assignGuestToSeat: (guestId: string, tableId: string, seatId: string) => boolean;
   unassignGuestFromSeat: (guestId: string) => void;
-  getGuestsForTable: (tableId: string) => any[];
+  getGuestsForTable: (tableId: string) => Guest[];
   findSeatByGuestId: (guestId: string) => any;
+  savedFloorPlan?: string | null;
+  onSave?: (data: string) => void;
 }
 
 const FloorPlanTab: React.FC<FloorPlanTabProps> = ({
@@ -24,7 +27,9 @@ const FloorPlanTab: React.FC<FloorPlanTabProps> = ({
   assignGuestToSeat,
   unassignGuestFromSeat,
   getGuestsForTable,
-  findSeatByGuestId
+  findSeatByGuestId,
+  savedFloorPlan,
+  onSave
 }) => {
   const isMobile = useIsMobile();
   
@@ -34,7 +39,10 @@ const FloorPlanTab: React.FC<FloorPlanTabProps> = ({
         <div className="lg:col-span-2">
           <Card>
             <CardContent className="p-0">
-              <FloorPlanner />
+              <FloorPlanner 
+                initialData={savedFloorPlan || undefined}
+                onSave={onSave}
+              />
             </CardContent>
           </Card>
         </div>
@@ -54,8 +62,10 @@ const FloorPlanTab: React.FC<FloorPlanTabProps> = ({
           <TableAssignment 
             guests={guests}
             tables={tables}
-            assignGuestToSeat={assignGuestToSeat}
-            unassignGuestFromSeat={unassignGuestFromSeat}
+            onUpdateTableName={() => {}}
+            onDeleteTable={() => {}}
+            onAssignGuest={assignGuestToSeat}
+            onUnassignGuest={unassignGuestFromSeat}
             getGuestsForTable={getGuestsForTable}
             findSeatByGuestId={findSeatByGuestId}
           />

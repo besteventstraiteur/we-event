@@ -17,6 +17,11 @@ export interface Guest {
   notes: string;
   menuChoice?: string;
   menuOption?: string;
+  // Add the missing properties
+  firstName?: string;
+  lastName?: string;
+  dietaryRestrictions?: string;
+  needsWheelchairAccess?: boolean;
 }
 
 export interface Seat {

@@ -91,8 +91,15 @@ const MainTabs: React.FC<MainTabsProps> = ({
 
       <TabsContent value="plan" className="space-y-3 mt-2">
         <FloorPlanTab 
-          savedFloorPlan={savedFloorPlan} 
-          onSave={handleSaveFloorPlan} 
+          tables={tables}
+          guests={guests}
+          createTable={createTable}
+          assignGuestToSeat={assignGuestToSeat}
+          unassignGuestFromSeat={unassignGuestFromSeat}
+          getGuestsForTable={getGuestsForTable}
+          findSeatByGuestId={findSeatByGuestId}
+          savedFloorPlan={savedFloorPlan}
+          onSave={handleSaveFloorPlan}
         />
       </TabsContent>
       
