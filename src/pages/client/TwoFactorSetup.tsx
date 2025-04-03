@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -69,7 +68,7 @@ const TwoFactorSetup: React.FC = () => {
           setIsLoading(false);
           toast({
             title: "2FA désactivé",
-            description: "L'authentification à deux facteurs a été désactivée.",
+            description: "L'authentification à deux facteurs a été désactivée."
           });
         }, 500);
       }
@@ -104,7 +103,7 @@ const TwoFactorSetup: React.FC = () => {
         console.log("Nouveau code envoyé à", verificationMethod);
         toast({
           title: "Code envoyé",
-          description: `Un nouveau code a été envoyé via ${verificationMethod === 'email' ? 'email' : 'application d'authentification'}.`,
+          description: `Un nouveau code a été envoyé via ${verificationMethod === 'email' ? 'email' : 'application d\'authentification'}.`
         });
         resolve();
       }, 1000);
@@ -117,7 +116,7 @@ const TwoFactorSetup: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Non disponible",
-        description: "L'authentification biométrique n'est pas disponible sur cet appareil.",
+        description: "L'authentification biométrique n'est pas disponible sur cet appareil."
       });
       return;
     }
@@ -132,7 +131,7 @@ const TwoFactorSetup: React.FC = () => {
           setIsBiometricEnabled(false);
           toast({
             title: "Biométrie désactivée",
-            description: "L'authentification biométrique a été désactivée.",
+            description: "L'authentification biométrique a été désactivée."
           });
         } else {
           throw new Error("Erreur lors de la désactivation");
@@ -145,7 +144,7 @@ const TwoFactorSetup: React.FC = () => {
           setIsBiometricEnabled(true);
           toast({
             title: "Biométrie activée",
-            description: "L'authentification biométrique a été activée avec succès.",
+            description: "L'authentification biométrique a été activée avec succès."
           });
         } else {
           throw new Error("Erreur lors de l'activation");
@@ -156,7 +155,7 @@ const TwoFactorSetup: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Une erreur est survenue. Veuillez réessayer.",
+        description: "Une erreur est survenue. Veuillez réessayer."
       });
     } finally {
       setIsLoading(false);
