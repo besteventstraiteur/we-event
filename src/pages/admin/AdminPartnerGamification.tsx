@@ -252,7 +252,7 @@ const AdminPartnerGamification = () => {
                       <Card key={key} className="bg-vip-gray-800 border-vip-gray-700">
                         <CardContent className="pt-6">
                           <div className="flex flex-col items-center mb-4">
-                            <div className={`w-12 h-12 rounded-full flex items-center justify-center`} style={{ backgroundColor: tier.color }}>
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: tier.color }}>
                               <Trophy className="h-6 w-6 text-vip-black" />
                             </div>
                             <h3 className="mt-2 text-vip-white font-medium">{tier.name}</h3>
@@ -299,7 +299,7 @@ const AdminPartnerGamification = () => {
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <label className="text-sm text-vip-gray-400">Réponse rapide (< 2h)</label>
+                          <label className="text-sm text-vip-gray-400">Réponse rapide (&lt; 2h)</label>
                           <div className="flex items-center gap-2">
                             <Input 
                               type="number" 
