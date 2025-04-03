@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { VerificationProvider } from "@/contexts/VerificationContext";
+import VerificationProvider from "./verification/VerificationProvider";
 import VerificationContent from "./verification/VerificationContent";
 import VerificationActions from "./verification/VerificationActions";
 
