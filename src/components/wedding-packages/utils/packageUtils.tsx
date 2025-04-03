@@ -1,4 +1,5 @@
 
+import React from "react";
 import { PackageService } from "@/models/weddingPackage";
 import { Camera, Music, Utensils, Paintbrush, Video, Car, MapPin } from "lucide-react";
 
