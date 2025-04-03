@@ -50,6 +50,8 @@ export interface PartnerGamification {
     completedEvents: number; // Nombre d'événements réalisés
     recommendationsGiven: number; // Nombre de recommandations données
     recommendationsReceived: number; // Nombre de recommandations reçues
+    averageRating: number; // Note moyenne des avis (0-5)
+    totalRatings: number; // Nombre total d'avis reçus
   };
 }
 
@@ -171,9 +173,45 @@ export const ACTION_POINTS = {
   clientBooked: 100, // Un client réserve le service
   eventCompleted: 200, // Événement réalisé avec succès
   goodReview: 50, // Avis positif (4-5 étoiles)
+  perfectReview: 100, // Avis 5 étoiles
+  reviewResponse: 10, // Réponse à un avis client
   recommendation: 20, // Recommandation d'un autre prestataire
   recommendationAccepted: 30, // Recommandation acceptée
   profileCompletion: 25, // Profil complété à 100%
   anniversaryMonth: 50, // Chaque mois anniversaire sur la plateforme
   renewSubscription: 300, // Renouvellement d'abonnement
+};
+
+/**
+ * Calcul des badges en fonction des statistiques du prestataire
+ */
+export const calculateBadges = (partnerStats: PartnerGamification['stats']): BadgeType[] => {
+  const earnedBadges: BadgeType[] = [];
+  
+  // Vérifier les critères pour chaque badge
+  if (partnerStats.averageResponseTime < 2) {
+    earnedBadges.push('speed');
+  }
+  
+  if (partnerStats.clientSatisfaction >= 4.8) {
+    earnedBadges.push('quality');
+  }
+  
+  if (partnerStats.responseRate > 95) {
+    earnedBadges.push('reliable');
+  }
+  
+  if (partnerStats.averageRating >= 4.8 && partnerStats.totalRatings >= 10) {
+    earnedBadges.push('topRated');
+  }
+  
+  if (partnerStats.recommendationsGiven >= 20) {
+    earnedBadges.push('recommended');
+  }
+  
+  // Les badges 'popular', 'exclusive', 'seasonal', 'verified', 'featured'
+  // sont généralement attribués manuellement ou selon des critères spécifiques
+  // qui ne peuvent pas être déterminés uniquement par les statistiques
+  
+  return earnedBadges;
 };

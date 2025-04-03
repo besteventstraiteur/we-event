@@ -1,134 +1,61 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AppWrapper from "./components/AppWrapper";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+
+// Import pages
 import HomePage from "./pages/HomePage";
-import Index from "./pages/Index";
-import LoginPage from "./pages/LoginPage";
-import RegisterClientPage from "./pages/RegisterClientPage";
-import RegisterPartnerPage from "./pages/RegisterPartnerPage";
-import PartnersPage from "./pages/PartnersPage";
-import ClientDashboard from "./pages/client/ClientDashboard";
-import ClientPartners from "./pages/client/ClientPartners";
-import ClientRequests from "./pages/client/ClientRequests";
-import ClientPodcasts from "./pages/client/ClientPodcasts";
-import ClientTalkshows from "./pages/client/ClientTalkshows";
-import ClientFloorPlans from "./pages/client/ClientFloorPlans";
-import ClientPhotos from "./pages/client/ClientPhotos";
-import ClientPinterbest from "./pages/client/ClientPinterbest";
-import ClientMenus from "./pages/client/ClientMenus";
-import ClientTodoList from "./pages/client/ClientTodoList";
-import ClientMusicPlaylists from "./pages/client/ClientMusicPlaylists";
-import ClientGuests from "./pages/client/ClientGuests";
-import ClientBudget from "./pages/client/ClientBudget";
-import ClientTwoFactorSetup from "./pages/client/TwoFactorSetup";
-import ClientPayments from "./pages/client/ClientPayments";
-import ClientLiveStreaming from "./pages/client/ClientLiveStreaming";
-import ClientMiniSite from "./pages/client/ClientMiniSite";
-import ClientDayOfCommunication from "./pages/client/ClientDayOfCommunication"; // Add the new import
-import PartnerDashboard from "./pages/partner/PartnerDashboard";
-import PartnerRequests from "./pages/partner/PartnerRequests";
-import PartnerStats from "./pages/partner/PartnerStats";
-import PartnerPodcasts from "./pages/partner/PartnerPodcasts";
-import PartnerTalkshows from "./pages/partner/PartnerTalkshows";
-import PartnerLiveStreaming from "./pages/partner/PartnerLiveStreaming";
-import PartnerRecommendations from "./pages/partner/PartnerRecommendations";
-import PartnerPhotos from "./pages/partner/PartnerPhotos";
-import PartnerMusicPlaylists from "./pages/partner/PartnerMusicPlaylists";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminPartners from "./pages/admin/AdminPartners";
-import AdminClients from "./pages/admin/AdminClients";
-import AdminPodcasts from "./pages/admin/AdminPodcasts";
-import AdminTalkshows from "./pages/admin/AdminTalkshows";
-import AdminVenues from "./pages/admin/AdminVenues";
-import AdminRecommendations from "./pages/admin/AdminRecommendations";
-import AdminBackup from "./pages/admin/AdminBackup";
-import AdminGuests from "./pages/admin/AdminGuests";
-import GuestDashboard from "./pages/GuestDashboard";
-import GuestMenuSelection from "./pages/GuestMenuSelection";
 import NotFound from "./pages/NotFound";
-import PrivacyPage from "./pages/PrivacyPage";
-import TermsPage from "./pages/TermsPage";
-import ContactPage from "./pages/ContactPage";
+import ClientDashboard from "./pages/client/ClientDashboard";
+import ClientTasks from "./pages/client/ClientTasks";
+import ClientTodoList from "./pages/client/ClientTodoList";
+import ClientBudget from "./pages/client/ClientBudget";
+import ClientGuests from "./pages/client/ClientGuests";
+import ClientFloorPlans from "./pages/client/ClientFloorPlans";
+import ClientProjectDashboard from "./pages/client/ClientProjectDashboard";
+import ClientMiniSite from "./pages/client/ClientMiniSite";
+import ClientPartners from "./pages/client/ClientPartners";
+import ClientPartnerRatings from "./pages/client/ClientPartnerRatings";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminGuests from "./pages/admin/AdminGuests";
+import AdminVenues from "./pages/admin/AdminVenues";
+import AdminClients from "./pages/admin/AdminClients";
+import AdminPartners from "./pages/admin/AdminPartners";
+import AdminRatings from "./pages/admin/AdminRatings";
+import LoginPage from "./pages/LoginPage";
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <AppWrapper>
-        <BrowserRouter>
-          <Routes>
-            {/* Pages publiques */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/index" element={<Index />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register-client" element={<RegisterClientPage />} />
-            <Route path="/register-partner" element={<RegisterPartnerPage />} />
-            <Route path="/partners" element={<PartnersPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            
-            {/* Espace invité */}
-            <Route path="/guest" element={<GuestDashboard />} />
-            <Route path="/guest/menu/:eventId/:guestId" element={<GuestMenuSelection />} />
-            <Route path="/guest-menu-selection" element={<GuestMenuSelection />} />
-            
-            {/* Dashboard Client */}
-            <Route path="/client/dashboard" element={<ClientDashboard />} />
-            <Route path="/client/partners" element={<ClientPartners />} />
-            <Route path="/client/requests" element={<ClientRequests />} />
-            <Route path="/client/podcasts" element={<ClientPodcasts />} />
-            <Route path="/client/talkshows" element={<ClientTalkshows />} />
-            <Route path="/client/floorplans" element={<ClientFloorPlans />} />
-            <Route path="/client/photos" element={<ClientPhotos />} />
-            <Route path="/client/pinterbest" element={<ClientPinterbest />} />
-            <Route path="/client/menus" element={<ClientMenus />} />
-            <Route path="/client/todolist" element={<ClientTodoList />} />
-            <Route path="/client/music" element={<ClientMusicPlaylists />} />
-            <Route path="/client/guests" element={<ClientGuests />} />
-            <Route path="/client/budget" element={<ClientBudget />} />
-            <Route path="/client/security" element={<ClientTwoFactorSetup />} />
-            <Route path="/client/payments" element={<ClientPayments />} />
-            <Route path="/client/live-streaming" element={<ClientLiveStreaming />} />
-            <Route path="/client/mini-site" element={<ClientMiniSite />} />
-            <Route path="/client/day-of-communication" element={<ClientDayOfCommunication />} /> {/* Add the new route */}
-            
-            {/* Dashboard Prestataire */}
-            <Route path="/partner/dashboard" element={<PartnerDashboard />} />
-            <Route path="/partner/requests" element={<PartnerRequests />} />
-            <Route path="/partner/stats" element={<PartnerStats />} />
-            <Route path="/partner/podcasts" element={<PartnerPodcasts />} />
-            <Route path="/partner/talkshows" element={<PartnerTalkshows />} />
-            <Route path="/partner/live-streaming" element={<PartnerLiveStreaming />} />
-            <Route path="/partner/recommendations" element={<PartnerRecommendations />} />
-            <Route path="/partner/photos" element={<PartnerPhotos />} />
-            <Route path="/partner/music" element={<PartnerMusicPlaylists />} />
-            
-            {/* Dashboard Admin */}
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/partners" element={<AdminPartners />} />
-            <Route path="/admin/clients" element={<AdminClients />} />
-            <Route path="/admin/guests" element={<AdminGuests />} />
-            <Route path="/admin/podcasts" element={<AdminPodcasts />} />
-            <Route path="/admin/talkshows" element={<AdminTalkshows />} />
-            <Route path="/admin/venues" element={<AdminVenues />} />
-            <Route path="/admin/recommendations" element={<AdminRecommendations />} />
-            <Route path="/admin/backup" element={<AdminBackup />} />
-            
-            {/* Page 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </AppWrapper>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        
+        {/* Client Routes */}
+        <Route path="/client/dashboard" element={<ClientDashboard />} />
+        <Route path="/client/tasks" element={<ClientTasks />} />
+        <Route path="/client/todo" element={<ClientTodoList />} />
+        <Route path="/client/budget" element={<ClientBudget />} />
+        <Route path="/client/guests" element={<ClientGuests />} />
+        <Route path="/client/floor-plans" element={<ClientFloorPlans />} />
+        <Route path="/client/project" element={<ClientProjectDashboard />} />
+        <Route path="/client/mini-site" element={<ClientMiniSite />} />
+        <Route path="/client/partners" element={<ClientPartners />} />
+        <Route path="/client/partners/:partnerId/ratings" element={<ClientPartnerRatings />} />
+        
+        {/* Admin Routes */}
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/guests" element={<AdminGuests />} />
+        <Route path="/admin/venues" element={<AdminVenues />} />
+        <Route path="/admin/clients" element={<AdminClients />} />
+        <Route path="/admin/partners" element={<AdminPartners />} />
+        <Route path="/admin/ratings" element={<AdminRatings />} />
+        
+        {/* 404 Route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
+  );
+}
 
 export default App;

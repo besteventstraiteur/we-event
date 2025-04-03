@@ -1,107 +1,124 @@
 
 import React from "react";
-import { useLocation } from "react-router-dom";
-import NavItem from "./NavItem";
-import { Calendar, CheckSquare, Users, ListMusic, Camera, Video, Receipt, FileText, Home, Map, Utensils, Radio, Package } from "lucide-react";
+import { NavItem } from "./NavItem";
+import { 
+  LayoutDashboard, 
+  ListTodo, 
+  Users, 
+  Calendar, 
+  SquareStack, 
+  Euro, 
+  MessageSquare, 
+  Image, 
+  Package, 
+  BarChart, 
+  Radio, 
+  Heart,
+  User,
+  Headphones,
+  PanelLeft,
+  Star
+} from "lucide-react";
 
 const ClientNavigation = () => {
-  const location = useLocation();
-  
   return (
-    <>
+    <div className="space-y-4">
       <NavItem
+        icon={<LayoutDashboard size={20} />}
+        title="Tableau de bord"
         href="/client/dashboard"
-        icon={<Home size={18} />}
-        active={location.pathname === "/client/dashboard"}
-      >
-        Tableau de bord
-      </NavItem>
+      />
       <NavItem
+        icon={<BarChart size={20} />}
+        title="Suivi projet"
+        href="/client/project"
+      />
+      <NavItem
+        icon={<ListTodo size={20} />}
+        title="Tâches"
         href="/client/tasks"
-        icon={<CheckSquare size={18} />}
-        active={location.pathname === "/client/tasks"}
-      >
-        Tâches
-      </NavItem>
+      />
       <NavItem
-        href="/client/requests"
-        icon={<FileText size={18} />}
-        active={location.pathname === "/client/requests"}
-      >
-        Demandes
-      </NavItem>
+        icon={<ListTodo size={20} />}
+        title="To-do list"
+        href="/client/todo"
+      />
       <NavItem
+        icon={<Euro size={20} />}
+        title="Budget"
+        href="/client/budget"
+      />
+      <NavItem
+        icon={<Users size={20} />}
+        title="Invités"
         href="/client/guests"
-        icon={<Users size={18} />}
-        active={location.pathname === "/client/guests"}
-      >
-        Invités
-      </NavItem>
+      />
       <NavItem
-        href="/client/partners"
-        icon={<Map size={18} />}
-        active={location.pathname === "/client/partners"}
-      >
-        Prestataires
-      </NavItem>
-      <NavItem
-        href="/client/wedding-packages"
-        icon={<Package size={18} />}
-        active={location.pathname === "/client/wedding-packages"}
-      >
-        Packs Mariage
-      </NavItem>
-      <NavItem
-        href="/client/payments"
-        icon={<Receipt size={18} />}
-        active={location.pathname === "/client/payments"}
-      >
-        Paiements
-      </NavItem>
-      <NavItem
+        icon={<Calendar size={20} />}
+        title="Plan de salle"
         href="/client/floor-plans"
-        icon={<Calendar size={18} />}
-        active={location.pathname === "/client/floor-plans"}
-      >
-        Plans de table
-      </NavItem>
+      />
       <NavItem
+        icon={<Package size={20} />}
+        title="Menus"
         href="/client/menus"
-        icon={<Utensils size={18} />}
-        active={location.pathname === "/client/menus"}
-      >
-        Menus
-      </NavItem>
+      />
       <NavItem
-        href="/client/music"
-        icon={<ListMusic size={18} />}
-        active={location.pathname === "/client/music"}
-      >
-        Musique
-      </NavItem>
-      <NavItem
+        icon={<Image size={20} />}
+        title="Photos"
         href="/client/photos"
-        icon={<Camera size={18} />}
-        active={location.pathname === "/client/photos"}
-      >
-        Photos
-      </NavItem>
+      />
       <NavItem
-        href="/client/live"
-        icon={<Radio size={18} />}
-        active={location.pathname === "/client/live"}
-      >
-        Diffusion en direct
-      </NavItem>
+        icon={<Heart size={20} />}
+        title="Pinterest"
+        href="/client/pinterbest"
+      />
       <NavItem
-        href="/client/videos"
-        icon={<Video size={18} />}
-        active={location.pathname === "/client/videos"}
-      >
-        Vidéos
-      </NavItem>
-    </>
+        icon={<MessageSquare size={20} />}
+        title="Demandes"
+        href="/client/requests"
+      />
+      <NavItem
+        icon={<Radio size={20} />}
+        title="Talkshows"
+        href="/client/talkshows"
+      />
+      <NavItem
+        icon={<Headphones size={20} />}
+        title="Podcasts"
+        href="/client/podcasts"
+      />
+      <NavItem
+        icon={<SquareStack size={20} />}
+        title="Playlists"
+        href="/client/music"
+      />
+      <NavItem
+        icon={<Building2 size={20} />}
+        title="Prestataires"
+        href="/client/partners"
+      />
+      <NavItem
+        icon={<Star size={20} />}
+        title="Évaluations"
+        href="/client/partners"
+      />
+      <NavItem
+        icon={<PanelLeft size={20} />}
+        title="Mini-site"
+        href="/client/mini-site"
+      />
+      <NavItem
+        icon={<User size={20} />}
+        title="Compte"
+        href="/client/account"
+      />
+    </div>
   );
 };
 
 export default ClientNavigation;
+
+function Building2(props: React.ComponentProps<typeof Star>) {
+  return <Star {...props} />;
+}

@@ -1,92 +1,72 @@
 
 import React from "react";
-import { useLocation } from "react-router-dom";
-import NavItem from "./NavItem";
-import { BarChart, Users, User, Map, Headphones, Video, Share2, Download, Package, Trophy, LineChart } from "lucide-react";
+import { NavItem } from "./NavItem";
+import { 
+  LayoutDashboard, 
+  Users, 
+  Building2, 
+  Calendar, 
+  PackageOpen, 
+  MessageSquare, 
+  Radio, 
+  Star,
+  Headphones
+} from "lucide-react";
 
 const AdminNavigation = () => {
-  const location = useLocation();
-  
   return (
-    <>
+    <div className="space-y-4">
       <NavItem
+        icon={<LayoutDashboard size={20} />}
+        title="Tableau de bord"
         href="/admin/dashboard"
-        icon={<BarChart size={18} />}
-        active={location.pathname === "/admin/dashboard"}
-      >
-        Tableau de bord
-      </NavItem>
+      />
       <NavItem
-        href="/admin/kpi-dashboard"
-        icon={<LineChart size={18} />}
-        active={location.pathname === "/admin/kpi-dashboard"}
-      >
-        KPIs
-      </NavItem>
-      <NavItem
-        href="/admin/partners"
-        icon={<Users size={18} />}
-        active={location.pathname === "/admin/partners"}
-      >
-        Prestataires
-      </NavItem>
-      <NavItem
+        icon={<Users size={20} />}
+        title="Clients"
         href="/admin/clients"
-        icon={<User size={18} />}
-        active={location.pathname === "/admin/clients"}
-      >
-        Clients
-      </NavItem>
+      />
       <NavItem
+        icon={<Building2 size={20} />}
+        title="Partenaires"
+        href="/admin/partners"
+      />
+      <NavItem
+        icon={<Users size={20} />}
+        title="Invités"
+        href="/admin/guests"
+      />
+      <NavItem
+        icon={<Calendar size={20} />}
+        title="Lieux"
         href="/admin/venues"
-        icon={<Map size={18} />}
-        active={location.pathname === "/admin/venues"}
-      >
-        Salles de réception
-      </NavItem>
+      />
       <NavItem
-        href="/admin/recommendations"
-        icon={<Share2 size={18} />}
-        active={location.pathname === "/admin/recommendations"}
-      >
-        Recommandations
-      </NavItem>
-      <NavItem
+        icon={<PackageOpen size={20} />}
+        title="Packs Mariage"
         href="/admin/wedding-packages"
-        icon={<Package size={18} />}
-        active={location.pathname === "/admin/wedding-packages"}
-      >
-        Packs Mariage
-      </NavItem>
+      />
       <NavItem
-        href="/admin/partner-gamification"
-        icon={<Trophy size={18} />}
-        active={location.pathname === "/admin/partner-gamification"}
-      >
-        Programme Fidélité
-      </NavItem>
+        icon={<Star size={20} />}
+        title="Avis & Évaluations"
+        href="/admin/ratings"
+      />
       <NavItem
-        href="/admin/podcasts"
-        icon={<Headphones size={18} />}
-        active={location.pathname === "/admin/podcasts"}
-      >
-        Podcasts
-      </NavItem>
+        icon={<MessageSquare size={20} />}
+        title="Recommandations"
+        href="/admin/recommendations"
+      />
       <NavItem
+        icon={<Radio size={20} />}
+        title="Talkshows"
         href="/admin/talkshows"
-        icon={<Video size={18} />}
-        active={location.pathname === "/admin/talkshows"}
-      >
-        Talkshows
-      </NavItem>
+      />
       <NavItem
-        href="/admin/backup"
-        icon={<Download size={18} />}
-        active={location.pathname === "/admin/backup"}
-      >
-        Sauvegarde
-      </NavItem>
-    </>
+        icon={<Headphones size={20} />}
+        title="Podcasts"
+        href="/admin/podcasts"
+      />
+    </div>
   );
 };
 

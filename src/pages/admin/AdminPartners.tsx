@@ -1,12 +1,13 @@
 
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Filter, ArrowUpDown, CheckCircle, AlertCircle } from "lucide-react";
+import { Search, Filter, ArrowUpDown, CheckCircle, AlertCircle, Star } from "lucide-react";
 import GoldButton from "@/components/GoldButton";
 
 const AdminPartners = () => {
@@ -14,11 +15,11 @@ const AdminPartners = () => {
   
   // Exemple de données prestataires
   const activePartners = [
-    { id: 1, name: "Domaine du Château", category: "Domaine", date: "15/04/2023", status: "active", views: 128, contacts: 15, revenue: "890 €" },
-    { id: 2, name: "Fleurs Élégance", category: "Fleuriste", date: "03/02/2023", status: "active", views: 87, contacts: 9, revenue: "890 €" },
-    { id: 3, name: "Studio Photo Elite", category: "Photographe", date: "21/05/2023", status: "active", views: 203, contacts: 24, revenue: "890 €" },
-    { id: 4, name: "DJ Mix Master", category: "DJ", date: "10/01/2023", status: "active", views: 156, contacts: 18, revenue: "890 €" },
-    { id: 5, name: "Pâtisserie Royale", category: "Traiteur", date: "08/03/2023", status: "active", views: 112, contacts: 14, revenue: "890 €" },
+    { id: 1, name: "Domaine du Château", category: "Domaine", date: "15/04/2023", status: "active", views: 128, contacts: 15, revenue: "890 €", rating: 4.8 },
+    { id: 2, name: "Fleurs Élégance", category: "Fleuriste", date: "03/02/2023", status: "active", views: 87, contacts: 9, revenue: "890 €", rating: 4.6 },
+    { id: 3, name: "Studio Photo Elite", category: "Photographe", date: "21/05/2023", status: "active", views: 203, contacts: 24, revenue: "890 €", rating: 4.9 },
+    { id: 4, name: "DJ Mix Master", category: "DJ", date: "10/01/2023", status: "active", views: 156, contacts: 18, revenue: "890 €", rating: 4.7 },
+    { id: 5, name: "Pâtisserie Royale", category: "Traiteur", date: "08/03/2023", status: "active", views: 112, contacts: 14, revenue: "890 €", rating: 4.5 },
   ];
   
   const pendingPartners = [
@@ -92,6 +93,7 @@ const AdminPartners = () => {
                         <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Date d'inscription</th>
                         <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Vues</th>
                         <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Contacts</th>
+                        <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Note</th>
                         <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Revenus</th>
                         <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Actions</th>
                       </tr>
@@ -115,12 +117,22 @@ const AdminPartners = () => {
                           <td className="px-4 py-3 text-vip-gray-400">{partner.date}</td>
                           <td className="px-4 py-3 text-vip-white">{partner.views}</td>
                           <td className="px-4 py-3 text-vip-white">{partner.contacts}</td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center text-amber-500">
+                              {partner.rating} <Star size={14} className="ml-1 fill-amber-500" />
+                            </div>
+                          </td>
                           <td className="px-4 py-3 text-vip-gold">{partner.revenue}</td>
                           <td className="px-4 py-3">
                             <div className="flex gap-2">
                               <Button variant="ghost" size="sm" className="h-8 text-vip-gray-400 hover:text-vip-white">
                                 Voir
                               </Button>
+                              <Link to="/admin/ratings">
+                                <Button variant="ghost" size="sm" className="h-8 text-vip-gray-400 hover:text-amber-500">
+                                  Avis
+                                </Button>
+                              </Link>
                               <Button variant="ghost" size="sm" className="h-8 text-vip-gray-400 hover:text-red-500">
                                 Désactiver
                               </Button>
