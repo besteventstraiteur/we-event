@@ -35,7 +35,7 @@ export interface TaskReminder {
 export interface NewReminderParams {
   type: ReminderType;
   message?: string;
-  date: Date | string;
+  date: string; // Changed from Date | string to just string for consistency
   frequency: ReminderFrequency;
   recipients?: string[];
 }

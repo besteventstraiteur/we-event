@@ -70,7 +70,7 @@ const TaskReminderManager: React.FC<TaskReminderManagerProps> = ({
       const newReminderParams: NewReminderParams = {
         type,
         message: message || "Rappel de tâche",
-        date: reminderDateTime.toISOString(), // Convert Date to string here
+        date: reminderDateTime.toISOString(), // Ensure we're using string format
         frequency,
         recipients: recipients ? recipients.split(',').map(r => r.trim()) : undefined
       };
@@ -82,7 +82,7 @@ const TaskReminderManager: React.FC<TaskReminderManagerProps> = ({
         taskId,
         type: newReminderParams.type,
         message: newReminderParams.message,
-        date: newReminderParams.date,
+        date: newReminderParams.date, // This is now guaranteed to be a string
         frequency: newReminderParams.frequency,
         enabled: true,
         sent: false,
