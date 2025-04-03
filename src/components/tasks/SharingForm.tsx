@@ -44,8 +44,11 @@ const SharingForm: React.FC<SharingFormProps> = ({
 
   const handleSubmit = (values: SharingFormValues) => {
     const sharingData: NewSharingParams = {
-      ...values,
       userId: `user-${Date.now()}`, // Dans une vraie application, ce serait l'ID de l'utilisateur réel
+      userName: values.userName,     // Ensure userName is explicitly passed
+      userEmail: values.userEmail,   // Ensure userEmail is explicitly passed
+      userType: values.userType,     // Ensure userType is explicitly passed
+      permission: values.permission  // Ensure permission is explicitly passed
     };
     
     onSubmit(sharingData);
