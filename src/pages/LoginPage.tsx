@@ -1,21 +1,53 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "@/components/AuthLayout";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Fingerprint, AlertTriangle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import SocialLoginButtons from "@/components/auth/SocialLoginButtons";
 import LoginForm from "@/components/auth/LoginForm";
 import PasswordResetForm from "@/components/auth/PasswordResetForm";
 import TwoFactorVerification from "@/components/auth/TwoFactorVerification";
+import { isBiometricAvailable, authenticateWithBiometrics } from "@/utils/biometricAuth";
+import { Capacitor } from "@capacitor/core";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const [showTwoFactor, setShowTwoFactor] = useState(false);
+  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+  const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
+  const [isNative, setIsNative] = useState(false);
+  const [biometricError, setBiometricError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Vérifier si l'application s'exécute dans un environnement natif
+    const nativePlatform = Capacitor.isNativePlatform();
+    setIsNative(nativePlatform);
+
+    // Vérifier si la biométrie est prise en charge et activée
+    const checkBiometric = async () => {
+      if (nativePlatform) {
+        try {
+          const isSupported = await isBiometricAvailable();
+          setIsBiometricSupported(isSupported);
+          
+          const enabled = localStorage.getItem('biometric_enabled') === 'true';
+          setIsBiometricEnabled(enabled && isSupported);
+        } catch (error) {
+          console.error("Erreur lors de la vérification biométrique:", error);
+        }
+      }
+    };
+
+    checkBiometric();
+  }, []);
 
   const handleLoginSubmit = async (email: string, password: string, rememberMe: boolean) => {
     setIsLoading(true);
@@ -32,9 +64,8 @@ const LoginPage = () => {
 
       // Simuler la vérification des identifiants
       setTimeout(() => {
-        // Pour les besoins de la démo, supposons que les comptes avec "secure" 
-        // dans l'email ont le 2FA activé
-        const requires2FA = email.includes("secure");
+        // Vérifier si le 2FA est activé pour cet utilisateur
+        const requires2FA = email.includes("secure") || localStorage.getItem('2fa_enabled') === 'true';
         
         if (requires2FA) {
           setShowTwoFactor(true);
@@ -94,6 +125,30 @@ const LoginPage = () => {
     return isValid;
   };
 
+  const handleBiometricAuth = async () => {
+    setBiometricError(null);
+    setIsLoading(true);
+    
+    try {
+      const result = await authenticateWithBiometrics();
+      
+      if (result.success) {
+        toast({
+          title: "Authentification réussie",
+          description: "Identité vérifiée par biométrie.",
+        });
+        redirectAfterLogin(result.userId);
+      } else {
+        setBiometricError("L'authentification biométrique a échoué. Veuillez réessayer ou utiliser une autre méthode de connexion.");
+      }
+    } catch (error) {
+      console.error("Erreur biométrique:", error);
+      setBiometricError("Une erreur est survenue lors de l'authentification biométrique.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const redirectAfterLogin = (userEmail: string = '') => {
     // Déterminer où rediriger l'utilisateur (client, partenaire ou admin)
     const isClient = userEmail.includes("client");
@@ -148,6 +203,37 @@ const LoginPage = () => {
     >
       {!forgotPassword ? (
         <>
+          {isBiometricEnabled && isNative && (
+            <div className="mb-6">
+              <Button 
+                onClick={handleBiometricAuth} 
+                className="w-full flex items-center justify-center gap-2"
+                disabled={isLoading}
+              >
+                <Fingerprint size={18} />
+                Se connecter avec biométrie
+              </Button>
+              
+              {biometricError && (
+                <Alert variant="destructive" className="mt-2">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>
+                    {biometricError}
+                  </AlertDescription>
+                </Alert>
+              )}
+              
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-white px-2 text-sm text-gray-500">ou</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           <SocialLoginButtons onLoginSuccess={redirectAfterLogin} />
 
           <div className="relative my-6">

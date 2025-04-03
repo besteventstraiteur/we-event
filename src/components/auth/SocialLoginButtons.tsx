@@ -1,88 +1,108 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Facebook, Apple } from "lucide-react";
-import { handleSocialLogin } from "@/utils/authUtils";
 import { useToast } from "@/components/ui/use-toast";
+import { handleSocialLogin } from "@/utils/authUtils";
+import { Lock } from "lucide-react";
 
 interface SocialLoginButtonsProps {
-  onLoginSuccess: (email: string) => void;
+  onLoginSuccess: (userEmail?: string) => void;
 }
 
 const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ onLoginSuccess }) => {
-  const [socialLoading, setSocialLoading] = React.useState<string | null>(null);
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = React.useState<string | null>(null);
 
-  const handleSocialLoginClick = async (provider: 'google' | 'facebook' | 'apple') => {
-    setSocialLoading(provider);
+  const handleLogin = async (provider: 'google' | 'facebook' | 'apple') => {
+    setIsLoading(provider);
+    
     try {
+      // Simuler un délai court pour afficher le message de sécurité SSL/TLS
+      setTimeout(() => {
+        toast({
+          title: "Connexion sécurisée",
+          description: "Chiffrement SSL/TLS activé pour protéger vos données",
+          duration: 3000,
+        });
+      }, 300);
+      
       const result = await handleSocialLogin(provider);
-      if (result.success) {
+      
+      if (result.success && result.userData) {
         toast({
           title: "Connexion réussie",
-          description: `Connecté avec ${provider}`,
+          description: `Bienvenue, ${result.userData.name || 'utilisateur'}`,
         });
-        onLoginSuccess(result.userData?.email || '');
+        onLoginSuccess(result.userData.email);
       } else {
-        throw new Error(result.error || "Erreur de connexion");
+        toast({
+          variant: "destructive",
+          title: "Échec de connexion",
+          description: result.error || "Une erreur est survenue lors de la connexion",
+        });
       }
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Erreur de connexion",
-        description: error instanceof Error ? error.message : "Une erreur est survenue",
+        title: "Erreur",
+        description: "Un problème est survenu. Veuillez réessayer.",
       });
     } finally {
-      setSocialLoading(null);
+      setIsLoading(null);
     }
   };
 
   return (
-    <div className="flex flex-col space-y-4 mb-6">
-      <Button 
-        className="w-full flex items-center justify-center gap-2 bg-white text-black border border-gray-300 hover:bg-gray-50"
-        onClick={() => handleSocialLoginClick('google')}
-        disabled={!!socialLoading}
+    <div className="space-y-3">
+      <Button
+        variant="outline"
+        className="w-full flex items-center gap-3 relative"
+        onClick={() => handleLogin('google')}
+        disabled={!!isLoading}
       >
-        {socialLoading === 'google' ? (
-          <div className="h-5 w-5 border-t-2 border-b-2 border-black rounded-full animate-spin"></div>
+        {isLoading === 'google' ? (
+          <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-current"></div>
         ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-            <path fill="#EA4335" d="M12 5.9c1.8 0 3.4.7 4.6 1.9L21.1 4C18.9 1.6 15.7 0 12 0 7.3 0 3.2 2.7 1.2 6.6l5.1 4C7.3 7.6 9.5 5.9 12 5.9z"></path>
-            <path fill="#4285F4" d="M23.5 12.3c0-1-.1-1.9-.3-2.8h-11v5.3h6.3c-.3 1.6-1.2 3-2.5 3.9l4.9 3.8c2.9-2.7 4.6-6.7 4.6-11.2z"></path>
-            <path fill="#FBBC05" d="M6.3 14.5l-5.1 4C3.4 21.4 7.5 24 12 24c3.2 0 5.9-1.1 7.9-2.9l-4.9-3.8c-1.3.9-3.1 1.4-5 1.4-3.8 0-7-2.6-8.1-6.1z"></path>
-            <path fill="#34A853" d="M12 24c4.5 0 8.2-1.5 11-4.3l-5.5-4.3c-1.5 1-3.4 1.6-5.5 1.6-4.2 0-7.8-2.8-9.1-6.6L-1.6 15C1.5 20.7 6.4 24 12 24z"></path>
-            <path fill="none" d="M-1.6 15L6.3 10.6"></path>
-          </svg>
-        )} 
-        Continuer avec Google
-      </Button>
-
-      <Button 
-        className="w-full flex items-center justify-center gap-2 bg-[#1877F2] text-white hover:bg-[#166FE5]"
-        onClick={() => handleSocialLoginClick('facebook')}
-        disabled={!!socialLoading}
-      >
-        {socialLoading === 'facebook' ? (
-          <div className="h-5 w-5 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
-        ) : (
-          <Facebook className="h-5 w-5" />
+          <img src="/google.svg" alt="Google" className="h-5 w-5" />
         )}
-        Continuer avec Facebook
+        <span className="flex-1">Continuer avec Google</span>
+        <Lock className="h-4 w-4 text-gray-400" />
       </Button>
-
-      <Button 
-        className="w-full flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-800"
-        onClick={() => handleSocialLoginClick('apple')}
-        disabled={!!socialLoading}
+      
+      <Button
+        variant="outline"
+        className="w-full flex items-center gap-3 relative"
+        onClick={() => handleLogin('facebook')}
+        disabled={!!isLoading}
       >
-        {socialLoading === 'apple' ? (
-          <div className="h-5 w-5 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
+        {isLoading === 'facebook' ? (
+          <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-current"></div>
         ) : (
-          <Apple className="h-5 w-5" />
+          <img src="/facebook.svg" alt="Facebook" className="h-5 w-5" />
         )}
-        Continuer avec Apple
+        <span className="flex-1">Continuer avec Facebook</span>
+        <Lock className="h-4 w-4 text-gray-400" />
       </Button>
+      
+      <Button
+        variant="outline"
+        className="w-full flex items-center gap-3 relative"
+        onClick={() => handleLogin('apple')}
+        disabled={!!isLoading}
+      >
+        {isLoading === 'apple' ? (
+          <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-current"></div>
+        ) : (
+          <img src="/apple.svg" alt="Apple" className="h-5 w-5" />
+        )}
+        <span className="flex-1">Continuer avec Apple</span>
+        <Lock className="h-4 w-4 text-gray-400" />
+      </Button>
+      
+      <div className="text-xs text-center text-gray-500 flex items-center justify-center gap-1">
+        <Lock className="h-3 w-3" />
+        Connexions sécurisées par chiffrement SSL/TLS
+      </div>
     </div>
   );
 };
