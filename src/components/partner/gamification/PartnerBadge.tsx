@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import * as LucideIcons from "lucide-react";
 import { PartnerBadge as PartnerBadgeType } from "@/models/partnerGamification";
+import { Award } from "lucide-react";
 
 interface BadgeProps {
   badge: PartnerBadgeType;
@@ -11,9 +12,6 @@ interface BadgeProps {
 }
 
 const PartnerBadge = ({ badge, size = "md" }: BadgeProps) => {
-  // Dynamically get the icon component from Lucide
-  const IconComponent = LucideIcons[badge.iconName as keyof typeof LucideIcons] || LucideIcons.Award;
-  
   // Determine size values
   const sizeMap = {
     sm: { badge: "h-8 w-8", icon: 14 },
@@ -23,6 +21,15 @@ const PartnerBadge = ({ badge, size = "md" }: BadgeProps) => {
   
   const { badge: badgeSize, icon: iconSize } = sizeMap[size];
   
+  // Get the icon component more safely
+  let Icon = Award; // Default icon as fallback
+  
+  if (badge.iconName && typeof badge.iconName === 'string' && 
+      badge.iconName in LucideIcons && 
+      typeof LucideIcons[badge.iconName as keyof typeof LucideIcons] === 'function') {
+    Icon = LucideIcons[badge.iconName as keyof typeof LucideIcons];
+  }
+  
   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>
@@ -30,7 +37,7 @@ const PartnerBadge = ({ badge, size = "md" }: BadgeProps) => {
           <Badge 
             className={`rounded-full flex items-center justify-center p-0 bg-gradient-to-br from-vip-gold to-yellow-600 hover:from-yellow-500 hover:to-amber-700 cursor-help ${badgeSize}`}
           >
-            <IconComponent size={iconSize} className="text-vip-black" />
+            <Icon size={iconSize} className="text-vip-black" />
           </Badge>
         </TooltipTrigger>
         <TooltipContent side="top" className="max-w-[250px]">

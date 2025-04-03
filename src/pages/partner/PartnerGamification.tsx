@@ -6,7 +6,7 @@ import LoyaltyTierCard from "@/components/partner/gamification/LoyaltyTierCard";
 import BadgesCollection from "@/components/partner/gamification/BadgesCollection";
 import PointsHistory from "@/components/partner/gamification/PointsHistory";
 import GamificationStats from "@/components/partner/gamification/GamificationStats";
-import { BADGES, PartnerGamification } from "@/models/partnerGamification";
+import { BADGES, type PartnerGamification } from "@/models/partnerGamification";
 import { Award, Trophy, Clock, ChartBar } from "lucide-react";
 
 // Mock data for a partner's gamification profile
