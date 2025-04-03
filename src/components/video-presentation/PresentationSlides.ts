@@ -11,7 +11,7 @@ const PresentationSlides = [
       "Expérience utilisateur premium"
     ],
     path: "/client/dashboard",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
+    image: "/screenshots/homepage.png"
   },
   // Fonctionnalités Client
   {
@@ -24,7 +24,7 @@ const PresentationSlides = [
       "Collaboration en temps réel avec les prestataires"
     ],
     path: "/client/dashboard",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+    image: "/screenshots/client-features.png"
   },
   {
     title: "Tableau de bord client",
@@ -36,7 +36,7 @@ const PresentationSlides = [
       "Compteur avant le jour J"
     ],
     path: "/client/dashboard",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+    image: "/screenshots/client-dashboard.png"
   },
   {
     title: "Gestion de budget",
@@ -48,7 +48,7 @@ const PresentationSlides = [
       "Rapports détaillés"
     ],
     path: "/client/budget",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    image: "/screenshots/client-budget.png"
   },
   {
     title: "Gestion des invités",
@@ -60,7 +60,7 @@ const PresentationSlides = [
       "Espace dédié pour vos invités"
     ],
     path: "/client/guests",
-    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+    image: "/screenshots/client-guests.png"
   },
   {
     title: "Plan de salle",
@@ -72,7 +72,7 @@ const PresentationSlides = [
       "Prévisualisation en temps réel"
     ],
     path: "/client/floor-plans",
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
+    image: "/screenshots/client-floor-plans.png"
   },
   {
     title: "Marketplace de packages",
@@ -84,7 +84,7 @@ const PresentationSlides = [
       "Réservation sécurisée"
     ],
     path: "/client/wedding-packages",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
+    image: "/screenshots/client-wedding-packages.png"
   },
   {
     title: "Gestion des prestataires (vue client)",
@@ -96,7 +96,7 @@ const PresentationSlides = [
       "Suivi des contrats"
     ],
     path: "/client/partners",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+    image: "/screenshots/client-partners.png"
   },
   {
     title: "Créateur de mini-site",
@@ -108,7 +108,7 @@ const PresentationSlides = [
       "Compteur avant l'événement"
     ],
     path: "/client/mini-site",
-    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+    image: "/screenshots/client-mini-site.png"
   },
   {
     title: "Liste de tâches",
@@ -120,7 +120,7 @@ const PresentationSlides = [
       "Délégation de tâches"
     ],
     path: "/client/todo",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    image: "/screenshots/client-todo.png"
   },
   {
     title: "Pinterbest - Inspiration",
@@ -132,7 +132,7 @@ const PresentationSlides = [
       "Suggestions personnalisées"
     ],
     path: "/client/pinterbest",
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
+    image: "/screenshots/client-pinterbest.png"
   },
   // Fonctionnalités Prestataire
   {
@@ -145,7 +145,7 @@ const PresentationSlides = [
       "Système de gamification"
     ],
     path: "/partner/dashboard",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+    image: "/screenshots/partner-features.png"
   },
   {
     title: "Tableau de bord prestataire",
@@ -157,7 +157,7 @@ const PresentationSlides = [
       "Gestion de disponibilité"
     ],
     path: "/partner/dashboard",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+    image: "/screenshots/partner-dashboard.png"
   },
   {
     title: "Système de gamification",
@@ -169,7 +169,7 @@ const PresentationSlides = [
       "Visibilité prioritaire"
     ],
     path: "/partner/gamification",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
+    image: "/screenshots/partner-gamification.png"
   },
   {
     title: "Gestion des requêtes client",
@@ -181,7 +181,7 @@ const PresentationSlides = [
       "Historique complet"
     ],
     path: "/partner/requests",
-    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+    image: "/screenshots/partner-requests.png"
   },
   {
     title: "Création de podcasts",
@@ -193,7 +193,7 @@ const PresentationSlides = [
       "Statistiques d'audience"
     ],
     path: "/partner/podcasts",
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
+    image: "/screenshots/partner-podcasts.png"
   },
   {
     title: "Talkshows et webinaires",
@@ -205,7 +205,7 @@ const PresentationSlides = [
       "Promotion intégrée"
     ],
     path: "/partner/talkshows",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    image: "/screenshots/partner-talkshows.png"
   },
   {
     title: "Système de recommandation",
@@ -217,7 +217,7 @@ const PresentationSlides = [
       "Suivi des conversions"
     ],
     path: "/partner/recommendations",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+    image: "/screenshots/partner-recommendations.png"
   },
   {
     title: "Communication et médias",
@@ -229,7 +229,7 @@ const PresentationSlides = [
       "Streaming en direct"
     ],
     path: "/client/talkshows",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
+    image: "/screenshots/client-communication.png"
   },
   {
     title: "Merci d'avoir suivi cette présentation",
@@ -241,7 +241,7 @@ const PresentationSlides = [
       "Confidentialité et sécurité maximales"
     ],
     path: "/client/dashboard",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+    image: "/screenshots/thank-you.png"
   }
 ];
 

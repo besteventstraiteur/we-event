@@ -55,11 +55,17 @@ const SlideContent: React.FC<SlideContentProps> = ({
             
             <div className="flex items-center justify-center">
               {slide.image ? (
-                <img 
-                  src={slide.image} 
-                  alt={slide.title}
-                  className="max-h-full w-full object-cover rounded-md shadow-md"
-                />
+                <div className="h-full w-full flex items-center justify-center rounded-md overflow-hidden shadow-md">
+                  <img 
+                    src={slide.image} 
+                    alt={slide.title}
+                    className="max-h-full w-full object-contain"
+                    onError={(e) => {
+                      // Fallback si l'image n'est pas trouvée
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d";
+                    }}
+                  />
+                </div>
               ) : (
                 <div className="h-full w-full bg-gray-100 rounded-md flex items-center justify-center">
                   <p className="text-gray-400">Aperçu non disponible</p>
