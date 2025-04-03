@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { User, FileText, BarChart, Headphones, Video, Share2, Image, Music, VideoIcon, CheckSquare } from "lucide-react";
+import { BarChart, Map, MessageSquare, Calendar, CheckSquare, Receipt, Image, HeadphonesIcon, Video, Users, Trophy } from "lucide-react";
 
 const PartnerNavigation = () => {
   const location = useLocation();
@@ -11,31 +11,10 @@ const PartnerNavigation = () => {
     <>
       <NavItem
         href="/partner/dashboard"
-        icon={<User size={18} />}
+        icon={<BarChart size={18} />}
         active={location.pathname === "/partner/dashboard"}
       >
-        Mon Profil
-      </NavItem>
-      <NavItem
-        href="/partner/requests"
-        icon={<FileText size={18} />}
-        active={location.pathname === "/partner/requests"}
-      >
-        Demandes Clients
-      </NavItem>
-      <NavItem
-        href="/partner/photos"
-        icon={<Image size={18} />}
-        active={location.pathname === "/partner/photos"}
-      >
-        Photos
-      </NavItem>
-      <NavItem
-        href="/partner/music"
-        icon={<Music size={18} />}
-        active={location.pathname === "/partner/music"}
-      >
-        Playlists Musicales
+        Tableau de bord
       </NavItem>
       <NavItem
         href="/partner/tasks"
@@ -45,11 +24,11 @@ const PartnerNavigation = () => {
         Tâches
       </NavItem>
       <NavItem
-        href="/partner/recommendations"
-        icon={<Share2 size={18} />}
-        active={location.pathname === "/partner/recommendations"}
+        href="/partner/requests"
+        icon={<MessageSquare size={18} />}
+        active={location.pathname === "/partner/requests"}
       >
-        Recommandations
+        Demandes clients
       </NavItem>
       <NavItem
         href="/partner/stats"
@@ -59,25 +38,60 @@ const PartnerNavigation = () => {
         Statistiques
       </NavItem>
       <NavItem
+        href="/partner/recommendations"
+        icon={<Users size={18} />}
+        active={location.pathname === "/partner/recommendations"}
+      >
+        Recommandations
+      </NavItem>
+      <NavItem
+        href="/partner/gamification"
+        icon={<Trophy size={18} />}
+        active={location.pathname === "/partner/gamification"}
+      >
+        Programme Fidélité
+      </NavItem>
+      <NavItem
+        href="/partner/venues"
+        icon={<Map size={18} />}
+        active={location.pathname === "/partner/venues"}
+      >
+        Lieux
+      </NavItem>
+      <NavItem
+        href="/partner/calendar"
+        icon={<Calendar size={18} />}
+        active={location.pathname === "/partner/calendar"}
+      >
+        Calendrier
+      </NavItem>
+      <NavItem
+        href="/partner/payments"
+        icon={<Receipt size={18} />}
+        active={location.pathname === "/partner/payments"}
+      >
+        Paiements
+      </NavItem>
+      <NavItem
+        href="/partner/photos"
+        icon={<Image size={18} />}
+        active={location.pathname === "/partner/photos"}
+      >
+        Photos
+      </NavItem>
+      <NavItem
         href="/partner/podcasts"
-        icon={<Headphones size={18} />}
+        icon={<HeadphonesIcon size={18} />}
         active={location.pathname === "/partner/podcasts"}
       >
-        Mes Podcasts
+        Podcasts
       </NavItem>
       <NavItem
         href="/partner/talkshows"
         icon={<Video size={18} />}
         active={location.pathname === "/partner/talkshows"}
       >
-        Mes Talkshows
-      </NavItem>
-      <NavItem
-        href="/partner/live-streaming"
-        icon={<VideoIcon size={18} />}
-        active={location.pathname === "/partner/live-streaming"}
-      >
-        Visioconférences
+        Talkshows
       </NavItem>
     </>
   );

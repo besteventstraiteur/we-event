@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { BarChart, Users, User, Map, Headphones, Video, Share2, Download, Package } from "lucide-react";
+import { BarChart, Users, User, Map, Headphones, Video, Share2, Download, Package, Trophy } from "lucide-react";
 
 const AdminNavigation = () => {
   const location = useLocation();
@@ -50,6 +50,13 @@ const AdminNavigation = () => {
         active={location.pathname === "/admin/wedding-packages"}
       >
         Packs Mariage
+      </NavItem>
+      <NavItem
+        href="/admin/partner-gamification"
+        icon={<Trophy size={18} />}
+        active={location.pathname === "/admin/partner-gamification"}
+      >
+        Programme Fidélité
       </NavItem>
       <NavItem
         href="/admin/podcasts"
