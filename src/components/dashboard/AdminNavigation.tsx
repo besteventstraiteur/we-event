@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { BarChart, Users, User, Map, Headphones, Video, Share2, Download, Package, Trophy } from "lucide-react";
+import { BarChart, Users, User, Map, Headphones, Video, Share2, Download, Package, Trophy, LineChart } from "lucide-react";
 
 const AdminNavigation = () => {
   const location = useLocation();
@@ -15,6 +15,13 @@ const AdminNavigation = () => {
         active={location.pathname === "/admin/dashboard"}
       >
         Tableau de bord
+      </NavItem>
+      <NavItem
+        href="/admin/kpi-dashboard"
+        icon={<LineChart size={18} />}
+        active={location.pathname === "/admin/kpi-dashboard"}
+      >
+        KPIs
       </NavItem>
       <NavItem
         href="/admin/partners"
