@@ -1,8 +1,8 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, DollarSign, Users, BarChart, TrendingUp, Clock } from "lucide-react";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, Line, LineChart, Area, AreaChart, CartesianGrid } from "recharts";
+import { Calendar, DollarSign, Users, BarChart as BarChartIcon, TrendingUp, Clock } from "lucide-react";
+import { Bar, BarChart as ReBarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, Line, LineChart, Area, AreaChart, CartesianGrid } from "recharts";
 
 // Mock data for platform KPIs
 const eventGrowthData = [
@@ -73,7 +73,7 @@ const PlatformKPIs = () => {
         <Card className="bg-vip-gray-900 border-vip-gray-800">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">ROI</CardTitle>
-            <BarChart className="h-4 w-4 text-vip-gray-400" />
+            <BarChartIcon className="h-4 w-4 text-vip-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">235%</div>
@@ -116,7 +116,7 @@ const PlatformKPIs = () => {
           <CardContent>
             <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={revenueData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                <ReBarChart data={revenueData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                   <XAxis dataKey="month" />
                   <YAxis />
@@ -131,7 +131,7 @@ const PlatformKPIs = () => {
                   <Legend />
                   <Bar dataKey="revenus" fill="#10b981" name="Revenus" />
                   <Bar dataKey="coûts" fill="#ef4444" name="Coûts" />
-                </BarChart>
+                </ReBarChart>
               </ResponsiveContainer>
             </div>
           </CardContent>

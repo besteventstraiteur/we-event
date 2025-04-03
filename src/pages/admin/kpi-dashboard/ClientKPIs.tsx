@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCheck, Clock, PiggyBank, LineChart, Users, Calendar } from "lucide-react";
+import { CheckCheck, Clock, PiggyBank, LineChart as LineChartIcon, Users, Calendar } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, Line, LineChart as ReLineChart } from "recharts";
 
 // Mock data for client KPIs
@@ -64,7 +64,7 @@ const ClientKPIs = () => {
         <Card className="bg-vip-gray-900 border-vip-gray-800">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Satisfaction</CardTitle>
-            <LineChart className="h-4 w-4 text-vip-gray-400" />
+            <LineChartIcon className="h-4 w-4 text-vip-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">4.7/5</div>

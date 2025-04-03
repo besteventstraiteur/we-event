@@ -1,8 +1,8 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingCart, Clock, Award, PieChart, Users, ArrowUpRight } from "lucide-react";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell, Pie, PieChart as RePieChart } from "recharts";
+import { ShoppingCart, Clock, Award, PieChart as PieChartIcon, Users, ArrowUpRight } from "lucide-react";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell, Pie, PieChart } from "recharts";
 
 // Mock data for partner KPIs
 const conversionRateData = [
@@ -63,7 +63,7 @@ const PartnerKPIs = () => {
         <Card className="bg-vip-gray-900 border-vip-gray-800">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Satisfaction</CardTitle>
-            <PieChart className="h-4 w-4 text-vip-gray-400" />
+            <PieChartIcon className="h-4 w-4 text-vip-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">4.8/5</div>
@@ -105,7 +105,7 @@ const PartnerKPIs = () => {
           <CardContent>
             <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <RePieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                   <Pie
                     data={categoryDistributionData}
                     cx="50%"
@@ -127,7 +127,7 @@ const PartnerKPIs = () => {
                       borderRadius: '4px' 
                     }} 
                   />
-                </RePieChart>
+                </PieChart>
               </ResponsiveContainer>
             </div>
           </CardContent>

@@ -1,8 +1,8 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PiggyBank, CalendarCheck, MessageSquare, BarChart, Users, MessageCircle } from "lucide-react";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, Line, LineChart } from "recharts";
+import { PiggyBank, CalendarCheck, MessageSquare, BarChart as BarChartIcon, Users, MessageCircle } from "lucide-react";
+import { Bar, BarChart as ReBarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, Line, LineChart } from "recharts";
 
 // Mock data for guest KPIs
 const responseRateData = [
@@ -64,7 +64,7 @@ const GuestKPIs = () => {
         <Card className="bg-vip-gray-900 border-vip-gray-800">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Sélection menu</CardTitle>
-            <BarChart className="h-4 w-4 text-vip-gray-400" />
+            <BarChartIcon className="h-4 w-4 text-vip-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">76%</div>
@@ -82,7 +82,7 @@ const GuestKPIs = () => {
           <CardContent>
             <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={responseRateData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                <ReBarChart data={responseRateData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                   <XAxis dataKey="month" />
                   <YAxis unit="%" />
                   <Tooltip 
@@ -93,7 +93,7 @@ const GuestKPIs = () => {
                     }} 
                   />
                   <Bar dataKey="taux" fill="#8b5cf6" name="Taux de réponse" unit="%" />
-                </BarChart>
+                </ReBarChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
