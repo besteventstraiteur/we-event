@@ -16,7 +16,7 @@ const VideoPresentation: React.FC<VideoPresentationProps> = ({
   const [showPresentation, setShowPresentation] = useState(false);
   
   return (
-    <>
+    <div>
       <Button 
         onClick={() => setShowPresentation(true)}
         className={`flex items-center gap-2 bg-vip-gold hover:bg-amber-600 text-white ${className}`}
@@ -26,7 +26,7 @@ const VideoPresentation: React.FC<VideoPresentationProps> = ({
       </Button>
       
       {showPresentation && <PlatformPresentation />}
-    </>
+    </div>
   );
 };
 
