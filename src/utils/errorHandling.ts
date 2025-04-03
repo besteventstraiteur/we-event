@@ -1,4 +1,3 @@
-
 /**
  * Custom error class for podcast-related errors
  * Extends the native Error class with additional context
@@ -29,9 +28,9 @@ export type PodcastErrorCode =
   | 'VALIDATION_ERROR'
   | 'FILE_ERROR'
   | 'UNKNOWN_ERROR'
-  | 'NOT_FOUND'  // Added for VideoConferenceService
-  | 'CREATE_ERROR'  // Added for VideoConferenceService
-  | 'UPDATE_ERROR';  // Added for TalkshowRepository
+  | 'NOT_FOUND'
+  | 'CREATE_ERROR'
+  | 'UPDATE_ERROR';
 
 /**
  * Formats an error into a user-friendly message

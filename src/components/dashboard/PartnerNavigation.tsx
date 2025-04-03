@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { User, FileText, BarChart, Headphones, Video, Share2, Image, Music, VideoIcon } from "lucide-react";
+import { User, FileText, BarChart, Headphones, Video, Share2, Image, Music, VideoIcon, CheckSquare } from "lucide-react";
 
 const PartnerNavigation = () => {
   const location = useLocation();
@@ -36,6 +36,13 @@ const PartnerNavigation = () => {
         active={location.pathname === "/partner/music"}
       >
         Playlists Musicales
+      </NavItem>
+      <NavItem
+        href="/partner/tasks"
+        icon={<CheckSquare size={18} />}
+        active={location.pathname === "/partner/tasks"}
+      >
+        Tâches
       </NavItem>
       <NavItem
         href="/partner/recommendations"
