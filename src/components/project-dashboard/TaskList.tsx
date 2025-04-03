@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Table, 
@@ -48,6 +47,7 @@ interface TaskListProps {
   onAddTask: (task: Omit<ProjectTask, "id">) => void;
   onUpdateTask: (id: string, task: Partial<ProjectTask>) => void;
   onDeleteTask: (id: string) => void;
+  onEditTask: (task: ProjectTask) => void;
 }
 
 const TaskList: React.FC<TaskListProps> = ({
@@ -56,6 +56,7 @@ const TaskList: React.FC<TaskListProps> = ({
   onAddTask,
   onUpdateTask,
   onDeleteTask,
+  onEditTask
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState<ProjectTask | null>(null);
@@ -123,7 +124,6 @@ const TaskList: React.FC<TaskListProps> = ({
   };
 
   const filteredTasks = tasks.filter(task => {
-    // Safe access to properties that might be undefined
     const taskTitle = task.title || "";
     const taskDescription = task.description || "";
     const searchTermLower = searchTerm.toLowerCase();
@@ -195,12 +195,23 @@ const TaskList: React.FC<TaskListProps> = ({
     return "";
   };
 
-  const formatDueDate = (dueDate: string | Date) => {
-    const date = new Date(dueDate);
+  const formatDueDate = (dateString: string) => {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return "Date invalide";
+    }
     return format(date, 'dd MMM yyyy', { locale: fr });
   };
 
   const getDueDateWithStyle = (task: ProjectTask) => {
+    if (!task.dueDate) {
+      return (
+        <div className="text-gray-500">
+          <span>Non définie</span>
+        </div>
+      );
+    }
+
     const isOverdue = isTaskOverdue(task);
     
     return (
@@ -478,7 +489,7 @@ const TaskList: React.FC<TaskListProps> = ({
                               <Button size="sm" variant="outline" onClick={() => setSelectedTaskId(null)}>
                                 Fermer
                               </Button>
-                              <Button size="sm" onClick={() => handleEditClick(task)}>
+                              <Button size="sm" onClick={() => onEditTask(task)}>
                                 Modifier
                               </Button>
                             </div>
@@ -489,7 +500,7 @@ const TaskList: React.FC<TaskListProps> = ({
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleEditClick(task)}
+                        onClick={() => onEditTask(task)}
                         className="h-8 w-8"
                       >
                         <Edit size={16} />
