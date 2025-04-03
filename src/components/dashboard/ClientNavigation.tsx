@@ -11,7 +11,6 @@ import {
   MessageSquare, 
   Image, 
   Package, 
-  BarChart, 
   Radio, 
   Heart,
   User,
@@ -29,11 +28,6 @@ const ClientNavigation = () => {
         icon={<LayoutDashboard size={20} />}
         title="Tableau de bord"
         href="/client/dashboard"
-      />
-      <NavItem
-        icon={<BarChart size={20} />}
-        title="Suivi projet"
-        href="/client/project"
       />
       <NavItem
         icon={<ListTodo size={20} />}
