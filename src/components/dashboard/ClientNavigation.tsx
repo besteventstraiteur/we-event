@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { Calendar, CheckSquare, Users, ListMusic, Camera, Video, Receipt, FileText, Home, Map, Utensils, Broadcast, Package } from "lucide-react";
+import { Calendar, CheckSquare, Users, ListMusic, Camera, Video, Receipt, FileText, Home, Map, Utensils, Radio, Package } from "lucide-react";
 
 const ClientNavigation = () => {
   const location = useLocation();
@@ -88,7 +88,7 @@ const ClientNavigation = () => {
       </NavItem>
       <NavItem
         href="/client/live"
-        icon={<Broadcast size={18} />}
+        icon={<Radio size={18} />}
         active={location.pathname === "/client/live"}
       >
         Diffusion en direct
