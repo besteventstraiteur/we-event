@@ -1,122 +1,107 @@
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, MutableRefObject } from "react";
 
-interface SwipeState {
+type SwipeDirection = 'left' | 'right' | 'up' | 'down' | null;
+
+interface TouchGestureState {
+  swiping: boolean;
+  direction: SwipeDirection;
   startX: number;
   startY: number;
-  endX: number;
-  endY: number;
-  swiping: boolean;
+  moveX: number;
+  moveY: number;
+  velocity: number;
 }
 
-interface SwipeResult {
-  direction: "left" | "right" | "up" | "down" | null;
-  distance: number;
-}
-
-interface TouchGestureOptions {
-  minDistance?: number;
-  preventScrollOnHorizontal?: boolean;
-}
-
-const initialSwipeState = {
+const initialState: TouchGestureState = {
+  swiping: false,
+  direction: null,
   startX: 0,
   startY: 0,
-  endX: 0,
-  endY: 0,
-  swiping: false
+  moveX: 0,
+  moveY: 0,
+  velocity: 0,
 };
 
-export function useTouchGestures(
-  element: React.RefObject<HTMLElement> | null,
-  options: TouchGestureOptions = {}
-) {
-  const { 
-    minDistance = 50, 
-    preventScrollOnHorizontal = true 
-  } = options;
-  
-  const [swipeState, setSwipeState] = useState<SwipeState>(initialSwipeState);
-  const [result, setResult] = useState<SwipeResult>({ direction: null, distance: 0 });
-  const swipingRef = useRef(false);
+export const useTouchGestures = (
+  ref: MutableRefObject<HTMLElement | null>,
+  options = { threshold: 50, preventScroll: false }
+) => {
+  const [gestureState, setGestureState] = useState<TouchGestureState>(initialState);
+  const [startTime, setStartTime] = useState<number>(0);
   
   useEffect(() => {
-    if (!element?.current) return;
+    const element = ref.current;
+    if (!element) return;
     
-    const onTouchStart = (e: TouchEvent) => {
+    const handleTouchStart = (e: TouchEvent) => {
       const touch = e.touches[0];
-      swipingRef.current = true;
-      setSwipeState({
-        ...initialSwipeState,
+      if (!touch) return;
+      
+      setStartTime(Date.now());
+      setGestureState({
+        ...initialState,
         startX: touch.clientX,
         startY: touch.clientY,
-        swiping: true
       });
     };
     
-    const onTouchMove = (e: TouchEvent) => {
-      if (!swipingRef.current) return;
-      
-      const touch = e.touches[0];
-      const deltaX = touch.clientX - swipeState.startX;
-      const deltaY = touch.clientY - swipeState.startY;
-      
-      // Prevent scrolling when swiping horizontally
-      if (preventScrollOnHorizontal && Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+    const handleTouchMove = (e: TouchEvent) => {
+      if (options.preventScroll) {
         e.preventDefault();
       }
       
-      setSwipeState(prevState => ({
-        ...prevState,
-        endX: touch.clientX,
-        endY: touch.clientY
+      const touch = e.touches[0];
+      if (!touch) return;
+      
+      const moveX = touch.clientX - gestureState.startX;
+      const moveY = touch.clientY - gestureState.startY;
+      const absX = Math.abs(moveX);
+      const absY = Math.abs(moveY);
+      
+      // Determine if we're swiping and in which direction
+      if (absX > options.threshold || absY > options.threshold) {
+        let direction: SwipeDirection = null;
+        
+        if (absX > absY) {
+          direction = moveX > 0 ? 'right' : 'left';
+        } else {
+          direction = moveY > 0 ? 'down' : 'up';
+        }
+        
+        const timeDiff = Date.now() - startTime;
+        const distance = Math.sqrt(moveX * moveX + moveY * moveY);
+        const velocity = distance / timeDiff;
+        
+        setGestureState({
+          swiping: true,
+          direction,
+          startX: gestureState.startX,
+          startY: gestureState.startY,
+          moveX,
+          moveY,
+          velocity,
+        });
+      }
+    };
+    
+    const handleTouchEnd = () => {
+      setGestureState(prev => ({
+        ...prev,
+        swiping: false,
       }));
     };
     
-    const onTouchEnd = () => {
-      if (!swipingRef.current) return;
-      
-      swipingRef.current = false;
-      const deltaX = swipeState.endX - swipeState.startX;
-      const deltaY = swipeState.endY - swipeState.startY;
-      const absX = Math.abs(deltaX);
-      const absY = Math.abs(deltaY);
-      
-      let direction: "left" | "right" | "up" | "down" | null = null;
-      let distance = 0;
-      
-      if (Math.max(absX, absY) > minDistance) {
-        if (absX > absY) {
-          direction = deltaX > 0 ? "right" : "left";
-          distance = absX;
-        } else {
-          direction = deltaY > 0 ? "down" : "up";
-          distance = absY;
-        }
-      }
-      
-      setResult({ direction, distance });
-      setSwipeState(prevState => ({ ...prevState, swiping: false }));
-    };
-    
-    const target = element.current;
-    
-    // Add passive: false to prevent default touch behavior when needed
-    target.addEventListener("touchstart", onTouchStart, { passive: true });
-    target.addEventListener("touchmove", onTouchMove, { passive: !preventScrollOnHorizontal });
-    target.addEventListener("touchend", onTouchEnd, { passive: true });
+    element.addEventListener('touchstart', handleTouchStart);
+    element.addEventListener('touchmove', handleTouchMove);
+    element.addEventListener('touchend', handleTouchEnd);
     
     return () => {
-      target.removeEventListener("touchstart", onTouchStart);
-      target.removeEventListener("touchmove", onTouchMove);
-      target.removeEventListener("touchend", onTouchEnd);
+      element.removeEventListener('touchstart', handleTouchStart);
+      element.removeEventListener('touchmove', handleTouchMove);
+      element.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [element, minDistance, preventScrollOnHorizontal, swipeState.startX, swipeState.startY]);
+  }, [ref, gestureState.startX, gestureState.startY, options.threshold, options.preventScroll, startTime]);
   
-  return {
-    swiping: swipeState.swiping,
-    direction: result.direction,
-    distance: result.distance,
-    reset: () => setResult({ direction: null, distance: 0 })
-  };
-}
+  return gestureState;
+};

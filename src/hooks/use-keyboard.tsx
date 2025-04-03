@@ -1,74 +1,81 @@
 
 import { useState, useEffect } from "react";
-import { Capacitor } from "@capacitor/core";
+import { useDeviceType } from "./use-mobile";
 
 interface KeyboardState {
   isVisible: boolean;
   height: number;
 }
 
-export function useKeyboard() {
-  const [keyboard, setKeyboard] = useState<KeyboardState>({
+export function useKeyboard(): KeyboardState {
+  const [keyboardState, setKeyboardState] = useState<KeyboardState>({
     isVisible: false,
-    height: 0
+    height: 0,
   });
+  const deviceType = useDeviceType();
+  const isMobile = deviceType === 'mobile' || deviceType === 'tablet';
   
   useEffect(() => {
-    if (!Capacitor.isNativePlatform()) {
-      // Détecter le clavier sur le web mobile en observant les changements de taille de la fenêtre
-      const detectKeyboard = () => {
-        // Sur iOS, la hauteur de la fenêtre diminue lorsque le clavier est visible
-        const isKeyboardVisible = window.innerHeight < window.outerHeight * 0.8;
-        const keyboardHeight = isKeyboardVisible ? window.outerHeight - window.innerHeight : 0;
-        
-        setKeyboard({
-          isVisible: isKeyboardVisible,
-          height: keyboardHeight
-        });
-      };
-      
-      window.addEventListener('resize', detectKeyboard);
-      return () => window.removeEventListener('resize', detectKeyboard);
-    } else {
-      // Pour une implémentation complète sur une vraie application native,
-      // il faudrait utiliser les plugins Capacitor, comme:
-      // import { Keyboard } from '@capacitor/keyboard';
-      // 
-      // Keyboard.addListener('keyboardWillShow', (info) => {
-      //   setKeyboard({ isVisible: true, height: info.keyboardHeight });
-      // });
-      // 
-      // Keyboard.addListener('keyboardWillHide', () => {
-      //   setKeyboard({ isVisible: false, height: 0 });
-      // });
-      
-      // Ici, nous simulons le comportement
-      const detectNativeKeyboard = () => {
-        const isPortrait = window.innerHeight > window.innerWidth;
-        const estimatedKeyboardHeight = isPortrait ? window.innerHeight * 0.4 : window.innerHeight * 0.3;
-        
-        // Détection heuristique - si un élément de formulaire a le focus
-        const hasFocus = document.activeElement && (
-          document.activeElement.tagName === 'INPUT' || 
-          document.activeElement.tagName === 'TEXTAREA' || 
-          document.activeElement.tagName === 'SELECT'
-        );
-        
-        setKeyboard({
-          isVisible: hasFocus,
-          height: hasFocus ? estimatedKeyboardHeight : 0
-        });
-      };
-      
-      document.addEventListener('focusin', detectNativeKeyboard);
-      document.addEventListener('focusout', detectNativeKeyboard);
-      
-      return () => {
-        document.removeEventListener('focusin', detectNativeKeyboard);
-        document.removeEventListener('focusout', detectNativeKeyboard);
-      };
+    if (!isMobile) {
+      return;
     }
-  }, []);
+    
+    const detectKeyboard = () => {
+      // iOS detection method
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+      
+      if (isIOS) {
+        // On iOS, we can detect if the keyboard is visible by checking if the window height is significantly smaller than the screen height
+        const visualViewport = window.visualViewport;
+        if (!visualViewport) return;
+        
+        const windowHeight = visualViewport.height;
+        const screenHeight = window.screen.height;
+        
+        // If the window height is significantly less than the screen height, the keyboard is likely open
+        const keyboardVisible = screenHeight - windowHeight > 100;
+        const keyboardHeight = keyboardVisible ? screenHeight - windowHeight : 0;
+        
+        setKeyboardState({
+          isVisible: keyboardVisible,
+          height: keyboardHeight,
+        });
+      } else {
+        // Android detection method
+        // On Android, we can detect if the keyboard is visible by checking if the window height is smaller than the window width (assuming portrait mode)
+        const visualViewport = window.visualViewport;
+        if (!visualViewport) return;
+        
+        const windowHeight = visualViewport.height;
+        const windowWidth = visualViewport.width;
+        
+        const keyboardVisible = windowHeight < windowWidth * 0.8;
+        const keyboardHeight = keyboardVisible ? window.innerHeight - windowHeight : 0;
+        
+        setKeyboardState({
+          isVisible: keyboardVisible,
+          height: keyboardHeight,
+        });
+      }
+    };
+    
+    // Add event listeners
+    window.addEventListener('resize', detectKeyboard);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', detectKeyboard);
+    }
+    
+    // Initial detection
+    detectKeyboard();
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', detectKeyboard);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', detectKeyboard);
+      }
+    };
+  }, [isMobile]);
   
-  return keyboard;
+  return keyboardState;
 }

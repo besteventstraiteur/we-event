@@ -1,52 +1,78 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "./dashboard/Sidebar";
-import Header from "./dashboard/Header";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
+import Header from "@/components/dashboard/Header";
+import Sidebar from "@/components/dashboard/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Sheet, SheetContent } from "./ui/sheet";
+import MobileAppWrapper from "@/components/mobile/MobileAppWrapper";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
   type: "client" | "partner" | "admin";
 }
 
-const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const handleLogout = () => {
-    // Logique de déconnexion ici
+    // Simulation de déconnexion - redirection vers la page de connexion
     navigate("/login");
   };
-
-  return (
-    <div className="flex min-h-screen w-full bg-white overflow-x-hidden">
-      {/* Sidebar pour desktop */}
-      {!isMobile && (
-        <Sidebar type={type} onLogout={handleLogout} />
-      )}
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col w-full overflow-hidden">
-        <Header 
-          type={type} 
-          isMobile={isMobile} 
-          onMenuClick={() => setSidebarOpen(true)} 
-        />
-        
-        {/* Menu mobile */}
-        {isMobile && (
+  
+  const toggleSidebar = () => {
+    setSidebarOpen(prev => !prev);
+  };
+  
+  // If mobile, use the mobile-optimized layout
+  if (isMobile) {
+    return (
+      <MobileAppWrapper type={type}>
+        <div className="flex h-screen overflow-hidden bg-white">
+          {/* Menu latéral pour Mobile */}
           <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-            <SheetContent side="left" className="p-0 w-[85vw] max-w-[290px]">
-              <Sidebar type={type} onLogout={handleLogout} mobile={true} onMenuClose={() => setSidebarOpen(false)} />
+            <SheetContent side="left" className="p-0 w-[280px]">
+              <Sidebar 
+                type={type} 
+                onLogout={handleLogout} 
+                mobile={true} 
+                onMenuClose={() => setSidebarOpen(false)}
+              />
             </SheetContent>
           </Sheet>
-        )}
+          
+          <div className="flex flex-col flex-1 overflow-hidden">
+            <Header 
+              type={type} 
+              isMobile={true} 
+              onMenuClick={toggleSidebar}
+            />
+            
+            <main className="flex-1 overflow-y-auto p-4 bg-white">
+              <div className="container mx-auto">
+                {children}
+              </div>
+            </main>
+          </div>
+        </div>
+      </MobileAppWrapper>
+    );
+  }
+  
+  // Desktop layout
+  return (
+    <div className="flex h-screen overflow-hidden bg-white">
+      <Sidebar type={type} onLogout={handleLogout} />
+      
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <Header type={type} />
         
-        <main className={`flex-1 overflow-hidden ${isMobile ? 'px-2 py-3' : 'p-6'} bg-white`}>
-          <div className={`${isMobile ? 'mobile-view w-full overflow-x-hidden' : ''}`}>
+        <main className="flex-1 overflow-y-auto p-6 bg-vip-gray-100">
+          <div className="container mx-auto">
             {children}
           </div>
         </main>
