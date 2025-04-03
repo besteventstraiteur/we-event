@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
 import GoldButton from "@/components/GoldButton";
+import VideoPresentation from "@/components/video-presentation/VideoPresentation";
 
 const Index = () => {
   return (
@@ -43,6 +44,10 @@ const Index = () => {
                 Devenir prestataire
               </GoldButton>
             </Link>
+          </div>
+          
+          <div className="mt-8 mb-8 flex justify-center">
+            <VideoPresentation buttonText="Découvrir toutes les fonctionnalités" />
           </div>
           
           <div className="mt-12">
