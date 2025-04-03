@@ -33,7 +33,7 @@ const GuestDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       <header className="bg-white p-4 shadow">
         <div className="container mx-auto flex justify-between items-center">
           <Logo size="medium" />
@@ -93,7 +93,7 @@ const GuestDashboard = () => {
                     <p className="text-sm text-gray-600 mb-4">
                       Merci de nous indiquer si vous serez présent à cet événement.
                     </p>
-                    <div className="flex gap-3">
+                    <div className="flex flex-col sm:flex-row gap-3">
                       <Button 
                         onClick={() => handleAttendance(true)}
                         className="bg-vip-gold hover:bg-vip-gold/90 text-white"
@@ -113,7 +113,7 @@ const GuestDashboard = () => {
                   <div className="bg-gray-50 p-4 rounded-lg mb-6 border">
                     <div className="flex items-center gap-2">
                       {attending ? (
-                        <Badge variant="success">Présent(e)</Badge>
+                        <Badge className="bg-green-500">Présent(e)</Badge>
                       ) : (
                         <Badge variant="destructive">Absent(e)</Badge>
                       )}
