@@ -17,7 +17,7 @@ export interface Guest {
   notes: string;
   menuChoice?: string;
   menuOption?: string;
-  // Add the missing properties
+  // Add all required properties to fix type errors
   firstName?: string;
   lastName?: string;
   dietaryRestrictions?: string;

@@ -18,7 +18,8 @@ import {
   PiggyBank,
   Shield,
   CreditCard,
-  VideoIcon
+  VideoIcon,
+  Globe
 } from "lucide-react";
 
 const ClientNavigation = () => {
@@ -102,6 +103,13 @@ const ClientNavigation = () => {
         active={location.pathname === "/client/menus"}
       >
         Gestion des Menus
+      </NavItem>
+      <NavItem
+        href="/client/mini-site"
+        icon={<Globe size={18} />}
+        active={location.pathname === "/client/mini-site"}
+      >
+        Mini-Site Web
       </NavItem>
       <NavItem
         href="/client/todolist"
