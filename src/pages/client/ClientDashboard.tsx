@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,11 +7,19 @@ import { Headphones, Clock, Users, Bell, ClipboardCheck } from "lucide-react";
 import GoldButton from "@/components/GoldButton";
 import EventCountdown from "@/components/client/EventCountdown";
 import VendorChecklist from "@/components/client/VendorChecklist";
+import EventDateEditor from "@/components/client/EventDateEditor";
 
 const ClientDashboard = () => {
   // Date fictive pour l'événement (à 3 mois dans le futur)
-  const eventDate = new Date();
-  eventDate.setMonth(eventDate.getMonth() + 3);
+  const [eventDate, setEventDate] = useState(() => {
+    const date = new Date();
+    date.setMonth(date.getMonth() + 3);
+    return date;
+  });
+  
+  const handleDateChange = (newDate: Date) => {
+    setEventDate(newDate);
+  };
   
   return (
     <DashboardLayout type="client">
@@ -111,6 +119,12 @@ const ClientDashboard = () => {
           </div>
 
           <div className="space-y-6">
+            <EventDateEditor 
+              currentDate={eventDate}
+              onDateChange={handleDateChange}
+              eventName="Mon Mariage" 
+            />
+
             <Card>
               <CardHeader>
                 <CardTitle>Derniers podcasts</CardTitle>
