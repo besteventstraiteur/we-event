@@ -27,7 +27,8 @@ import ClientBudget from "./pages/client/ClientBudget";
 import ClientTwoFactorSetup from "./pages/client/TwoFactorSetup";
 import ClientPayments from "./pages/client/ClientPayments";
 import ClientLiveStreaming from "./pages/client/ClientLiveStreaming";
-import ClientMiniSite from "./pages/client/ClientMiniSite"; // Add the new import
+import ClientMiniSite from "./pages/client/ClientMiniSite";
+import ClientDayOfCommunication from "./pages/client/ClientDayOfCommunication"; // Add the new import
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerRequests from "./pages/partner/PartnerRequests";
 import PartnerStats from "./pages/partner/PartnerStats";
@@ -96,7 +97,8 @@ const App = () => (
             <Route path="/client/security" element={<ClientTwoFactorSetup />} />
             <Route path="/client/payments" element={<ClientPayments />} />
             <Route path="/client/live-streaming" element={<ClientLiveStreaming />} />
-            <Route path="/client/mini-site" element={<ClientMiniSite />} /> {/* Add the new route */}
+            <Route path="/client/mini-site" element={<ClientMiniSite />} />
+            <Route path="/client/day-of-communication" element={<ClientDayOfCommunication />} /> {/* Add the new route */}
             
             {/* Dashboard Prestataire */}
             <Route path="/partner/dashboard" element={<PartnerDashboard />} />
