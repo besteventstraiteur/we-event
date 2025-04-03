@@ -34,3 +34,29 @@ export const calculateCartTotals = (items: CartItem[]) => {
 export const getItemTypeLabel = (type: "package" | "service") => {
   return type === "package" ? "Pack" : "Service";
 };
+
+export const groupCartItemsByType = (items: CartItem[]) => {
+  return items.reduce(
+    (groups, item) => {
+      if (item.type === "package") {
+        groups.packages.push(item);
+      } else {
+        groups.services.push(item);
+      }
+      return groups;
+    },
+    { packages: [] as CartItem[], services: [] as CartItem[] }
+  );
+};
+
+export const getCartSummary = (items: CartItem[]) => {
+  const { packages, services } = groupCartItemsByType(items);
+  const packageCount = packages.length;
+  const serviceCount = services.length;
+  
+  return {
+    packageCount,
+    serviceCount,
+    totalItems: packageCount + serviceCount
+  };
+};

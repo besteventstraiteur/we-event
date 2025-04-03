@@ -6,11 +6,21 @@ import { ShoppingCart } from "lucide-react";
 
 interface CartTriggerButtonProps {
   itemCount: number;
+  className?: string;
+  onClick?: () => void;
 }
 
-const CartTriggerButton: React.FC<CartTriggerButtonProps> = ({ itemCount }) => {
+const CartTriggerButton: React.FC<CartTriggerButtonProps> = ({ 
+  itemCount, 
+  className,
+  onClick 
+}) => {
   return (
-    <Button variant="outline" className="relative">
+    <Button 
+      variant="outline" 
+      className={`relative ${className || ''}`}
+      onClick={onClick}
+    >
       <ShoppingCart className="h-5 w-5 mr-2" />
       <span>Panier</span>
       {itemCount > 0 && (

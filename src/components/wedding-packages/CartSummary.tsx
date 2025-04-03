@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
-import { ShoppingCart } from "lucide-react";
 import { 
   Sheet, 
   SheetContent, 
@@ -9,11 +8,10 @@ import {
   SheetTitle, 
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import CartItemsList from "./cart/CartItemsList";
 import CartSummaryFooter from "./cart/CartSummaryFooter";
 import CartTriggerButton from "./cart/CartTriggerButton";
+import { ShoppingCart } from "lucide-react";
 
 const CartSummary = () => {
   const { cart, removeFromCart, clearCart } = useCart();
