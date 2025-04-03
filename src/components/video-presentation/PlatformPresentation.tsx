@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
-import PresentationSlides from "./PresentationSlides";
+import PresentationSlides from "./presentation-slides";
 import PresentationDialog from "./presentation-dialog/PresentationDialog";
 import SlidesContainer from "./presentation-dialog/SlidesContainer";
 import NavigationControls from "./presentation-dialog/NavigationControls";
