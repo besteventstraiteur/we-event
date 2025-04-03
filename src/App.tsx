@@ -31,6 +31,7 @@ import AdminKpiDashboard from './pages/admin/AdminKpiDashboard';
 import AdminPartnerGamification from './pages/admin/AdminPartnerGamification';
 import AdminBackup from './pages/admin/AdminBackup';
 import AdminPresentationManagement from './pages/admin/AdminPresentationManagement';
+import AdminPartnerTypes from './pages/admin/AdminPartnerTypes';
 
 // Client Pages
 import ClientDashboard from './pages/client/ClientDashboard';
@@ -71,6 +72,11 @@ import PartnerMusicPlaylists from './pages/partner/PartnerMusicPlaylists';
 import PartnerGamification from './pages/partner/PartnerGamification';
 import PartnerBestAwards from './pages/partner/PartnerBestAwards';
 
+// Security Components
+import AdminRoute from './components/security/AdminRoute';
+import ProtectedRoute from './components/security/ProtectedRoute';
+import PartnerTypeRoute from './components/security/PartnerTypeRoute';
+
 function App() {
   return (
     <Router>
@@ -90,21 +96,22 @@ function App() {
         <Route path="/guest/:eventId/:guestId" element={<GuestDashboard />} />
         <Route path="/guest/menu/:eventId/:guestId" element={<GuestMenuSelection />} />
 
-        {/* Admin Pages */}
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/clients" element={<AdminClients />} />
-        <Route path="/admin/partners" element={<AdminPartners />} />
-        <Route path="/admin/guests" element={<AdminGuests />} />
-        <Route path="/admin/venues" element={<AdminVenues />} />
-        <Route path="/admin/wedding-packages" element={<AdminWeddingPackages />} />
-        <Route path="/admin/ratings" element={<AdminRatings />} />
-        <Route path="/admin/recommendations" element={<AdminRecommendations />} />
-        <Route path="/admin/talkshows" element={<AdminTalkshows />} />
-        <Route path="/admin/podcasts" element={<AdminPodcasts />} />
-        <Route path="/admin/kpi-dashboard" element={<AdminKpiDashboard />} />
-        <Route path="/admin/partner-gamification" element={<AdminPartnerGamification />} />
-        <Route path="/admin/backup" element={<AdminBackup />} />
-        <Route path="/admin/presentation" element={<AdminPresentationManagement />} />
+        {/* Admin Pages - All wrapped with AdminRoute */}
+        <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/admin/clients" element={<AdminRoute><AdminClients /></AdminRoute>} />
+        <Route path="/admin/partners" element={<AdminRoute><AdminPartners /></AdminRoute>} />
+        <Route path="/admin/partner-types" element={<AdminRoute><AdminPartnerTypes /></AdminRoute>} />
+        <Route path="/admin/guests" element={<AdminRoute><AdminGuests /></AdminRoute>} />
+        <Route path="/admin/venues" element={<AdminRoute><AdminVenues /></AdminRoute>} />
+        <Route path="/admin/wedding-packages" element={<AdminRoute><AdminWeddingPackages /></AdminRoute>} />
+        <Route path="/admin/ratings" element={<AdminRoute><AdminRatings /></AdminRoute>} />
+        <Route path="/admin/recommendations" element={<AdminRoute><AdminRecommendations /></AdminRoute>} />
+        <Route path="/admin/talkshows" element={<AdminRoute><AdminTalkshows /></AdminRoute>} />
+        <Route path="/admin/podcasts" element={<AdminRoute><AdminPodcasts /></AdminRoute>} />
+        <Route path="/admin/kpi-dashboard" element={<AdminRoute><AdminKpiDashboard /></AdminRoute>} />
+        <Route path="/admin/partner-gamification" element={<AdminRoute><AdminPartnerGamification /></AdminRoute>} />
+        <Route path="/admin/backup" element={<AdminRoute><AdminBackup /></AdminRoute>} />
+        <Route path="/admin/presentation" element={<AdminRoute><AdminPresentationManagement /></AdminRoute>} />
 
         {/* Client Pages */}
         <Route path="/client/dashboard" element={<ClientDashboard />} />
