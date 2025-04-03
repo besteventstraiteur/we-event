@@ -11,7 +11,20 @@ const PresentationSlides = [
       "Expérience utilisateur premium"
     ],
     path: "/client/dashboard",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
+  },
+  // Fonctionnalités Client
+  {
+    title: "Fonctionnalités Client",
+    description: "Notre plateforme offre un ensemble complet d'outils destinés aux clients pour une organisation d'événement sans stress et parfaitement maîtrisée.",
+    keyFeatures: [
+      "Tableau de bord intuitif",
+      "Gestion budgétaire avancée",
+      "Organisation des invités simplifiée",
+      "Collaboration en temps réel avec les prestataires"
+    ],
+    path: "/client/dashboard",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
   },
   {
     title: "Tableau de bord client",
@@ -23,7 +36,7 @@ const PresentationSlides = [
       "Compteur avant le jour J"
     ],
     path: "/client/dashboard",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
   },
   {
     title: "Gestion de budget",
@@ -35,7 +48,7 @@ const PresentationSlides = [
       "Rapports détaillés"
     ],
     path: "/client/budget",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
   },
   {
     title: "Gestion des invités",
@@ -47,7 +60,7 @@ const PresentationSlides = [
       "Espace dédié pour vos invités"
     ],
     path: "/client/guests",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
   },
   {
     title: "Plan de salle",
@@ -59,7 +72,7 @@ const PresentationSlides = [
       "Prévisualisation en temps réel"
     ],
     path: "/client/floor-plans",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
   },
   {
     title: "Marketplace de packages",
@@ -71,10 +84,10 @@ const PresentationSlides = [
       "Réservation sécurisée"
     ],
     path: "/client/wedding-packages",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
   },
   {
-    title: "Gestion des prestataires",
+    title: "Gestion des prestataires (vue client)",
     description: "Découvrez, contactez et gérez vos prestataires en un seul endroit. Consultez les avis, demandez des devis et planifiez des rendez-vous facilement.",
     keyFeatures: [
       "Annuaire de prestataires premium",
@@ -83,7 +96,7 @@ const PresentationSlides = [
       "Suivi des contrats"
     ],
     path: "/client/partners",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
   },
   {
     title: "Créateur de mini-site",
@@ -95,7 +108,7 @@ const PresentationSlides = [
       "Compteur avant l'événement"
     ],
     path: "/client/mini-site",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
   },
   {
     title: "Liste de tâches",
@@ -107,7 +120,7 @@ const PresentationSlides = [
       "Délégation de tâches"
     ],
     path: "/client/todo",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
   },
   {
     title: "Pinterbest - Inspiration",
@@ -119,7 +132,92 @@ const PresentationSlides = [
       "Suggestions personnalisées"
     ],
     path: "/client/pinterbest",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
+  },
+  // Fonctionnalités Prestataire
+  {
+    title: "Fonctionnalités Prestataire",
+    description: "Notre plateforme offre aux prestataires des outils puissants pour gérer leur activité, présenter leurs services et interagir avec leurs clients.",
+    keyFeatures: [
+      "Tableau de bord professionnel",
+      "Gestion des rendez-vous",
+      "Marketing ciblé",
+      "Système de gamification"
+    ],
+    path: "/partner/dashboard",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+  },
+  {
+    title: "Tableau de bord prestataire",
+    description: "Centralisez la gestion de votre activité avec notre tableau de bord dédié aux prestataires. Suivez vos performances, gérez vos clients et optimisez votre planning.",
+    keyFeatures: [
+      "Aperçu des rendez-vous à venir",
+      "Statistiques de performance",
+      "Notifications en temps réel",
+      "Gestion de disponibilité"
+    ],
+    path: "/partner/dashboard",
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+  },
+  {
+    title: "Système de gamification",
+    description: "Augmentez votre visibilité et votre crédibilité grâce à notre système de gamification. Gagnez des badges, débloquez des niveaux et améliorez votre classement.",
+    keyFeatures: [
+      "Badges de compétence",
+      "Niveaux d'expertise",
+      "Récompenses spéciales",
+      "Visibilité prioritaire"
+    ],
+    path: "/partner/gamification",
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
+  },
+  {
+    title: "Gestion des requêtes client",
+    description: "Répondez efficacement aux demandes de vos clients avec notre système de gestion des requêtes. Restez organisé et ne manquez jamais une opportunité.",
+    keyFeatures: [
+      "Notifications instantanées",
+      "Suivi des discussions",
+      "Modèles de réponse",
+      "Historique complet"
+    ],
+    path: "/partner/requests",
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+  },
+  {
+    title: "Création de podcasts",
+    description: "Partagez votre expertise et développez votre notoriété en créant des podcasts exclusifs. Présentez vos services et donnez des conseils précieux à vos futurs clients.",
+    keyFeatures: [
+      "Enregistrement simplifié",
+      "Outils d'édition intégrés",
+      "Diffusion automatique",
+      "Statistiques d'audience"
+    ],
+    path: "/partner/podcasts",
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
+  },
+  {
+    title: "Talkshows et webinaires",
+    description: "Organisez des émissions interactives pour présenter vos services, répondre aux questions et engager directement votre audience cible.",
+    keyFeatures: [
+      "Programmation de diffusion",
+      "Chat en direct avec les spectateurs",
+      "Replays automatiques",
+      "Promotion intégrée"
+    ],
+    path: "/partner/talkshows",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+  },
+  {
+    title: "Système de recommandation",
+    description: "Développez votre réseau professionnel grâce à notre système de recommandation entre prestataires. Créez des partenariats stratégiques et augmentez vos opportunités.",
+    keyFeatures: [
+      "Recommandations croisées",
+      "Mise en relation facilitée",
+      "Partage de clients",
+      "Suivi des conversions"
+    ],
+    path: "/partner/recommendations",
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
   },
   {
     title: "Communication et médias",
@@ -131,19 +229,19 @@ const PresentationSlides = [
       "Streaming en direct"
     ],
     path: "/client/talkshows",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
   },
   {
     title: "Merci d'avoir suivi cette présentation",
-    description: "Vous avez maintenant un aperçu des principales fonctionnalités de Best Events VIP. N'hésitez pas à explorer chaque module pour découvrir toutes les possibilités de notre plateforme.",
+    description: "Vous avez maintenant un aperçu des principales fonctionnalités de Best Events VIP pour les clients et les prestataires. N'hésitez pas à explorer chaque module pour découvrir toutes les possibilités de notre plateforme.",
     keyFeatures: [
-      "Support client 24/7",
+      "Support client/prestataire 24/7",
       "Mise à jour régulière des fonctionnalités",
       "Service personnalisé",
       "Confidentialité et sécurité maximales"
     ],
     path: "/client/dashboard",
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
   }
 ];
 

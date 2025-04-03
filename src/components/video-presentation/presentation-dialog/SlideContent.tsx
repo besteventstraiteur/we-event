@@ -58,7 +58,7 @@ const SlideContent: React.FC<SlideContentProps> = ({
                 <img 
                   src={slide.image} 
                   alt={slide.title}
-                  className="max-h-full object-contain rounded-md shadow-md"
+                  className="max-h-full w-full object-cover rounded-md shadow-md"
                 />
               ) : (
                 <div className="h-full w-full bg-gray-100 rounded-md flex items-center justify-center">
