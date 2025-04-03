@@ -269,7 +269,7 @@ export const useEnhancedTaskList = ({
       taskId,
       type: reminderData.type,
       message: reminderData.message,
-      date: typeof reminderData.date === 'string' ? reminderData.date : reminderData.date.toISOString(),
+      date: reminderData.date, // This is now guaranteed to be a string
       frequency: reminderData.frequency,
       enabled: true,
       sent: false,

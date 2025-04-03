@@ -79,7 +79,7 @@ const ReminderForm: React.FC<ReminderFormProps> = ({
     const reminderData: NewReminderParams = {
       type: values.type,
       message: values.message,
-      date: reminderDate,
+      date: reminderDate.toISOString(), // Convert Date to string here
       frequency: values.frequency,
       recipients: values.recipients ? values.recipients.split(',').map(r => r.trim()) : undefined,
     };
