@@ -6,8 +6,8 @@ import GoldButton from "@/components/GoldButton";
 
 const TermsPage = () => {
   return (
-    <div className="min-h-screen bg-vip-black flex flex-col">
-      <header className="border-b border-vip-gray-800 py-4">
+    <div className="min-h-screen bg-white flex flex-col">
+      <header className="border-b border-gray-200 py-4">
         <div className="container flex items-center justify-between">
           <Link to="/">
             <Logo />
@@ -24,9 +24,9 @@ const TermsPage = () => {
 
       <main className="flex-1 container py-12">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">Conditions Générales d'Utilisation</h1>
+          <h1 className="text-3xl font-bold mb-8 text-vip-black">Conditions Générales d'Utilisation</h1>
           
-          <div className="space-y-8 text-vip-gray-300">
+          <div className="space-y-8 text-vip-gray-600">
             <section>
               <h2 className="text-xl font-semibold text-vip-gold mb-4">1. Acceptation des conditions</h2>
               <p>
@@ -158,7 +158,7 @@ const TermsPage = () => {
         </div>
       </main>
 
-      <footer className="py-8 border-t border-vip-gray-800">
+      <footer className="py-8 border-t border-gray-200">
         <div className="container">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <Link to="/">
@@ -168,7 +168,7 @@ const TermsPage = () => {
               © {new Date().getFullYear()} Best Events VIP. Tous droits réservés.
             </p>
             <div className="flex gap-4">
-              <Link to="/privacy" className="text-vip-gray-400 hover:text-vip-gold text-sm">
+              <Link to="/privacy" className="text-vip-gray-500 hover:text-vip-gold text-sm">
                 Politique de confidentialité
               </Link>
               <Link to="/terms" className="text-vip-gold hover:underline text-sm">
