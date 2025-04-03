@@ -17,6 +17,9 @@ const SlideContent: React.FC<SlideContentProps> = ({
   totalSlides,
   onNavigate
 }) => {
+  // Determine if the media is a gif based on file extension
+  const isGif = slide.videoUrl?.toLowerCase().endsWith('.gif');
+
   return (
     <Card className="h-full border-0 rounded-none">
       <CardContent className="p-6 h-full flex flex-col">
@@ -65,6 +68,34 @@ const SlideContent: React.FC<SlideContentProps> = ({
                       e.currentTarget.src = "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d";
                     }}
                   />
+                </div>
+              ) : slide.videoUrl ? (
+                <div className="h-full w-full flex items-center justify-center rounded-md overflow-hidden shadow-md">
+                  {isGif ? (
+                    // Display GIF as an image
+                    <img 
+                      src={slide.videoUrl} 
+                      alt={slide.title}
+                      className="max-h-full w-full object-contain"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d";
+                      }}
+                    />
+                  ) : (
+                    // Display video with controls
+                    <video 
+                      src={slide.videoUrl}
+                      controls
+                      autoPlay
+                      loop
+                      muted
+                      className="max-h-full w-full object-contain"
+                      onError={(e) => {
+                        // We can't set a fallback directly, so we'll hide the video
+                        (e.target as HTMLVideoElement).style.display = 'none';
+                      }}
+                    />
+                  )}
                 </div>
               ) : (
                 <div className="h-full w-full bg-gray-100 rounded-md flex items-center justify-center">

@@ -10,7 +10,8 @@ import {
   MessageSquare, 
   Radio, 
   Star,
-  Headphones
+  Headphones,
+  Presentation
 } from "lucide-react";
 
 const AdminNavigation = () => {
@@ -65,6 +66,11 @@ const AdminNavigation = () => {
         icon={<Headphones size={20} />}
         title="Podcasts"
         href="/admin/podcasts"
+      />
+      <NavItem
+        icon={<Presentation size={20} />}
+        title="Présentation"
+        href="/admin/presentation"
       />
     </div>
   );

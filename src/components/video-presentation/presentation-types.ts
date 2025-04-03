@@ -5,4 +5,5 @@ export interface SlideType {
   keyFeatures?: string[];
   path?: string;
   image?: string;
+  videoUrl?: string; // New field for videos/GIFs
 }
