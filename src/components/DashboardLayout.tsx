@@ -32,10 +32,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => 
   if (isMobile) {
     return (
       <MobileAppWrapper type={type}>
-        <div className="flex h-screen overflow-hidden bg-white">
+        <div className="flex h-screen overflow-hidden bg-gradient-to-br from-white to-gray-50">
           {/* Menu latéral pour Mobile */}
           <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-            <SheetContent side="left" className="p-0 w-[280px]">
+            <SheetContent side="left" className="p-0 w-[280px] border-r shadow-lg">
               <Sidebar 
                 type={type} 
                 onLogout={handleLogout} 
@@ -52,7 +52,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => 
               onMenuClick={toggleSidebar}
             />
             
-            <main className="flex-1 overflow-y-auto p-4 bg-white">
+            <main className="flex-1 overflow-y-auto p-4 bg-gradient-to-br from-white to-gray-50">
               <div className="container mx-auto">
                 {children}
               </div>
@@ -71,7 +71,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => 
       <div className="flex flex-col flex-1 overflow-hidden">
         <Header type={type} />
         
-        <main className="flex-1 overflow-y-auto p-6 bg-vip-gray-100">
+        <main className="flex-1 overflow-y-auto p-6 bg-gradient-to-br from-white to-gray-50">
           <div className="container mx-auto">
             {children}
           </div>
