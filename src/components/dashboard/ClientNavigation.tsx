@@ -17,7 +17,8 @@ import {
   Music, 
   PiggyBank,
   Shield,
-  CreditCard
+  CreditCard,
+  VideoIcon
 } from "lucide-react";
 
 const ClientNavigation = () => {
@@ -122,6 +123,13 @@ const ClientNavigation = () => {
         active={location.pathname === "/client/talkshows"}
       >
         Talkshows
+      </NavItem>
+      <NavItem
+        href="/client/live-streaming"
+        icon={<VideoIcon size={18} />}
+        active={location.pathname === "/client/live-streaming"}
+      >
+        Visioconférences
       </NavItem>
       <NavItem
         href="/client/security"

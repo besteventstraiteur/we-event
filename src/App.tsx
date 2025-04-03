@@ -25,12 +25,14 @@ import ClientMusicPlaylists from "./pages/client/ClientMusicPlaylists";
 import ClientGuests from "./pages/client/ClientGuests";
 import ClientBudget from "./pages/client/ClientBudget";
 import ClientTwoFactorSetup from "./pages/client/TwoFactorSetup";
-import ClientPayments from "./pages/client/ClientPayments"; // New import
+import ClientPayments from "./pages/client/ClientPayments";
+import ClientLiveStreaming from "./pages/client/ClientLiveStreaming"; // Nouvelle page
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import PartnerRequests from "./pages/partner/PartnerRequests";
 import PartnerStats from "./pages/partner/PartnerStats";
 import PartnerPodcasts from "./pages/partner/PartnerPodcasts";
 import PartnerTalkshows from "./pages/partner/PartnerTalkshows";
+import PartnerLiveStreaming from "./pages/partner/PartnerLiveStreaming"; // Nouvelle page
 import PartnerRecommendations from "./pages/partner/PartnerRecommendations";
 import PartnerPhotos from "./pages/partner/PartnerPhotos";
 import PartnerMusicPlaylists from "./pages/partner/PartnerMusicPlaylists";
@@ -91,7 +93,8 @@ const App = () => (
             <Route path="/client/guests" element={<ClientGuests />} />
             <Route path="/client/budget" element={<ClientBudget />} />
             <Route path="/client/security" element={<ClientTwoFactorSetup />} />
-            <Route path="/client/payments" element={<ClientPayments />} /> {/* New route */}
+            <Route path="/client/payments" element={<ClientPayments />} />
+            <Route path="/client/live-streaming" element={<ClientLiveStreaming />} /> {/* Nouvelle route */}
             
             {/* Dashboard Prestataire */}
             <Route path="/partner/dashboard" element={<PartnerDashboard />} />
@@ -99,6 +102,7 @@ const App = () => (
             <Route path="/partner/stats" element={<PartnerStats />} />
             <Route path="/partner/podcasts" element={<PartnerPodcasts />} />
             <Route path="/partner/talkshows" element={<PartnerTalkshows />} />
+            <Route path="/partner/live-streaming" element={<PartnerLiveStreaming />} /> {/* Nouvelle route */}
             <Route path="/partner/recommendations" element={<PartnerRecommendations />} />
             <Route path="/partner/photos" element={<PartnerPhotos />} />
             <Route path="/partner/music" element={<PartnerMusicPlaylists />} />
@@ -124,4 +128,3 @@ const App = () => (
 );
 
 export default App;
-

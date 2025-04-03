@@ -28,6 +28,14 @@ export interface Talkshow {
   host: string;
   /** Invités participant au talkshow */
   guests: string[];
+  /** Est-ce que ce talkshow est ou était un événement en direct */
+  isLive?: boolean;
+  /** ID de la visioconférence associée (si en direct) */
+  conferenceId?: string;
+  /** Date de diffusion en direct (si applicable) */
+  liveDate?: string;
+  /** Statut de la diffusion en direct */
+  liveStatus?: 'scheduled' | 'live' | 'ended' | 'cancelled';
 }
 
 /**
@@ -49,4 +57,8 @@ export interface NewTalkshow {
   host: string;
   /** Invités participant au talkshow (séparés par des virgules) */
   guests: string;
+  /** Est-ce que ce talkshow est un événement en direct */
+  isLive?: boolean;
+  /** Date et heure prévues pour la diffusion en direct */
+  liveDate?: string;
 }
