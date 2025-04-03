@@ -55,6 +55,7 @@ import TwoFactorSetup from './pages/client/TwoFactorSetup';
 import ClientPinterbest from './pages/client/ClientPinterbest';
 import ClientMenus from './pages/client/ClientMenus';
 import ClientMiniSite from './pages/client/ClientMiniSite';
+import ClientAccount from './pages/client/ClientAccount';
 
 // Partner Pages
 import PartnerDashboard from './pages/partner/PartnerDashboard';
@@ -127,6 +128,7 @@ function App() {
         <Route path="/client/pinterbest" element={<ClientPinterbest />} />
         <Route path="/client/menus" element={<ClientMenus />} />
         <Route path="/client/mini-site" element={<ClientMiniSite />} />
+        <Route path="/client/account" element={<ClientAccount />} />
 
         {/* Partner Pages */}
         <Route path="/partner/dashboard" element={<PartnerDashboard />} />
