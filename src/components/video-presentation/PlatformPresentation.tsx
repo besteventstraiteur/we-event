@@ -4,15 +4,43 @@ import PresentationDialog from './presentation-dialog/PresentationDialog';
 import SlidesContainer from './presentation-dialog/SlidesContainer';
 import NavigationControls from './presentation-dialog/NavigationControls';
 import PresentationSlides from './presentation-slides';
+import clientSlides from './presentation-slides/client-slides';
+import partnerSlides from './presentation-slides/partner-slides';
+import introductionSlides from './presentation-slides/introduction-slides';
+import conclusionSlides from './presentation-slides/conclusion-slides';
 
 interface PlatformPresentationProps {
   onClose?: () => void;
+  title?: string;
+  description?: string;
+  clientOnly?: boolean;
+  partnerOnly?: boolean;
 }
 
-const PlatformPresentation: React.FC<PlatformPresentationProps> = ({ onClose }) => {
+const PlatformPresentation: React.FC<PlatformPresentationProps> = ({ 
+  onClose,
+  title = "Bienvenue sur We Event",
+  description = "Découvrez nos fonctionnalités principales",
+  clientOnly = false,
+  partnerOnly = false 
+}) => {
   const [isOpen, setIsOpen] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  
+  // Sélection des slides à montrer en fonction des props
+  const slidesToShow = React.useMemo(() => {
+    if (clientOnly) {
+      // Pour les clients : intro + slides client + conclusion
+      return [...introductionSlides.slice(0, 1), ...clientSlides, ...conclusionSlides.slice(-1)];
+    } else if (partnerOnly) {
+      // Pour les prestataires : intro + slides prestataire + conclusion
+      return [...introductionSlides.slice(0, 1), ...partnerSlides, ...conclusionSlides.slice(-1)];
+    } else {
+      // Par défaut, tous les slides
+      return PresentationSlides;
+    }
+  }, [clientOnly, partnerOnly]);
   
   useEffect(() => {
     // Prevent scrolling on the background when dialog is open
@@ -36,7 +64,7 @@ const PlatformPresentation: React.FC<PlatformPresentationProps> = ({ onClose }) 
   };
 
   const handleNext = () => {
-    if (currentSlide < PresentationSlides.length - 1) {
+    if (currentSlide < slidesToShow.length - 1) {
       setCurrentSlide(currentSlide + 1);
     }
   };
@@ -57,7 +85,7 @@ const PlatformPresentation: React.FC<PlatformPresentationProps> = ({ onClose }) 
 
   const navigateToFeature = () => {
     // Implement navigation to feature based on current slide
-    const currentPath = PresentationSlides[currentSlide].path;
+    const currentPath = slidesToShow[currentSlide].path;
     if (currentPath) {
       // Close dialog before navigating
       setIsOpen(false);
@@ -70,13 +98,13 @@ const PlatformPresentation: React.FC<PlatformPresentationProps> = ({ onClose }) 
     <PresentationDialog 
       open={isOpen} 
       setOpen={setIsOpen}
-      title="Bienvenue sur We Event"
-      description="Découvrez nos fonctionnalités principales"
+      title={title}
+      description={description}
       onClose={handleDialogClose}
     >
       <div className="presentation-content">
         <SlidesContainer 
-          slides={PresentationSlides} 
+          slides={slidesToShow} 
           currentSlide={currentSlide} 
           navigateToFeature={navigateToFeature}
         />
@@ -84,7 +112,7 @@ const PlatformPresentation: React.FC<PlatformPresentationProps> = ({ onClose }) 
           isPlaying={isPlaying}
           togglePlayPause={togglePlayPause}
           currentSlide={currentSlide}
-          totalSlides={PresentationSlides.length}
+          totalSlides={slidesToShow.length}
           goToSlide={goToSlide}
           handlePrevious={handlePrevious}
           handleNext={handleNext}
