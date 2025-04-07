@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
@@ -75,6 +74,7 @@ import PartnerBestAwards from './pages/partner/PartnerBestAwards';
 import PartnerCalendar from './pages/partner/PartnerCalendar';
 import PartnerMenus from './pages/partner/PartnerMenus';
 import PartnerFloorPlans from './pages/partner/PartnerFloorPlans';
+import PartnerSubscription from "./pages/partner/PartnerSubscription";
 
 // Security Components
 import AdminRoute from './components/security/AdminRoute';
@@ -156,6 +156,11 @@ function App() {
         <Route path="/partner/best-awards" element={<PartnerBestAwards />} />
         <Route path="/partner/podcasts" element={<PartnerPodcasts />} />
         <Route path="/partner/talkshows" element={<PartnerTalkshows />} />
+        <Route path="/partner/subscription" element={
+          <ProtectedRoute role="partner">
+            <PartnerSubscription />
+          </ProtectedRoute>
+        } />
 
         {/* 404 - Not Found */}
         <Route path="*" element={<NotFound />} />

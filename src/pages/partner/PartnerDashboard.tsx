@@ -1,12 +1,15 @@
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserRound, BarChart, MessageSquare, Calendar } from "lucide-react";
+import { UserRound, BarChart, MessageSquare, Calendar, CreditCard } from "lucide-react";
 import GoldButton from "@/components/GoldButton";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 
 const PartnerDashboard = () => {
+  const navigate = useNavigate();
   // Date d'expiration fictive (dans 8 mois)
   const expiryDate = new Date();
   expiryDate.setMonth(expiryDate.getMonth() + 8);
@@ -15,6 +18,13 @@ const PartnerDashboard = () => {
   const totalDays = 365; // Abonnement annuel
   const daysRemaining = Math.floor((expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
   const percentageRemaining = Math.floor((daysRemaining / totalDays) * 100);
+
+  // Example subscription tier
+  const subscriptionTier = "standard";
+  
+  const handleSubscriptionClick = () => {
+    navigate("/partner/subscription");
+  };
 
   return (
     <DashboardLayout type="partner">
@@ -64,15 +74,37 @@ const PartnerDashboard = () => {
           <Card className="bg-vip-gray-900 border-vip-gray-800">
             <CardHeader className="pb-2">
               <CardTitle className="text-vip-gold flex items-center gap-2">
-                <Calendar size={18} /> Abonnement
+                <CreditCard size={18} /> Abonnement
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-md font-medium text-vip-white">Expire le {expiryDate.toLocaleDateString()}</p>
-              <div className="mt-2 space-y-1">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-vip-white">
+                  <Badge 
+                    variant="outline" 
+                    className={`${
+                      subscriptionTier === 'premium' 
+                        ? 'bg-amber-500/20 text-amber-500 border-amber-500/50' 
+                        : subscriptionTier === 'standard' 
+                        ? 'bg-blue-500/20 text-blue-500 border-blue-500/50' 
+                        : 'bg-vip-gray-700/20 text-vip-gray-400 border-vip-gray-700/50'
+                    }`}
+                  >
+                    {subscriptionTier === 'premium' 
+                      ? 'Premium' 
+                      : subscriptionTier === 'standard' 
+                      ? 'Standard' 
+                      : 'Gratuit'}
+                  </Badge>
+                </p>
+                <p className="text-xs text-vip-gray-400 cursor-pointer hover:text-vip-gold" onClick={handleSubscriptionClick}>
+                  Gérer
+                </p>
+              </div>
+              <div className="space-y-1">
                 <Progress value={percentageRemaining} className="h-2 bg-vip-gray-700" />
                 <p className="text-xs text-vip-gray-400">
-                  {daysRemaining} jours restants sur votre abonnement
+                  Expire dans {daysRemaining} jours
                 </p>
               </div>
             </CardContent>

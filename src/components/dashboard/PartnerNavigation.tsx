@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { BarChart, MessageSquare, Calendar, CheckSquare, Image, Music, Video, Users, Trophy, Award, FileText, Grid3X3, HeadphonesIcon } from "lucide-react";
+import { BarChart, MessageSquare, Calendar, CheckSquare, Image, Music, Video, Users, Trophy, Award, FileText, Grid3X3, HeadphonesIcon, CreditCard } from "lucide-react";
 import { useAccessControl } from "@/hooks/useAccessControl";
 import { PartnerType } from "@/utils/accessControl";
 
@@ -21,6 +21,13 @@ const PartnerNavigation = () => {
         active={location.pathname === "/partner/dashboard"}
       >
         Tableau de bord
+      </NavItem>
+      <NavItem
+        href="/partner/subscription"
+        icon={<CreditCard size={18} />}
+        active={location.pathname === "/partner/subscription"}
+      >
+        Mon Abonnement
       </NavItem>
       <NavItem
         href="/partner/tasks"

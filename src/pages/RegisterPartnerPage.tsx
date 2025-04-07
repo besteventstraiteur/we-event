@@ -8,6 +8,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Card, CardContent } from "@/components/ui/card";
+import { CheckCircle } from "lucide-react";
 
 const RegisterPartnerPage = () => {
   const [formData, setFormData] = useState({
@@ -20,6 +23,7 @@ const RegisterPartnerPage = () => {
     category: "",
     password: "",
     confirmPassword: "",
+    subscriptionTier: "standard", // Default subscription tier
   });
   const [logo, setLogo] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,6 +44,10 @@ const RegisterPartnerPage = () => {
     if (e.target.files && e.target.files[0]) {
       setLogo(e.target.files[0]);
     }
+  };
+
+  const handleSubscriptionTierChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, subscriptionTier: value }));
   };
 
   const handleNextStep = () => {
@@ -110,6 +118,52 @@ const RegisterPartnerPage = () => {
     { value: "florist", label: "Fleuriste" },
     { value: "wedding_planner", label: "Wedding Planner" },
     { value: "general", label: "Autre" },
+  ];
+
+  // Subscription plans
+  const subscriptionPlans = [
+    {
+      id: "premium",
+      name: "Abonnement Premium",
+      price: 800,
+      vat: 160,
+      total: 960,
+      features: [
+        "Top 5 des résultats de recherche",
+        "Mise en avant régulière",
+        "Recommandations prioritaires",
+        "Badges et Best Awards",
+        "Statistiques avancées"
+      ],
+      limited: true
+    },
+    {
+      id: "standard",
+      name: "Abonnement Standard",
+      price: 400,
+      vat: 80,
+      total: 480,
+      features: [
+        "Résultats entre 6ème et 10ème position",
+        "Réception des recommandations",
+        "Badges et Best Awards",
+        "Statistiques basiques"
+      ],
+      limited: true
+    },
+    {
+      id: "free",
+      name: "Abonnement Gratuit",
+      price: 0,
+      vat: 0,
+      total: 0,
+      features: [
+        "Accès à la plateforme",
+        "Apparition après la 11ème position",
+        "Profil de base"
+      ],
+      limited: false
+    }
   ];
 
   return (
@@ -211,6 +265,66 @@ const RegisterPartnerPage = () => {
           </>
         ) : (
           <>
+            <div className="space-y-4">
+              <Label className="text-lg font-semibold">Choisissez votre abonnement</Label>
+              <div className="space-y-4">
+                <RadioGroup 
+                  value={formData.subscriptionTier} 
+                  onValueChange={handleSubscriptionTierChange}
+                  className="grid grid-cols-1 md:grid-cols-3 gap-4"
+                >
+                  {subscriptionPlans.map((plan) => (
+                    <div key={plan.id} className="relative">
+                      <RadioGroupItem 
+                        value={plan.id} 
+                        id={`plan-${plan.id}`} 
+                        className="sr-only"
+                      />
+                      <Label 
+                        htmlFor={`plan-${plan.id}`}
+                        className={`block h-full cursor-pointer rounded-lg border p-4 hover:border-vip-gold/50 
+                          ${formData.subscriptionTier === plan.id 
+                            ? 'border-vip-gold bg-vip-gold/10' 
+                            : 'border-vip-gray-700 bg-vip-gray-800'}`}
+                      >
+                        <div className="flex justify-between">
+                          <span className="font-medium text-vip-white">{plan.name}</span>
+                          {formData.subscriptionTier === plan.id && (
+                            <CheckCircle className="h-5 w-5 text-vip-gold" />
+                          )}
+                        </div>
+                        <p className="mt-1 mb-2">
+                          {plan.price > 0 ? (
+                            <span className="text-xl font-bold text-vip-white">{plan.price}€ HT/an</span>
+                          ) : (
+                            <span className="text-xl font-bold text-vip-white">Gratuit</span>
+                          )}
+                        </p>
+                        {plan.price > 0 && (
+                          <p className="text-xs text-vip-gray-400 mb-2">
+                            TVA (20%): {plan.vat}€ • Total: {plan.total}€ TTC
+                          </p>
+                        )}
+                        <div className="space-y-1">
+                          {plan.features.map((feature, index) => (
+                            <div key={index} className="flex items-start">
+                              <CheckCircle className="h-3 w-3 text-vip-gold mr-2 mt-0.5" />
+                              <span className="text-xs text-vip-gray-300">{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                        {plan.limited && (
+                          <div className="mt-3 text-xs text-amber-500 italic">
+                            Limité à 5 prestataires par catégorie et département
+                          </div>
+                        )}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </div>
+            </div>
+
             <InputField
               label="Mot de passe"
               id="password"
@@ -230,46 +344,48 @@ const RegisterPartnerPage = () => {
               required
             />
 
-            <div className="p-4 bg-vip-gray-800 rounded-lg">
-              <h3 className="text-lg font-semibold text-vip-gold mb-2">Abonnement Partenaire VIP</h3>
-              <p className="text-vip-gray-300 mb-4">
-                L'abonnement annuel au Club Privé Best Events VIP vous donne accès à :
-              </p>
-              <ul className="text-vip-gray-300 space-y-2 mb-4">
-                <li className="flex items-start">
-                  <span className="text-vip-gold mr-2">✓</span> 
-                  Visibilité auprès d'une clientèle VIP qualifiée
-                </li>
-                <li className="flex items-start">
-                  <span className="text-vip-gold mr-2">✓</span> 
-                  Publication de vos podcasts et contenus conseils
-                </li>
-                <li className="flex items-start">
-                  <span className="text-vip-gold mr-2">✓</span> 
-                  Mise en relation directe avec les clients Best Events
-                </li>
-                <li className="flex items-start">
-                  <span className="text-vip-gold mr-2">✓</span> 
-                  Statistiques et suivi de performance
-                </li>
-              </ul>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-vip-white">Abonnement annuel</span>
-                <span className="text-vip-gold font-bold">299€ HT</span>
-              </div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-vip-white">TVA (20%)</span>
-                <span className="text-vip-gold">59,80€</span>
-              </div>
-              <div className="flex justify-between items-center pt-2 border-t border-vip-gray-700 my-2">
-                <span className="text-vip-white font-bold">Total TTC</span>
-                <span className="text-vip-gold font-bold">358,80€</span>
-              </div>
-              <p className="text-vip-gray-400 text-sm mt-4">
-                En validant votre inscription, vous acceptez les conditions générales 
-                d'utilisation et autorisez le prélèvement annuel de votre abonnement.
-              </p>
-            </div>
+            <Card className="p-4 bg-vip-gray-800 border-none">
+              <CardContent className="p-0 space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-vip-white">Abonnement</span>
+                  <span className="text-vip-white font-bold">
+                    {formData.subscriptionTier === "premium" 
+                      ? "Premium" 
+                      : formData.subscriptionTier === "standard" 
+                        ? "Standard" 
+                        : "Gratuit"}
+                  </span>
+                </div>
+                
+                {formData.subscriptionTier !== "free" && (
+                  <>
+                    <div className="flex justify-between items-center">
+                      <span className="text-vip-white">Prix HT</span>
+                      <span className="text-vip-gold font-bold">
+                        {formData.subscriptionTier === "premium" ? "800€" : "400€"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-vip-white">TVA (20%)</span>
+                      <span className="text-vip-gold">
+                        {formData.subscriptionTier === "premium" ? "160€" : "80€"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center pt-2 border-t border-vip-gray-700 my-2">
+                      <span className="text-vip-white font-bold">Total TTC</span>
+                      <span className="text-vip-gold font-bold">
+                        {formData.subscriptionTier === "premium" ? "960€" : "480€"}
+                      </span>
+                    </div>
+                  </>
+                )}
+                
+                <p className="text-vip-gray-400 text-sm mt-4">
+                  En validant votre inscription, vous acceptez les conditions générales 
+                  d'utilisation et autorisez le prélèvement annuel de votre abonnement.
+                </p>
+              </CardContent>
+            </Card>
 
             <div className="flex gap-4">
               <GoldButton
