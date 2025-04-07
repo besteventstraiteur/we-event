@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "@/components/AuthLayout";
@@ -32,7 +31,6 @@ const LoginPage = () => {
   const deviceType = useDeviceType();
   const isMobileDevice = deviceType === 'mobile' || deviceType === 'tablet';
   
-  // Store login redirect info to help with debugging
   const [authDebugInfo, setAuthDebugInfo] = useState<{
     email?: string;
     userType?: string;
@@ -80,7 +78,6 @@ const LoginPage = () => {
         localStorage.removeItem("weddingPlannerRememberMe");
       }
 
-      // Store user login info in local storage to persist between page refreshes
       const userData = prepareUserData(email);
       localStorage.setItem('currentUser', JSON.stringify(userData));
       
@@ -169,11 +166,9 @@ const LoginPage = () => {
     }
   };
 
-  // Prepare user data based on email
   const prepareUserData = (userEmail: string = '') => {
     const email = userEmail || localStorage.getItem('weddingPlannerEmail') || '';
     
-    // For debugging purposes, update the auth debug info
     setAuthDebugInfo(prev => ({
       ...prev,
       email: email,
@@ -191,7 +186,6 @@ const LoginPage = () => {
         name: 'Admin Test'
       };
     } else if (email.includes("partner")) {
-      // Déterminer le type de partenaire (pour la démo)
       let partnerType = "general";
       
       if (email.includes("photo")) partnerType = "photographer";
@@ -248,7 +242,6 @@ const LoginPage = () => {
       redirectPath = "/admin/dashboard";
     }
     
-    // Update debug info
     setAuthDebugInfo(prev => ({
       ...prev,
       redirectPath: redirectPath,
@@ -257,10 +250,8 @@ const LoginPage = () => {
     
     console.log(`Redirecting to ${redirectPath} for user type: ${isAdmin ? 'admin' : isPartner ? 'partner' : 'client'}`);
     
-    // Force navigation with replace to prevent back button issues and ensure a complete page reload
     window.location.href = redirectPath;
     
-    // Show success toast only after redirect is initiated
     toast({
       title: "Connexion réussie",
       description: "Bienvenue sur votre espace VIP",
