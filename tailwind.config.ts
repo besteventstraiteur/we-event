@@ -80,6 +80,23 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Add vip colors
+				vip: {
+					gold: '#D4BC8A',
+					black: '#000000',
+					white: '#FFFFFF',
+					gray: {
+						100: '#F9F8F6',
+						200: '#F2F0ED',
+						300: '#E8E5E1',
+						400: '#D1CDC8',
+						500: '#AAA6A1',
+						600: '#837F7A',
+						700: '#5F5C58',
+						800: '#3B3936',
+						900: '#1A1918',
+					}
 				}
 			},
 			fontFamily: {
