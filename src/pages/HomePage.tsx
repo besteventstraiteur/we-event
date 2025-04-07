@@ -50,9 +50,6 @@ const HomePage = () => {
             <div className="hidden md:flex items-center space-x-6">
               <NavLink href="/" isActive>Accueil</NavLink>
               <NavLink href="/partners">Prestataires</NavLink>
-              <NavLink href="/client/pinterbest">Inspirations</NavLink>
-              <NavLink href="/partners">Avis</NavLink>
-              <NavLink href="/blog">Blog</NavLink>
               <NavLink href="/contact">Contact</NavLink>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-4">
@@ -227,9 +224,6 @@ const HomePage = () => {
               <div className="flex flex-wrap justify-center gap-4">
                 <Link to="/partners" className="text-we-gray-600 hover:text-we-gold text-sm">
                   Prestataires
-                </Link>
-                <Link to="/client/pinterbest" className="text-we-gray-600 hover:text-we-gold text-sm">
-                  Inspirations
                 </Link>
                 <Link to="/privacy" className="text-we-gray-600 hover:text-we-gold text-sm">
                   Confidentialité
