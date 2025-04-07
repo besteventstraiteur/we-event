@@ -12,6 +12,18 @@ const introductionSlides = [
     ],
     path: "/client/dashboard",
     image: "/screenshots/homepage.png"
+  },
+  {
+    title: "Organisation simplifiée",
+    description: "Profitez d'un environnement de travail intuitif pour planifier chaque aspect de votre événement, du premier contact avec les prestataires jusqu'au jour J.",
+    keyFeatures: [
+      "Tableau de bord personnalisé",
+      "Gestion des tâches intégrée",
+      "Suivi budgétaire en temps réel",
+      "Communication centralisée"
+    ],
+    path: "/client/dashboard",
+    image: "/screenshots/dashboard.png"
   }
 ];
 

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
 import GoldButton from "@/components/GoldButton";
 import VideoPresentation from "@/components/video-presentation/VideoPresentation";
+import PresentationSection from "@/components/home/PresentationSection";
 
 const Index = () => {
   return (
@@ -13,10 +14,12 @@ const Index = () => {
           <Link to="/">
             <Logo />
           </Link>
+          <div className="hidden md:flex items-center space-x-6">
+            <Link to="/" className="text-we-gold font-semibold">Accueil</Link>
+            <Link to="/partners" className="text-we-gray-700 hover:text-we-gold">Prestataires</Link>
+            <Link to="/contact" className="text-we-gray-700 hover:text-we-gold">Contact</Link>
+          </div>
           <div className="flex items-center space-x-4">
-            <Link to="/partners" className="text-we-gray-700 hover:text-we-gold">
-              Nos Prestataires
-            </Link>
             <Link to="/login">
               <GoldButton variant="outline" size="sm">
                 Connexion
@@ -49,14 +52,19 @@ const Index = () => {
           <div className="mt-8 mb-8 flex justify-center">
             <VideoPresentation buttonText="Découvrir toutes les fonctionnalités" />
           </div>
-          
-          <div className="mt-12">
-            <Link to="/partners">
-              <GoldButton variant="outline">
-                Découvrir nos prestataires
-              </GoldButton>
-            </Link>
-          </div>
+        </div>
+        
+        {/* Ajout de la section de présentation vidéo/fonctionnement */}
+        <div className="mt-16">
+          <PresentationSection />
+        </div>
+        
+        <div className="mt-12 text-center">
+          <Link to="/partners">
+            <GoldButton variant="outline">
+              Découvrir nos prestataires
+            </GoldButton>
+          </Link>
         </div>
       </main>
 
