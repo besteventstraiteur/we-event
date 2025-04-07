@@ -11,14 +11,14 @@ export interface Recommendation {
 
 export interface CategoryStat {
   name: string;
-  count: number;
-  acceptedRate: number;
+  value: number;
 }
 
 export interface MonthlyStat {
-  name: string;
-  recommendations: number;
-  acceptedRate: number;
+  month: string;
+  total: number;
+  accepted: number;
+  rejected: number;
 }
 
 export interface StatusStat {
@@ -28,7 +28,9 @@ export interface StatusStat {
 }
 
 export interface TopPartner {
+  id: string;
   name: string;
-  sent: number;
-  received: number;
+  category: string;
+  recommendations: number;
+  acceptanceRate: number;
 }

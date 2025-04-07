@@ -7,10 +7,10 @@ import { BarChart, LineChart, PieChart, CreditCard, Users, Calendar, Star, Messa
 import { useToast } from "@/hooks/use-toast";
 
 // Importation du composant de graphique des recommandations
-import RecommendationsStats from "./admin/recommendations/RecommendationsStats";
+import RecommendationsStats from "./recommendations/RecommendationsStats";
 
 // Données simulées pour les graphiques
-import { monthlyStats, categoryStats, statusStats, topPartners } from "./admin/recommendations/mockData";
+import { monthlyStats, categoryStats, statusStats, topPartners } from "./recommendations/mockData";
 
 const AdminStatistics = () => {
   const [activeTab, setActiveTab] = useState("overview");

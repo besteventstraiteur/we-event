@@ -14,6 +14,7 @@ export interface CategoryStat {
 export interface StatusStat {
   name: string;
   value: number;
+  color: string;
 }
 
 export interface TopPartner {
@@ -23,6 +24,92 @@ export interface TopPartner {
   recommendations: number;
   acceptanceRate: number;
 }
+
+export interface Recommendation {
+  id: number;
+  fromPartner: string;
+  toPartner: string;
+  status: "accepted" | "pending" | "declined";
+  date: string;
+  category: string;
+  clientName: string;
+}
+
+// Recommendations list
+export const recommendations: Recommendation[] = [
+  {
+    id: 1,
+    fromPartner: "Studio Elite",
+    toPartner: "DJ Max",
+    status: "accepted",
+    date: "05/04/2025",
+    category: "DJ",
+    clientName: "Sophie & Thomas"
+  },
+  {
+    id: 2,
+    fromPartner: "DJ Max",
+    toPartner: "Délices Traiteur",
+    status: "accepted",
+    date: "02/04/2025",
+    category: "Traiteur",
+    clientName: "Claire & Antoine"
+  },
+  {
+    id: 3,
+    fromPartner: "Château des Roses",
+    toPartner: "Studio Elite",
+    status: "pending",
+    date: "01/04/2025",
+    category: "Photographe",
+    clientName: "Marie & Julien"
+  },
+  {
+    id: 4,
+    fromPartner: "Délices Traiteur",
+    toPartner: "Fleurs Élégance",
+    status: "declined",
+    date: "30/03/2025",
+    category: "Fleuriste",
+    clientName: "Emma & Lucas"
+  },
+  {
+    id: 5,
+    fromPartner: "Event Planner VIP",
+    toPartner: "Château des Roses",
+    status: "accepted",
+    date: "28/03/2025",
+    category: "Lieu",
+    clientName: "Sarah & Maxime"
+  },
+  {
+    id: 6,
+    fromPartner: "Fleurs Élégance",
+    toPartner: "Event Planner VIP",
+    status: "accepted",
+    date: "25/03/2025",
+    category: "Wedding Planner",
+    clientName: "Léa & Nicolas"
+  },
+  {
+    id: 7,
+    fromPartner: "Studio Elite",
+    toPartner: "Château des Roses",
+    status: "pending",
+    date: "20/03/2025",
+    category: "Lieu",
+    clientName: "Chloé & Alexandre"
+  },
+  {
+    id: 8,
+    fromPartner: "DJ Max",
+    toPartner: "Studio Elite",
+    status: "accepted",
+    date: "18/03/2025",
+    category: "Photographe",
+    clientName: "Julie & Romain"
+  }
+];
 
 // Données mensuelles des recommandations
 export const monthlyStats: MonthlyStat[] = [
@@ -55,9 +142,9 @@ export const categoryStats: CategoryStat[] = [
 
 // Données par statut
 export const statusStats: StatusStat[] = [
-  { name: "Acceptée", value: 265 },
-  { name: "En attente", value: 42 },
-  { name: "Refusée", value: 35 },
+  { name: "Acceptée", value: 265, color: "#22c55e" },
+  { name: "En attente", value: 42, color: "#f97316" },
+  { name: "Refusée", value: 35, color: "#ef4444" },
 ];
 
 // Top partenaires

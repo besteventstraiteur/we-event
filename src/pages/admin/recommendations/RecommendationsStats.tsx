@@ -1,6 +1,6 @@
 
 import React from "react";
-import { MonthlyStat, CategoryStat, StatusStat, TopPartner } from "./types";
+import { MonthlyStat, CategoryStat, StatusStat, TopPartner } from "./mockData";
 import MonthlyChart from "./charts/MonthlyChart";
 import StatusChart from "./charts/StatusChart";
 import CategoryChart from "./charts/CategoryChart";
