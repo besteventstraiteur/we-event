@@ -45,7 +45,7 @@ const PackageFilterBar: React.FC<PackageFilterBarProps> = ({ onFilterChange, cur
   };
 
   return (
-    <Card className="p-4 bg-vip-gray-900 border-vip-gray-800">
+    <Card className="p-4 bg-white border-vip-gray-200">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2">
@@ -55,12 +55,12 @@ const PackageFilterBar: React.FC<PackageFilterBarProps> = ({ onFilterChange, cur
           
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8 gap-1 border-vip-gray-700">
+              <Button variant="outline" size="sm" className="h-8 gap-1 border-vip-gray-300">
                 <Filter size={14} />
                 Services
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[240px] p-4 bg-vip-gray-900 border-vip-gray-800">
+            <PopoverContent className="w-[240px] p-4 bg-white border-vip-gray-200">
               <div className="space-y-4">
                 <h4 className="font-medium">Services inclus</h4>
                 <div className="space-y-2">
@@ -85,20 +85,20 @@ const PackageFilterBar: React.FC<PackageFilterBarProps> = ({ onFilterChange, cur
           
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8 gap-1 border-vip-gray-700">
+              <Button variant="outline" size="sm" className="h-8 gap-1 border-vip-gray-300">
                 <CalendarIcon size={14} />
                 {currentFilters.date 
                   ? format(new Date(currentFilters.date), "d MMMM yyyy", { locale: fr })
                   : "Date du mariage"}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-vip-gray-900 border-vip-gray-800">
+            <PopoverContent className="w-auto p-0 bg-white border-vip-gray-200">
               <Calendar
                 mode="single"
                 selected={currentFilters.date ? new Date(currentFilters.date) : undefined}
                 onSelect={handleDateChange}
                 locale={fr}
-                className="border border-vip-gray-800"
+                className="border border-vip-gray-200"
               />
             </PopoverContent>
           </Popover>

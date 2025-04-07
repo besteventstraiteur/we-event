@@ -42,10 +42,10 @@ const PackageComparisonTable: React.FC<PackageComparisonTableProps> = ({ package
   }
 
   return (
-    <div className="rounded-md border border-vip-gray-800 overflow-x-auto">
+    <div className="rounded-md border border-vip-gray-200 overflow-x-auto">
       <Table>
         <TableHeader>
-          <TableRow className="bg-vip-gray-800/50">
+          <TableRow className="bg-vip-gray-100">
             <TableHead className="w-[200px]">Détails</TableHead>
             {packages.map(pkg => (
               <TableHead key={pkg.id} className="text-center">

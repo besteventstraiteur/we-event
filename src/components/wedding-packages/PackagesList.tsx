@@ -52,7 +52,7 @@ const PackagesList: React.FC<PackagesListProps> = ({ packages }) => {
           </div>
         ) : (
           packages.map((pkg) => (
-            <Card key={pkg.id} className="overflow-hidden hover:border-vip-gold transition-colors bg-vip-gray-900 border-vip-gray-800">
+            <Card key={pkg.id} className="overflow-hidden hover:border-vip-gold transition-colors bg-white border-vip-gray-200">
               <div className="relative">
                 <img 
                   src={pkg.imageUrl} 
@@ -115,7 +115,7 @@ const PackagesList: React.FC<PackagesListProps> = ({ packages }) => {
               <CardFooter className="flex justify-end space-x-2 pt-2">
                 <Button 
                   variant="outline" 
-                  className="border-vip-gray-700"
+                  className="border-vip-gray-300"
                   onClick={() => setSelectedPackage(pkg)}
                 >
                   Détails
@@ -132,7 +132,7 @@ const PackagesList: React.FC<PackagesListProps> = ({ packages }) => {
       
       <Dialog open={!!selectedPackage} onOpenChange={(open) => !open && setSelectedPackage(null)}>
         {selectedPackage && (
-          <DialogContent className="max-w-4xl bg-vip-gray-900 border-vip-gray-800">
+          <DialogContent className="max-w-4xl bg-white border-vip-gray-200">
             <DialogHeader>
               <DialogTitle>Détails du pack - {selectedPackage.name}</DialogTitle>
             </DialogHeader>
