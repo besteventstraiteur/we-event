@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
@@ -71,6 +70,7 @@ import PartnerLiveStreaming from './pages/partner/PartnerLiveStreaming';
 import PartnerMusicPlaylists from './pages/partner/PartnerMusicPlaylists';
 import PartnerGamification from './pages/partner/PartnerGamification';
 import PartnerBestAwards from './pages/partner/PartnerBestAwards';
+import PartnerCalendar from './pages/partner/PartnerCalendar';
 
 // Security Components
 import AdminRoute from './components/security/AdminRoute';
@@ -139,17 +139,18 @@ function App() {
 
         {/* Partner Pages */}
         <Route path="/partner/dashboard" element={<PartnerDashboard />} />
-        <Route path="/partner/requests" element={<PartnerRequests />} />
-        <Route path="/partner/recommendations" element={<PartnerRecommendations />} />
         <Route path="/partner/tasks" element={<PartnerTasks />} />
+        <Route path="/partner/requests" element={<PartnerRequests />} />
         <Route path="/partner/stats" element={<PartnerStats />} />
         <Route path="/partner/photos" element={<PartnerPhotos />} />
-        <Route path="/partner/talkshows" element={<PartnerTalkshows />} />
-        <Route path="/partner/podcasts" element={<PartnerPodcasts />} />
-        <Route path="/partner/live-streaming" element={<PartnerLiveStreaming />} />
-        <Route path="/partner/music-playlists" element={<PartnerMusicPlaylists />} />
+        <Route path="/partner/playlists" element={<PartnerMusicPlaylists />} />
+        <Route path="/partner/menus" element={<PartnerMenus />} />
+        <Route path="/partner/recommendations" element={<PartnerRecommendations />} />
+        <Route path="/partner/calendar" element={<PartnerCalendar />} />
         <Route path="/partner/gamification" element={<PartnerGamification />} />
         <Route path="/partner/best-awards" element={<PartnerBestAwards />} />
+        <Route path="/partner/podcasts" element={<PartnerPodcasts />} />
+        <Route path="/partner/talkshows" element={<PartnerTalkshows />} />
 
         {/* 404 - Not Found */}
         <Route path="*" element={<NotFound />} />
