@@ -1,13 +1,14 @@
 
-import React from "react";
+import React, { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Music, Search } from "lucide-react";
+import { PlusCircle, Music, Search, Share } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useDjPlaylists } from "@/hooks/useDjPlaylists";
 import PartnerTypeRoute from "@/components/security/PartnerTypeRoute";
 import { PartnerType } from "@/utils/accessControl";
+import { useToast } from "@/hooks/use-toast";
 
 const PartnerPlaylists = () => {
   const {
@@ -20,6 +21,27 @@ const PartnerPlaylists = () => {
     setClientFilter,
     isLoading
   } = useDjPlaylists("current-dj-id");
+  
+  const { toast } = useToast();
+  const [sharingPlaylistId, setSharingPlaylistId] = useState<string | null>(null);
+  const [clientEmail, setClientEmail] = useState("");
+  
+  const handleSharePlaylist = (playlistId: string) => {
+    if (clientEmail) {
+      toast({
+        title: "Playlist partagée",
+        description: `La playlist a été partagée avec ${clientEmail} avec succès.`
+      });
+      setClientEmail("");
+      setSharingPlaylistId(null);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Veuillez saisir l'adresse email du client."
+      });
+    }
+  };
   
   return (
     <DashboardLayout type="partner">
@@ -79,13 +101,49 @@ const PartnerPlaylists = () => {
                     </p>
                     <p className="text-gray-500">{new Date(playlist.updatedAt).toLocaleDateString()}</p>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => openPlaylist(playlist.id)}
-                  >
-                    Gérer cette playlist
-                  </Button>
+                  
+                  {sharingPlaylistId === playlist.id ? (
+                    <div className="mt-2 mb-4 flex flex-col space-y-2">
+                      <Input
+                        placeholder="Email du client"
+                        value={clientEmail}
+                        onChange={(e) => setClientEmail(e.target.value)}
+                      />
+                      <div className="flex space-x-2">
+                        <Button 
+                          variant="default" 
+                          onClick={() => handleSharePlaylist(playlist.id)}
+                          className="flex-1"
+                        >
+                          <Share size={16} className="mr-1" /> Partager
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setSharingPlaylistId(null)}
+                          className="flex-1"
+                        >
+                          Annuler
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex space-x-2">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => openPlaylist(playlist.id)}
+                      >
+                        Gérer
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => setSharingPlaylistId(playlist.id)}
+                      >
+                        Partager
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))

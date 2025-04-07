@@ -2,22 +2,9 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { BarChart, MessageSquare, Calendar, CheckSquare, Image, HeadphonesIcon, Video, Users, Trophy, Award, SquareStack, Grid3X3 } from "lucide-react";
+import { BarChart, MessageSquare, Calendar, CheckSquare, Image, Music, Video, Users, Trophy, Award, FileText, Grid3X3, HeadphonesIcon } from "lucide-react";
 import { useAccessControl } from "@/hooks/useAccessControl";
-
-// Define partner types
-export enum PartnerType {
-  PHOTOGRAPHER = "photographer",
-  DJ = "dj",
-  CATERER = "caterer",
-  VENUE = "venue",
-  DECORATOR = "decorator",
-  VIDEOGRAPHER = "videographer",
-  ARTIST = "artist",
-  FLORIST = "florist",
-  WEDDING_PLANNER = "wedding_planner",
-  GENERAL = "general",
-}
+import { PartnerType } from "@/utils/accessControl";
 
 const PartnerNavigation = () => {
   const location = useLocation();
@@ -100,7 +87,7 @@ const PartnerNavigation = () => {
       {(partnerType === PartnerType.DJ || partnerType === PartnerType.GENERAL) && (
         <NavItem
           href="/partner/playlists"
-          icon={<SquareStack size={18} />}
+          icon={<Music size={18} />}
           active={location.pathname === "/partner/playlists"}
         >
           Playlists
@@ -108,13 +95,24 @@ const PartnerNavigation = () => {
       )}
 
       {/* Menu section - only for caterers */}
-      {(partnerType === PartnerType.CATERER || partnerType === PartnerType.VENUE || partnerType === PartnerType.GENERAL) && (
+      {(partnerType === PartnerType.CATERER || partnerType === PartnerType.GENERAL) && (
         <NavItem
           href="/partner/menus"
-          icon={<CheckSquare size={18} />}
+          icon={<FileText size={18} />}
           active={location.pathname === "/partner/menus"}
         >
-          Menus & Plans
+          Menus
+        </NavItem>
+      )}
+      
+      {/* Floor Plans - only for venues */}
+      {(partnerType === PartnerType.VENUE || partnerType === PartnerType.GENERAL) && (
+        <NavItem
+          href="/partner/floor-plans"
+          icon={<Grid3X3 size={18} />}
+          active={location.pathname === "/partner/floor-plans"}
+        >
+          Plans de salle
         </NavItem>
       )}
 

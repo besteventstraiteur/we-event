@@ -68,11 +68,12 @@ import PartnerPhotos from './pages/partner/PartnerPhotos';
 import PartnerTalkshows from './pages/partner/PartnerTalkshows';
 import PartnerPodcasts from './pages/partner/PartnerPodcasts';
 import PartnerLiveStreaming from './pages/partner/PartnerLiveStreaming';
-import PartnerMusicPlaylists from './pages/partner/PartnerMusicPlaylists';
+import PartnerPlaylists from './pages/partner/PartnerPlaylists';
 import PartnerGamification from './pages/partner/PartnerGamification';
 import PartnerBestAwards from './pages/partner/PartnerBestAwards';
 import PartnerCalendar from './pages/partner/PartnerCalendar';
 import PartnerMenus from './pages/partner/PartnerMenus';
+import PartnerFloorPlans from './pages/partner/PartnerFloorPlans';
 
 // Security Components
 import AdminRoute from './components/security/AdminRoute';
@@ -145,8 +146,9 @@ function App() {
         <Route path="/partner/requests" element={<PartnerRequests />} />
         <Route path="/partner/stats" element={<PartnerStats />} />
         <Route path="/partner/photos" element={<PartnerPhotos />} />
-        <Route path="/partner/playlists" element={<PartnerMusicPlaylists />} />
+        <Route path="/partner/playlists" element={<PartnerPlaylists />} />
         <Route path="/partner/menus" element={<PartnerMenus />} />
+        <Route path="/partner/floor-plans" element={<PartnerFloorPlans />} />
         <Route path="/partner/recommendations" element={<PartnerRecommendations />} />
         <Route path="/partner/calendar" element={<PartnerCalendar />} />
         <Route path="/partner/gamification" element={<PartnerGamification />} />
