@@ -44,7 +44,7 @@ const RegisterClientPage = () => {
       setTimeout(() => {
         toast({
           title: "Inscription réussie!",
-          description: "Bienvenue dans le Club Best Events VIP!",
+          description: "Bienvenue sur We Event!",
         });
         navigate("/client/dashboard");
       }, 1500);
@@ -61,8 +61,8 @@ const RegisterClientPage = () => {
 
   return (
     <AuthLayout
-      title="Inscription Client VIP"
-      subtitle="Rejoignez notre club privé et accédez à des avantages exclusifs"
+      title="Inscription Client"
+      subtitle="Rejoignez notre plateforme et accédez à des services exclusifs"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -126,9 +126,9 @@ const RegisterClientPage = () => {
           {isLoading ? "Inscription en cours..." : "S'inscrire"}
         </GoldButton>
 
-        <div className="text-center text-sm text-vip-gray-400">
+        <div className="text-center text-sm text-we-gray-400">
           Déjà inscrit?{" "}
-          <Link to="/login" className="text-vip-gold hover:underline">
+          <Link to="/login" className="text-we-gold hover:underline">
             Se connecter
           </Link>
         </div>
