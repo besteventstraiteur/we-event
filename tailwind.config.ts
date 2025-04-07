@@ -53,20 +53,22 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				vip: {
+				we: {
 					black: '#000000',
-					white: '#FFFFFF',
-					gold: '#D4AF37',
+					white: '#FCFBF8', // Blanc cassé
+					gold: '#D4BC8A', // Or doux
+					beige: '#F2EBE3', // Beige doux
+					green: '#7D9D8C', // Vert eucalyptus
 					gray: {
-						100: '#F5F5F5',
-						200: '#E5E5E5',
-						300: '#D4D4D4',
-						400: '#A3A3A3',
-						500: '#737373',
-						600: '#525252',
-						700: '#404040',
-						800: '#262626',
-						900: '#171717',
+						100: '#F9F8F6',
+						200: '#F2F0ED',
+						300: '#E8E5E1',
+						400: '#D1CDC8',
+						500: '#AAA6A1',
+						600: '#837F7A',
+						700: '#5F5C58',
+						800: '#3B3936',
+						900: '#1A1918',
 					}
 				},
 				sidebar: {
@@ -81,8 +83,10 @@ export default {
 				}
 			},
 			fontFamily: {
-				sans: ['Inter var', 'sans-serif'],
+				sans: ['Poppins', 'sans-serif'],
 				serif: ['Playfair Display', 'serif'],
+				display: ['Playfair Display', 'serif'],
+				body: ['Poppins', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

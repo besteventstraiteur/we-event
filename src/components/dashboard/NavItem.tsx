@@ -19,11 +19,11 @@ const NavItem = ({ href, icon, title, children, active: propActive }: NavItemPro
       to={href}
       className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all ${
         isActive
-          ? "bg-vip-gold/10 text-vip-gold font-medium"
-          : "text-vip-gray-600 hover:text-vip-gray-900 hover:bg-vip-gray-100"
+          ? "bg-we-beige/50 text-we-green font-medium"
+          : "text-we-gray-600 hover:text-we-green hover:bg-we-beige/30"
       }`}
     >
-      <div className={`${isActive ? 'text-vip-gold' : 'text-vip-gray-500'}`}>
+      <div className={`${isActive ? 'text-we-gold' : 'text-we-gray-500'}`}>
         {icon}
       </div>
       <span>{title || children}</span>

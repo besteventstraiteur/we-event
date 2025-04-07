@@ -7,7 +7,7 @@ import {
   Users, 
   Calendar, 
   SquareStack, 
-  Euro, 
+  CreditCard, 
   MessageSquare, 
   Image, 
   Package, 
@@ -37,7 +37,7 @@ const ClientNavigation = () => {
       
       {/* Budget & Vendors */}
       <NavItem
-        icon={<Euro size={20} />}
+        icon={<CreditCard size={20} />}
         title="Budget"
         href="/client/budget"
       />
@@ -77,7 +77,7 @@ const ClientNavigation = () => {
       {/* Media & Content */}
       <NavItem
         icon={<Heart size={20} />}
-        title="Pinterbest"
+        title="Inspirations"
         href="/client/pinterbest"
       />
       <NavItem
