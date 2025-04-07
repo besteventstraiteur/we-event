@@ -100,13 +100,16 @@ const RegisterPartnerPage = () => {
 
   // Catégories de prestataires
   const categories = [
-    { value: "domaine", label: "Domaine" },
+    { value: "photographer", label: "Photographe" },
     { value: "dj", label: "DJ" },
-    { value: "fleuriste", label: "Fleuriste" },
-    { value: "photographe", label: "Photographe" },
-    { value: "traiteur", label: "Traiteur" },
-    { value: "wedding-planner", label: "Wedding Planner" },
-    { value: "other", label: "Autre" },
+    { value: "caterer", label: "Traiteur" },
+    { value: "venue", label: "Domaine" },
+    { value: "decorator", label: "Décorateur" },
+    { value: "videographer", label: "Vidéaste" },
+    { value: "artist", label: "Artiste" },
+    { value: "florist", label: "Fleuriste" },
+    { value: "wedding_planner", label: "Wedding Planner" },
+    { value: "general", label: "Autre" },
   ];
 
   return (

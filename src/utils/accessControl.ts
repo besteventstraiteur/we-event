@@ -1,3 +1,4 @@
+
 import { toast } from "@/components/ui/use-toast";
 
 /**
@@ -20,6 +21,10 @@ export enum PartnerType {
   CATERER = "caterer",         // Traiteur
   VENUE = "venue",             // Lieu
   DECORATOR = "decorator",     // Décorateur
+  VIDEOGRAPHER = "videographer", // Vidéaste
+  ARTIST = "artist",           // Artiste
+  FLORIST = "florist",         // Fleuriste
+  WEDDING_PLANNER = "wedding_planner", // Wedding Planner
   GENERAL = "general",         // Partenaire général
 }
 
@@ -127,6 +132,26 @@ const PartnerTypePermissions: Record<PartnerType, Permission[]> = {
     Permission.MANAGE_PORTFOLIO
   ],
   [PartnerType.DECORATOR]: [
+    Permission.MANAGE_SERVICES,
+    Permission.MANAGE_CALENDAR,
+    Permission.MANAGE_PORTFOLIO
+  ],
+  [PartnerType.VIDEOGRAPHER]: [
+    Permission.MANAGE_SERVICES,
+    Permission.MANAGE_CALENDAR,
+    Permission.MANAGE_PORTFOLIO
+  ],
+  [PartnerType.ARTIST]: [
+    Permission.MANAGE_SERVICES,
+    Permission.MANAGE_CALENDAR,
+    Permission.MANAGE_PORTFOLIO
+  ],
+  [PartnerType.FLORIST]: [
+    Permission.MANAGE_SERVICES,
+    Permission.MANAGE_CALENDAR,
+    Permission.MANAGE_PORTFOLIO
+  ],
+  [PartnerType.WEDDING_PLANNER]: [
     Permission.MANAGE_SERVICES,
     Permission.MANAGE_CALENDAR,
     Permission.MANAGE_PORTFOLIO
