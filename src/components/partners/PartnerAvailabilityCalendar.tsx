@@ -35,6 +35,9 @@ const PartnerAvailabilityCalendar: React.FC<PartnerAvailabilityCalendarProps> = 
     }
   };
 
+  // Convert the availability dates to Date objects for the calendar
+  const availabilityDates = availability.map(a => parse(a.date, "yyyy-MM-dd", new Date()));
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -48,13 +51,16 @@ const PartnerAvailabilityCalendar: React.FC<PartnerAvailabilityCalendarProps> = 
             onSelect={() => {}}
             className="rounded-md bg-white"
             modifiers={{
-              customStyles: availability.map(a => parse(a.date, "yyyy-MM-dd", new Date()))
+              customStyles: availabilityDates
             }}
             modifiersClassNames={{
-              customStyles: (date) => getClassForDate(date)
+              customStyles: "availability-day" // Use a CSS class instead of a function
             }}
             disabled={{ before: new Date() }}
             readOnly
+            styles={{
+              day_today: { className: "custom-today" }
+            }}
           />
         </div>
         

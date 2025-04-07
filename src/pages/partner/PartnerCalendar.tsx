@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { usePartnerAvailability } from "@/hooks/usePartnerAvailability";
 import { AvailabilityStatus } from "@/models/partnerAvailability";
 import { useAccessControl } from "@/hooks/useAccessControl";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 
 const PartnerCalendar = () => {
   const { availability, updateAvailability, getDateAvailability } = usePartnerAvailability();
@@ -43,8 +43,10 @@ const PartnerCalendar = () => {
     }
   };
 
-  const getClassForDate = (date: Date) => {
+  // Use a separate function to get the class for styling the calendar days
+  const getDayClassName = (date: Date): string => {
     const status = getDateAvailability(date);
+    
     if (!status) return "";
     
     switch (status) {
@@ -60,6 +62,9 @@ const PartnerCalendar = () => {
         return "";
     }
   };
+
+  // Convert availability dates to Date objects
+  const availabilityDates = availability.map(a => parse(a.date, "yyyy-MM-dd", new Date()));
 
   return (
     <DashboardLayout type="partner">
@@ -79,14 +84,17 @@ const PartnerCalendar = () => {
                   mode="single"
                   selected={selectedDate}
                   onSelect={handleDateSelect}
-                  className="rounded-md bg-white"
+                  className="rounded-md bg-white pointer-events-auto"
                   modifiers={{
-                    customStyles: availability.map(a => parse(a.date, "yyyy-MM-dd", new Date()))
+                    availability: availabilityDates
                   }}
                   modifiersClassNames={{
-                    customStyles: (date) => getClassForDate(date)
+                    availability: "custom-availability-day"
                   }}
                   disabled={{ before: new Date() }}
+                  styles={{
+                    day_today: { className: "today-style" }
+                  }}
                 />
               </div>
               
@@ -170,37 +178,46 @@ const PartnerCalendar = () => {
           <CardContent>
             <div className="space-y-4">
               {availability
-                .filter(a => parse(a.date, "yyyy-MM-dd", new Date()) >= new Date())
+                .filter(a => {
+                  const dateObj = parse(a.date, "yyyy-MM-dd", new Date());
+                  return dateObj >= new Date();
+                })
                 .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
                 .slice(0, 10)
-                .map((item, index) => (
-                  <div 
-                    key={index} 
-                    className={`p-4 rounded-lg flex justify-between items-center ${
-                      item.status === AvailabilityStatus.AVAILABLE ? "bg-green-50" : 
-                      item.status === AvailabilityStatus.TENTATIVE ? "bg-blue-50" : 
-                      item.status === AvailabilityStatus.BUSY ? "bg-orange-50" : "bg-red-50"
-                    }`}
-                  >
-                    <div>
-                      <h3 className="font-medium">
-                        {format(parse(item.date, "yyyy-MM-dd", new Date()), "dd MMMM yyyy")}
-                      </h3>
-                      {item.notes && <p className="text-sm text-gray-600">{item.notes}</p>}
+                .map((item, index) => {
+                  const itemDate = parse(item.date, "yyyy-MM-dd", new Date());
+                  return (
+                    <div 
+                      key={index} 
+                      className={`p-4 rounded-lg flex justify-between items-center ${
+                        item.status === AvailabilityStatus.AVAILABLE ? "bg-green-50" : 
+                        item.status === AvailabilityStatus.TENTATIVE ? "bg-blue-50" : 
+                        item.status === AvailabilityStatus.BUSY ? "bg-orange-50" : "bg-red-50"
+                      }`}
+                    >
+                      <div>
+                        <h3 className="font-medium">
+                          {format(itemDate, "dd MMMM yyyy")}
+                        </h3>
+                        {item.notes && <p className="text-sm text-gray-600">{item.notes}</p>}
+                      </div>
+                      <span className={`text-sm font-medium rounded-full px-2 py-1 ${
+                        item.status === AvailabilityStatus.AVAILABLE ? "bg-green-100 text-green-800" : 
+                        item.status === AvailabilityStatus.TENTATIVE ? "bg-blue-100 text-blue-800" : 
+                        item.status === AvailabilityStatus.BUSY ? "bg-orange-100 text-orange-800" : "bg-red-100 text-red-800"
+                      }`}>
+                        {item.status === AvailabilityStatus.AVAILABLE ? "Disponible" : 
+                         item.status === AvailabilityStatus.TENTATIVE ? "Provisoire" : 
+                         item.status === AvailabilityStatus.BUSY ? "Occupé" : "Indisponible"}
+                      </span>
                     </div>
-                    <span className={`text-sm font-medium rounded-full px-2 py-1 ${
-                      item.status === AvailabilityStatus.AVAILABLE ? "bg-green-100 text-green-800" : 
-                      item.status === AvailabilityStatus.TENTATIVE ? "bg-blue-100 text-blue-800" : 
-                      item.status === AvailabilityStatus.BUSY ? "bg-orange-100 text-orange-800" : "bg-red-100 text-red-800"
-                    }`}>
-                      {item.status === AvailabilityStatus.AVAILABLE ? "Disponible" : 
-                       item.status === AvailabilityStatus.TENTATIVE ? "Provisoire" : 
-                       item.status === AvailabilityStatus.BUSY ? "Occupé" : "Indisponible"}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               
-              {availability.filter(a => parse(a.date, "yyyy-MM-dd", new Date()) >= new Date()).length === 0 && (
+              {availability.filter(a => {
+                const dateObj = parse(a.date, "yyyy-MM-dd", new Date());
+                return dateObj >= new Date();
+              }).length === 0 && (
                 <div className="text-center py-4 text-gray-500">
                   Aucune disponibilité n'a été définie pour les dates à venir.
                 </div>

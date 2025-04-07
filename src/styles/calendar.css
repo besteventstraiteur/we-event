@@ -1,0 +1,26 @@
+
+/* Custom styles for calendar availability */
+.custom-availability-day {
+  background-color: var(--day-color, transparent);
+  color: var(--day-text-color, inherit);
+}
+
+.availability-day[data-status="available"] {
+  background-color: #dcfce7; /* Green 100 */
+  color: #166534; /* Green 800 */
+}
+
+.availability-day[data-status="tentative"] {
+  background-color: #dbeafe; /* Blue 100 */
+  color: #1e40af; /* Blue 800 */
+}
+
+.availability-day[data-status="busy"] {
+  background-color: #ffedd5; /* Orange 100 */
+  color: #9a3412; /* Orange 800 */
+}
+
+.availability-day[data-status="unavailable"] {
+  background-color: #fee2e2; /* Red 100 */
+  color: #991b1b; /* Red 800 */
+}
