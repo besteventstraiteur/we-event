@@ -97,7 +97,9 @@ const mockPartnerGamification: PartnerGamification = {
     clientSatisfaction: 4.8,
     completedEvents: 12,
     recommendationsGiven: 15,
-    recommendationsReceived: 7
+    recommendationsReceived: 7,
+    averageRating: 4.7,
+    totalRatings: 48
   }
 };
 

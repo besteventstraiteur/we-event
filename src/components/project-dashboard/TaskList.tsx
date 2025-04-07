@@ -182,7 +182,7 @@ const TaskList: React.FC<TaskListProps> = ({
 
   const isTaskOverdue = (task: ProjectTask) => {
     if (task.status === "completed") return false;
-    const dueDate = new Date(task.dueDate);
+    const dueDate = task.dueDate instanceof Date ? task.dueDate : new Date(task.dueDate);
     const today = new Date();
     return dueDate < today;
   };
@@ -195,8 +195,8 @@ const TaskList: React.FC<TaskListProps> = ({
     return "";
   };
 
-  const formatDueDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDueDate = (dateString: string | Date) => {
+    const date = dateString instanceof Date ? dateString : new Date(dateString);
     if (isNaN(date.getTime())) {
       return "Date invalide";
     }

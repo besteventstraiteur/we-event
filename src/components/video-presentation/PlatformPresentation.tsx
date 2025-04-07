@@ -26,12 +26,8 @@ const PlatformPresentation: React.FC<PlatformPresentationProps> = ({ onClose }) 
     };
   }, [isOpen, onClose]);
 
-  return (
-    <PresentationDialog
-      open={isOpen}
-      onOpenChange={(open) => setIsOpen(open)}
-    />
-  );
+  // Passer uniquement la prop open à PresentationDialog
+  return <PresentationDialog open={isOpen} />;
 };
 
 export default PlatformPresentation;

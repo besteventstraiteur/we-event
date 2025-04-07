@@ -2,13 +2,26 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PartnerGamification } from "@/models/partnerGamification";
-import { Clock, Star, Calendar, Users, MessageSquare } from "lucide-react";
+import { Clock, Star, Calendar, Users, MessageSquare, Award, StarHalf } from "lucide-react";
 
 interface GamificationStatsProps {
-  stats: PartnerGamification["stats"];
+  stats: {
+    responseRate: number;
+    averageResponseTime: number;
+    clientSatisfaction: number;
+    completedEvents: number;
+    recommendationsGiven: number;
+    recommendationsReceived: number;
+    averageRating?: number;
+    totalRatings?: number;
+  };
 }
 
 const GamificationStats = ({ stats }: GamificationStatsProps) => {
+  // Ajouter des valeurs par défaut pour les propriétés manquantes
+  const averageRating = stats.averageRating || stats.clientSatisfaction || 0;
+  const totalRatings = stats.totalRatings || 0;
+  
   const statItems = [
     {
       label: "Taux de réponse",
@@ -35,6 +48,16 @@ const GamificationStats = ({ stats }: GamificationStatsProps) => {
       value: `${stats.recommendationsGiven}/${stats.recommendationsReceived}`,
       icon: <Users size={16} className="text-pink-400" />,
     },
+    {
+      label: "Note moyenne",
+      value: `${averageRating.toFixed(1)}/5`,
+      icon: <StarHalf size={16} className="text-amber-400" />,
+    },
+    {
+      label: "Évaluations reçues",
+      value: totalRatings.toString(),
+      icon: <Award size={16} className="text-indigo-400" />,
+    }
   ];
 
   return (
@@ -43,7 +66,7 @@ const GamificationStats = ({ stats }: GamificationStatsProps) => {
         <CardTitle className="text-lg">Vos statistiques</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="grid grid-cols-2 gap-4 p-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-6">
           {statItems.map((item, index) => (
             <div key={index} className="flex flex-col space-y-1">
               <div className="flex items-center gap-2">

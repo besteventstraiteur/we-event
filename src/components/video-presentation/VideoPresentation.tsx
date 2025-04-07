@@ -17,9 +17,9 @@ const VideoPresentation: React.FC<VideoPresentationProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
   
-  const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
-    if (!open && onClose) {
+  const handleOpenChange = () => {
+    setIsOpen(false);
+    if (onClose) {
       onClose();
     }
   };
@@ -36,7 +36,8 @@ const VideoPresentation: React.FC<VideoPresentationProps> = ({
         {buttonText}
       </Button>
       
-      <PresentationDialog open={isOpen} onOpenChange={handleOpenChange} />
+      {/* Ne passer que la prop open nécessaire */}
+      {isOpen && <PresentationDialog open={isOpen} />}
     </>
   );
 };

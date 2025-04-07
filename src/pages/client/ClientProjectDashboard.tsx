@@ -49,6 +49,14 @@ const ClientProjectDashboard = () => {
               onAddTask={addTask}
               onUpdateTask={updateTask}
               onDeleteTask={deleteTask}
+              onEditTask={(task) => {
+                // Implémentation simple qui réutilise updateTask
+                const taskDialog = document.querySelector('[role="dialog"]');
+                if (taskDialog) {
+                  taskDialog.setAttribute("data-state", "open");
+                }
+                updateTask(task.id, task);
+              }}
             />
           </TabsContent>
           

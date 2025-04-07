@@ -62,10 +62,13 @@ export const useAIFloorPlan = ({
     };
     
     guests.forEach(guest => {
-      const age = guest.age || 0;
-      if (age < 18) {
+      // Vérifier si la propriété age existe avant de l'utiliser
+      const guestAge = typeof guest.age === 'number' ? guest.age : 
+                      guest.enfants !== undefined ? (guest.enfants > 0 ? 10 : 30) : 30;
+      
+      if (guestAge < 18) {
         ageGroups['enfants'].push(guest);
-      } else if (age > 65) {
+      } else if (guestAge > 65) {
         ageGroups['seniors'].push(guest);
       } else {
         ageGroups['adultes'].push(guest);
