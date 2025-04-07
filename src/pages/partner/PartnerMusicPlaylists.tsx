@@ -2,7 +2,7 @@
 import React from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import PartnerTypeRoute from "@/components/security/PartnerTypeRoute";
-import { PartnerType } from "@/components/dashboard/PartnerNavigation";
+import { PartnerType } from "@/utils/accessControl";
 
 const PartnerMusicPlaylists = () => {
   return (

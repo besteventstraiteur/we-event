@@ -2,7 +2,7 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAccessControl } from "@/hooks/useAccessControl";
-import { PartnerType } from "@/components/dashboard/PartnerNavigation";
+import { PartnerType } from "@/utils/accessControl";
 import { Loader2 } from "lucide-react";
 
 interface PartnerTypeRouteProps {
