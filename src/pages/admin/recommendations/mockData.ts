@@ -1,56 +1,70 @@
 
-import { Recommendation, CategoryStat, MonthlyStat, StatusStat, TopPartner } from "./types";
+export interface MonthlyStat {
+  month: string;
+  total: number;
+  accepted: number;
+  rejected: number;
+}
 
-// Données pour les recommandations
-export const recommendations: Recommendation[] = [
-  { id: 1, fromPartner: "Domaine du Château", toPartner: "DJ Mix Master", status: "accepted", date: "10/05/2024", category: "DJ", clientName: "Sophie Martin" },
-  { id: 2, fromPartner: "DJ Mix Master", toPartner: "Fleurs Élégance", status: "pending", date: "05/05/2024", category: "Fleuriste", clientName: "Marc Dupont" },
-  { id: 3, fromPartner: "Pâtisserie Royale", toPartner: "Studio Photo Elite", status: "accepted", date: "01/05/2024", category: "Photographe", clientName: "Julie Petit" },
-  { id: 4, fromPartner: "Studio Photo Elite", toPartner: "Domaine du Château", status: "declined", date: "28/04/2024", category: "Domaine", clientName: "Thomas Bernard" },
-  { id: 5, fromPartner: "Fleurs Élégance", toPartner: "Domaine du Château", status: "accepted", date: "25/04/2024", category: "Domaine", clientName: "Claire Rousseau" },
-  { id: 6, fromPartner: "Gastronomie Délice", toPartner: "Domaine du Château", status: "declined", date: "20/04/2024", category: "Domaine", clientName: "Antoine Lefevre" },
-  { id: 7, fromPartner: "Domaine du Château", toPartner: "Gastronomie Délice", status: "accepted", date: "15/04/2024", category: "Traiteur", clientName: "Emilie Girard" },
-  { id: 8, fromPartner: "Harmony Musique", toPartner: "Fleurs Élégance", status: "pending", date: "10/04/2024", category: "Fleuriste", clientName: "Pierre Lambert" },
-];
+export interface CategoryStat {
+  name: string;
+  value: number;
+}
 
-// Statistiques par catégorie
-export const categoryStats: CategoryStat[] = [
-  { name: "DJ", count: 15, acceptedRate: 80 },
-  { name: "Fleuriste", count: 22, acceptedRate: 65 },
-  { name: "Photographe", count: 18, acceptedRate: 75 },
-  { name: "Traiteur", count: 12, acceptedRate: 90 },
-  { name: "Domaine", count: 30, acceptedRate: 60 },
-  { name: "Décorateur", count: 8, acceptedRate: 70 },
-];
+export interface StatusStat {
+  name: string;
+  value: number;
+}
 
-// Statistiques par mois
+export interface TopPartner {
+  id: string;
+  name: string;
+  category: string;
+  recommendations: number;
+  acceptanceRate: number;
+}
+
+// Données mensuelles des recommandations
 export const monthlyStats: MonthlyStat[] = [
-  { name: "Jan", recommendations: 12, acceptedRate: 58 },
-  { name: "Fév", recommendations: 15, acceptedRate: 65 },
-  { name: "Mar", recommendations: 18, acceptedRate: 70 },
-  { name: "Avr", recommendations: 25, acceptedRate: 75 },
-  { name: "Mai", recommendations: 22, acceptedRate: 68 },
-  { name: "Juin", recommendations: 0, acceptedRate: 0 },
-  { name: "Juil", recommendations: 0, acceptedRate: 0 },
-  { name: "Août", recommendations: 0, acceptedRate: 0 },
-  { name: "Sep", recommendations: 0, acceptedRate: 0 },
-  { name: "Oct", recommendations: 0, acceptedRate: 0 },
-  { name: "Nov", recommendations: 0, acceptedRate: 0 },
-  { name: "Déc", recommendations: 0, acceptedRate: 0 },
+  { month: "Jan", total: 18, accepted: 12, rejected: 6 },
+  { month: "Fév", total: 22, accepted: 15, rejected: 7 },
+  { month: "Mar", total: 25, accepted: 18, rejected: 7 },
+  { month: "Avr", total: 30, accepted: 24, rejected: 6 },
+  { month: "Mai", total: 35, accepted: 28, rejected: 7 },
+  { month: "Juin", total: 42, accepted: 35, rejected: 7 },
+  { month: "Juil", total: 38, accepted: 30, rejected: 8 },
+  { month: "Août", total: 32, accepted: 26, rejected: 6 },
+  { month: "Sep", total: 40, accepted: 34, rejected: 6 },
+  { month: "Oct", total: 45, accepted: 38, rejected: 7 },
+  { month: "Nov", total: 52, accepted: 45, rejected: 7 },
+  { month: "Déc", total: 46, accepted: 37, rejected: 9 },
 ];
 
-// Statistiques par statut
+// Données par catégorie
+export const categoryStats: CategoryStat[] = [
+  { name: "Photographe", value: 68 },
+  { name: "DJ", value: 53 },
+  { name: "Traiteur", value: 43 },
+  { name: "Lieu", value: 38 },
+  { name: "Fleuriste", value: 32 },
+  { name: "Wedding Planner", value: 28 },
+  { name: "Décorateur", value: 24 },
+  { name: "Animateur", value: 20 },
+  { name: "Autre", value: 36 },
+];
+
+// Données par statut
 export const statusStats: StatusStat[] = [
-  { name: "Acceptées", value: 65, color: "#4ade80" },
-  { name: "En attente", value: 20, color: "#facc15" },
-  { name: "Refusées", value: 15, color: "#f87171" },
+  { name: "Acceptée", value: 265 },
+  { name: "En attente", value: 42 },
+  { name: "Refusée", value: 35 },
 ];
 
-// Statistiques des partenaires les plus actifs
+// Top partenaires
 export const topPartners: TopPartner[] = [
-  { name: "Domaine du Château", sent: 25, received: 18 },
-  { name: "DJ Mix Master", sent: 20, received: 12 },
-  { name: "Fleurs Élégance", sent: 18, received: 15 },
-  { name: "Studio Photo Elite", sent: 15, received: 8 },
-  { name: "Pâtisserie Royale", sent: 12, received: 10 },
+  { id: "p1", name: "Studio Elite", category: "Photographe", recommendations: 18, acceptanceRate: 94 },
+  { id: "p2", name: "DJ Max", category: "DJ", recommendations: 15, acceptanceRate: 92 },
+  { id: "p3", name: "Château des Roses", category: "Lieu", recommendations: 14, acceptanceRate: 100 },
+  { id: "p4", name: "Délices Traiteur", category: "Traiteur", recommendations: 12, acceptanceRate: 89 },
+  { id: "p5", name: "Event Planner VIP", category: "Wedding Planner", recommendations: 11, acceptanceRate: 95 },
 ];

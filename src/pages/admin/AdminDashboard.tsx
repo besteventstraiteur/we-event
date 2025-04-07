@@ -3,6 +3,7 @@ import React from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, User, CreditCard, BarChart, Download, FileDown } from "lucide-react";
+import { Link } from "react-router-dom";
 import GoldButton from "@/components/GoldButton";
 import ExportBackupButton from "@/components/admin/ExportBackupButton";
 
@@ -128,9 +129,11 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                <GoldButton className="w-full">
-                  Exporter les données
-                </GoldButton>
+                <Link to="/admin/statistics">
+                  <GoldButton className="w-full">
+                    <BarChart className="h-4 w-4 mr-2" /> Voir statistiques
+                  </GoldButton>
+                </Link>
                 <GoldButton className="w-full">
                   Ajouter un podcast
                 </GoldButton>

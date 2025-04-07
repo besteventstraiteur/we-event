@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
@@ -32,6 +33,7 @@ import AdminPartnerGamification from './pages/admin/AdminPartnerGamification';
 import AdminBackup from './pages/admin/AdminBackup';
 import AdminPresentationManagement from './pages/admin/AdminPresentationManagement';
 import AdminPartnerTypes from './pages/admin/AdminPartnerTypes';
+import AdminStatistics from './pages/admin/AdminStatistics';
 
 // Client Pages
 import ClientDashboard from './pages/client/ClientDashboard';
@@ -99,6 +101,7 @@ function App() {
 
         {/* Admin Pages - All wrapped with AdminRoute */}
         <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/admin/statistics" element={<AdminRoute><AdminStatistics /></AdminRoute>} />
         <Route path="/admin/clients" element={<AdminRoute><AdminClients /></AdminRoute>} />
         <Route path="/admin/partners" element={<AdminRoute><AdminPartners /></AdminRoute>} />
         <Route path="/admin/partner-types" element={<AdminRoute><AdminPartnerTypes /></AdminRoute>} />

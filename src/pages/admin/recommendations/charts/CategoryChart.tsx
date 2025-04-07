@@ -1,42 +1,48 @@
 
 import React from "react";
-import { UserPlus } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
-import { CategoryStat } from "../types";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { CategoryStat } from "../mockData";
 
 interface CategoryChartProps {
   data: CategoryStat[];
 }
 
+const COLORS = ['#d4af37', '#3b82f6', '#ef4444', '#22c55e', '#f97316', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b'];
+
 const CategoryChart: React.FC<CategoryChartProps> = ({ data }) => {
   return (
     <Card className="bg-vip-gray-900 border-vip-gray-800">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Recommandations par catégorie</CardTitle>
-          <UserPlus size={18} className="text-vip-gray-400" />
-        </div>
+      <CardHeader>
+        <CardTitle className="text-vip-white">Répartition par catégorie</CardTitle>
+        <CardDescription>Distribution des recommandations par type de partenaire</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={data}
-              layout="vertical"
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis type="number" stroke="#9CA3AF" />
-              <YAxis dataKey="name" type="category" stroke="#9CA3AF" />
-              <Tooltip
-                contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', color: '#F9FAFB' }}
-                cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                innerRadius={60}
+                outerRadius={80}
+                fill="#8884d8"
+                paddingAngle={5}
+                dataKey="value"
+                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip 
+                contentStyle={{ backgroundColor: '#1a1a1a', borderColor: '#444' }}
+                labelStyle={{ color: '#fff' }}
               />
               <Legend />
-              <Bar dataKey="count" name="Nombre" fill="#93C5FD" />
-              <Bar dataKey="acceptedRate" name="Taux d'acceptation (%)" fill="#A78BFA" />
-            </BarChart>
+            </PieChart>
           </ResponsiveContainer>
         </div>
       </CardContent>

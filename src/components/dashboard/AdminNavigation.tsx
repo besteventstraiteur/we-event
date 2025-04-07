@@ -12,7 +12,8 @@ import {
   Star,
   Headphones,
   Presentation,
-  UserCog
+  UserCog,
+  BarChart
 } from "lucide-react";
 
 const AdminNavigation = () => {
@@ -22,6 +23,11 @@ const AdminNavigation = () => {
         icon={<LayoutDashboard size={20} />}
         title="Tableau de bord"
         href="/admin/dashboard"
+      />
+      <NavItem
+        icon={<BarChart size={20} />}
+        title="Statistiques"
+        href="/admin/statistics"
       />
       <NavItem
         icon={<Users size={20} />}
