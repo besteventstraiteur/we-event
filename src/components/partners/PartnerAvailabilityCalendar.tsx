@@ -57,7 +57,8 @@ const PartnerAvailabilityCalendar: React.FC<PartnerAvailabilityCalendarProps> = 
               customStyles: "availability-day" // Use a CSS class instead of a function
             }}
             disabled={{ before: new Date() }}
-            readOnly
+            // Remove the readOnly prop as it's not supported
+            // Instead, we're using an empty onSelect handler to make it read-only behavior
           />
         </div>
         
