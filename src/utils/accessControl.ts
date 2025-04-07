@@ -44,13 +44,16 @@ export interface AccessControlUser {
 }
 
 // Fonctions auxiliaires pour le contrôle d'accès
-export const hasPermission = (user: AccessControlUser | null, permission: Permission): boolean => {
+export const hasPermission = (user: AccessControlUser | null, permission: Permission, resourceOwnerId?: string): boolean => {
   if (!user) return false;
   
   if (user.role === UserRole.ADMIN) return true;
   
+  // If checking resource ownership
+  if (resourceOwnerId && user.id === resourceOwnerId) return true;
+  
   return !!user.permissions?.includes(permission);
 };
 
-// Alias for use in useAccessControl
+// Explicitly export the alias for use in useAccessControl
 export const userHasPermission = hasPermission;
