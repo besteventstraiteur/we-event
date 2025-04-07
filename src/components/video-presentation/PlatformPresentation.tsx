@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import PresentationDialog from './presentation-dialog/PresentationDialog';
-import { SlidesContainer } from './presentation-dialog/SlidesContainer';
-import { NavigationControls } from './presentation-dialog/NavigationControls';
+import SlidesContainer from './presentation-dialog/SlidesContainer';
+import NavigationControls from './presentation-dialog/NavigationControls';
 
 interface PlatformPresentationProps {
   onClose?: () => void;

@@ -4,8 +4,8 @@ import PresentationDialog from "./presentation-dialog/PresentationDialog";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { SlidesContainer } from "./presentation-dialog/SlidesContainer";
-import { NavigationControls } from "./presentation-dialog/NavigationControls";
+import SlidesContainer from "./presentation-dialog/SlidesContainer";
+import NavigationControls from "./presentation-dialog/NavigationControls";
 
 interface VideoPresentationProps {
   buttonText?: string;
