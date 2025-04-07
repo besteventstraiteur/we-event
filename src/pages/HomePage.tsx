@@ -7,6 +7,8 @@ import WeEventButton from "@/components/WeEventButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
+import VideoPresentation from "@/components/video-presentation/VideoPresentation";
+import PresentationSection from "@/components/home/PresentationSection";
 
 const HomePage = () => {
   const isMobile = useIsMobile();
@@ -104,6 +106,17 @@ const HomePage = () => {
                   </WeEventButton>
                 </Link>
               </div>
+              
+              <div className="mt-8 mb-8 flex justify-center">
+                <VideoPresentation buttonText="Découvrir toutes les fonctionnalités" />
+              </div>
+            </div>
+          </section>
+
+          {/* Présentation Section */}
+          <section className="py-12 sm:py-16 bg-white">
+            <div className="container">
+              <PresentationSection />
             </div>
           </section>
 
@@ -174,37 +187,6 @@ const HomePage = () => {
                 <Link to="/partners">
                   <WeEventButton>
                     Voir tous les avis
-                  </WeEventButton>
-                </Link>
-              </div>
-            </div>
-          </section>
-
-          {/* Inspirations Preview */}
-          <section className="py-12 sm:py-16 bg-white">
-            <div className="container">
-              <div className="text-center mb-10">
-                <h2 className="font-display text-2xl sm:text-3xl mb-2 text-we-green">Inspirations</h2>
-                <p className="text-we-gray-600">Trouvez l'inspiration pour votre événement parfait</p>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {Array.from({ length: 8 }).map((_, index) => (
-                  <div key={index} className="aspect-w-1 aspect-h-1 overflow-hidden rounded-md cursor-pointer group relative">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                    <img 
-                      src={`https://source.unsplash.com/random/${500 + index}x${500 + index}/?wedding,event`}
-                      alt="Inspiration"
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-8 text-center">
-                <Link to="/client/pinterbest">
-                  <WeEventButton>
-                    Découvrir plus d'inspirations
                   </WeEventButton>
                 </Link>
               </div>
