@@ -66,6 +66,18 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
     }
   };
 
+  // Format information for help tooltip
+  const formatInfo = (
+    <div className="text-sm">
+      <p className="font-semibold mb-1">Format d'importation compatible:</p>
+      <ul className="list-disc pl-5 space-y-1">
+        <li>Fichier JSON généré par l'éditeur de plan</li>
+        <li>Doit contenir les propriétés 'objects' et 'background'</li>
+        <li>Les objets doivent avoir leurs propriétés de dimensions et positions</li>
+      </ul>
+    </div>
+  );
+
   return (
     <div className="flex flex-col">
       <Card className="bg-white border-gray-200 mb-4">
@@ -103,18 +115,11 @@ const FloorPlanner: React.FC<FloorPlannerProps> = ({ onSave, initialData, readOn
             <FloorPlanActions
               createRoomPlan={resetRoomPlan}
               savePlan={handleSavePlan}
+              importPlan={importPlan}
               isMobile={isMobile}
+              formatInfo={formatInfo}
             />
           )}
-          
-          {/* Hidden file input for import functionality */}
-          <input
-            id="import-plan"
-            type="file"
-            accept=".json"
-            className="hidden"
-            onChange={importPlan}
-          />
         </CardContent>
       </Card>
     </div>

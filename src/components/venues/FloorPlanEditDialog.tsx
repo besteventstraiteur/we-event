@@ -6,9 +6,13 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import FloorPlanner from '@/components/floor-planner/FloorPlanner';
 import { useIsMobile } from '@/hooks/use-mobile';
+import FloorPlanImportButton from './FloorPlanImportButton';
+import { usePlanPersistence } from '@/hooks/floor-planner/usePlanPersistence';
 
 interface Venue {
   id: string;
@@ -34,6 +38,9 @@ const FloorPlanEditDialog: React.FC<FloorPlanEditDialogProps> = ({
   onSave
 }) => {
   const isMobile = useIsMobile();
+  // Nous devons passer null au hook car nous n'avons pas encore accès au canvas
+  // Le composant FloorPlanner gère son propre canvas et ses propres méthodes d'importation
+  const { importPlan, isImporting } = usePlanPersistence({ canvas: null });
   
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -53,6 +60,21 @@ const FloorPlanEditDialog: React.FC<FloorPlanEditDialogProps> = ({
             />
           )}
         </div>
+
+        <DialogFooter className="flex justify-between sm:justify-between">
+          <FloorPlanImportButton 
+            onImport={importPlan} 
+            isImporting={isImporting} 
+          />
+          
+          <Button 
+            variant="outline" 
+            className="border-vip-gray-700 text-vip-gray-400 hover:text-vip-white"
+            onClick={() => onOpenChange(false)}
+          >
+            Fermer
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
