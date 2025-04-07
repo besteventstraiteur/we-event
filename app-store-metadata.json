@@ -1,0 +1,30 @@
+
+{
+  "ios": {
+    "appName": "Best Events VIP",
+    "subtitle": "Organisez des événements d'exception",
+    "keywords": ["événements", "mariage", "planification", "VIP", "célébration", "organisation"],
+    "description": "Best Events VIP est l'application ultime pour planifier vos événements d'exception. Que ce soit un mariage, un anniversaire ou une conférence professionnelle, notre application vous accompagne dans toutes les étapes de l'organisation. Profitez d'un suivi en temps réel, d'une gestion des invités simplifiée et d'un accès à notre réseau de prestataires haut de gamme. Transformez votre événement en une expérience inoubliable avec Best Events VIP.",
+    "category": "Lifestyle",
+    "secondaryCategory": "Productivity",
+    "ageRating": "4+",
+    "privacyPolicyUrl": "https://weevents.example.com/privacy",
+    "termsOfServiceUrl": "https://weevents.example.com/terms",
+    "marketingUrl": "https://weevents.example.com",
+    "supportUrl": "https://weevents.example.com/support",
+    "copyright": "© 2025 Best Events VIP. Tous droits réservés."
+  },
+  "android": {
+    "appName": "Best Events VIP",
+    "shortDescription": "Planifiez vos événements d'exception",
+    "fullDescription": "Best Events VIP est l'application ultime pour planifier vos événements d'exception. Que ce soit un mariage, un anniversaire ou une conférence professionnelle, notre application vous accompagne dans toutes les étapes de l'organisation. Profitez d'un suivi en temps réel, d'une gestion des invités simplifiée et d'un accès à notre réseau de prestataires haut de gamme. Transformez votre événement en une expérience inoubliable avec Best Events VIP.",
+    "category": "EVENTS",
+    "contentRating": "Everyone",
+    "tags": ["événements", "mariage", "planification", "VIP", "célébration", "organisation"],
+    "privacyPolicyUrl": "https://weevents.example.com/privacy",
+    "termsOfServiceUrl": "https://weevents.example.com/terms",
+    "contactEmail": "contact@weevents.example.com",
+    "contactPhone": "+33123456789",
+    "contactWebsite": "https://weevents.example.com"
+  }
+}

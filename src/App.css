@@ -64,10 +64,55 @@
   padding-right: env(safe-area-inset-right);
 }
 
+/* Styles pour applications natives */
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  body {
+    overscroll-behavior-y: none;
+  }
+  
+  /* Fix pour le problème de hauteur 100vh sur mobile */
+  .full-height {
+    height: 100vh; /* Fallback */
+    height: calc(var(--vh, 1vh) * 100);
+  }
+}
+
 /* Ajustements pour les boutons sur mobile */
 .native-app button, 
 .native-app a.btn {
   min-height: 44px; /* Taille minimale recommandée pour les cibles tactiles */
+  touch-action: manipulation;
+}
+
+/* Animations adaptées pour mobile */
+@media (hover: none) {
+  .native-app .touch-feedback {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .native-app .touch-feedback::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1) 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform .3s, opacity .5s;
+  }
+  
+  .native-app .touch-feedback:active::after {
+    transform: scale(0, 0);
+    opacity: .2;
+    transition: 0s;
+  }
 }
 
 /* Désactiver le zoom sur les inputs dans iOS */
@@ -80,4 +125,78 @@
   textarea {
     font-size: 16px !important; /* Empêche le zoom automatique sur iOS */
   }
+  
+  /* Désactiver les effets de survol sur mobile */
+  a:hover, button:hover {
+    transition: none !important;
+  }
+  
+  /* Optimisations pour le mode plein écran */
+  .ios-pwa {
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Éviter le défilement élastique sur iOS */
+  .ios-pwa .overflow-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Styles de l'interface native */
+  .native-app .modal-native {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  
+  /* Ombre adaptée aux appareils mobiles */
+  .native-app .card-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* Status bar pour les appareils natifs */
+.status-bar-spacer {
+  height: env(safe-area-inset-top);
+  background-color: #ffffff;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+}
+
+/* Styles pour mode offline */
+.offline-indicator {
+  position: fixed;
+  top: env(safe-area-inset-top);
+  left: 0;
+  right: 0;
+  background-color: #ff9800;
+  color: white;
+  text-align: center;
+  padding: 6px;
+  font-size: 14px;
+  z-index: 9999;
+}
+
+/* Retour tactile pour mobiles */
+@media (hover: none) {
+  .native-app .button-effect:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Fix pour le modèle visuel iOS */
+.ios-pwa .bottom-navbar {
+  padding-bottom: env(safe-area-inset-bottom);
+  background-color: #ffffff;
 }
