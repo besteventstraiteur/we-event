@@ -59,7 +59,7 @@ const AdvancedSecurity: React.FC = () => {
   return (
     <DashboardLayout type="client">
       <div className="space-y-6">
-        <SecurityHeader title="Sécurité Avancée" />
+        <SecurityHeader />
 
         <div className="grid gap-6">
           <TwoFactorCard 

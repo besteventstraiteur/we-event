@@ -26,14 +26,14 @@ const ClientAccount = () => {
   const {
     isBiometricEnabled,
     isBiometricSupported,
-    isNativeApp,
-    toggleBiometricAuth,
+    isNative: isNativeApp,
+    handleToggleBiometric: toggleBiometricAuth,
     isLoading: isBiometricLoading
   } = useBiometricAuth();
 
   // Encryption
   const {
-    isEncryptionEnabled,
+    encryptionEnabled: isEncryptionEnabled,
     setEncryptionEnabled,
     showEncryptionDetails,
     setShowEncryptionDetails
