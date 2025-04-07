@@ -75,7 +75,7 @@ const PartnerPlaylists = () => {
                 <CardContent>
                   <div className="text-sm mb-4">
                     <p className="font-medium">
-                      Client: {playlist.client?.name || "Sans nom"}
+                      Client: {playlist.clientId ? "Client " + playlist.clientId : "Sans nom"}
                     </p>
                     <p className="text-gray-500">{new Date(playlist.updatedAt).toLocaleDateString()}</p>
                   </div>

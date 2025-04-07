@@ -4,6 +4,8 @@ import PresentationDialog from "./presentation-dialog/PresentationDialog";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SlidesContainer } from "./presentation-dialog/SlidesContainer";
+import { NavigationControls } from "./presentation-dialog/NavigationControls";
 
 interface VideoPresentationProps {
   buttonText?: string;
@@ -17,9 +19,9 @@ const VideoPresentation: React.FC<VideoPresentationProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
   
-  const handleOpenChange = () => {
-    setIsOpen(false);
-    if (onClose) {
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open && onClose) {
       onClose();
     }
   };
@@ -36,8 +38,20 @@ const VideoPresentation: React.FC<VideoPresentationProps> = ({
         {buttonText}
       </Button>
       
-      {/* Ne passer que la prop open nécessaire */}
-      {isOpen && <PresentationDialog open={isOpen} />}
+      {isOpen && (
+        <PresentationDialog 
+          open={isOpen} 
+          setOpen={setIsOpen}
+          title="Découvrez We Event"
+          description="Voici nos principales fonctionnalités"
+          onClose={() => handleOpenChange(false)}
+        >
+          <div className="presentation-content">
+            <SlidesContainer />
+            <NavigationControls />
+          </div>
+        </PresentationDialog>
+      )}
     </>
   );
 };

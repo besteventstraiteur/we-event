@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Guest, Table } from "@/types/floorPlanTypes";
 
@@ -62,27 +61,17 @@ export const useAIFloorPlan = ({
     };
     
     guests.forEach(guest => {
-      // Vérifier si la propriété age existe avant de l'utiliser
-      const guestAge = typeof guest.age === 'number' ? guest.age : 
-                      guest.enfants !== undefined ? (guest.enfants > 0 ? 10 : 30) : 30;
+      // Vérifier si l'invité est un enfant en fonction du nombre d'enfants ou d'autres attributs
+      const isChild = guest.enfants > 0;
+      const isSenior = false; // Logique à implémenter si nécessaire
       
-      if (guestAge < 18) {
+      if (isChild) {
         ageGroups['enfants'].push(guest);
-      } else if (guestAge > 65) {
+      } else if (isSenior) {
         ageGroups['seniors'].push(guest);
       } else {
         ageGroups['adultes'].push(guest);
       }
-    });
-    
-    // Affinités basées sur restrictions alimentaires similaires
-    const dietaryGroups: Record<string, Guest[]> = {};
-    guests.forEach(guest => {
-      const diet = guest.dietaryRestrictions || 'standard';
-      if (!dietaryGroups[diet]) {
-        dietaryGroups[diet] = [];
-      }
-      dietaryGroups[diet].push(guest);
     });
     
     setAffinity(affinityMap);

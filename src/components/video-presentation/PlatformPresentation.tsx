@@ -1,6 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import PresentationDialog from './presentation-dialog/PresentationDialog';
+import { SlidesContainer } from './presentation-dialog/SlidesContainer';
+import { NavigationControls } from './presentation-dialog/NavigationControls';
 
 interface PlatformPresentationProps {
   onClose?: () => void;
@@ -26,8 +28,24 @@ const PlatformPresentation: React.FC<PlatformPresentationProps> = ({ onClose }) 
     };
   }, [isOpen, onClose]);
 
-  // Passer uniquement la prop open à PresentationDialog
-  return <PresentationDialog open={isOpen} />;
+  const handleDialogClose = () => {
+    setIsOpen(false);
+  };
+
+  return (
+    <PresentationDialog 
+      open={isOpen} 
+      setOpen={setIsOpen}
+      title="Bienvenue sur We Event"
+      description="Découvrez nos fonctionnalités principales"
+      onClose={handleDialogClose}
+    >
+      <div className="presentation-content">
+        <SlidesContainer />
+        <NavigationControls />
+      </div>
+    </PresentationDialog>
+  );
 };
 
 export default PlatformPresentation;
