@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { BarChart, MessageSquare, Calendar, CheckSquare, Image, HeadphonesIcon, Video, Users, Trophy, Award, SquareStack } from "lucide-react";
+import { BarChart, MessageSquare, Calendar, CheckSquare, Image, HeadphonesIcon, Video, Users, Trophy, Award, SquareStack, Grid3X3 } from "lucide-react";
 import { useAccessControl } from "@/hooks/useAccessControl";
 
 // Define partner types
@@ -108,13 +108,13 @@ const PartnerNavigation = () => {
       )}
 
       {/* Menu section - only for caterers */}
-      {(partnerType === PartnerType.CATERER || partnerType === PartnerType.GENERAL) && (
+      {(partnerType === PartnerType.CATERER || partnerType === PartnerType.VENUE || partnerType === PartnerType.GENERAL) && (
         <NavItem
           href="/partner/menus"
           icon={<CheckSquare size={18} />}
           active={location.pathname === "/partner/menus"}
         >
-          Menus clients
+          Menus & Plans
         </NavItem>
       )}
 

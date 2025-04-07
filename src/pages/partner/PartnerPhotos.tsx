@@ -1,7 +1,8 @@
+
 import React from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import PartnerTypeRoute from "@/components/security/PartnerTypeRoute";
-import { PartnerType } from "@/utils/accessControl";
+import { PartnerType } from "@/components/dashboard/PartnerNavigation";
 
 const PartnerPhotos = () => {
   return (

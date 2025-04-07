@@ -1,8 +1,8 @@
 
 import React from "react";
-import { Navigate } from "react-router-dom";
-import { PartnerType, UserRole } from "@/utils/accessControl";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAccessControl } from "@/hooks/useAccessControl";
+import { PartnerType } from "@/components/dashboard/PartnerNavigation";
 import { Loader2 } from "lucide-react";
 
 interface PartnerTypeRouteProps {
@@ -16,32 +16,29 @@ const PartnerTypeRoute: React.FC<PartnerTypeRouteProps> = ({
   allowedTypes,
   fallbackPath = "/partner/dashboard"
 }) => {
-  const { currentUser, isLoading, isPartnerType } = useAccessControl();
+  const { currentUser, isLoading } = useAccessControl();
+  const location = useLocation();
 
   // Afficher un indicateur de chargement pendant la vérification
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2">Vérification des accès...</span>
+        <span className="ml-2">Vérification de l'accès...</span>
       </div>
     );
   }
 
-  // Vérifier si l'utilisateur est connecté
-  if (!currentUser) {
-    return <Navigate to="/login" replace />;
+  // Vérifier si l'utilisateur est un partenaire
+  if (!currentUser || currentUser.role !== 'partner') {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
-  // Vérifier que l'utilisateur est un partenaire
-  if (currentUser.role !== UserRole.PARTNER) {
-    return <Navigate to="/unauthorized" replace />;
-  }
+  // Vérifier si le type de partenaire est autorisé
+  const userPartnerType = currentUser.partnerType || PartnerType.GENERAL;
+  const hasAllowedType = allowedTypes.includes(userPartnerType as PartnerType);
 
-  // Vérifier le type de partenaire
-  const hasAllowedType = allowedTypes.some(type => isPartnerType(type));
-  
-  if (!hasAllowedType) {
+  if (!hasAllowedType && userPartnerType !== PartnerType.GENERAL) {
     return <Navigate to={fallbackPath} replace />;
   }
 
