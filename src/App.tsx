@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
@@ -78,7 +77,6 @@ import PartnerFloorPlans from './pages/partner/PartnerFloorPlans';
 // Security Components
 import AdminRoute from './components/security/AdminRoute';
 import ProtectedRoute from './components/security/ProtectedRoute';
-import PartnerTypeRoute from './components/security/PartnerTypeRoute';
 
 function App() {
   return (

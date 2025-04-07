@@ -10,7 +10,8 @@ import PartnerTypeRoute from "@/components/security/PartnerTypeRoute";
 import { PartnerType } from "@/utils/accessControl";
 import { useToast } from "@/hooks/use-toast";
 
-const PartnerPlaylists = () => {
+// This component will be wrapped with PartnerTypeRoute later
+const PartnerPlaylistsContent = () => {
   const {
     playlists,
     createPlaylist,
@@ -162,10 +163,10 @@ const PartnerPlaylists = () => {
 };
 
 // Wrap the component with the PartnerTypeRoute to restrict access
-const ProtectedPartnerPlaylists = () => (
+const PartnerPlaylists = () => (
   <PartnerTypeRoute allowedTypes={[PartnerType.DJ, PartnerType.GENERAL]}>
-    <PartnerPlaylists />
+    <PartnerPlaylistsContent />
   </PartnerTypeRoute>
 );
 
-export default ProtectedPartnerPlaylists;
+export default PartnerPlaylists;

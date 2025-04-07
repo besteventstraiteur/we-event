@@ -4,7 +4,8 @@ import DashboardLayout from "@/components/DashboardLayout";
 import PartnerTypeRoute from "@/components/security/PartnerTypeRoute";
 import { PartnerType } from "@/utils/accessControl";
 
-const PartnerMusicPlaylists = () => {
+// This component will be wrapped with PartnerTypeRoute later
+const PartnerMusicPlaylistsContent = () => {
   return (
     <DashboardLayout type="partner">
       <div>
@@ -16,10 +17,10 @@ const PartnerMusicPlaylists = () => {
 };
 
 // Wrap the component to restrict access to DJs only
-const ProtectedPartnerMusicPlaylists = () => (
+const PartnerMusicPlaylists = () => (
   <PartnerTypeRoute allowedTypes={[PartnerType.DJ, PartnerType.GENERAL]}>
-    <PartnerMusicPlaylists />
+    <PartnerMusicPlaylistsContent />
   </PartnerTypeRoute>
 );
 
-export default ProtectedPartnerMusicPlaylists;
+export default PartnerMusicPlaylists;

@@ -29,16 +29,25 @@ const PartnerTypeRoute: React.FC<PartnerTypeRouteProps> = ({
     );
   }
 
-  // Vérifier si l'utilisateur est un partenaire
+  // Pour le débogage, vérifions ce que nous recevons réellement
+  console.log("PartnerTypeRoute - currentUser:", currentUser);
+  console.log("PartnerTypeRoute - allowedTypes:", allowedTypes);
+  
+  // Vérifier si l'utilisateur est connecté et est un partenaire
   if (!currentUser || currentUser.role !== 'partner') {
+    console.log("PartnerTypeRoute - Redirection vers login - Utilisateur non connecté ou non partenaire");
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
   // Vérifier si le type de partenaire est autorisé
   const userPartnerType = currentUser.partnerType || PartnerType.GENERAL;
-  const hasAllowedType = allowedTypes.includes(userPartnerType as PartnerType);
+  console.log("PartnerTypeRoute - userPartnerType:", userPartnerType);
+  
+  const hasAllowedType = allowedTypes.includes(userPartnerType);
+  console.log("PartnerTypeRoute - hasAllowedType:", hasAllowedType);
 
   if (!hasAllowedType && userPartnerType !== PartnerType.GENERAL) {
+    console.log("PartnerTypeRoute - Redirection vers fallback - Type de partenaire non autorisé");
     return <Navigate to={fallbackPath} replace />;
   }
 
