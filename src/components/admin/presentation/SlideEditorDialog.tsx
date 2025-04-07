@@ -1,5 +1,8 @@
 
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +11,18 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription } fr
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { SlideType } from "@/components/video-presentation/presentation-types";
+
+// Define schema for form validation
+const slideSchema = z.object({
+  title: z.string().min(1, "Le titre est requis"),
+  description: z.string().min(1, "La description est requise"),
+  keyFeatures: z.array(z.string()).optional(),
+  path: z.string().optional(),
+  image: z.string().optional(),
+  videoUrl: z.string().optional(),
+});
+
+type SlideFormValues = z.infer<typeof slideSchema>;
 
 interface SlideEditorDialogProps {
   open: boolean;
@@ -22,63 +37,69 @@ const SlideEditorDialog: React.FC<SlideEditorDialogProps> = ({
   onSave,
   onCancel
 }) => {
-  const [editedSlide, setEditedSlide] = useState<SlideType>({...slide});
-  const [mediaType, setMediaType] = useState<string>(slide.videoUrl ? "video" : "image");
+  const [mediaType, setMediaType] = useState<string>(slide.videoUrl ? "video" : slide.image ? "image" : "none");
   const { toast } = useToast();
 
-  const handleInputChange = (field: keyof SlideType, value: string) => {
-    setEditedSlide(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  // Initialize form with the react-hook-form
+  const form = useForm<SlideFormValues>({
+    resolver: zodResolver(slideSchema),
+    defaultValues: {
+      title: slide.title,
+      description: slide.description,
+      keyFeatures: slide.keyFeatures || [],
+      path: slide.path || "",
+      image: slide.image || "",
+      videoUrl: slide.videoUrl || "",
+    }
+  });
 
-  const handleFeaturesChange = (featuresText: string) => {
-    const features = featuresText.split('\n').filter(feature => feature.trim() !== '');
-    setEditedSlide(prev => ({
-      ...prev,
-      keyFeatures: features
-    }));
-  };
+  // Update form values when slide changes
+  React.useEffect(() => {
+    if (slide) {
+      form.reset({
+        title: slide.title,
+        description: slide.description,
+        keyFeatures: slide.keyFeatures || [],
+        path: slide.path || "",
+        image: slide.image || "",
+        videoUrl: slide.videoUrl || "",
+      });
+      
+      setMediaType(slide.videoUrl ? "video" : slide.image ? "image" : "none");
+    }
+  }, [slide, form]);
 
   const handleMediaTypeChange = (value: string) => {
     setMediaType(value);
     
     if (value === "video") {
-      setEditedSlide(prev => ({
-        ...prev,
-        image: "",
-        videoUrl: prev.videoUrl || ""
-      }));
+      form.setValue("image", "");
+    } else if (value === "image") {
+      form.setValue("videoUrl", "");
     } else {
-      setEditedSlide(prev => ({
-        ...prev,
-        videoUrl: "",
-        image: prev.image || ""
-      }));
+      form.setValue("image", "");
+      form.setValue("videoUrl", "");
     }
   };
 
-  const handleSubmit = () => {
-    if (!editedSlide.title.trim()) {
-      toast({
-        title: "Titre obligatoire",
-        description: "Veuillez saisir un titre pour le slide",
-        variant: "destructive"
-      });
-      return;
-    }
+  const handleFeaturesChange = (featuresText: string) => {
+    const features = featuresText.split('\n').filter(feature => feature.trim() !== '');
+    form.setValue("keyFeatures", features);
+  };
+
+  const onSubmit = (values: SlideFormValues) => {
+    // Create updated slide object
+    const updatedSlide: SlideType = {
+      ...slide,
+      title: values.title,
+      description: values.description,
+      keyFeatures: values.keyFeatures,
+      path: values.path,
+      image: values.image,
+      videoUrl: values.videoUrl,
+    };
     
-    if (!editedSlide.description.trim()) {
-      toast({
-        title: "Description obligatoire",
-        description: "Veuillez saisir une description pour le slide",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    onSave(editedSlide);
+    onSave(updatedSlide);
   };
 
   return (
@@ -90,51 +111,80 @@ const SlideEditorDialog: React.FC<SlideEditorDialogProps> = ({
           </DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-4 py-4">
-          <div className="grid gap-4">
-            <FormItem>
-              <FormLabel>Titre</FormLabel>
-              <Input
-                value={editedSlide.title}
-                onChange={(e) => handleInputChange("title", e.target.value)}
-                placeholder="Titre du slide"
-              />
-            </FormItem>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Titre</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Titre du slide"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
             
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <Textarea
-                value={editedSlide.description}
-                onChange={(e) => handleInputChange("description", e.target.value)}
-                placeholder="Description du slide"
-                rows={3}
-              />
-            </FormItem>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Description du slide"
+                      rows={3}
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
             
-            <FormItem>
-              <FormLabel>Fonctionnalités clés</FormLabel>
-              <Textarea
-                value={editedSlide.keyFeatures?.join('\n') || ''}
-                onChange={(e) => handleFeaturesChange(e.target.value)}
-                placeholder="Une fonctionnalité par ligne"
-                rows={4}
-              />
-              <FormDescription>
-                Saisissez une fonctionnalité par ligne
-              </FormDescription>
-            </FormItem>
+            <FormField
+              control={form.control}
+              name="keyFeatures"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Fonctionnalités clés</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      value={field.value?.join('\n') || ''}
+                      onChange={(e) => handleFeaturesChange(e.target.value)}
+                      placeholder="Une fonctionnalité par ligne"
+                      rows={4}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Saisissez une fonctionnalité par ligne
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
             
-            <FormItem>
-              <FormLabel>Lien du bouton (optionnel)</FormLabel>
-              <Input
-                value={editedSlide.path || ''}
-                onChange={(e) => handleInputChange("path", e.target.value)}
-                placeholder="/client/dashboard"
-              />
-              <FormDescription>
-                Chemin vers lequel le bouton redirigera (laissez vide pour masquer le bouton)
-              </FormDescription>
-            </FormItem>
+            <FormField
+              control={form.control}
+              name="path"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Lien du bouton (optionnel)</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="/client/dashboard"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Chemin vers lequel le bouton redirigera (laissez vide pour masquer le bouton)
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
             
             <FormItem>
               <FormLabel>Type de média</FormLabel>
@@ -154,44 +204,58 @@ const SlideEditorDialog: React.FC<SlideEditorDialogProps> = ({
             </FormItem>
             
             {mediaType === "image" && (
-              <FormItem>
-                <FormLabel>URL de l'image</FormLabel>
-                <Input
-                  value={editedSlide.image || ''}
-                  onChange={(e) => handleInputChange("image", e.target.value)}
-                  placeholder="/screenshots/feature.png"
-                />
-                <FormDescription>
-                  Chemin vers l'image (ex: /screenshots/feature.png)
-                </FormDescription>
-              </FormItem>
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>URL de l'image</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="/screenshots/feature.png"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Chemin vers l'image (ex: /screenshots/feature.png)
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
             )}
             
             {mediaType === "video" && (
-              <FormItem>
-                <FormLabel>URL de la vidéo/GIF</FormLabel>
-                <Input
-                  value={editedSlide.videoUrl || ''}
-                  onChange={(e) => handleInputChange("videoUrl", e.target.value)}
-                  placeholder="/videos/demo.mp4 ou /gifs/demo.gif"
-                />
-                <FormDescription>
-                  Chemin vers la vidéo ou le GIF (ex: /videos/demo.mp4)
-                </FormDescription>
-              </FormItem>
+              <FormField
+                control={form.control}
+                name="videoUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>URL de la vidéo/GIF</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="/videos/demo.mp4 ou /gifs/demo.gif"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Chemin vers la vidéo ou le GIF (ex: /videos/demo.mp4)
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
             )}
-          </div>
-        </div>
-        
-        <DialogFooter>
-          <Button variant="outline" onClick={onCancel}>Annuler</Button>
-          <Button 
-            onClick={handleSubmit}
-            className="bg-vip-gold hover:bg-amber-600"
-          >
-            Enregistrer
-          </Button>
-        </DialogFooter>
+            
+            <DialogFooter>
+              <Button variant="outline" onClick={onCancel}>Annuler</Button>
+              <Button 
+                type="submit"
+                className="bg-vip-gold hover:bg-amber-600"
+              >
+                Enregistrer
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
