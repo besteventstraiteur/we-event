@@ -9,6 +9,7 @@ interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredPermission?: Permission;
   allowedRoles?: UserRole[];
+  role?: string; // Add the role prop to the interface
   fallbackPath?: string;
 }
 
@@ -16,6 +17,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredPermission,
   allowedRoles,
+  role, // Include role in the component props
   fallbackPath = "/login"
 }) => {
   const { currentUser, isLoading, hasPermission } = useAccessControl();
@@ -35,6 +37,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   if (!currentUser) {
     // Rediriger vers la page de connexion tout en enregistrant la page actuelle
     return <Navigate to={fallbackPath} state={{ from: location.pathname }} replace />;
+  }
+
+  // If role is specified, check if user has that role
+  if (role && currentUser.role !== role) {
+    return <Navigate to="/unauthorized" replace />;
   }
 
   // Vérifier les rôles si spécifiés

@@ -7,6 +7,7 @@ import { UserRound, BarChart, MessageSquare, Calendar, CreditCard } from "lucide
 import GoldButton from "@/components/GoldButton";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { SubscriptionTier } from "@/models/subscription";
 
 const PartnerDashboard = () => {
   const navigate = useNavigate();
@@ -19,8 +20,8 @@ const PartnerDashboard = () => {
   const daysRemaining = Math.floor((expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
   const percentageRemaining = Math.floor((daysRemaining / totalDays) * 100);
 
-  // Example subscription tier
-  const subscriptionTier = "standard";
+  // Example subscription tier using the enum
+  const subscriptionTier = SubscriptionTier.STANDARD;
   
   const handleSubscriptionClick = () => {
     navigate("/partner/subscription");
@@ -83,16 +84,16 @@ const PartnerDashboard = () => {
                   <Badge 
                     variant="outline" 
                     className={`${
-                      subscriptionTier === 'premium' 
+                      subscriptionTier === SubscriptionTier.PREMIUM 
                         ? 'bg-amber-500/20 text-amber-500 border-amber-500/50' 
-                        : subscriptionTier === 'standard' 
+                        : subscriptionTier === SubscriptionTier.STANDARD 
                         ? 'bg-blue-500/20 text-blue-500 border-blue-500/50' 
                         : 'bg-vip-gray-700/20 text-vip-gray-400 border-vip-gray-700/50'
                     }`}
                   >
-                    {subscriptionTier === 'premium' 
+                    {subscriptionTier === SubscriptionTier.PREMIUM 
                       ? 'Premium' 
-                      : subscriptionTier === 'standard' 
+                      : subscriptionTier === SubscriptionTier.STANDARD 
                       ? 'Standard' 
                       : 'Gratuit'}
                   </Badge>
