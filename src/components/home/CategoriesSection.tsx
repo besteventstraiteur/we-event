@@ -5,8 +5,16 @@ import { ChevronDown, Star, MessageSquare, Image, Calendar } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card";
 import WeEventButton from "@/components/WeEventButton";
 
-const CategoriesSection: React.FC = () => {
-  const categories = [
+interface CategoryItem {
+  name: string;
+  icon: React.ReactNode;
+  count: number;
+}
+
+interface CategoriesSectionProps {}
+
+const CategoriesSection: React.FC<CategoriesSectionProps> = () => {
+  const categories: CategoryItem[] = [
     { name: "Traiteurs", icon: <Image size={24} />, count: 42 },
     { name: "Lieux de réception", icon: <Calendar size={24} />, count: 38 },
     { name: "Décoration", icon: <Star size={24} />, count: 29 },

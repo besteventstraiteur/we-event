@@ -5,8 +5,17 @@ import { Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import WeEventButton from "@/components/WeEventButton";
 
-const TestimonialsSection: React.FC = () => {
-  const testimonials = [
+interface Testimonial {
+  name: string;
+  event: string;
+  text: string;
+  rating: number;
+}
+
+interface TestimonialsSectionProps {}
+
+const TestimonialsSection: React.FC<TestimonialsSectionProps> = () => {
+  const testimonials: Testimonial[] = [
     {
       name: "Marie & Pierre",
       event: "Mariage à Paris",

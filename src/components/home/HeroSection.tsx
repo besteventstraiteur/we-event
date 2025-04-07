@@ -6,7 +6,9 @@ import WeEventButton from "@/components/WeEventButton";
 import VideoPresentation from "@/components/video-presentation/VideoPresentation";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-const HeroSection: React.FC = () => {
+interface HeroSectionProps {}
+
+const HeroSection: React.FC<HeroSectionProps> = () => {
   const isMobile = useIsMobile();
   
   return (

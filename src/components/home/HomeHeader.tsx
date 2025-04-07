@@ -6,8 +6,14 @@ import WeEventButton from "@/components/WeEventButton";
 import { Search } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+interface NavLinkProps {
+  href: string;
+  children: React.ReactNode;
+  isActive?: boolean;
+}
+
 // Component for navigation links
-const NavLink = ({ href, children, isActive = false }: { href: string; children: React.ReactNode; isActive?: boolean }) => (
+const NavLink: React.FC<NavLinkProps> = ({ href, children, isActive = false }) => (
   <Link 
     to={href}
     className={`relative text-sm font-medium pb-1 ${
@@ -21,7 +27,9 @@ const NavLink = ({ href, children, isActive = false }: { href: string; children:
   </Link>
 );
 
-const HomeHeader: React.FC = () => {
+interface HomeHeaderProps {}
+
+const HomeHeader: React.FC<HomeHeaderProps> = () => {
   const isMobile = useIsMobile();
   
   return (

@@ -8,7 +8,9 @@ import CategoriesSection from "@/components/home/CategoriesSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import HomeFooter from "@/components/home/HomeFooter";
 
-const HomePage = () => {
+interface HomePageProps {}
+
+const HomePage: React.FC<HomePageProps> = () => {
   return (
     <MobileOptimizedLayout fullHeight={true}>
       <div className="min-h-screen bg-we-white flex flex-col">

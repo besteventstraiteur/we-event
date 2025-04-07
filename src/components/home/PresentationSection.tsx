@@ -4,9 +4,11 @@ import { ArrowRight } from "lucide-react";
 import VideoPresentation from "@/components/video-presentation/VideoPresentation";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-const PresentationSection = () => {
+interface PresentationSectionProps {}
+
+const PresentationSection: React.FC<PresentationSectionProps> = () => {
   const isMobile = useIsMobile();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <div className="bg-vip-gray-100 rounded-2xl p-6 md:p-8">

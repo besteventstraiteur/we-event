@@ -3,7 +3,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import WeEventLogo from "@/components/WeEventLogo";
 
-const HomeFooter: React.FC = () => {
+interface HomeFooterProps {}
+
+const HomeFooter: React.FC<HomeFooterProps> = () => {
   return (
     <footer className="py-8 border-t border-we-beige bg-white">
       <div className="container">
