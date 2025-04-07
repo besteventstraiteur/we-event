@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Shield, Lock, Eye, EyeOff, RefreshCw } from "lucide-react";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
@@ -176,7 +175,7 @@ const AdvancedSecurityCard: React.FC<AdvancedSecurityCardProps> = ({ currentUser
             <div className="mt-3 p-2 bg-gray-100 rounded text-xs font-mono">
               <p>Utilisateur actuel: {currentUser?.id ?? 'Non connecté'}</p>
               <p>Rôle: {currentUser?.role ?? 'N/A'}</p>
-              <p>Permissions personnalisées: {currentUser?.customPermissions?.length ?? 0}</p>
+              <p>Permissions: {currentUser?.permissions?.length ?? 0}</p>
             </div>
           </div>
         )}

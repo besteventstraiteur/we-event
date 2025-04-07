@@ -8,7 +8,7 @@ export function usePartnerAvailability(initialData: AvailabilityDate[] = []) {
   const [availability, setAvailability] = useState<AvailabilityDate[]>(initialData);
   const { toast } = useToast();
 
-  const updateAvailability = (date: Date, status: AvailabilityStatus, notes?: string) => {
+  const updateAvailability = (date: Date, status: AvailabilityStatus, note?: string) => {
     const dateString = format(date, "yyyy-MM-dd");
     const existingIndex = availability.findIndex(
       a => isEqual(parse(a.date, "yyyy-MM-dd", new Date()), date)
@@ -16,10 +16,10 @@ export function usePartnerAvailability(initialData: AvailabilityDate[] = []) {
 
     if (existingIndex >= 0) {
       const newAvailability = [...availability];
-      newAvailability[existingIndex] = { date: dateString, status, notes };
+      newAvailability[existingIndex] = { date: dateString, status, note };
       setAvailability(newAvailability);
     } else {
-      setAvailability([...availability, { date: dateString, status, notes }]);
+      setAvailability([...availability, { date: dateString, status, note }]);
     }
 
     toast({
@@ -28,7 +28,7 @@ export function usePartnerAvailability(initialData: AvailabilityDate[] = []) {
     });
 
     // In a real app, this would save to the backend
-    console.log("Saving availability:", { date: dateString, status, notes });
+    console.log("Saving availability:", { date: dateString, status, note });
   };
 
   const getDateAvailability = (date: Date): AvailabilityStatus | undefined => {

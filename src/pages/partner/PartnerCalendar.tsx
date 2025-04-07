@@ -24,7 +24,7 @@ const PartnerCalendar = () => {
       
       if (existingAvailability) {
         setCurrentStatus(existingAvailability.status);
-        setNotes(existingAvailability.notes || "");
+        setNotes(existingAvailability.note || "");
       } else {
         setCurrentStatus(AvailabilityStatus.AVAILABLE);
         setNotes("");

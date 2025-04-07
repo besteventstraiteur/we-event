@@ -42,7 +42,7 @@ const UpcomingAvailability: React.FC<UpcomingAvailabilityProps> = ({ availabilit
               <h3 className="font-medium">
                 {format(itemDate, "dd MMMM yyyy")}
               </h3>
-              {item.notes && <p className="text-sm text-gray-600">{item.notes}</p>}
+              {item.note && <p className="text-sm text-gray-600">{item.note}</p>}
             </div>
             <span className={`text-sm font-medium rounded-full px-2 py-1 ${
               item.status === AvailabilityStatus.AVAILABLE ? "bg-green-100 text-green-800" : 

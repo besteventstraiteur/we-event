@@ -32,7 +32,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
   }
 
   // Check if user is an admin
-  if (currentUser.role !== UserRole.ADMIN && currentUser.role !== UserRole.SUPER_ADMIN) {
+  if (currentUser.role !== UserRole.ADMIN) {
     return <Navigate to="/unauthorized" replace />;
   }
 

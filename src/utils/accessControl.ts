@@ -51,3 +51,6 @@ export const hasPermission = (user: AccessControlUser | null, permission: Permis
   
   return !!user.permissions?.includes(permission);
 };
+
+// Alias for use in useAccessControl
+export const userHasPermission = hasPermission;
