@@ -15,6 +15,7 @@ import { isBiometricAvailable, authenticateWithBiometrics } from "@/utils/biomet
 import { Capacitor } from "@capacitor/core";
 import { useDeviceType } from "@/hooks/use-mobile";
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
+import { UserRole, Permission } from "@/utils/accessControl";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -82,6 +83,8 @@ const LoginPage = () => {
       // Store user login info in local storage to persist between page refreshes
       const userData = prepareUserData(email);
       localStorage.setItem('currentUser', JSON.stringify(userData));
+      
+      console.log("Login - User data stored in localStorage:", userData);
 
       setTimeout(() => {
         const requires2FA = email.includes("secure") || localStorage.getItem('2fa_enabled') === 'true';
@@ -182,8 +185,8 @@ const LoginPage = () => {
     if (email.includes("admin")) {
       return {
         id: 'admin-1',
-        role: 'admin',
-        permissions: ['view_dashboard', 'access_admin', 'manage_partners', 'manage_clients'],
+        role: UserRole.ADMIN,
+        permissions: Object.values(Permission),
         email: email,
         name: 'Admin Test'
       };
@@ -198,25 +201,31 @@ const LoginPage = () => {
       
       return {
         id: 'partner-1',
-        role: 'partner',
+        role: UserRole.PARTNER,
         partnerType: partnerType,
-        permissions: ['view_dashboard', 'manage_requests'],
+        permissions: [
+          Permission.VIEW_DASHBOARD,
+          Permission.MANAGE_REQUESTS
+        ],
         email: email,
         name: 'Partenaire Test'
       };
     } else if (email.includes("client")) {
       return {
         id: 'client-1',
-        role: 'client',
-        permissions: ['view_dashboard', 'manage_guests'],
+        role: UserRole.CLIENT,
+        permissions: [
+          Permission.VIEW_DASHBOARD,
+          Permission.MANAGE_GUESTS
+        ],
         email: email,
         name: 'Client Test'
       };
     } else {
       return {
         id: 'demo-user',
-        role: 'client',
-        permissions: ['view_dashboard'],
+        role: UserRole.CLIENT,
+        permissions: [Permission.VIEW_DASHBOARD],
         email: email,
         name: 'Utilisateur Démo'
       };
@@ -248,8 +257,8 @@ const LoginPage = () => {
     
     console.log(`Redirecting to ${redirectPath} for user type: ${isAdmin ? 'admin' : isPartner ? 'partner' : 'client'}`);
     
-    // Force navigation with replace to prevent back button issues
-    navigate(redirectPath, { replace: true });
+    // Force navigation with replace to prevent back button issues and ensure a complete page reload
+    window.location.href = redirectPath;
     
     // Show success toast only after redirect is initiated
     toast({

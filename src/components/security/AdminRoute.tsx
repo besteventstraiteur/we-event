@@ -32,9 +32,11 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
       // If we have an admin user in localStorage but not in currentUser (might be a timing issue)
       if (!currentUser && parsedUser.role === UserRole.ADMIN) {
         console.log("AdminRoute - Admin found in localStorage but not in currentUser");
+        // Force navigation to current path to trigger a re-render with the admin user
+        navigate(location.pathname, { replace: true });
       }
     }
-  }, [currentUser, isLoading]);
+  }, [currentUser, isLoading, navigate, location.pathname]);
 
   // Show loading indicator while checking access
   if (isLoading) {

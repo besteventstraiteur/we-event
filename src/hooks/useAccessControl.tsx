@@ -30,6 +30,17 @@ export function useAccessControl(initialUser?: AccessControlUser) {
         if (storedUser) {
           const parsedUser = JSON.parse(storedUser);
           console.log("Access Control - Using stored user:", parsedUser);
+          // Vérifier et corriger le rôle si nécessaire (pour s'assurer qu'il s'agit du bon objet UserRole)
+          if (typeof parsedUser.role === 'string') {
+            // Convertir la chaîne de caractères en enum UserRole
+            if (parsedUser.role === 'admin') {
+              parsedUser.role = UserRole.ADMIN;
+            } else if (parsedUser.role === 'partner') {
+              parsedUser.role = UserRole.PARTNER;
+            } else if (parsedUser.role === 'client') {
+              parsedUser.role = UserRole.CLIENT;
+            }
+          }
           setCurrentUser(parsedUser);
         } 
         // Sinon, utilisons l'email pour déterminer le type d'utilisateur
