@@ -21,9 +21,9 @@ const ClientBudget = () => {
 
   return (
     <DashboardLayout type="client">
-      <div className="space-y-6">
+      <div className="space-y-6 bg-white p-4">
         <div>
-          <h1 className="text-3xl font-bold">Planification Budgétaire</h1>
+          <h1 className="text-3xl font-bold truncate">Planification Budgétaire</h1>
           <p className="text-muted-foreground">
             Définissez et suivez votre budget pour maîtriser vos dépenses
           </p>
@@ -33,11 +33,11 @@ const ClientBudget = () => {
           <div className="lg:col-span-2">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 truncate">
                   <PiggyBank className="h-5 w-5 text-vip-gold" />
                   Gestion de Budget
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="truncate">
                   Définissez votre budget global et répartissez-le entre vos différents prestataires
                 </CardDescription>
               </CardHeader>

@@ -20,13 +20,15 @@ const initialCategories = [
 const ClientTasks = () => {
   return (
     <DashboardLayout type="client">
-      <EnhancedTaskList
-        userId="client-001"
-        userName="Sophie et Thomas"
-        userType="client"
-        initialCategories={initialCategories}
-        storageKey="clientTasks"
-      />
+      <div className="bg-white p-4">
+        <EnhancedTaskList
+          userId="client-001"
+          userName="Sophie et Thomas"
+          userType="client"
+          initialCategories={initialCategories}
+          storageKey="clientTasks"
+        />
+      </div>
     </DashboardLayout>
   );
 };

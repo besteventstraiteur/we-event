@@ -42,18 +42,18 @@ const PackageComparisonTable: React.FC<PackageComparisonTableProps> = ({ package
   }
 
   return (
-    <div className="rounded-md border border-vip-gray-200 overflow-x-auto">
+    <div className="rounded-md border border-vip-gray-200 overflow-x-auto bg-white">
       <Table>
         <TableHeader>
           <TableRow className="bg-vip-gray-100">
             <TableHead className="w-[200px]">Détails</TableHead>
             {packages.map(pkg => (
               <TableHead key={pkg.id} className="text-center">
-                <div className="font-bold">{pkg.name}</div>
+                <div className="font-bold truncate">{pkg.name}</div>
                 <div className="flex items-center justify-center gap-1 mt-1">
-                  <Star className="h-4 w-4 fill-vip-gold text-vip-gold" />
-                  <span>{pkg.rating.toFixed(1)}</span>
-                  <span className="text-xs text-vip-gray-400">({pkg.reviewCount})</span>
+                  <Star className="h-4 w-4 flex-shrink-0 fill-vip-gold text-vip-gold" />
+                  <span className="truncate">{pkg.rating.toFixed(1)}</span>
+                  <span className="text-xs text-vip-gray-400 truncate">({pkg.reviewCount})</span>
                 </div>
               </TableHead>
             ))}
@@ -64,10 +64,10 @@ const PackageComparisonTable: React.FC<PackageComparisonTableProps> = ({ package
             <TableCell className="font-medium">Prix</TableCell>
             {packages.map(pkg => (
               <TableCell key={`${pkg.id}-price`} className="text-center">
-                <div className="text-xl font-bold text-vip-gold">{formatPrice(pkg.totalPrice)}</div>
+                <div className="text-xl font-bold text-vip-gold truncate">{formatPrice(pkg.totalPrice)}</div>
                 {pkg.discount > 0 && (
                   <div className="text-sm">
-                    <span className="line-through text-vip-gray-400">
+                    <span className="line-through text-vip-gray-400 truncate">
                       {formatPrice(pkg.originalPrice)}
                     </span>
                     <span className="text-green-400 ml-2">
@@ -89,15 +89,15 @@ const PackageComparisonTable: React.FC<PackageComparisonTableProps> = ({ package
                     {service ? (
                       <div>
                         <div className="flex items-center justify-center text-green-400">
-                          <CheckCircle className="h-5 w-5 mr-1" />
-                          <span>Inclus</span>
+                          <CheckCircle className="h-5 w-5 mr-1 flex-shrink-0" />
+                          <span className="truncate">Inclus</span>
                         </div>
-                        <div className="text-sm">{service.vendorName}</div>
+                        <div className="text-sm truncate">{service.vendorName}</div>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center text-vip-gray-400">
-                        <XCircle className="h-5 w-5 mr-1" />
-                        <span>Non inclus</span>
+                        <XCircle className="h-5 w-5 mr-1 flex-shrink-0" />
+                        <span className="truncate">Non inclus</span>
                       </div>
                     )}
                   </TableCell>

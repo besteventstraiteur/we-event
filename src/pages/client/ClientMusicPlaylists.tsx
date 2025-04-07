@@ -49,9 +49,9 @@ const ClientMusicPlaylists = () => {
       <h1 className="text-2xl font-bold mb-6">Mes Playlists Musicales</h1>
       
       {error && (
-        <Alert variant="destructive" className="bg-red-900/20 border-red-900 mb-6">
+        <Alert variant="destructive" className="bg-red-50 border-red-200 mb-6">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription className="text-red-400 flex justify-between items-center">
+          <AlertDescription className="text-red-600 flex justify-between items-center">
             <span>{error}</span>
             <button 
               onClick={refresh}
@@ -69,7 +69,7 @@ const ClientMusicPlaylists = () => {
           <Input
             type="search"
             placeholder="Rechercher une playlist ou un morceau..."
-            className="pl-10 bg-vip-gray-900 border-vip-gray-800"
+            className="pl-10 bg-white border-vip-gray-200"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -79,7 +79,7 @@ const ClientMusicPlaylists = () => {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Liste des playlists */}
         <div className="w-full lg:w-1/3 space-y-4">
-          <h2 className="text-lg font-medium text-white flex items-center gap-2">
+          <h2 className="text-lg font-medium flex items-center gap-2">
             <Music className="h-5 w-5" /> Playlists partagées
           </h2>
           
@@ -88,10 +88,10 @@ const ClientMusicPlaylists = () => {
               <p className="text-vip-gray-400">Chargement des playlists...</p>
             </div>
           ) : playlists.length === 0 ? (
-            <Card className="bg-vip-gray-800 border-vip-gray-700">
+            <Card className="bg-white border-vip-gray-200">
               <CardContent className="py-8 text-center">
-                <Music className="mx-auto h-10 w-10 text-vip-gray-600 mb-3" />
-                <p className="text-vip-gray-400 mb-4">
+                <Music className="mx-auto h-10 w-10 text-vip-gray-400 mb-3" />
+                <p className="text-vip-gray-500 mb-4">
                   Aucune playlist partagée par votre DJ
                 </p>
               </CardContent>
@@ -115,7 +115,7 @@ const ClientMusicPlaylists = () => {
           {currentPlaylist ? (
             <>
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-medium text-white">{currentPlaylist.name}</h2>
+                <h2 className="text-lg font-medium">{currentPlaylist.name}</h2>
                 <Button 
                   onClick={() => setIsAddSongModalOpen(true)}
                   className="bg-vip-gold hover:bg-vip-gold/90 text-vip-black"
@@ -126,10 +126,10 @@ const ClientMusicPlaylists = () => {
               </div>
               
               {currentPlaylist.description && (
-                <p className="text-vip-gray-400">{currentPlaylist.description}</p>
+                <p className="text-vip-gray-500">{currentPlaylist.description}</p>
               )}
               
-              <Separator className="bg-vip-gray-700" />
+              <Separator className="bg-vip-gray-200" />
               
               <MusicPlayer
                 song={currentSong}
@@ -139,7 +139,7 @@ const ClientMusicPlaylists = () => {
                 onNext={nextSong}
               />
               
-              <h3 className="text-md font-medium text-white flex items-center gap-2 mt-4">
+              <h3 className="text-md font-medium flex items-center gap-2 mt-4">
                 <PlayIcon className="h-4 w-4" /> Morceaux de la playlist
               </h3>
               
@@ -153,10 +153,10 @@ const ClientMusicPlaylists = () => {
               />
             </>
           ) : (
-            <Card className="bg-vip-gray-800 border-vip-gray-700">
+            <Card className="bg-white border-vip-gray-200">
               <CardContent className="py-12 text-center">
-                <Music className="mx-auto h-12 w-12 text-vip-gray-600 mb-4" />
-                <p className="text-vip-gray-400 mb-2">
+                <Music className="mx-auto h-12 w-12 text-vip-gray-400 mb-4" />
+                <p className="text-vip-gray-500 mb-2">
                   Sélectionnez une playlist pour voir son contenu
                 </p>
                 <p className="text-vip-gray-500 text-sm">
@@ -171,9 +171,9 @@ const ClientMusicPlaylists = () => {
       
       {/* Modal pour ajouter un morceau */}
       <Dialog open={isAddSongModalOpen} onOpenChange={setIsAddSongModalOpen}>
-        <DialogContent className="bg-vip-gray-900 border-vip-gray-700">
+        <DialogContent className="bg-white border-vip-gray-200">
           <DialogHeader>
-            <DialogTitle className="text-white">Ajouter un morceau</DialogTitle>
+            <DialogTitle>Ajouter un morceau</DialogTitle>
           </DialogHeader>
           <AddSongForm 
             onAddSong={handleAddSong}

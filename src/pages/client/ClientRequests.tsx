@@ -18,30 +18,32 @@ const ClientRequests = () => {
 
   return (
     <DashboardLayout type="client">
-      <h1 className="text-2xl font-bold mb-6">Mes Demandes</h1>
-      
-      <Tabs defaultValue="list" className="w-full">
-        <TabsList className="mb-6">
-          <TabsTrigger value="list">Mes demandes</TabsTrigger>
-          <TabsTrigger value="new">Nouvelle demande</TabsTrigger>
-        </TabsList>
+      <div className="bg-white">
+        <h1 className="text-2xl font-bold mb-6">Mes Demandes</h1>
         
-        <TabsContent value="list">
-          <RequestList 
-            requests={requests}
-            navigateToNewTab={navigateToNewTab}
-          />
-        </TabsContent>
-        
-        <TabsContent value="new">
-          <RequestForm
-            newRequest={newRequest}
-            setNewRequest={setNewRequest}
-            handleSubmit={handleSubmit}
-            isLoading={isLoading}
-          />
-        </TabsContent>
-      </Tabs>
+        <Tabs defaultValue="list" className="w-full">
+          <TabsList className="mb-6 bg-vip-gray-100">
+            <TabsTrigger value="list" className="data-[state=active]:bg-white">Mes demandes</TabsTrigger>
+            <TabsTrigger value="new" className="data-[state=active]:bg-white">Nouvelle demande</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="list" className="bg-white">
+            <RequestList 
+              requests={requests}
+              navigateToNewTab={navigateToNewTab}
+            />
+          </TabsContent>
+          
+          <TabsContent value="new" className="bg-white">
+            <RequestForm
+              newRequest={newRequest}
+              setNewRequest={setNewRequest}
+              handleSubmit={handleSubmit}
+              isLoading={isLoading}
+            />
+          </TabsContent>
+        </Tabs>
+      </div>
     </DashboardLayout>
   );
 };
