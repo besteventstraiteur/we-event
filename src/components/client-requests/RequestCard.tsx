@@ -1,10 +1,8 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import GoldButton from "@/components/GoldButton";
 import RequestMessage from "./RequestMessage";
-
 interface Request {
   id: number;
   title: string;
@@ -21,14 +19,14 @@ interface Request {
     date: string;
   }[];
 }
-
 interface RequestCardProps {
   request: Request;
 }
-
-const RequestCard: React.FC<RequestCardProps> = ({ request }) => {
+const RequestCard: React.FC<RequestCardProps> = ({
+  request
+}) => {
   const getStatusBadge = (status: string) => {
-    switch(status) {
+    switch (status) {
       case "pending":
         return <Badge className="bg-amber-500">En attente</Badge>;
       case "in_progress":
@@ -41,9 +39,7 @@ const RequestCard: React.FC<RequestCardProps> = ({ request }) => {
         return <Badge>Inconnu</Badge>;
     }
   };
-
-  return (
-    <Card className="bg-vip-gray-900 border-vip-gray-800">
+  return <Card className="bg-vip-gray-900 border-vip-gray-800">
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
@@ -65,19 +61,15 @@ const RequestCard: React.FC<RequestCardProps> = ({ request }) => {
         <div className="mt-6 border-t border-vip-gray-800 pt-4">
           <h4 className="text-vip-gold font-semibold mb-3">Messages ({request.messages.length})</h4>
           <div className="space-y-3">
-            {request.messages.map(message => (
-              <RequestMessage key={message.id} message={message} />
-            ))}
+            {request.messages.map(message => <RequestMessage key={message.id} message={message} />)}
           </div>
         </div>
       </CardContent>
       <CardFooter>
-        <GoldButton variant="outline" className="w-full">
+        <GoldButton variant="outline" className="w-full text-slate-50">
           Répondre
         </GoldButton>
       </CardFooter>
-    </Card>
-  );
+    </Card>;
 };
-
 export default RequestCard;
