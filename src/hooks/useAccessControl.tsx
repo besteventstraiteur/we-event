@@ -23,12 +23,19 @@ export function useAccessControl(initialUser?: AccessControlUser) {
         const storedUser = localStorage.getItem('currentUser');
         const storedEmail = localStorage.getItem('weddingPlannerEmail');
         
+        console.log("Access Control - Stored user:", storedUser);
+        console.log("Access Control - Stored email:", storedEmail);
+        
         // Si nous avons un utilisateur stocké, utilisons-le
         if (storedUser) {
-          setCurrentUser(JSON.parse(storedUser));
+          const parsedUser = JSON.parse(storedUser);
+          console.log("Access Control - Using stored user:", parsedUser);
+          setCurrentUser(parsedUser);
         } 
         // Sinon, utilisons l'email pour déterminer le type d'utilisateur
         else if (storedEmail) {
+          console.log("Access Control - Creating user from email:", storedEmail);
+          
           // Déterminer le type d'utilisateur à partir de l'email
           if (storedEmail.includes('admin')) {
             setCurrentUser({
@@ -80,6 +87,7 @@ export function useAccessControl(initialUser?: AccessControlUser) {
             });
           }
         } else {
+          console.log("Access Control - No user data found");
           setCurrentUser(null);
         }
       } catch (error) {

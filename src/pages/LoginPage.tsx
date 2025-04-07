@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "@/components/AuthLayout";
@@ -29,6 +30,14 @@ const LoginPage = () => {
   const { toast } = useToast();
   const deviceType = useDeviceType();
   const isMobileDevice = deviceType === 'mobile' || deviceType === 'tablet';
+  
+  // Store login redirect info to help with debugging
+  const [authDebugInfo, setAuthDebugInfo] = useState<{
+    email?: string;
+    userType?: string;
+    redirectPath?: string;
+    redirectAttempted?: boolean;
+  }>({});
 
   useEffect(() => {
     const nativePlatform = Capacitor.isNativePlatform();
@@ -69,6 +78,10 @@ const LoginPage = () => {
         localStorage.removeItem("weddingPlannerEmail");
         localStorage.removeItem("weddingPlannerRememberMe");
       }
+
+      // Store user login info in local storage to persist between page refreshes
+      const userData = prepareUserData(email);
+      localStorage.setItem('currentUser', JSON.stringify(userData));
 
       setTimeout(() => {
         const requires2FA = email.includes("secure") || localStorage.getItem('2fa_enabled') === 'true';
@@ -153,21 +166,92 @@ const LoginPage = () => {
     }
   };
 
-  const redirectAfterLogin = (userEmail: string = '') => {
-    const isClient = userEmail.includes("client");
-    const isPartner = userEmail.includes("partner");
-    const isAdmin = userEmail.includes("admin");
+  // Prepare user data based on email
+  const prepareUserData = (userEmail: string = '') => {
+    const email = userEmail || localStorage.getItem('weddingPlannerEmail') || '';
+    
+    // For debugging purposes, update the auth debug info
+    setAuthDebugInfo(prev => ({
+      ...prev,
+      email: email,
+      userType: email.includes("admin") ? "admin" : 
+               email.includes("partner") ? "partner" : 
+               email.includes("client") ? "client" : "unknown"
+    }));
 
-    if (isClient) {
-      navigate("/client/dashboard");
-    } else if (isPartner) {
-      navigate("/partner/dashboard");
-    } else if (isAdmin) {
-      navigate("/admin/dashboard");
+    if (email.includes("admin")) {
+      return {
+        id: 'admin-1',
+        role: 'admin',
+        permissions: ['view_dashboard', 'access_admin', 'manage_partners', 'manage_clients'],
+        email: email,
+        name: 'Admin Test'
+      };
+    } else if (email.includes("partner")) {
+      // Déterminer le type de partenaire (pour la démo)
+      let partnerType = "general";
+      
+      if (email.includes("photo")) partnerType = "photographer";
+      else if (email.includes("dj")) partnerType = "dj";
+      else if (email.includes("catering")) partnerType = "caterer";
+      else if (email.includes("venue")) partnerType = "venue";
+      
+      return {
+        id: 'partner-1',
+        role: 'partner',
+        partnerType: partnerType,
+        permissions: ['view_dashboard', 'manage_requests'],
+        email: email,
+        name: 'Partenaire Test'
+      };
+    } else if (email.includes("client")) {
+      return {
+        id: 'client-1',
+        role: 'client',
+        permissions: ['view_dashboard', 'manage_guests'],
+        email: email,
+        name: 'Client Test'
+      };
     } else {
-      navigate("/client/dashboard");
+      return {
+        id: 'demo-user',
+        role: 'client',
+        permissions: ['view_dashboard'],
+        email: email,
+        name: 'Utilisateur Démo'
+      };
     }
+  };
 
+  const redirectAfterLogin = (userEmail: string = '') => {
+    const email = userEmail || localStorage.getItem('weddingPlannerEmail') || '';
+    const isClient = email.includes("client");
+    const isPartner = email.includes("partner");
+    const isAdmin = email.includes("admin");
+    
+    let redirectPath = "/client/dashboard";
+    
+    if (isClient) {
+      redirectPath = "/client/dashboard";
+    } else if (isPartner) {
+      redirectPath = "/partner/dashboard";
+    } else if (isAdmin) {
+      redirectPath = "/admin/dashboard";
+    }
+    
+    // Update debug info
+    setAuthDebugInfo(prev => ({
+      ...prev,
+      redirectPath: redirectPath,
+      redirectAttempted: true
+    }));
+    
+    console.log(`Redirecting to ${redirectPath} for user type: ${isAdmin ? 'admin' : isPartner ? 'partner' : 'client'}`);
+    
+    // Force navigation with replace to prevent back button issues
+    navigate(redirectPath, { replace: true });
+    
+    // Show success toast only after redirect is initiated
     toast({
       title: "Connexion réussie",
       description: "Bienvenue sur votre espace VIP",
@@ -278,6 +362,23 @@ const LoginPage = () => {
             isLoading={isLoading}
             resetSent={resetSent}
           />
+        )}
+        
+        {authDebugInfo.redirectAttempted && (
+          <div className="mt-4 p-3 border border-amber-200 bg-amber-50 rounded-md text-sm">
+            <p><strong>Debug:</strong> Redirection tentée pour {authDebugInfo.email} ({authDebugInfo.userType}) vers {authDebugInfo.redirectPath}</p>
+            <p className="mt-1 text-xs">Si vous voyez toujours cette page, veuillez essayer de cliquer manuellement sur le lien ci-dessous:</p>
+            <div className="mt-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full"
+                onClick={() => navigate(authDebugInfo.redirectPath || '/admin/dashboard', { replace: true })}
+              >
+                Aller vers {authDebugInfo.redirectPath}
+              </Button>
+            </div>
+          </div>
         )}
       </AuthLayout>
     </MobileOptimizedLayout>
