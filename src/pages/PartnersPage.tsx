@@ -54,6 +54,11 @@ const PartnersPage = () => {
           <Link to="/">
             <Logo />
           </Link>
+          <div className="hidden md:flex items-center space-x-6">
+            <Link to="/" className="text-vip-gray-600 hover:text-vip-gold">Accueil</Link>
+            <Link to="/partners" className="text-vip-gold font-semibold">Prestataires</Link>
+            <Link to="/contact" className="text-vip-gray-600 hover:text-vip-gold">Contact</Link>
+          </div>
           <div className="flex items-center space-x-4">
             <Link to="/login">
               <GoldButton variant="outline" size="sm">
@@ -178,7 +183,7 @@ const PartnersPage = () => {
               <Logo />
             </Link>
             <p className="text-vip-gray-500 text-sm">
-              © {new Date().getFullYear()} Best Events VIP. Tous droits réservés.
+              © {new Date().getFullYear()} We Event. Tous droits réservés.
             </p>
             <div className="flex gap-4">
               <Link to="/privacy" className="text-vip-gray-600 hover:text-vip-gold text-sm">

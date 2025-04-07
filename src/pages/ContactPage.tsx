@@ -57,6 +57,11 @@ const ContactPage = () => {
           <Link to="/">
             <Logo />
           </Link>
+          <div className="hidden md:flex items-center space-x-6">
+            <Link to="/" className="text-vip-gray-600 hover:text-vip-gold">Accueil</Link>
+            <Link to="/partners" className="text-vip-gray-600 hover:text-vip-gold">Prestataires</Link>
+            <Link to="/contact" className="text-vip-gold font-semibold">Contact</Link>
+          </div>
           <div className="flex items-center space-x-4">
             <Link to="/login">
               <GoldButton variant="outline" size="sm">
@@ -158,8 +163,8 @@ const ContactPage = () => {
                     <Mail className="text-vip-gold mr-3 mt-1" size={20} />
                     <div>
                       <p className="font-medium text-vip-black">Email</p>
-                      <a href="mailto:contact@best-events-vip.com" className="text-vip-gray-700 hover:text-vip-gold">
-                        contact@best-events-vip.com
+                      <a href="mailto:contact@we-event.com" className="text-vip-gray-700 hover:text-vip-gold">
+                        contact@we-event.com
                       </a>
                     </div>
                   </div>
@@ -242,7 +247,7 @@ const ContactPage = () => {
               <Logo />
             </Link>
             <p className="text-vip-gray-500 text-sm">
-              © {new Date().getFullYear()} Best Events VIP. Tous droits réservés.
+              © {new Date().getFullYear()} We Event. Tous droits réservés.
             </p>
             <div className="flex gap-4">
               <Link to="/privacy" className="text-vip-gray-500 hover:text-vip-gold text-sm">
