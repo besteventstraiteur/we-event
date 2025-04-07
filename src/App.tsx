@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
@@ -71,6 +72,7 @@ import PartnerMusicPlaylists from './pages/partner/PartnerMusicPlaylists';
 import PartnerGamification from './pages/partner/PartnerGamification';
 import PartnerBestAwards from './pages/partner/PartnerBestAwards';
 import PartnerCalendar from './pages/partner/PartnerCalendar';
+import PartnerMenus from './pages/partner/PartnerMenus';
 
 // Security Components
 import AdminRoute from './components/security/AdminRoute';

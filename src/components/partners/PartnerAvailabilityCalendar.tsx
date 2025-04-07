@@ -58,9 +58,6 @@ const PartnerAvailabilityCalendar: React.FC<PartnerAvailabilityCalendarProps> = 
             }}
             disabled={{ before: new Date() }}
             readOnly
-            styles={{
-              day_today: { className: "custom-today" }
-            }}
           />
         </div>
         
