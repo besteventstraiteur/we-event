@@ -23,6 +23,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { currentUser, isLoading, hasPermission } = useAccessControl();
   const location = useLocation();
 
+  console.log("ProtectedRoute - currentUser:", currentUser);
+  console.log("ProtectedRoute - allowedRoles:", allowedRoles);
+  
   // Afficher un indicateur de chargement pendant la vérification
   if (isLoading) {
     return (
@@ -35,29 +38,35 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Vérifier si l'utilisateur est connecté
   if (!currentUser) {
+    console.log("ProtectedRoute - User not authenticated, redirecting to:", fallbackPath);
     // Rediriger vers la page de connexion tout en enregistrant la page actuelle
     return <Navigate to={fallbackPath} state={{ from: location.pathname }} replace />;
   }
 
   // If role is specified, check if user has that role
   if (role && currentUser.role !== role) {
+    console.log("ProtectedRoute - User doesn't have required role:", role);
     return <Navigate to="/unauthorized" replace />;
   }
 
   // Vérifier les rôles si spécifiés
   if (allowedRoles && allowedRoles.length > 0) {
-    const hasAllowedRole = allowedRoles.includes(currentUser.role);
+    const hasAllowedRole = allowedRoles.includes(currentUser.role as UserRole);
+    console.log("ProtectedRoute - hasAllowedRole:", hasAllowedRole, "user role:", currentUser.role);
     if (!hasAllowedRole) {
+      console.log("ProtectedRoute - User doesn't have any of the allowed roles");
       return <Navigate to="/unauthorized" replace />;
     }
   }
 
   // Vérifier la permission si spécifiée
   if (requiredPermission && !hasPermission(requiredPermission)) {
+    console.log("ProtectedRoute - User doesn't have required permission:", requiredPermission);
     return <Navigate to="/unauthorized" replace />;
   }
 
   // Si toutes les vérifications sont passées, afficher le contenu protégé
+  console.log("ProtectedRoute - All checks passed, showing protected content");
   return <>{children}</>;
 };
 

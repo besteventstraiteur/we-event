@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
@@ -79,6 +80,7 @@ import PartnerSubscription from "./pages/partner/PartnerSubscription";
 // Security Components
 import AdminRoute from './components/security/AdminRoute';
 import ProtectedRoute from './components/security/ProtectedRoute';
+import { UserRole } from './utils/accessControl';
 
 function App() {
   return (
@@ -157,7 +159,10 @@ function App() {
         <Route path="/partner/podcasts" element={<PartnerPodcasts />} />
         <Route path="/partner/talkshows" element={<PartnerTalkshows />} />
         <Route path="/partner/subscription" element={
-          <ProtectedRoute role="partner">
+          <ProtectedRoute 
+            allowedRoles={[UserRole.PARTNER]} 
+            fallbackPath="/login"
+          >
             <PartnerSubscription />
           </ProtectedRoute>
         } />
