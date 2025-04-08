@@ -13,7 +13,8 @@ import {
   Headphones,
   Presentation,
   UserCog,
-  BarChart
+  BarChart,
+  CreditCard
 } from "lucide-react";
 
 const AdminNavigation = () => {
@@ -43,6 +44,11 @@ const AdminNavigation = () => {
         icon={<UserCog size={20} />}
         title="Types Partenaires"
         href="/admin/partner-types"
+      />
+      <NavItem
+        icon={<CreditCard size={20} />}
+        title="Abonnements"
+        href="/admin/subscriptions"
       />
       <NavItem
         icon={<Users size={20} />}

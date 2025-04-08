@@ -34,6 +34,7 @@ import AdminBackup from './pages/admin/AdminBackup';
 import AdminPresentationManagement from './pages/admin/AdminPresentationManagement';
 import AdminPartnerTypes from './pages/admin/AdminPartnerTypes';
 import AdminStatistics from './pages/admin/AdminStatistics';
+import AdminSubscriptions from './pages/admin/AdminSubscriptions';
 
 // Client Pages
 import ClientDashboard from './pages/client/ClientDashboard';
@@ -118,6 +119,7 @@ function App() {
         <Route path="/admin/partner-gamification" element={<AdminRoute><AdminPartnerGamification /></AdminRoute>} />
         <Route path="/admin/backup" element={<AdminRoute><AdminBackup /></AdminRoute>} />
         <Route path="/admin/presentation" element={<AdminRoute><AdminPresentationManagement /></AdminRoute>} />
+        <Route path="/admin/subscriptions" element={<AdminRoute><AdminSubscriptions /></AdminRoute>} />
 
         {/* Client Pages */}
         <Route path="/client/dashboard" element={<ClientDashboard />} />
