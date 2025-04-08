@@ -1,24 +1,59 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { handleSocialLogin } from "@/utils/authUtils";
-import { Lock, Facebook, Mail, Apple } from "lucide-react";
+import { Facebook, Apple, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+// Define the available social providers
+type SocialProvider = 'google' | 'facebook' | 'apple';
 
 interface SocialLoginButtonsProps {
   onLoginSuccess: (userEmail?: string) => void;
 }
 
+interface SocialButtonProps {
+  provider: SocialProvider;
+  isLoading: string | null;
+  onClick: (provider: SocialProvider) => void;
+  children: React.ReactNode;
+  icon: React.ReactNode;
+}
+
+// Reusable social button component
+const SocialButton: React.FC<SocialButtonProps> = ({ 
+  provider, 
+  isLoading, 
+  onClick, 
+  children, 
+  icon
+}) => (
+  <Button
+    variant="outline"
+    className="w-full flex items-center gap-3 relative"
+    onClick={() => onClick(provider)}
+    disabled={!!isLoading}
+  >
+    {isLoading === provider ? (
+      <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-current"></div>
+    ) : icon}
+    <span className="flex-1">{children}</span>
+    <Lock className="h-4 w-4 text-gray-400" />
+  </Button>
+);
+
+// Main component for social login buttons
 const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ onLoginSuccess }) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleLogin = async (provider: 'google' | 'facebook' | 'apple') => {
+  const handleLogin = async (provider: SocialProvider) => {
     setIsLoading(provider);
     
     try {
-      // Simuler un délai court pour afficher le message de sécurité SSL/TLS
+      // Simulate a delay for showing the SSL/TLS security message
       setTimeout(() => {
         toast({
           title: "Connexion sécurisée",
@@ -55,50 +90,32 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ onLoginSuccess 
 
   return (
     <div className="space-y-3">
-      <Button
-        variant="outline"
-        className="w-full flex items-center gap-3 relative"
-        onClick={() => handleLogin('google')}
-        disabled={!!isLoading}
+      <SocialButton 
+        provider="google" 
+        isLoading={isLoading} 
+        onClick={handleLogin}
+        icon={<GoogleIcon className="h-5 w-5" />}
       >
-        {isLoading === 'google' ? (
-          <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-current"></div>
-        ) : (
-          <GoogleIcon className="h-5 w-5" />
-        )}
-        <span className="flex-1">Continuer avec Google</span>
-        <Lock className="h-4 w-4 text-gray-400" />
-      </Button>
+        Continuer avec Google
+      </SocialButton>
       
-      <Button
-        variant="outline"
-        className="w-full flex items-center gap-3 relative"
-        onClick={() => handleLogin('facebook')}
-        disabled={!!isLoading}
+      <SocialButton 
+        provider="facebook" 
+        isLoading={isLoading} 
+        onClick={handleLogin}
+        icon={<Facebook className="h-5 w-5 text-blue-600" />}
       >
-        {isLoading === 'facebook' ? (
-          <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-current"></div>
-        ) : (
-          <Facebook className="h-5 w-5 text-blue-600" />
-        )}
-        <span className="flex-1">Continuer avec Facebook</span>
-        <Lock className="h-4 w-4 text-gray-400" />
-      </Button>
+        Continuer avec Facebook
+      </SocialButton>
       
-      <Button
-        variant="outline"
-        className="w-full flex items-center gap-3 relative"
-        onClick={() => handleLogin('apple')}
-        disabled={!!isLoading}
+      <SocialButton 
+        provider="apple" 
+        isLoading={isLoading} 
+        onClick={handleLogin}
+        icon={<Apple className="h-5 w-5" />}
       >
-        {isLoading === 'apple' ? (
-          <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-current"></div>
-        ) : (
-          <Apple className="h-5 w-5" />
-        )}
-        <span className="flex-1">Continuer avec Apple</span>
-        <Lock className="h-4 w-4 text-gray-400" />
-      </Button>
+        Continuer avec Apple
+      </SocialButton>
       
       <div className="text-xs text-center text-gray-500 flex items-center justify-center gap-1">
         <Lock className="h-3 w-3" />
@@ -108,6 +125,7 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ onLoginSuccess 
   );
 };
 
+// Google icon component (SVG)
 const GoogleIcon = ({ className }: { className?: string }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
