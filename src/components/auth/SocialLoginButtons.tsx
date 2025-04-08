@@ -1,9 +1,9 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { handleSocialLogin } from "@/utils/authUtils";
 import { Lock, Facebook, Mail, Apple } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface SocialLoginButtonsProps {
   onLoginSuccess: (userEmail?: string) => void;
@@ -12,6 +12,7 @@ interface SocialLoginButtonsProps {
 const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ onLoginSuccess }) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleLogin = async (provider: 'google' | 'facebook' | 'apple') => {
     setIsLoading(provider);
@@ -107,7 +108,6 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ onLoginSuccess 
   );
 };
 
-// Icône Google personnalisée pour correspondre au style de l'application
 const GoogleIcon = ({ className }: { className?: string }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 

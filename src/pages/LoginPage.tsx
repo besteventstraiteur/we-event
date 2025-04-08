@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "@/components/AuthLayout";
@@ -250,7 +251,8 @@ const LoginPage = () => {
     
     console.log(`Redirecting to ${redirectPath} for user type: ${isAdmin ? 'admin' : isPartner ? 'partner' : 'client'}`);
     
-    window.location.href = redirectPath;
+    // Utiliser navigate au lieu de window.location.href pour une navigation SPA
+    navigate(redirectPath, { replace: true });
     
     toast({
       title: "Connexion réussie",
