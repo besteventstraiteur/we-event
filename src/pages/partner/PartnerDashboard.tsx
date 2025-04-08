@@ -27,6 +27,30 @@ const PartnerDashboard = () => {
     navigate("/partner/subscription");
   };
 
+  // Helper function to get badge styling based on subscription tier
+  const getBadgeStyling = (tier: SubscriptionTier): string => {
+    switch (tier) {
+      case SubscriptionTier.PREMIUM:
+        return 'bg-amber-500/20 text-amber-500 border-amber-500/50';
+      case SubscriptionTier.STANDARD:
+        return 'bg-blue-500/20 text-blue-500 border-blue-500/50';
+      default:
+        return 'bg-vip-gray-700/20 text-vip-gray-400 border-vip-gray-700/50';
+    }
+  };
+
+  // Helper function to get subscription tier display name
+  const getSubscriptionName = (tier: SubscriptionTier): string => {
+    switch (tier) {
+      case SubscriptionTier.PREMIUM:
+        return 'Premium';
+      case SubscriptionTier.STANDARD:
+        return 'Standard';
+      default:
+        return 'Gratuit';
+    }
+  };
+
   return (
     <DashboardLayout type="partner">
       <div className="space-y-8">
@@ -83,19 +107,9 @@ const PartnerDashboard = () => {
                 <p className="text-vip-white">
                   <Badge 
                     variant="outline" 
-                    className={
-                      subscriptionTier === SubscriptionTier.PREMIUM 
-                        ? 'bg-amber-500/20 text-amber-500 border-amber-500/50' 
-                        : subscriptionTier === SubscriptionTier.STANDARD 
-                        ? 'bg-blue-500/20 text-blue-500 border-blue-500/50' 
-                        : 'bg-vip-gray-700/20 text-vip-gray-400 border-vip-gray-700/50'
-                    }
+                    className={getBadgeStyling(subscriptionTier)}
                   >
-                    {subscriptionTier === SubscriptionTier.PREMIUM 
-                      ? 'Premium' 
-                      : subscriptionTier === SubscriptionTier.STANDARD 
-                      ? 'Standard' 
-                      : 'Gratuit'}
+                    {getSubscriptionName(subscriptionTier)}
                   </Badge>
                 </p>
                 <p className="text-xs text-vip-gray-400 cursor-pointer hover:text-vip-gold" onClick={handleSubscriptionClick}>
