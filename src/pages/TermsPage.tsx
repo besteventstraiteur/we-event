@@ -30,7 +30,7 @@ const TermsPage = () => {
             <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">1. Acceptation des conditions</h2>
               <p>
-                En accédant et en utilisant le service Best Events VIP, vous acceptez d'être lié par les présentes 
+                En accédant et en utilisant le service We Event, vous acceptez d'être lié par les présentes 
                 Conditions Générales d'Utilisation. Si vous n'acceptez pas toutes les conditions, vous ne pouvez pas 
                 accéder au service.
               </p>
@@ -39,7 +39,7 @@ const TermsPage = () => {
             <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">2. Description du service</h2>
               <p className="mb-4">
-                Best Events VIP est une plateforme exclusive qui met en relation des clients VIP et des partenaires 
+                We Event est une plateforme exclusive qui met en relation des clients VIP et des partenaires 
                 professionnels de l'événementiel. Notre service comprend l'accès à un réseau de partenaires sélectionnés, 
                 des conseils d'experts via des podcasts exclusifs, et des avantages tarifaires pour nos membres.
               </p>
@@ -82,7 +82,7 @@ const TermsPage = () => {
               <h2 className="text-xl font-semibold text-vip-gold mb-4">5. Contenu du service</h2>
               <p className="mb-4">
                 Le contenu disponible via notre service, y compris les podcasts, textes, graphiques, logos, images et vidéos, 
-                est la propriété de Best Events VIP ou de ses concédants de licence et est protégé par les lois sur la propriété 
+                est la propriété de We Event ou de ses concédants de licence et est protégé par les lois sur la propriété 
                 intellectuelle.
               </p>
               <p>
@@ -107,19 +107,19 @@ const TermsPage = () => {
             <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">7. Mise en relation</h2>
               <p className="mb-4">
-                Best Events VIP agit uniquement comme intermédiaire entre les clients et les partenaires. Nous ne sommes pas 
+                We Event agit uniquement comme intermédiaire entre les clients et les partenaires. Nous ne sommes pas 
                 responsables des services fournis par les partenaires et n'offrons aucune garantie quant à la qualité de ces services.
               </p>
               <p>
                 Tout contrat pour la fourniture de services est conclu directement entre le client et le partenaire, 
-                Best Events VIP n'étant pas partie à ce contrat.
+                We Event n'étant pas partie à ce contrat.
               </p>
             </section>
             
             <section className="bg-white">
               <h2 className="text-xl font-semibold text-vip-gold mb-4">8. Limitation de responsabilité</h2>
               <p>
-                Dans toute la mesure permise par la loi applicable, Best Events VIP ne sera pas responsable des dommages 
+                Dans toute la mesure permise par la loi applicable, We Event ne sera pas responsable des dommages 
                 indirects, spéciaux, accessoires, consécutifs ou punitifs, y compris la perte de profits ou de revenus, 
                 résultant de votre utilisation du service ou de votre incapacité à utiliser le service.
               </p>
@@ -145,7 +145,7 @@ const TermsPage = () => {
               <h2 className="text-xl font-semibold text-vip-gold mb-4">11. Contact</h2>
               <p>
                 Pour toute question concernant ces conditions, veuillez nous contacter à l'adresse : 
-                contact@best-events-vip.com
+                contact@we-event.com
               </p>
             </section>
           </div>
@@ -165,7 +165,7 @@ const TermsPage = () => {
               <Logo />
             </Link>
             <p className="text-vip-gray-500 text-sm">
-              © {new Date().getFullYear()} Best Events VIP. Tous droits réservés.
+              © {new Date().getFullYear()} We Event. Tous droits réservés.
             </p>
             <div className="flex gap-4">
               <Link to="/privacy" className="text-vip-gray-500 hover:text-vip-gold text-sm">

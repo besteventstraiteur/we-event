@@ -28,7 +28,7 @@ const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
       <footer className="py-6 border-t border-vip-gray-200">
         <div className="container">
           <p className="text-center text-vip-gray-500 text-sm">
-            © {new Date().getFullYear()} Best Events VIP. Tous droits réservés.
+            © {new Date().getFullYear()} We Event. Tous droits réservés.
           </p>
         </div>
       </footer>

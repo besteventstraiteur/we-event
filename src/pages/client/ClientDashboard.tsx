@@ -128,7 +128,7 @@ const ClientDashboard = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="truncate">Derniers podcasts</CardTitle>
-                <CardDescription className="truncate">Les derniers conseils exclusifs Best Events</CardDescription>
+                <CardDescription className="truncate">Les derniers conseils exclusifs We Event</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -138,7 +138,7 @@ const ClientDashboard = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium truncate">Comment choisir votre lieu de réception</h4>
-                      <p className="text-sm text-muted-foreground truncate">Best Events • 24 min</p>
+                      <p className="text-sm text-muted-foreground truncate">We Event • 24 min</p>
                     </div>
                     <GoldButton variant="outline" size="sm">
                       Écouter

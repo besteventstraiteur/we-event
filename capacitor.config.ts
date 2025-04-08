@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/core';
 
 const config: CapacitorConfig = {
   appId: 'app.lovable.ca616c0b2d17467885719db03e397c9e',
-  appName: 'Best Events VIP',
+  appName: 'We Event',
   webDir: 'dist',
   bundledWebRuntime: false,
   // Configuration de serveur pour le développement
@@ -75,7 +75,7 @@ const config: CapacitorConfig = {
       resizeOnFullScreen: true,
     },
     App: {
-      appName: "Best Events VIP",
+      appName: "We Event",
       appVersion: "1.0.0",
       appBuild: "1"
     },

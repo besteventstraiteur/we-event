@@ -39,7 +39,7 @@ const NewTalkshowForm: React.FC<NewTalkshowFormProps> = ({
       <CardHeader>
         <CardTitle className="text-vip-white">Ajouter un nouveau talkshow</CardTitle>
         <CardDescription className="text-vip-gray-400">
-          Partagez votre expertise vidéo avec la communauté Best Events VIP
+          Partagez votre expertise vidéo avec la communauté We Event
         </CardDescription>
       </CardHeader>
       
@@ -198,7 +198,7 @@ const NewTalkshowForm: React.FC<NewTalkshowFormProps> = ({
               <strong className="text-vip-gold">Notes importantes:</strong>
             </p>
             <ul className="list-disc pl-5 space-y-1">
-              <li>Tous les talkshows sont soumis à validation par l'équipe Best Events VIP</li>
+              <li>Tous les talkshows sont soumis à validation par l'équipe We Event</li>
               <li>Les talkshows approuvés seront disponibles pour tous les clients VIP</li>
               <li>Assurez-vous que votre contenu est original et de qualité professionnelle</li>
               <li>Évitez tout contenu promotionnel direct - privilégiez le partage d'expertise</li>

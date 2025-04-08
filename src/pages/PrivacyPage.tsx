@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
@@ -29,7 +30,7 @@ const PrivacyPage = () => {
             <section>
               <h2 className="text-xl font-semibold text-vip-gold mb-4">1. Introduction</h2>
               <p className="mb-4">
-                La présente Politique de Confidentialité décrit comment Best Events VIP recueille, utilise et protège 
+                La présente Politique de Confidentialité décrit comment We Event recueille, utilise et protège 
                 les informations personnelles que vous nous fournissez lorsque vous utilisez notre service.
               </p>
               <p>
@@ -121,7 +122,7 @@ const PrivacyPage = () => {
               <h2 className="text-xl font-semibold text-vip-gold mb-4">8. Contact</h2>
               <p>
                 Pour toute question concernant cette politique ou pour exercer vos droits en matière de protection des données, 
-                veuillez nous contacter à l'adresse email suivante : privacy@best-events-vip.com
+                veuillez nous contacter à l'adresse email suivante : privacy@we-event.com
               </p>
             </section>
             
@@ -149,7 +150,7 @@ const PrivacyPage = () => {
               <Logo />
             </Link>
             <p className="text-vip-gray-500 text-sm">
-              © {new Date().getFullYear()} Best Events VIP. Tous droits réservés.
+              © {new Date().getFullYear()} We Event. Tous droits réservés.
             </p>
             <div className="flex gap-4">
               <Link to="/privacy" className="text-vip-gold hover:underline text-sm">

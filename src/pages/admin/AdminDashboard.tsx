@@ -12,7 +12,7 @@ const AdminDashboard = () => {
     <DashboardLayout type="admin">
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold">Administration Best Events VIP</h1>
+          <h1 className="text-3xl font-bold">Administration We Event</h1>
           <p className="text-vip-gray-400">Gérez les partenaires, clients et contenus de la plateforme</p>
         </div>
 

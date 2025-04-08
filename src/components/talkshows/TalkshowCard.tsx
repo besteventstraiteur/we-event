@@ -64,7 +64,7 @@ const TalkshowCard: React.FC<TalkshowCardProps> = ({
               <div className="mt-4 flex items-center p-3 bg-amber-500/10 rounded-md">
                 <AlertCircle size={18} className="text-amber-500 mr-2" />
                 <p className="text-sm text-amber-300">
-                  Ce talkshow est en cours de validation par l'équipe Best Events VIP. 
+                  Ce talkshow est en cours de validation par l'équipe We Event. 
                   Vous serez notifié par email dès qu'il sera approuvé.
                 </p>
               </div>

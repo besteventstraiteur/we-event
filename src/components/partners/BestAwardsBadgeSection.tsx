@@ -13,7 +13,7 @@ const BestAwardsBadgeSection = () => {
             <h3 className="font-medium">Reconnaissance de qualité</h3>
           </div>
           <p className="text-amber-700 text-sm">
-            Le badge Best Awards est un symbole d'excellence reconnu par les futurs mariés.
+            Le badge We Event Awards est un symbole d'excellence reconnu par les futurs mariés.
           </p>
         </div>
         
@@ -53,7 +53,7 @@ const BestAwardsBadgeSection = () => {
                 </div>
               </div>
               <div className="text-sm font-medium">{name}</div>
-              <div className="text-xs text-gray-500">Lauréat Best Awards</div>
+              <div className="text-xs text-gray-500">Lauréat We Event Awards</div>
             </div>
           ))}
         </div>
