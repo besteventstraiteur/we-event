@@ -83,13 +83,13 @@ const PartnerDashboard = () => {
                 <p className="text-vip-white">
                   <Badge 
                     variant="outline" 
-                    className={`${
+                    className={
                       subscriptionTier === SubscriptionTier.PREMIUM 
                         ? 'bg-amber-500/20 text-amber-500 border-amber-500/50' 
                         : subscriptionTier === SubscriptionTier.STANDARD 
                         ? 'bg-blue-500/20 text-blue-500 border-blue-500/50' 
                         : 'bg-vip-gray-700/20 text-vip-gray-400 border-vip-gray-700/50'
-                    }`}
+                    }
                   >
                     {subscriptionTier === SubscriptionTier.PREMIUM 
                       ? 'Premium' 
