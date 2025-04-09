@@ -1,4 +1,3 @@
-
 // Fichier de traduction français (langue par défaut)
 const fr = {
   common: {
@@ -144,6 +143,23 @@ const fr = {
       title: "Message envoyé",
       description: "Nous vous répondrons dans les plus brefs délais."
     }
+  },
+  mobile: {
+    welcome: "Bienvenue sur We Event",
+    tagline: "Planifiez vos événements d'exception",
+    versionInfo: "Version",
+    continueAsGuest: "Continuer en tant qu'invité",
+    offlineMessage: "Vous êtes hors ligne",
+    onlineMessage: "Connexion rétablie",
+    installApp: "Installer l'application",
+    installPrompt: "Ajoutez cette application à votre écran d'accueil",
+    openSettings: "Ouvrir les paramètres",
+    locationPermission: "Nous avons besoin de votre localisation pour vous montrer les lieux à proximité",
+    cameraPermission: "Autoriser l'accès à l'appareil photo pour scanner les QR codes",
+    notificationsPermission: "Autoriser les notifications pour rester informé",
+    biometricPrompt: "Utilisez votre empreinte pour un accès rapide",
+    mobileOptimized: "Vue optimisée pour mobile",
+    switchToDesktop: "Passer en vue ordinateur",
   }
 };
 

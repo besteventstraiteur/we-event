@@ -1,4 +1,3 @@
-
 // English translation file
 const en = {
   common: {
@@ -144,6 +143,24 @@ const en = {
       title: "Message sent",
       description: "We'll get back to you as soon as possible."
     }
+  },
+  // Mobile translations
+  mobile: {
+    welcome: "Welcome to We Event",
+    tagline: "Plan your exceptional events",
+    versionInfo: "Version",
+    continueAsGuest: "Continue as guest",
+    offlineMessage: "You are offline",
+    onlineMessage: "Connection restored",
+    installApp: "Install app",
+    installPrompt: "Add this app to your home screen",
+    openSettings: "Open settings",
+    locationPermission: "We need your location to show venues nearby",
+    cameraPermission: "Allow camera access to scan QR codes",
+    notificationsPermission: "Allow notifications to stay informed",
+    biometricPrompt: "Use your fingerprint for quick access",
+    mobileOptimized: "Mobile optimized view",
+    switchToDesktop: "Switch to desktop view",
   }
 };
 
