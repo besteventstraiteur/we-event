@@ -34,7 +34,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ variant = 'standard
           {availableLanguages.map((lang) => (
             <DropdownMenuItem
               key={lang.code}
-              onClick={() => handleLanguageChange(lang.code)}
+              onClick={() => handleLanguageChange(lang.code as LanguageCode)}
               className={language === lang.code ? 'bg-we-beige/50 font-medium' : ''}
             >
               {lang.name}
@@ -57,7 +57,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ variant = 'standard
         {availableLanguages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => handleLanguageChange(lang.code)}
+            onClick={() => handleLanguageChange(lang.code as LanguageCode)}
             className={language === lang.code ? 'bg-we-beige/50 font-medium' : ''}
           >
             {lang.name}
