@@ -7,4 +7,11 @@ export interface Venue {
   capacity: number;
   description: string;
   floorPlan?: string;
+  imageUrl?: string;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+  price?: string;
+  availability?: string[];
 }

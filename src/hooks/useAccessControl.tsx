@@ -42,63 +42,8 @@ export function useAccessControl(initialUser?: AccessControlUser) {
             }
           }
           setCurrentUser(parsedUser);
-        } 
-        // Sinon, utilisons l'email pour déterminer le type d'utilisateur
-        else if (storedEmail) {
-          console.log("Access Control - Creating user from email:", storedEmail);
-          
-          // Déterminer le type d'utilisateur à partir de l'email
-          if (storedEmail.includes('admin')) {
-            setCurrentUser({
-              id: 'admin-1',
-              role: UserRole.ADMIN,
-              permissions: Object.values(Permission),
-              email: storedEmail,
-              name: 'Admin Test'
-            });
-          } else if (storedEmail.includes('partner')) {
-            // Déterminer le type de partenaire (pour la démo)
-            let partnerType = PartnerType.GENERAL;
-            
-            if (storedEmail.includes('photo')) partnerType = PartnerType.PHOTOGRAPHER;
-            else if (storedEmail.includes('dj')) partnerType = PartnerType.DJ;
-            else if (storedEmail.includes('catering')) partnerType = PartnerType.CATERER;
-            else if (storedEmail.includes('venue')) partnerType = PartnerType.VENUE;
-            
-            setCurrentUser({
-              id: 'partner-1',
-              role: UserRole.PARTNER,
-              partnerType: partnerType,
-              permissions: [
-                Permission.VIEW_DASHBOARD,
-                Permission.MANAGE_REQUESTS
-              ],
-              email: storedEmail,
-              name: 'Partenaire Test'
-            });
-          } else if (storedEmail.includes('client')) {
-            setCurrentUser({
-              id: 'client-1',
-              role: UserRole.CLIENT,
-              permissions: [
-                Permission.VIEW_DASHBOARD,
-                Permission.MANAGE_GUESTS
-              ],
-              email: storedEmail,
-              name: 'Client Test'
-            });
-          } else {
-            // Utilisateur par défaut pour la démonstration
-            setCurrentUser({
-              id: 'demo-user',
-              role: UserRole.CLIENT,
-              permissions: [Permission.VIEW_DASHBOARD],
-              email: storedEmail,
-              name: 'Utilisateur Démo'
-            });
-          }
         } else {
-          console.log("Access Control - No user data found");
+          // Aucun utilisateur trouvé
           setCurrentUser(null);
         }
       } catch (error) {

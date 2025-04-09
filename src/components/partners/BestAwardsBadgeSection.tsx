@@ -45,7 +45,7 @@ const BestAwardsBadgeSection = () => {
       <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
         <h3 className="text-lg font-medium mb-4 text-center">Nos lauréats 2024</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {['Château des Merveilles', 'Fleurs Élégance', 'Studio Photo Elite', 'Harmony Musique'].map((name, i) => (
+          {['Château des Merveilles', 'Studio Photo Elite'].map((name, i) => (
             <div key={i} className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm text-center">
               <div className="flex justify-center mb-2">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center bg-amber-500">
