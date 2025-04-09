@@ -6,7 +6,7 @@ type LanguageContextType = {
   language: LanguageCode;
   setLanguage: (lang: LanguageCode) => void;
   t: (key: string) => string;
-  availableLanguages: { code: LanguageCode; name: string }[];
+  availableLanguages: typeof availableLanguages;
 };
 
 const defaultLanguage: LanguageCode = 'fr';
