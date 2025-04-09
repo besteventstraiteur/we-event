@@ -27,7 +27,8 @@ const en = {
     clientSpace: "Client Portal",
     partnerSpace: "Partner Portal",
     administration: "Administration",
-    guest: "Guest"
+    guest: "Guest",
+    dashboard: "Dashboard"
   },
   auth: {
     loginTitle: "Login",
@@ -68,6 +69,22 @@ const en = {
     joinVipButton: "Join the VIP Club",
     seeDetails: "See details",
   },
+  partner: {
+    subscription: "My Subscription",
+    tasks: "Tasks",
+    clientRequests: "Client Requests",
+    statistics: "Statistics",
+    recommendations: "Recommendations",
+    loyaltyProgram: "Loyalty Program",
+    bestAwards: "Best Awards 2025",
+    calendar: "Calendar",
+    photos: "Photos",
+    playlists: "Playlists",
+    menus: "Menus",
+    floorPlans: "Floor Plans",
+    podcasts: "Podcasts",
+    talkshows: "Talkshows"
+  },
   guest: {
     attendance: "Confirm your attendance",
     attendanceDescription: "Please let us know if you will be attending this event.",
@@ -85,7 +102,10 @@ const en = {
     questions: "If you have any questions, please don't hesitate to contact the organizers",
     information: "Information",
     guestbook: "Guestbook",
-    giftFund: "Gift Fund"
+    giftFund: "Gift Fund",
+    menuConfirmation: "Your menu selection has been saved",
+    menuThankYou: "Thank you for selecting your menu. You can modify your choice until the deadline.",
+    menuDeadlineInfo: "You can modify your choice until June 1, 2024."
   },
   contact: {
     title: "Contact Us",

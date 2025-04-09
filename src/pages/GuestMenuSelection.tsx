@@ -7,12 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Logo from '@/components/Logo';
 import GuestMenuSelectionComponent from '@/components/guest-menu/GuestMenuSelection';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const GuestMenuSelection: React.FC = () => {
   const { eventId, guestId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [menuSubmitted, setMenuSubmitted] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const handleMenuSubmitted = () => {
@@ -46,7 +48,7 @@ const GuestMenuSelection: React.FC = () => {
             className="text-gray-600"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Retour
+            {t('common.back')}
           </Button>
         </div>
       </header>
@@ -61,27 +63,27 @@ const GuestMenuSelection: React.FC = () => {
                 </div>
               </div>
               <CardTitle className="text-center text-green-700">
-                Votre choix de menu a été enregistré
+                {t('guest.menuConfirmation')}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-4 text-center">
               <p className="text-gray-600 mb-4">
-                Merci d'avoir sélectionné votre menu. Vous pouvez modifier votre choix jusqu'à la date limite.
+                {t('guest.menuThankYou')}
               </p>
               <Button 
                 onClick={handleBackToDashboard}
                 className="bg-vip-gold hover:bg-vip-gold/90 text-white"
               >
-                Retour au tableau de bord
+                {t('common.back')}
               </Button>
             </CardContent>
           </Card>
         ) : (
           <>
-            <h1 className="text-2xl font-bold text-center mb-6 text-vip-gold">Sélection du menu</h1>
+            <h1 className="text-2xl font-bold text-center mb-6 text-vip-gold">{t('guest.menuSelection')}</h1>
             <p className="text-center text-gray-600 mb-8">
-              Veuillez sélectionner votre menu pour l'événement.<br />
-              <span className="text-sm">Vous pouvez modifier votre choix jusqu'au 01 juin 2024.</span>
+              {t('guest.menuDescription')}<br />
+              <span className="text-sm">{t('guest.menuDeadlineInfo')}</span>
             </p>
             <GuestMenuSelectionComponent />
           </>

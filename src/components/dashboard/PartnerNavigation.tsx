@@ -5,10 +5,12 @@ import NavItem from "./NavItem";
 import { BarChart, MessageSquare, Calendar, CheckSquare, Image, Music, Video, Users, Trophy, Award, FileText, Grid3X3, HeadphonesIcon, CreditCard } from "lucide-react";
 import { useAccessControl } from "@/hooks/useAccessControl";
 import { PartnerType } from "@/utils/accessControl";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const PartnerNavigation = () => {
   const location = useLocation();
   const { currentUser } = useAccessControl();
+  const { t } = useLanguage();
   
   // Get partner type from current user (default to general if not specified)
   const partnerType = currentUser?.partnerType || PartnerType.GENERAL;
@@ -20,63 +22,63 @@ const PartnerNavigation = () => {
         icon={<BarChart size={18} />}
         active={location.pathname === "/partner/dashboard"}
       >
-        Tableau de bord
+        {t('common.dashboard')}
       </NavItem>
       <NavItem
         href="/partner/subscription"
         icon={<CreditCard size={18} />}
         active={location.pathname === "/partner/subscription"}
       >
-        Mon Abonnement
+        {t('partner.subscription')}
       </NavItem>
       <NavItem
         href="/partner/tasks"
         icon={<CheckSquare size={18} />}
         active={location.pathname === "/partner/tasks"}
       >
-        Tâches
+        {t('partner.tasks')}
       </NavItem>
       <NavItem
         href="/partner/requests"
         icon={<MessageSquare size={18} />}
         active={location.pathname === "/partner/requests"}
       >
-        Demandes clients
+        {t('partner.clientRequests')}
       </NavItem>
       <NavItem
         href="/partner/stats"
         icon={<BarChart size={18} />}
         active={location.pathname === "/partner/stats"}
       >
-        Statistiques
+        {t('partner.statistics')}
       </NavItem>
       <NavItem
         href="/partner/recommendations"
         icon={<Users size={18} />}
         active={location.pathname === "/partner/recommendations"}
       >
-        Recommandations
+        {t('partner.recommendations')}
       </NavItem>
       <NavItem
         href="/partner/gamification"
         icon={<Trophy size={18} />}
         active={location.pathname === "/partner/gamification"}
       >
-        Programme Fidélité
+        {t('partner.loyaltyProgram')}
       </NavItem>
       <NavItem
         href="/partner/best-awards"
         icon={<Award size={18} />}
         active={location.pathname === "/partner/best-awards"}
       >
-        Best Awards 2025
+        {t('partner.bestAwards')}
       </NavItem>
       <NavItem
         href="/partner/calendar"
         icon={<Calendar size={18} />}
         active={location.pathname === "/partner/calendar"}
       >
-        Calendrier
+        {t('partner.calendar')}
       </NavItem>
 
       {/* Photo section - only for photographers */}
@@ -86,7 +88,7 @@ const PartnerNavigation = () => {
           icon={<Image size={18} />}
           active={location.pathname === "/partner/photos"}
         >
-          Photos
+          {t('partner.photos')}
         </NavItem>
       )}
 
@@ -97,7 +99,7 @@ const PartnerNavigation = () => {
           icon={<Music size={18} />}
           active={location.pathname === "/partner/playlists"}
         >
-          Playlists
+          {t('partner.playlists')}
         </NavItem>
       )}
 
@@ -108,7 +110,7 @@ const PartnerNavigation = () => {
           icon={<FileText size={18} />}
           active={location.pathname === "/partner/menus"}
         >
-          Menus
+          {t('partner.menus')}
         </NavItem>
       )}
       
@@ -119,7 +121,7 @@ const PartnerNavigation = () => {
           icon={<Grid3X3 size={18} />}
           active={location.pathname === "/partner/floor-plans"}
         >
-          Plans de salle
+          {t('partner.floorPlans')}
         </NavItem>
       )}
 
@@ -129,14 +131,14 @@ const PartnerNavigation = () => {
         icon={<HeadphonesIcon size={18} />}
         active={location.pathname === "/partner/podcasts"}
       >
-        Podcasts
+        {t('partner.podcasts')}
       </NavItem>
       <NavItem
         href="/partner/talkshows"
         icon={<Video size={18} />}
         active={location.pathname === "/partner/talkshows"}
       >
-        Talkshows
+        {t('partner.talkshows')}
       </NavItem>
     </>
   );

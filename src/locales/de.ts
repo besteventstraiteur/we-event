@@ -27,7 +27,8 @@ const de = {
     clientSpace: "Kundenportal",
     partnerSpace: "Dienstleisterportal",
     administration: "Verwaltung",
-    guest: "Gast"
+    guest: "Gast",
+    dashboard: "Dashboard"
   },
   auth: {
     loginTitle: "Anmelden",
@@ -67,6 +68,22 @@ const de = {
     joinVipDescription: "Greifen Sie auf exklusive Vorteile und Rabatte bei allen unseren Dienstleistern zu.",
     joinVipButton: "Dem VIP-Club beitreten",
     seeDetails: "Details anzeigen",
+  },
+  partner: {
+    subscription: "Mein Abonnement",
+    tasks: "Aufgaben",
+    clientRequests: "Kundenanfragen",
+    statistics: "Statistiken",
+    recommendations: "Empfehlungen",
+    loyaltyProgram: "Treueprogramm",
+    bestAwards: "Best Awards 2025",
+    calendar: "Kalender",
+    photos: "Fotos",
+    playlists: "Playlists",
+    menus: "Menüs",
+    floorPlans: "Raumplan",
+    podcasts: "Podcasts",
+    talkshows: "Talkshows"
   },
   guest: {
     attendance: "Bestätigen Sie Ihre Teilnahme",

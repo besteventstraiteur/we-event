@@ -1,6 +1,7 @@
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { useGoogleMapsApiKey } from '@/hooks/useGoogleMapsApiKey';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface MapContextProps {
   mapKey: string;
@@ -9,6 +10,7 @@ interface MapContextProps {
   clearMapKey: () => void;
   selectedMarkerId: string | null;
   setSelectedMarkerId: (id: string | null) => void;
+  currentLanguage: string;
 }
 
 const MapContext = createContext<MapContextProps | undefined>(undefined);
@@ -16,6 +18,7 @@ const MapContext = createContext<MapContextProps | undefined>(undefined);
 export const MapProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { apiKey, setApiKey, isKeyValid, clearApiKey } = useGoogleMapsApiKey();
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
+  const { language } = useLanguage();
 
   return (
     <MapContext.Provider 
@@ -25,7 +28,8 @@ export const MapProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         isKeySet: isKeyValid,
         clearMapKey: clearApiKey,
         selectedMarkerId, 
-        setSelectedMarkerId 
+        setSelectedMarkerId,
+        currentLanguage: language
       }}
     >
       {children}

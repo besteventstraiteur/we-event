@@ -19,14 +19,17 @@ import {
   Star,
   Building2
 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ClientNavigation = () => {
+  const { t } = useLanguage();
+  
   return (
     <div className="space-y-4">
       {/* Main Planning & Dashboard */}
       <NavItem
         icon={<LayoutDashboard size={20} />}
-        title="Tableau de bord"
+        title="Dashboard"
         href="/client/dashboard"
       />
       <NavItem
@@ -43,7 +46,7 @@ const ClientNavigation = () => {
       />
       <NavItem
         icon={<Building2 size={20} />}
-        title="Prestataires"
+        title="Vendors"
         href="/client/partners"
       />
       <NavItem
@@ -53,19 +56,19 @@ const ClientNavigation = () => {
       />
       <NavItem
         icon={<Star size={20} />}
-        title="Évaluations"
+        title="Ratings"
         href="/client/ratings"
       />
       
       {/* Guests & Floor Plans */}
       <NavItem
         icon={<Users size={20} />}
-        title="Invités"
+        title="Guests"
         href="/client/guests"
       />
       <NavItem
         icon={<Calendar size={20} />}
-        title="Plan de salle"
+        title="Floor Plan"
         href="/client/floor-plans"
       />
       <NavItem
@@ -77,7 +80,7 @@ const ClientNavigation = () => {
       {/* Media & Content */}
       <NavItem
         icon={<Heart size={20} />}
-        title="Inspirations"
+        title="Inspiration"
         href="/client/pinterbest"
       />
       <NavItem
@@ -104,7 +107,7 @@ const ClientNavigation = () => {
       {/* Communication & Mini-site */}
       <NavItem
         icon={<MessageSquare size={20} />}
-        title="Demandes"
+        title="Requests"
         href="/client/requests"
       />
       <NavItem
@@ -116,7 +119,7 @@ const ClientNavigation = () => {
       {/* Account */}
       <NavItem
         icon={<User size={20} />}
-        title="Compte"
+        title="Account"
         href="/client/account"
       />
     </div>

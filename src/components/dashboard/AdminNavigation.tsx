@@ -16,18 +16,21 @@ import {
   BarChart,
   CreditCard
 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const AdminNavigation = () => {
+  const { t } = useLanguage();
+  
   return (
     <div className="space-y-4">
       <NavItem
         icon={<LayoutDashboard size={20} />}
-        title="Tableau de bord"
+        title="Dashboard"
         href="/admin/dashboard"
       />
       <NavItem
         icon={<BarChart size={20} />}
-        title="Statistiques"
+        title="Statistics"
         href="/admin/statistics"
       />
       <NavItem
@@ -37,42 +40,42 @@ const AdminNavigation = () => {
       />
       <NavItem
         icon={<Building2 size={20} />}
-        title="Partenaires"
+        title="Partners"
         href="/admin/partners"
       />
       <NavItem
         icon={<UserCog size={20} />}
-        title="Types Partenaires"
+        title="Partner Types"
         href="/admin/partner-types"
       />
       <NavItem
         icon={<CreditCard size={20} />}
-        title="Abonnements"
+        title="Subscriptions"
         href="/admin/subscriptions"
       />
       <NavItem
         icon={<Users size={20} />}
-        title="Invités"
+        title="Guests"
         href="/admin/guests"
       />
       <NavItem
         icon={<Calendar size={20} />}
-        title="Lieux"
+        title="Venues"
         href="/admin/venues"
       />
       <NavItem
         icon={<PackageOpen size={20} />}
-        title="Packs Mariage"
+        title="Wedding Packages"
         href="/admin/wedding-packages"
       />
       <NavItem
         icon={<Star size={20} />}
-        title="Avis & Évaluations"
+        title="Ratings & Reviews"
         href="/admin/ratings"
       />
       <NavItem
         icon={<MessageSquare size={20} />}
-        title="Recommandations"
+        title="Recommendations"
         href="/admin/recommendations"
       />
       <NavItem
@@ -87,7 +90,7 @@ const AdminNavigation = () => {
       />
       <NavItem
         icon={<Presentation size={20} />}
-        title="Présentation"
+        title="Presentation"
         href="/admin/presentation"
       />
     </div>

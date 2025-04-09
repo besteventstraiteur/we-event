@@ -6,6 +6,7 @@ import WeEventLogo from "../WeEventLogo";
 import ClientNavigation from "./ClientNavigation";
 import PartnerNavigation from "./PartnerNavigation";
 import AdminNavigation from "./AdminNavigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SidebarProps {
   type: "client" | "partner" | "admin";
@@ -15,6 +16,8 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ type, onLogout, mobile = false, onMenuClose }: SidebarProps) => {
+  const { t } = useLanguage();
+  
   return (
     <div className={`flex flex-col ${mobile ? 'w-full h-full' : 'hidden md:flex w-64'} border-r border-we-beige bg-gradient-to-b from-white to-we-gray-100 p-4 overflow-hidden`}>
       <div className="flex items-center justify-between mb-6 pl-3">
@@ -40,7 +43,7 @@ const Sidebar = ({ type, onLogout, mobile = false, onMenuClose }: SidebarProps) 
         onClick={onLogout}
       >
         <LogOut size={18} className="mr-2" />
-        Déconnexion
+        {t('common.logout')}
       </Button>
     </div>
   );
