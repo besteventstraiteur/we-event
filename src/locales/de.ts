@@ -24,6 +24,10 @@ const de = {
     continue: "Weiter",
     back: "Zurück",
     close: "Schließen",
+    clientSpace: "Kundenportal",
+    partnerSpace: "Dienstleisterportal",
+    administration: "Verwaltung",
+    guest: "Gast"
   },
   auth: {
     loginTitle: "Anmelden",
@@ -64,6 +68,63 @@ const de = {
     joinVipButton: "Dem VIP-Club beitreten",
     seeDetails: "Details anzeigen",
   },
+  guest: {
+    attendance: "Bestätigen Sie Ihre Teilnahme",
+    attendanceDescription: "Bitte teilen Sie uns mit, ob Sie an dieser Veranstaltung teilnehmen werden.",
+    attending: "Ich nehme teil",
+    notAttending: "Ich kann nicht teilnehmen",
+    attendanceConfirmed: "Sie haben Ihre Teilnahme an dieser Veranstaltung bestätigt.",
+    absenceConfirmed: "Sie haben angegeben, dass Sie nicht an dieser Veranstaltung teilnehmen können.",
+    modify: "Ändern",
+    menuSelection: "Menüauswahl",
+    menuDeadline: "Frist",
+    menuDescription: "Bitte wählen Sie Ihr Menü für diese Veranstaltung",
+    chooseMenu: "Mein Menü wählen",
+    date: "Datum",
+    location: "Ort",
+    questions: "Bei Fragen kontaktieren Sie bitte die Organisatoren",
+    information: "Informationen",
+    guestbook: "Gästebuch",
+    giftFund: "Geschenkfonds"
+  },
+  contact: {
+    title: "Kontakt",
+    subtitle: "Wir sind hier, um all Ihre Fragen zu beantworten",
+    form: {
+      name: "Ihr Name",
+      email: "Ihre E-Mail",
+      subject: "Betreff",
+      message: "Ihre Nachricht",
+      messagePlaceholder: "Wie können wir Ihnen helfen?",
+      send: "Nachricht senden",
+      sending: "Wird gesendet...",
+      selectSubject: "Betreff auswählen"
+    },
+    info: {
+      title: "Kontaktinformationen",
+      email: "E-Mail",
+      phone: "Telefon",
+      address: "Adresse",
+      hours: "Öffnungszeiten",
+      monday: "Montag - Freitag",
+      saturday: "Samstag",
+      sunday: "Sonntag",
+      closed: "Geschlossen",
+      followUs: "Folgen Sie uns"
+    },
+    subjects: {
+      info: "Informationsanfrage",
+      clientSignup: "Kundenregistrierung",
+      partnerSignup: "Dienstleisterregistrierung",
+      support: "Technischer Support",
+      issue: "Problem melden",
+      other: "Sonstiges"
+    },
+    success: {
+      title: "Nachricht gesendet",
+      description: "Wir werden uns so schnell wie möglich bei Ihnen melden."
+    }
+  }
 };
 
 export default de;

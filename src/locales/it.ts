@@ -24,6 +24,10 @@ const it = {
     continue: "Continua",
     back: "Indietro",
     close: "Chiudi",
+    clientSpace: "Portale Cliente",
+    partnerSpace: "Portale Fornitore",
+    administration: "Amministrazione",
+    guest: "Ospite"
   },
   auth: {
     loginTitle: "Accesso",
@@ -64,6 +68,63 @@ const it = {
     joinVipButton: "Unisciti al Club VIP",
     seeDetails: "Vedi dettagli",
   },
+  guest: {
+    attendance: "Conferma la tua presenza",
+    attendanceDescription: "Ti preghiamo di farci sapere se parteciperai a questo evento.",
+    attending: "Parteciperò",
+    notAttending: "Non potrò partecipare",
+    attendanceConfirmed: "Hai confermato la tua partecipazione a questo evento.",
+    absenceConfirmed: "Hai indicato che non potrai partecipare a questo evento.",
+    modify: "Modifica",
+    menuSelection: "Selezione menu",
+    menuDeadline: "Scadenza",
+    menuDescription: "Seleziona il tuo menu per questo evento",
+    chooseMenu: "Scegli il mio menu",
+    date: "Data",
+    location: "Luogo",
+    questions: "Se hai domande, non esitare a contattare gli organizzatori",
+    information: "Informazioni",
+    guestbook: "Libro degli ospiti",
+    giftFund: "Fondo regali"
+  },
+  contact: {
+    title: "Contattaci",
+    subtitle: "Siamo qui per rispondere a tutte le tue domande",
+    form: {
+      name: "Il tuo nome",
+      email: "La tua email",
+      subject: "Oggetto",
+      message: "Il tuo messaggio",
+      messagePlaceholder: "Come possiamo aiutarti?",
+      send: "Invia messaggio",
+      sending: "Invio in corso...",
+      selectSubject: "Seleziona un oggetto"
+    },
+    info: {
+      title: "Informazioni di contatto",
+      email: "Email",
+      phone: "Telefono",
+      address: "Indirizzo",
+      hours: "Orari di apertura",
+      monday: "Lunedì - Venerdì",
+      saturday: "Sabato",
+      sunday: "Domenica",
+      closed: "Chiuso",
+      followUs: "Seguici"
+    },
+    subjects: {
+      info: "Richiesta informazioni",
+      clientSignup: "Registrazione cliente",
+      partnerSignup: "Registrazione fornitore",
+      support: "Supporto tecnico",
+      issue: "Segnala un problema",
+      other: "Altro"
+    },
+    success: {
+      title: "Messaggio inviato",
+      description: "Ti risponderemo il prima possibile."
+    }
+  }
 };
 
 export default it;

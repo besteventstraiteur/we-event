@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import WeEventLogo from "../WeEventLogo";
-import { Home, Menu, Bell, Search, ChevronLeft, User, Globe } from "lucide-react";
+import { Home, Menu, Bell, Search, ChevronLeft, User } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -113,9 +113,9 @@ const Header = ({
           )}
           
           <div className="text-sm text-we-gray-600 hidden sm:block font-display">
-            {type === "client" && "Espace Client"}
-            {type === "partner" && "Espace Prestataire"}
-            {type === "admin" && "Administration"}
+            {type === "client" && t('common.clientSpace')}
+            {type === "partner" && t('common.partnerSpace')}
+            {type === "admin" && t('common.administration')}
           </div>
           {isNativeLike && <div className="sm:hidden w-1"></div>}
         </div>

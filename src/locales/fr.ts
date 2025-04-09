@@ -24,6 +24,10 @@ const fr = {
     continue: "Continuer",
     back: "Retour",
     close: "Fermer",
+    clientSpace: "Espace Client",
+    partnerSpace: "Espace Prestataire",
+    administration: "Administration",
+    guest: "Invité"
   },
   auth: {
     loginTitle: "Connexion",
@@ -64,6 +68,63 @@ const fr = {
     joinVipButton: "Rejoindre le Club VIP",
     seeDetails: "Voir les détails",
   },
+  guest: {
+    attendance: "Confirmer votre présence",
+    attendanceDescription: "Merci de nous indiquer si vous serez présent à cet événement.",
+    attending: "Je serai présent",
+    notAttending: "Je ne pourrai pas venir",
+    attendanceConfirmed: "Vous avez confirmé votre présence à cet événement.",
+    absenceConfirmed: "Vous avez indiqué que vous ne pourrez pas assister à cet événement.",
+    modify: "Modifier",
+    menuSelection: "Choix de menu",
+    menuDeadline: "Date limite",
+    menuDescription: "Veuillez sélectionner votre menu pour cet événement",
+    chooseMenu: "Choisir mon menu",
+    date: "Date",
+    location: "Lieu",
+    questions: "Si vous avez des questions, n'hésitez pas à contacter les organisateurs",
+    information: "Informations",
+    guestbook: "Livre d'or",
+    giftFund: "Cagnotte"
+  },
+  contact: {
+    title: "Contactez-nous",
+    subtitle: "Nous sommes à votre disposition pour répondre à toutes vos questions",
+    form: {
+      name: "Votre nom",
+      email: "Votre email",
+      subject: "Sujet",
+      message: "Votre message",
+      messagePlaceholder: "Comment pouvons-nous vous aider?",
+      send: "Envoyer le message",
+      sending: "Envoi en cours...",
+      selectSubject: "Sélectionner un sujet"
+    },
+    info: {
+      title: "Informations de contact",
+      email: "Email",
+      phone: "Téléphone",
+      address: "Adresse",
+      hours: "Horaires d'ouverture",
+      monday: "Lundi - Vendredi",
+      saturday: "Samedi",
+      sunday: "Dimanche",
+      closed: "Fermé",
+      followUs: "Suivez-nous"
+    },
+    subjects: {
+      info: "Demande d'information",
+      clientSignup: "Inscription client",
+      partnerSignup: "Inscription partenaire",
+      support: "Support technique",
+      issue: "Signaler un problème",
+      other: "Autre"
+    },
+    success: {
+      title: "Message envoyé",
+      description: "Nous vous répondrons dans les plus brefs délais."
+    }
+  }
 };
 
 export default fr;

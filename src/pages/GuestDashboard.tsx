@@ -12,6 +12,8 @@ import GuestBook from "@/components/guests/GuestBook";
 import GiftFund from "@/components/guests/GiftFund";
 import MobileAppWrapper from "@/components/mobile/MobileAppWrapper";
 import { useDeviceType } from "@/hooks/use-mobile";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSelector from "@/components/LanguageSelector";
 
 const GuestDashboard = () => {
   const { eventId, guestId } = useParams();
@@ -19,6 +21,7 @@ const GuestDashboard = () => {
   const [activeTab, setActiveTab] = useState("info");
   const deviceType = useDeviceType();
   const isMobile = deviceType === 'mobile' || deviceType === 'tablet';
+  const { t } = useLanguage();
 
   // Mock data - in a real app, this would be fetched from an API
   const eventDetails = {
@@ -42,6 +45,7 @@ const GuestDashboard = () => {
         <div className="container mx-auto flex justify-between items-center">
           <Logo size="medium" />
           <div className="flex items-center gap-2">
+            <LanguageSelector variant="minimal" />
             <User className="h-5 w-5 text-gray-500" />
             <span className="text-sm text-gray-700">Invité</span>
           </div>

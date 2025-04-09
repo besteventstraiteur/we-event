@@ -8,9 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSelector from "@/components/LanguageSelector";
 
 const ContactPage = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -58,14 +61,15 @@ const ContactPage = () => {
             <Logo />
           </Link>
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-vip-gray-600 hover:text-vip-gold">Accueil</Link>
-            <Link to="/partners" className="text-vip-gray-600 hover:text-vip-gold">Prestataires</Link>
-            <Link to="/contact" className="text-vip-gold font-semibold">Contact</Link>
+            <Link to="/" className="text-vip-gray-600 hover:text-vip-gold">{t('common.home')}</Link>
+            <Link to="/partners" className="text-vip-gray-600 hover:text-vip-gold">{t('common.partners')}</Link>
+            <Link to="/contact" className="text-vip-gold font-semibold">{t('common.contact')}</Link>
           </div>
           <div className="flex items-center space-x-4">
+            <LanguageSelector />
             <Link to="/login">
               <GoldButton variant="outline" size="sm">
-                Connexion
+                {t('common.login')}
               </GoldButton>
             </Link>
           </div>
@@ -74,7 +78,7 @@ const ContactPage = () => {
 
       <main className="flex-1 container py-12 bg-white">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2 text-center text-vip-black">Contactez-nous</h1>
+          <h1 className="text-3xl font-bold mb-2 text-center text-vip-black">{t('common.contact')}</h1>
           <p className="text-vip-gray-600 text-center mb-12">
             Nous sommes à votre disposition pour répondre à toutes vos questions
           </p>
@@ -247,14 +251,17 @@ const ContactPage = () => {
               <Logo />
             </Link>
             <p className="text-vip-gray-500 text-sm">
-              © {new Date().getFullYear()} We Event. Tous droits réservés.
+              {t('home.footer.copyright')}
             </p>
             <div className="flex gap-4">
               <Link to="/privacy" className="text-vip-gray-500 hover:text-vip-gold text-sm">
-                Politique de confidentialité
+                {t('home.footer.privacy')}
               </Link>
               <Link to="/terms" className="text-vip-gray-500 hover:text-vip-gold text-sm">
-                Conditions d'utilisation
+                {t('home.footer.terms')}
+              </Link>
+              <Link to="/contact" className="text-vip-gray-500 hover:text-vip-gold text-sm">
+                {t('common.contact')}
               </Link>
             </div>
           </div>

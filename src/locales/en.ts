@@ -24,6 +24,10 @@ const en = {
     continue: "Continue",
     back: "Back",
     close: "Close",
+    clientSpace: "Client Portal",
+    partnerSpace: "Partner Portal",
+    administration: "Administration",
+    guest: "Guest"
   },
   auth: {
     loginTitle: "Login",
@@ -64,6 +68,63 @@ const en = {
     joinVipButton: "Join the VIP Club",
     seeDetails: "See details",
   },
+  guest: {
+    attendance: "Confirm your attendance",
+    attendanceDescription: "Please let us know if you will be attending this event.",
+    attending: "I will attend",
+    notAttending: "I cannot attend",
+    attendanceConfirmed: "You have confirmed your attendance to this event.",
+    absenceConfirmed: "You have indicated that you will not be able to attend this event.",
+    modify: "Modify",
+    menuSelection: "Menu Selection",
+    menuDeadline: "Deadline",
+    menuDescription: "Please select your menu for this event",
+    chooseMenu: "Choose my menu",
+    date: "Date",
+    location: "Location",
+    questions: "If you have any questions, please don't hesitate to contact the organizers",
+    information: "Information",
+    guestbook: "Guestbook",
+    giftFund: "Gift Fund"
+  },
+  contact: {
+    title: "Contact Us",
+    subtitle: "We're here to answer all your questions",
+    form: {
+      name: "Your name",
+      email: "Your email",
+      subject: "Subject",
+      message: "Your message",
+      messagePlaceholder: "How can we help you?",
+      send: "Send message",
+      sending: "Sending...",
+      selectSubject: "Select a subject"
+    },
+    info: {
+      title: "Contact Information",
+      email: "Email",
+      phone: "Phone",
+      address: "Address",
+      hours: "Opening Hours",
+      monday: "Monday - Friday",
+      saturday: "Saturday",
+      sunday: "Sunday",
+      closed: "Closed",
+      followUs: "Follow Us"
+    },
+    subjects: {
+      info: "Information Request",
+      clientSignup: "Client Registration",
+      partnerSignup: "Partner Registration",
+      support: "Technical Support",
+      issue: "Report an Issue",
+      other: "Other"
+    },
+    success: {
+      title: "Message sent",
+      description: "We'll get back to you as soon as possible."
+    }
+  }
 };
 
 export default en;
