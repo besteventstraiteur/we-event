@@ -90,6 +90,7 @@ import PartnerTypeRoute from "@/components/security/PartnerTypeRoute";
 
 // Contexte de carte pour les lieux
 import { MapProvider } from "@/components/venues/map/MapContext";
+import { UserRole } from "@/utils/accessControl";
 
 interface AppRouterProps {}
 
@@ -134,75 +135,69 @@ const AppRouter: React.FC<AppRouterProps> = () => {
         <Route path="/guest" element={<GuestDashboard />} />
         <Route path="/guest/menu" element={<GuestMenuSelection />} />
         
-        {/* Routes client protégées */}
-        <Route path="/client" element={<ProtectedRoute type="client" />}>
-          <Route path="dashboard" element={<ClientDashboard />} />
-          <Route path="guests" element={<ClientGuests />} />
-          <Route path="partners" element={<ClientPartners />} />
-          <Route path="requests" element={<ClientRequests />} />
-          <Route path="todo" element={<ClientTodoList />} />
-          <Route path="account" element={<ClientAccount />} />
-          <Route path="budget" element={<ClientBudget />} />
-          <Route path="floor-plans" element={<ClientFloorPlans />} />
-          <Route path="menus" element={<ClientMenus />} />
-          <Route path="payments" element={<ClientPayments />} />
-          <Route path="tasks" element={<ClientTasks />} />
-          <Route path="photos" element={<ClientPhotos />} />
-          <Route path="pinterbest" element={<ClientPinterbest />} />
-          <Route path="playlists" element={<ClientMusicPlaylists />} />
-          <Route path="wedding-packages" element={<ClientWeddingPackages />} />
-          <Route path="live-streaming" element={<ClientLiveStreaming />} />
-          <Route path="mini-site" element={<ClientMiniSite />} />
-          <Route path="day-of" element={<ClientDayOfCommunication />} />
-          <Route path="podcasts" element={<ClientPodcasts />} />
-          <Route path="project-dashboard" element={<ClientProjectDashboard />} />
-          <Route path="talkshows" element={<ClientTalkshows />} />
-          <Route path="ratings" element={<ClientPartnerRatings />} />
-          <Route path="security/two-factor" element={<TwoFactorSetup />} />
-          <Route path="security" element={<AdvancedSecurity />} />
-        </Route>
+        {/* Routes client protégées - Fix: properly protecting individual routes */}
+        <Route path="/client/dashboard" element={<ProtectedRoute role="client"><ClientDashboard /></ProtectedRoute>} />
+        <Route path="/client/guests" element={<ProtectedRoute role="client"><ClientGuests /></ProtectedRoute>} />
+        <Route path="/client/partners" element={<ProtectedRoute role="client"><ClientPartners /></ProtectedRoute>} />
+        <Route path="/client/requests" element={<ProtectedRoute role="client"><ClientRequests /></ProtectedRoute>} />
+        <Route path="/client/todo" element={<ProtectedRoute role="client"><ClientTodoList /></ProtectedRoute>} />
+        <Route path="/client/account" element={<ProtectedRoute role="client"><ClientAccount /></ProtectedRoute>} />
+        <Route path="/client/budget" element={<ProtectedRoute role="client"><ClientBudget /></ProtectedRoute>} />
+        <Route path="/client/floor-plans" element={<ProtectedRoute role="client"><ClientFloorPlans /></ProtectedRoute>} />
+        <Route path="/client/menus" element={<ProtectedRoute role="client"><ClientMenus /></ProtectedRoute>} />
+        <Route path="/client/payments" element={<ProtectedRoute role="client"><ClientPayments /></ProtectedRoute>} />
+        <Route path="/client/tasks" element={<ProtectedRoute role="client"><ClientTasks /></ProtectedRoute>} />
+        <Route path="/client/photos" element={<ProtectedRoute role="client"><ClientPhotos /></ProtectedRoute>} />
+        <Route path="/client/pinterbest" element={<ProtectedRoute role="client"><ClientPinterbest /></ProtectedRoute>} />
+        <Route path="/client/playlists" element={<ProtectedRoute role="client"><ClientMusicPlaylists /></ProtectedRoute>} />
+        <Route path="/client/wedding-packages" element={<ProtectedRoute role="client"><ClientWeddingPackages /></ProtectedRoute>} />
+        <Route path="/client/live-streaming" element={<ProtectedRoute role="client"><ClientLiveStreaming /></ProtectedRoute>} />
+        <Route path="/client/mini-site" element={<ProtectedRoute role="client"><ClientMiniSite /></ProtectedRoute>} />
+        <Route path="/client/day-of" element={<ProtectedRoute role="client"><ClientDayOfCommunication /></ProtectedRoute>} />
+        <Route path="/client/podcasts" element={<ProtectedRoute role="client"><ClientPodcasts /></ProtectedRoute>} />
+        <Route path="/client/project-dashboard" element={<ProtectedRoute role="client"><ClientProjectDashboard /></ProtectedRoute>} />
+        <Route path="/client/talkshows" element={<ProtectedRoute role="client"><ClientTalkshows /></ProtectedRoute>} />
+        <Route path="/client/ratings" element={<ProtectedRoute role="client"><ClientPartnerRatings /></ProtectedRoute>} />
+        <Route path="/client/security/two-factor" element={<ProtectedRoute role="client"><TwoFactorSetup /></ProtectedRoute>} />
+        <Route path="/client/security" element={<ProtectedRoute role="client"><AdvancedSecurity /></ProtectedRoute>} />
         
-        {/* Routes partenaire protégées */}
-        <Route path="/partner" element={<ProtectedRoute type="partner" />}>
-          <Route path="dashboard" element={<PartnerDashboard />} />
-          <Route path="requests" element={<PartnerRequests />} />
-          <Route path="calendar" element={<PartnerCalendar />} />
-          <Route path="best-awards" element={<PartnerBestAwards />} />
-          <Route path="gamification" element={<PartnerGamification />} />
-          <Route path="stats" element={<PartnerStats />} />
-          <Route path="menus" element={<PartnerMenus />} />
-          <Route path="playlists" element={<PartnerPlaylists />} />
-          <Route path="podcasts" element={<PartnerPodcasts />} />
-          <Route path="talkshows" element={<PartnerTalkshows />} />
-          <Route path="recommendations" element={<PartnerRecommendations />} />
-          <Route path="floor-plans" element={<PartnerFloorPlans />} />
-          <Route path="live-streaming" element={<PartnerLiveStreaming />} />
-          <Route path="music-playlists" element={<PartnerMusicPlaylists />} />
-          <Route path="photos" element={<PartnerPhotos />} />
-          <Route path="subscription" element={<PartnerSubscription />} />
-          <Route path="tasks" element={<PartnerTasks />} />
-        </Route>
+        {/* Routes partenaire protégées - Fix: properly protecting individual routes */}
+        <Route path="/partner/dashboard" element={<ProtectedRoute role="partner"><PartnerDashboard /></ProtectedRoute>} />
+        <Route path="/partner/requests" element={<ProtectedRoute role="partner"><PartnerRequests /></ProtectedRoute>} />
+        <Route path="/partner/calendar" element={<ProtectedRoute role="partner"><PartnerCalendar /></ProtectedRoute>} />
+        <Route path="/partner/best-awards" element={<ProtectedRoute role="partner"><PartnerBestAwards /></ProtectedRoute>} />
+        <Route path="/partner/gamification" element={<ProtectedRoute role="partner"><PartnerGamification /></ProtectedRoute>} />
+        <Route path="/partner/stats" element={<ProtectedRoute role="partner"><PartnerStats /></ProtectedRoute>} />
+        <Route path="/partner/menus" element={<ProtectedRoute role="partner"><PartnerMenus /></ProtectedRoute>} />
+        <Route path="/partner/playlists" element={<ProtectedRoute role="partner"><PartnerPlaylists /></ProtectedRoute>} />
+        <Route path="/partner/podcasts" element={<ProtectedRoute role="partner"><PartnerPodcasts /></ProtectedRoute>} />
+        <Route path="/partner/talkshows" element={<ProtectedRoute role="partner"><PartnerTalkshows /></ProtectedRoute>} />
+        <Route path="/partner/recommendations" element={<ProtectedRoute role="partner"><PartnerRecommendations /></ProtectedRoute>} />
+        <Route path="/partner/floor-plans" element={<ProtectedRoute role="partner"><PartnerFloorPlans /></ProtectedRoute>} />
+        <Route path="/partner/live-streaming" element={<ProtectedRoute role="partner"><PartnerLiveStreaming /></ProtectedRoute>} />
+        <Route path="/partner/music-playlists" element={<ProtectedRoute role="partner"><PartnerMusicPlaylists /></ProtectedRoute>} />
+        <Route path="/partner/photos" element={<ProtectedRoute role="partner"><PartnerPhotos /></ProtectedRoute>} />
+        <Route path="/partner/subscription" element={<ProtectedRoute role="partner"><PartnerSubscription /></ProtectedRoute>} />
+        <Route path="/partner/tasks" element={<ProtectedRoute role="partner"><PartnerTasks /></ProtectedRoute>} />
         
-        {/* Routes admin protégées */}
-        <Route path="/admin" element={<AdminRoute />}>
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="clients" element={<AdminClients />} />
-          <Route path="partners" element={<AdminPartners />} />
-          <Route path="guests" element={<AdminGuests />} />
-          <Route path="venues" element={<AdminVenues />} />
-          <Route path="kpi-dashboard" element={<AdminKpiDashboard />} />
-          <Route path="ratings" element={<AdminRatings />} />
-          <Route path="recommendations" element={<AdminRecommendations />} />
-          <Route path="statistics" element={<AdminStatistics />} />
-          <Route path="subscriptions" element={<AdminSubscriptions />} />
-          <Route path="talkshows" element={<AdminTalkshows />} />
-          <Route path="podcasts" element={<AdminPodcasts />} />
-          <Route path="wedding-packages" element={<AdminWeddingPackages />} />
-          <Route path="presentation" element={<AdminPresentationManagement />} />
-          <Route path="partner-types" element={<AdminPartnerTypes />} />
-          <Route path="partner-gamification" element={<AdminPartnerGamification />} />
-          <Route path="backup" element={<AdminBackup />} />
-        </Route>
+        {/* Routes admin protégées - Fix: properly protecting individual routes */}
+        <Route path="/admin/dashboard" element={<AdminRoute fallbackPath="/login"><AdminDashboard /></AdminRoute>} />
+        <Route path="/admin/clients" element={<AdminRoute fallbackPath="/login"><AdminClients /></AdminRoute>} />
+        <Route path="/admin/partners" element={<AdminRoute fallbackPath="/login"><AdminPartners /></AdminRoute>} />
+        <Route path="/admin/guests" element={<AdminRoute fallbackPath="/login"><AdminGuests /></AdminRoute>} />
+        <Route path="/admin/venues" element={<AdminRoute fallbackPath="/login"><AdminVenues /></AdminRoute>} />
+        <Route path="/admin/kpi-dashboard" element={<AdminRoute fallbackPath="/login"><AdminKpiDashboard /></AdminRoute>} />
+        <Route path="/admin/ratings" element={<AdminRoute fallbackPath="/login"><AdminRatings /></AdminRoute>} />
+        <Route path="/admin/recommendations" element={<AdminRoute fallbackPath="/login"><AdminRecommendations /></AdminRoute>} />
+        <Route path="/admin/statistics" element={<AdminRoute fallbackPath="/login"><AdminStatistics /></AdminRoute>} />
+        <Route path="/admin/subscriptions" element={<AdminRoute fallbackPath="/login"><AdminSubscriptions /></AdminRoute>} />
+        <Route path="/admin/talkshows" element={<AdminRoute fallbackPath="/login"><AdminTalkshows /></AdminRoute>} />
+        <Route path="/admin/podcasts" element={<AdminRoute fallbackPath="/login"><AdminPodcasts /></AdminRoute>} />
+        <Route path="/admin/wedding-packages" element={<AdminRoute fallbackPath="/login"><AdminWeddingPackages /></AdminRoute>} />
+        <Route path="/admin/presentation" element={<AdminRoute fallbackPath="/login"><AdminPresentationManagement /></AdminRoute>} />
+        <Route path="/admin/partner-types" element={<AdminRoute fallbackPath="/login"><AdminPartnerTypes /></AdminRoute>} />
+        <Route path="/admin/partner-gamification" element={<AdminRoute fallbackPath="/login"><AdminPartnerGamification /></AdminRoute>} />
+        <Route path="/admin/backup" element={<AdminRoute fallbackPath="/login"><AdminBackup /></AdminRoute>} />
         
         {/* Page 404 */}
         <Route path="*" element={<NotFound />} />
