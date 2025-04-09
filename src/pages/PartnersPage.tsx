@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import GoldButton from "@/components/GoldButton";
 import Logo from "@/components/Logo";
 import { Search } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSelector from "@/components/LanguageSelector";
 
 // Données fictives de prestataires
 const partnerCategories = [
@@ -38,6 +40,7 @@ const allPartners = [
 const PartnersPage = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const { t } = useLanguage();
 
   // Filtrer les prestataires en fonction de la catégorie active et de la recherche
   const filteredPartners = allPartners.filter((partner) => {
@@ -55,19 +58,20 @@ const PartnersPage = () => {
             <Logo />
           </Link>
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-vip-gray-600 hover:text-vip-gold">Accueil</Link>
-            <Link to="/partners" className="text-vip-gold font-semibold">Prestataires</Link>
-            <Link to="/contact" className="text-vip-gray-600 hover:text-vip-gold">Contact</Link>
+            <Link to="/" className="text-vip-gray-600 hover:text-vip-gold">{t('common.home')}</Link>
+            <Link to="/partners" className="text-vip-gold font-semibold">{t('common.partners')}</Link>
+            <Link to="/contact" className="text-vip-gray-600 hover:text-vip-gold">{t('common.contact')}</Link>
           </div>
           <div className="flex items-center space-x-4">
+            <LanguageSelector />
             <Link to="/login">
               <GoldButton variant="outline" size="sm">
-                Connexion
+                {t('common.login')}
               </GoldButton>
             </Link>
             <Link to="/register-client">
               <GoldButton size="sm">
-                Inscription
+                {t('common.register')}
               </GoldButton>
             </Link>
           </div>
@@ -77,9 +81,9 @@ const PartnersPage = () => {
       <main className="flex-1 container py-8">
         <div className="space-y-6">
           <div>
-            <h1 className="text-3xl font-bold">Nos Prestataires</h1>
+            <h1 className="text-3xl font-bold">{t('partners.title')}</h1>
             <p className="text-vip-gray-600">
-              Découvrez notre réseau de prestataires de qualité pour vos événements exceptionnels
+              {t('partners.subtitle')}
             </p>
           </div>
 
@@ -88,7 +92,7 @@ const PartnersPage = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-vip-gray-500" size={18} />
               <Input
                 type="search"
-                placeholder="Rechercher un prestataire..."
+                placeholder={t('partners.searchPlaceholder')}
                 className="pl-10 border-vip-gray-300"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -98,9 +102,9 @@ const PartnersPage = () => {
 
           <div className="bg-vip-gray-100 p-4 rounded-lg">
             <p className="text-vip-gray-800 italic text-sm">
-              <span className="font-semibold text-vip-gold">Avantage Club VIP :</span> Devenez membre pour accéder à des réductions exclusives auprès de tous nos prestataires.
+              <span className="font-semibold text-vip-gold">{t('partners.vipAdvantage')}</span> {t('partners.vipDescription')}
               <Link to="/register-client" className="ml-2 text-vip-gold hover:underline">
-                S'inscrire
+                {t('common.register')}
               </Link>
             </p>
           </div>
@@ -108,7 +112,7 @@ const PartnersPage = () => {
           <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory}>
             <TabsList className="bg-white border border-vip-gray-300 overflow-x-auto flex w-full space-x-2 p-1">
               <TabsTrigger value="all" className="data-[state=active]:bg-vip-gold data-[state=active]:text-white">
-                Tous
+                {t('partners.allCategory')}
               </TabsTrigger>
               {partnerCategories.map((category) => (
                 <TabsTrigger
@@ -144,7 +148,7 @@ const PartnersPage = () => {
                         <div className="mt-4 flex justify-end">
                           <Link to="/login">
                             <GoldButton>
-                              Voir les détails
+                              {t('partners.seeDetails')}
                             </GoldButton>
                           </Link>
                         </div>
@@ -162,14 +166,14 @@ const PartnersPage = () => {
         </div>
 
         <div className="mt-16 bg-vip-gray-100 p-6 rounded-lg">
-          <h2 className="text-2xl font-bold text-center mb-4">Devenez membre du Club VIP</h2>
+          <h2 className="text-2xl font-bold text-center mb-4">{t('partners.joinVipTitle')}</h2>
           <p className="text-center text-vip-gray-700 mb-6">
-            Accédez à des avantages exclusifs et des réductions chez tous nos prestataires.
+            {t('partners.joinVipDescription')}
           </p>
           <div className="flex justify-center">
             <Link to="/register-client">
               <GoldButton size="lg">
-                Rejoindre le Club VIP
+                {t('partners.joinVipButton')}
               </GoldButton>
             </Link>
           </div>
@@ -183,17 +187,17 @@ const PartnersPage = () => {
               <Logo />
             </Link>
             <p className="text-vip-gray-500 text-sm">
-              © {new Date().getFullYear()} We Event. Tous droits réservés.
+              {t('home.footer.copyright')}
             </p>
             <div className="flex gap-4">
               <Link to="/privacy" className="text-vip-gray-600 hover:text-vip-gold text-sm">
-                Politique de confidentialité
+                {t('home.footer.privacy')}
               </Link>
               <Link to="/terms" className="text-vip-gray-600 hover:text-vip-gold text-sm">
-                Conditions d'utilisation
+                {t('home.footer.terms')}
               </Link>
               <Link to="/contact" className="text-vip-gray-600 hover:text-vip-gold text-sm">
-                Contact
+                {t('common.contact')}
               </Link>
             </div>
           </div>

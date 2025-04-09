@@ -1,10 +1,12 @@
 
 import React, { useState } from "react";
 import WeEventLogo from "../WeEventLogo";
-import { Home, Menu, Bell, Search, ChevronLeft, User } from "lucide-react";
+import { Home, Menu, Bell, Search, ChevronLeft, User, Globe } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
+import LanguageSelector from "@/components/LanguageSelector";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface HeaderProps {
   type: "client" | "partner" | "admin";
@@ -26,6 +28,7 @@ const Header = ({
   const actualIsMobile = useIsMobile();
   const [searchOpen, setSearchOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const { t } = useLanguage();
   
   // Determine if we're on a native mobile platform
   const isNativeLike = actualIsMobile || isMobile;
@@ -54,6 +57,8 @@ const Header = ({
         </div>
         
         <div className="flex items-center gap-2 flex-shrink-0">
+          <LanguageSelector variant="minimal" />
+          
           {isNativeLike && (
             <>
               <Sheet open={searchOpen} onOpenChange={setSearchOpen}>
@@ -67,7 +72,7 @@ const Header = ({
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                     <input 
                       type="text" 
-                      placeholder="Rechercher..." 
+                      placeholder={t('common.search') + '...'}
                       className="w-full pl-9 pr-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-we-gold/50"
                       autoFocus
                     />
@@ -84,7 +89,7 @@ const Header = ({
                 </SheetTrigger>
                 <SheetContent className="pt-6">
                   <div>
-                    <h2 className="text-lg font-display font-semibold mb-4 text-we-green">Notifications</h2>
+                    <h2 className="text-lg font-display font-semibold mb-4 text-we-green">{t('common.notifications')}</h2>
                     <div className="space-y-4">
                       <div className="p-3 bg-we-beige/50 rounded-lg hover:bg-we-beige/70 transition-colors cursor-pointer">
                         <div className="font-medium text-we-gray-900">Nouvelle demande</div>
@@ -118,10 +123,10 @@ const Header = ({
       
       {isNativeLike && (
         <div className="bottom-tabs fixed bottom-0 left-0 right-0 bg-white border-t border-we-beige flex justify-around py-2 px-1 z-10 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-          <TabButton icon={<Home size={20} />} label="Accueil" isActive={false} href="/client/dashboard" />
-          <TabButton icon={<Bell size={20} />} label="Notifications" isActive={false} href="/client/notifications" />
-          <TabButton icon={<Search size={20} />} label="Explorer" isActive={false} href="/client/explore" />
-          <TabButton icon={<User size={20} />} label="Profil" isActive={false} href="/client/profile" />
+          <TabButton icon={<Home size={20} />} label={t('common.home')} isActive={false} href="/client/dashboard" />
+          <TabButton icon={<Bell size={20} />} label={t('common.notifications')} isActive={false} href="/client/notifications" />
+          <TabButton icon={<Search size={20} />} label={t('common.explore')} isActive={false} href="/client/explore" />
+          <TabButton icon={<User size={20} />} label={t('common.profile')} isActive={false} href="/client/profile" />
         </div>
       )}
     </header>

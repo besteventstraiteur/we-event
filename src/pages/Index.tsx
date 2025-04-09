@@ -5,8 +5,12 @@ import Logo from "@/components/Logo";
 import GoldButton from "@/components/GoldButton";
 import VideoPresentation from "@/components/video-presentation/VideoPresentation";
 import PresentationSection from "@/components/home/PresentationSection";
+import LanguageSelector from "@/components/LanguageSelector";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <header className="border-b border-we-gray-200 py-4">
@@ -15,14 +19,15 @@ const Index = () => {
             <Logo />
           </Link>
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-we-gold font-semibold">Accueil</Link>
-            <Link to="/partners" className="text-we-gray-700 hover:text-we-gold">Prestataires</Link>
-            <Link to="/contact" className="text-we-gray-700 hover:text-we-gold">Contact</Link>
+            <Link to="/" className="text-we-gold font-semibold">{t('common.home')}</Link>
+            <Link to="/partners" className="text-we-gray-700 hover:text-we-gold">{t('common.partners')}</Link>
+            <Link to="/contact" className="text-we-gray-700 hover:text-we-gold">{t('common.contact')}</Link>
           </div>
           <div className="flex items-center space-x-4">
+            <LanguageSelector />
             <Link to="/login">
               <GoldButton variant="outline" size="sm">
-                Connexion
+                {t('common.login')}
               </GoldButton>
             </Link>
           </div>
@@ -31,26 +36,26 @@ const Index = () => {
 
       <main className="flex-1 container py-12">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-3xl font-bold mb-8 text-we-gold">Bienvenue sur We Event</h1>
+          <h1 className="text-3xl font-bold mb-8 text-we-gold">{t('common.welcome')}</h1>
           <p className="text-we-gray-700 mb-8">
-            La plateforme exclusive qui connecte clients et prestataires événementiels de prestige.
+            {t('home.heroSubtitle')}
           </p>
           
           <div className="flex flex-col md:flex-row gap-4 justify-center mb-8">
             <Link to="/register-client">
               <GoldButton size="lg">
-                Devenir client
+                {t('home.becomeClient')}
               </GoldButton>
             </Link>
             <Link to="/register-partner">
               <GoldButton variant="outline" size="lg">
-                Devenir prestataire
+                {t('home.becomePartner')}
               </GoldButton>
             </Link>
           </div>
           
           <div className="mt-8 mb-8 flex justify-center">
-            <VideoPresentation buttonText="Découvrir toutes les fonctionnalités" />
+            <VideoPresentation buttonText={t('home.discoverFeatures')} />
           </div>
         </div>
         
@@ -62,7 +67,7 @@ const Index = () => {
         <div className="mt-12 text-center">
           <Link to="/partners">
             <GoldButton variant="outline">
-              Découvrir nos prestataires
+              {t('home.explorePartners')}
             </GoldButton>
           </Link>
         </div>
@@ -75,20 +80,20 @@ const Index = () => {
               <Logo />
             </Link>
             <p className="text-we-gray-500 text-sm">
-              © {new Date().getFullYear()} We Event. Tous droits réservés.
+              {t('home.footer.copyright')}
             </p>
             <div className="flex gap-4">
               <Link to="/partners" className="text-we-gray-600 hover:text-we-gold text-sm">
-                Nos Prestataires
+                {t('common.partners')}
               </Link>
               <Link to="/privacy" className="text-we-gray-600 hover:text-we-gold text-sm">
-                Politique de confidentialité
+                {t('home.footer.privacy')}
               </Link>
               <Link to="/terms" className="text-we-gray-600 hover:text-we-gold text-sm">
-                Conditions d'utilisation
+                {t('home.footer.terms')}
               </Link>
               <Link to="/contact" className="text-we-gray-600 hover:text-we-gold text-sm">
-                Contact
+                {t('common.contact')}
               </Link>
             </div>
           </div>

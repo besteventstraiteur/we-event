@@ -5,6 +5,8 @@ import WeEventLogo from "@/components/WeEventLogo";
 import WeEventButton from "@/components/WeEventButton";
 import { Search } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import LanguageSelector from "@/components/LanguageSelector";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface NavLinkProps {
   href: string;
@@ -31,6 +33,7 @@ interface HomeHeaderProps {}
 
 const HomeHeader: React.FC<HomeHeaderProps> = () => {
   const isMobile = useIsMobile();
+  const { t } = useLanguage();
   
   return (
     <header className="border-b border-we-beige py-4">
@@ -39,14 +42,15 @@ const HomeHeader: React.FC<HomeHeaderProps> = () => {
           <WeEventLogo size={isMobile ? "small" : "medium"} />
         </Link>
         <div className="hidden md:flex items-center space-x-6">
-          <NavLink href="/" isActive>Accueil</NavLink>
-          <NavLink href="/partners">Prestataires</NavLink>
-          <NavLink href="/contact">Contact</NavLink>
+          <NavLink href="/" isActive>{t('common.home')}</NavLink>
+          <NavLink href="/partners">{t('common.partners')}</NavLink>
+          <NavLink href="/contact">{t('common.contact')}</NavLink>
         </div>
         <div className="flex items-center space-x-2 sm:space-x-4">
+          <LanguageSelector variant={isMobile ? 'minimal' : 'standard'} />
           <Link to="/login">
             <WeEventButton variant="outline" size={isMobile ? "xs" : "sm"}>
-              Connexion
+              {t('common.login')}
             </WeEventButton>
           </Link>
           <div className="md:hidden">

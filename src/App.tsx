@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -85,94 +86,96 @@ import { UserRole } from './utils/accessControl';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Public Pages */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register-client" element={<RegisterClientPage />} />
-        <Route path="/register-partner" element={<RegisterPartnerPage />} />
-        <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="/terms" element={<TermsPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/partners" element={<PartnersPage />} />
-        <Route path="/unauthorized" element={<Unauthorized />} />
+    <LanguageProvider>
+      <Router>
+        <Routes>
+          {/* Public Pages */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register-client" element={<RegisterClientPage />} />
+          <Route path="/register-partner" element={<RegisterPartnerPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/partners" element={<PartnersPage />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
-        {/* Guest Pages */}
-        <Route path="/guest/:eventId/:guestId" element={<GuestDashboard />} />
-        <Route path="/guest/menu/:eventId/:guestId" element={<GuestMenuSelection />} />
+          {/* Guest Pages */}
+          <Route path="/guest/:eventId/:guestId" element={<GuestDashboard />} />
+          <Route path="/guest/menu/:eventId/:guestId" element={<GuestMenuSelection />} />
 
-        {/* Admin Pages - All wrapped with AdminRoute */}
-        <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-        <Route path="/admin/statistics" element={<AdminRoute><AdminStatistics /></AdminRoute>} />
-        <Route path="/admin/clients" element={<AdminRoute><AdminClients /></AdminRoute>} />
-        <Route path="/admin/partners" element={<AdminRoute><AdminPartners /></AdminRoute>} />
-        <Route path="/admin/partner-types" element={<AdminRoute><AdminPartnerTypes /></AdminRoute>} />
-        <Route path="/admin/guests" element={<AdminRoute><AdminGuests /></AdminRoute>} />
-        <Route path="/admin/venues" element={<AdminRoute><AdminVenues /></AdminRoute>} />
-        <Route path="/admin/wedding-packages" element={<AdminRoute><AdminWeddingPackages /></AdminRoute>} />
-        <Route path="/admin/ratings" element={<AdminRoute><AdminRatings /></AdminRoute>} />
-        <Route path="/admin/recommendations" element={<AdminRoute><AdminRecommendations /></AdminRoute>} />
-        <Route path="/admin/talkshows" element={<AdminRoute><AdminTalkshows /></AdminRoute>} />
-        <Route path="/admin/podcasts" element={<AdminRoute><AdminPodcasts /></AdminRoute>} />
-        <Route path="/admin/kpi-dashboard" element={<AdminRoute><AdminKpiDashboard /></AdminRoute>} />
-        <Route path="/admin/partner-gamification" element={<AdminRoute><AdminPartnerGamification /></AdminRoute>} />
-        <Route path="/admin/backup" element={<AdminRoute><AdminBackup /></AdminRoute>} />
-        <Route path="/admin/presentation" element={<AdminRoute><AdminPresentationManagement /></AdminRoute>} />
-        <Route path="/admin/subscriptions" element={<AdminRoute><AdminSubscriptions /></AdminRoute>} />
+          {/* Admin Pages - All wrapped with AdminRoute */}
+          <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/admin/statistics" element={<AdminRoute><AdminStatistics /></AdminRoute>} />
+          <Route path="/admin/clients" element={<AdminRoute><AdminClients /></AdminRoute>} />
+          <Route path="/admin/partners" element={<AdminRoute><AdminPartners /></AdminRoute>} />
+          <Route path="/admin/partner-types" element={<AdminRoute><AdminPartnerTypes /></AdminRoute>} />
+          <Route path="/admin/guests" element={<AdminRoute><AdminGuests /></AdminRoute>} />
+          <Route path="/admin/venues" element={<AdminRoute><AdminVenues /></AdminRoute>} />
+          <Route path="/admin/wedding-packages" element={<AdminRoute><AdminWeddingPackages /></AdminRoute>} />
+          <Route path="/admin/ratings" element={<AdminRoute><AdminRatings /></AdminRoute>} />
+          <Route path="/admin/recommendations" element={<AdminRoute><AdminRecommendations /></AdminRoute>} />
+          <Route path="/admin/talkshows" element={<AdminRoute><AdminTalkshows /></AdminRoute>} />
+          <Route path="/admin/podcasts" element={<AdminRoute><AdminPodcasts /></AdminRoute>} />
+          <Route path="/admin/kpi-dashboard" element={<AdminRoute><AdminKpiDashboard /></AdminRoute>} />
+          <Route path="/admin/partner-gamification" element={<AdminRoute><AdminPartnerGamification /></AdminRoute>} />
+          <Route path="/admin/backup" element={<AdminRoute><AdminBackup /></AdminRoute>} />
+          <Route path="/admin/presentation" element={<AdminRoute><AdminPresentationManagement /></AdminRoute>} />
+          <Route path="/admin/subscriptions" element={<AdminRoute><AdminSubscriptions /></AdminRoute>} />
 
-        {/* Client Pages */}
-        <Route path="/client/dashboard" element={<ClientDashboard />} />
-        <Route path="/client/budget" element={<ClientBudget />} />
-        <Route path="/client/guests" element={<ClientGuests />} />
-        <Route path="/client/todo" element={<ClientTodoList />} />
-        <Route path="/client/partners" element={<ClientPartners />} />
-        <Route path="/client/requests" element={<ClientRequests />} />
-        <Route path="/client/ratings" element={<ClientPartnerRatings />} />
-        <Route path="/client/floor-plans" element={<ClientFloorPlans />} />
-        <Route path="/client/photos" element={<ClientPhotos />} />
-        <Route path="/client/talkshows" element={<ClientTalkshows />} />
-        <Route path="/client/podcasts" element={<ClientPodcasts />} />
-        <Route path="/client/music" element={<ClientMusicPlaylists />} />
-        <Route path="/client/wedding-packages" element={<ClientWeddingPackages />} />
-        <Route path="/client/payments" element={<ClientPayments />} />
-        <Route path="/client/live-streaming" element={<ClientLiveStreaming />} />
-        <Route path="/client/day-of-communication" element={<ClientDayOfCommunication />} />
-        <Route path="/client/advanced-security" element={<AdvancedSecurity />} />
-        <Route path="/client/two-factor-setup" element={<TwoFactorSetup />} />
-        <Route path="/client/pinterbest" element={<ClientPinterbest />} />
-        <Route path="/client/menus" element={<ClientMenus />} />
-        <Route path="/client/mini-site" element={<ClientMiniSite />} />
-        <Route path="/client/account" element={<ClientAccount />} />
+          {/* Client Pages */}
+          <Route path="/client/dashboard" element={<ClientDashboard />} />
+          <Route path="/client/budget" element={<ClientBudget />} />
+          <Route path="/client/guests" element={<ClientGuests />} />
+          <Route path="/client/todo" element={<ClientTodoList />} />
+          <Route path="/client/partners" element={<ClientPartners />} />
+          <Route path="/client/requests" element={<ClientRequests />} />
+          <Route path="/client/ratings" element={<ClientPartnerRatings />} />
+          <Route path="/client/floor-plans" element={<ClientFloorPlans />} />
+          <Route path="/client/photos" element={<ClientPhotos />} />
+          <Route path="/client/talkshows" element={<ClientTalkshows />} />
+          <Route path="/client/podcasts" element={<ClientPodcasts />} />
+          <Route path="/client/music" element={<ClientMusicPlaylists />} />
+          <Route path="/client/wedding-packages" element={<ClientWeddingPackages />} />
+          <Route path="/client/payments" element={<ClientPayments />} />
+          <Route path="/client/live-streaming" element={<ClientLiveStreaming />} />
+          <Route path="/client/day-of-communication" element={<ClientDayOfCommunication />} />
+          <Route path="/client/advanced-security" element={<AdvancedSecurity />} />
+          <Route path="/client/two-factor-setup" element={<TwoFactorSetup />} />
+          <Route path="/client/pinterbest" element={<ClientPinterbest />} />
+          <Route path="/client/menus" element={<ClientMenus />} />
+          <Route path="/client/mini-site" element={<ClientMiniSite />} />
+          <Route path="/client/account" element={<ClientAccount />} />
 
-        {/* Partner Pages */}
-        <Route path="/partner/dashboard" element={<PartnerDashboard />} />
-        <Route path="/partner/tasks" element={<PartnerTasks />} />
-        <Route path="/partner/requests" element={<PartnerRequests />} />
-        <Route path="/partner/stats" element={<PartnerStats />} />
-        <Route path="/partner/photos" element={<PartnerPhotos />} />
-        <Route path="/partner/playlists" element={<PartnerPlaylists />} />
-        <Route path="/partner/menus" element={<PartnerMenus />} />
-        <Route path="/partner/floor-plans" element={<PartnerFloorPlans />} />
-        <Route path="/partner/recommendations" element={<PartnerRecommendations />} />
-        <Route path="/partner/calendar" element={<PartnerCalendar />} />
-        <Route path="/partner/gamification" element={<PartnerGamification />} />
-        <Route path="/partner/best-awards" element={<PartnerBestAwards />} />
-        <Route path="/partner/podcasts" element={<PartnerPodcasts />} />
-        <Route path="/partner/talkshows" element={<PartnerTalkshows />} />
-        <Route path="/partner/subscription" element={
-          <ProtectedRoute 
-            allowedRoles={[UserRole.PARTNER]} 
-            fallbackPath="/login"
-          >
-            <PartnerSubscription />
-          </ProtectedRoute>
-        } />
+          {/* Partner Pages */}
+          <Route path="/partner/dashboard" element={<PartnerDashboard />} />
+          <Route path="/partner/tasks" element={<PartnerTasks />} />
+          <Route path="/partner/requests" element={<PartnerRequests />} />
+          <Route path="/partner/stats" element={<PartnerStats />} />
+          <Route path="/partner/photos" element={<PartnerPhotos />} />
+          <Route path="/partner/playlists" element={<PartnerPlaylists />} />
+          <Route path="/partner/menus" element={<PartnerMenus />} />
+          <Route path="/partner/floor-plans" element={<PartnerFloorPlans />} />
+          <Route path="/partner/recommendations" element={<PartnerRecommendations />} />
+          <Route path="/partner/calendar" element={<PartnerCalendar />} />
+          <Route path="/partner/gamification" element={<PartnerGamification />} />
+          <Route path="/partner/best-awards" element={<PartnerBestAwards />} />
+          <Route path="/partner/podcasts" element={<PartnerPodcasts />} />
+          <Route path="/partner/talkshows" element={<PartnerTalkshows />} />
+          <Route path="/partner/subscription" element={
+            <ProtectedRoute 
+              allowedRoles={[UserRole.PARTNER]} 
+              fallbackPath="/login"
+            >
+              <PartnerSubscription />
+            </ProtectedRoute>
+          } />
 
-        {/* 404 - Not Found */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+          {/* 404 - Not Found */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </LanguageProvider>
   );
 }
 
