@@ -45,7 +45,7 @@ const MobileDashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type 
         
         <div className="flex flex-col flex-1 overflow-hidden">
           <Header 
-            type={type} 
+            type={type === "guest" ? "client" : type} 
             isMobile={isMobile} 
             onMenuClick={toggleSidebar}
           />

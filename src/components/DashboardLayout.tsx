@@ -47,7 +47,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => 
           
           <div className="flex flex-col flex-1 overflow-hidden">
             <Header 
-              type={type} 
+              type={type === "guest" ? "client" : type} 
               isMobile={true} 
               onMenuClick={toggleSidebar}
             />
@@ -69,7 +69,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => 
       <Sidebar type={type} onLogout={handleLogout} />
       
       <div className="flex flex-col flex-1 overflow-hidden">
-        <Header type={type} />
+        <Header type={type === "guest" ? "client" : type} />
         
         <main className="flex-1 overflow-y-auto p-6 bg-gradient-to-br from-white to-gray-50">
           <div className="container mx-auto">

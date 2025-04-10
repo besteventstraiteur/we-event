@@ -9,7 +9,7 @@ import AdminNavigation from "./AdminNavigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SidebarProps {
-  type: "client" | "partner" | "admin";
+  type: "client" | "partner" | "admin" | "guest";
   onLogout: () => void;
   mobile?: boolean;
   onMenuClose?: () => void;
@@ -35,6 +35,7 @@ const Sidebar = ({ type, onLogout, mobile = false, onMenuClose }: SidebarProps) 
         {type === "client" && <ClientNavigation />}
         {type === "partner" && <PartnerNavigation />}
         {type === "admin" && <AdminNavigation />}
+        {/* Guest Navigation would be added here if needed */}
       </nav>
 
       <Button

@@ -9,7 +9,7 @@ import LanguageSelector from "@/components/LanguageSelector";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface HeaderProps {
-  type: "client" | "partner" | "admin";
+  type: "client" | "partner" | "admin" | "guest";
   isMobile?: boolean;
   onMenuClick?: () => void;
   title?: string;
@@ -116,6 +116,7 @@ const Header = ({
             {type === "client" && t('common.clientSpace')}
             {type === "partner" && t('common.partnerSpace')}
             {type === "admin" && t('common.administration')}
+            {type === "guest" && t('common.guestSpace')}
           </div>
           {isNativeLike && <div className="sm:hidden w-1"></div>}
         </div>
