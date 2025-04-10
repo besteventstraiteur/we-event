@@ -20,13 +20,8 @@ const HomePage: React.FC<HomePageProps> = () => {
         <HomeHeader />
 
         <main className="flex-1">
-          {/* Hero Section */}
           <HeroSection />
-
-          {/* Categories Section */}
           <CategoriesSection />
-
-          {/* Testimonials Section */}
           <TestimonialsSection />
         </main>
 

@@ -38,8 +38,8 @@ const ContactPage = () => {
     // Simulation d'envoi du message
     setTimeout(() => {
       toast({
-        title: "Message envoyé",
-        description: "Nous vous répondrons dans les plus brefs délais."
+        title: t('contact.messageSent'),
+        description: t('contact.messageResponse')
       });
       
       setFormData({
@@ -80,7 +80,7 @@ const ContactPage = () => {
         <div className="max-w-5xl mx-auto">
           <h1 className="text-3xl font-bold mb-2 text-center text-vip-black">{t('common.contact')}</h1>
           <p className="text-vip-gray-600 text-center mb-12">
-            Nous sommes à votre disposition pour répondre à toutes vos questions
+            {t('contact.subtitle')}
           </p>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -88,11 +88,11 @@ const ContactPage = () => {
               <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border border-gray-200">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-vip-gray-700 mb-1">
-                    Votre nom
+                    {t('contact.form.name')}
                   </label>
                   <Input 
                     id="name"
-                    placeholder="John Doe"
+                    placeholder={t('contact.form.namePlaceholder')}
                     className="bg-white border-gray-300"
                     value={formData.name}
                     onChange={handleChange}
@@ -102,12 +102,12 @@ const ContactPage = () => {
                 
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-vip-gray-700 mb-1">
-                    Votre email
+                    {t('contact.form.email')}
                   </label>
                   <Input 
                     id="email"
                     type="email"
-                    placeholder="john@example.com"
+                    placeholder={t('contact.form.emailPlaceholder')}
                     className="bg-white border-gray-300"
                     value={formData.email}
                     onChange={handleChange}
@@ -117,7 +117,7 @@ const ContactPage = () => {
                 
                 <div>
                   <label htmlFor="subject" className="block text-sm font-medium text-vip-gray-700 mb-1">
-                    Sujet
+                    {t('contact.form.subject')}
                   </label>
                   <Select
                     value={formData.subject}
@@ -125,26 +125,26 @@ const ContactPage = () => {
                     required
                   >
                     <SelectTrigger className="bg-white border-gray-300">
-                      <SelectValue placeholder="Sélectionner un sujet" />
+                      <SelectValue placeholder={t('contact.form.subjectPlaceholder')} />
                     </SelectTrigger>
                     <SelectContent className="bg-white border-gray-300">
-                      <SelectItem value="Demande d'information">Demande d'information</SelectItem>
-                      <SelectItem value="Inscription client">Inscription client</SelectItem>
-                      <SelectItem value="Inscription partenaire">Inscription partenaire</SelectItem>
-                      <SelectItem value="Support technique">Support technique</SelectItem>
-                      <SelectItem value="Signaler un problème">Signaler un problème</SelectItem>
-                      <SelectItem value="Autre">Autre</SelectItem>
+                      <SelectItem value="Demande d'information">{t('contact.form.subjects.info')}</SelectItem>
+                      <SelectItem value="Inscription client">{t('contact.form.subjects.client')}</SelectItem>
+                      <SelectItem value="Inscription partenaire">{t('contact.form.subjects.partner')}</SelectItem>
+                      <SelectItem value="Support technique">{t('contact.form.subjects.support')}</SelectItem>
+                      <SelectItem value="Signaler un problème">{t('contact.form.subjects.problem')}</SelectItem>
+                      <SelectItem value="Autre">{t('contact.form.subjects.other')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-vip-gray-700 mb-1">
-                    Votre message
+                    {t('contact.form.message')}
                   </label>
                   <Textarea
                     id="message"
-                    placeholder="Comment pouvons-nous vous aider?"
+                    placeholder={t('contact.form.messagePlaceholder')}
                     className="bg-white border-gray-300 min-h-[150px]"
                     value={formData.message}
                     onChange={handleChange}
@@ -153,20 +153,20 @@ const ContactPage = () => {
                 </div>
                 
                 <GoldButton type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Envoi en cours..." : "Envoyer le message"}
+                  {isLoading ? t('contact.form.sending') : t('contact.form.send')}
                 </GoldButton>
               </form>
             </div>
             
             <div>
               <div className="bg-white p-6 rounded-lg border border-gray-200 space-y-6">
-                <h2 className="text-xl font-semibold text-vip-gold">Informations de contact</h2>
+                <h2 className="text-xl font-semibold text-vip-gold">{t('contact.info.title')}</h2>
                 
                 <div className="space-y-4">
                   <div className="flex items-start">
                     <Mail className="text-vip-gold mr-3 mt-1" size={20} />
                     <div>
-                      <p className="font-medium text-vip-black">Email</p>
+                      <p className="font-medium text-vip-black">{t('contact.info.email')}</p>
                       <a href="mailto:contact@we-event.com" className="text-vip-gray-700 hover:text-vip-gold">
                         contact@we-event.com
                       </a>
@@ -176,7 +176,7 @@ const ContactPage = () => {
                   <div className="flex items-start">
                     <Phone className="text-vip-gold mr-3 mt-1" size={20} />
                     <div>
-                      <p className="font-medium text-vip-black">Téléphone</p>
+                      <p className="font-medium text-vip-black">{t('contact.info.phone')}</p>
                       <a href="tel:+33123456789" className="text-vip-gray-700 hover:text-vip-gold">
                         +33 1 23 45 67 89
                       </a>
@@ -186,36 +186,36 @@ const ContactPage = () => {
                   <div className="flex items-start">
                     <MapPin className="text-vip-gold mr-3 mt-1" size={20} />
                     <div>
-                      <p className="font-medium text-vip-black">Adresse</p>
+                      <p className="font-medium text-vip-black">{t('contact.info.address')}</p>
                       <p className="text-vip-gray-700">
-                        123 Avenue des Champs-Élysées<br />
-                        75008 Paris, France
+                        {t('contact.info.addressLine1')}<br />
+                        {t('contact.info.addressLine2')}
                       </p>
                     </div>
                   </div>
                 </div>
                 
                 <div className="pt-6 border-t border-gray-300">
-                  <h3 className="text-vip-black font-medium mb-3">Horaires d'ouverture</h3>
+                  <h3 className="text-vip-black font-medium mb-3">{t('contact.info.hours.title')}</h3>
                   <div className="space-y-2 text-vip-gray-700">
                     <div className="flex justify-between">
-                      <span>Lundi - Vendredi</span>
-                      <span>9h - 18h</span>
+                      <span>{t('contact.info.hours.weekdays')}</span>
+                      <span>{t('contact.info.hours.weekdayHours')}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Samedi</span>
-                      <span>10h - 15h</span>
+                      <span>{t('contact.info.hours.saturday')}</span>
+                      <span>{t('contact.info.hours.saturdayHours')}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Dimanche</span>
-                      <span>Fermé</span>
+                      <span>{t('contact.info.hours.sunday')}</span>
+                      <span>{t('contact.info.hours.sundayHours')}</span>
                     </div>
                   </div>
                 </div>
               </div>
               
               <div className="mt-6 bg-white p-6 rounded-lg border border-gray-200">
-                <h2 className="text-xl font-semibold text-vip-gold mb-4">Suivez-nous</h2>
+                <h2 className="text-xl font-semibold text-vip-gold mb-4">{t('contact.social.title')}</h2>
                 <div className="flex gap-4">
                   <a href="#" className="p-2 bg-white rounded-full hover:bg-vip-gold/20">
                     <svg className="w-5 h-5 text-vip-gold" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
