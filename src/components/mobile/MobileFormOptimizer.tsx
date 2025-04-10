@@ -18,7 +18,7 @@ const MobileFormOptimizer: React.FC<MobileFormOptimizerProps> = ({
   const formRef = useRef<HTMLDivElement>(null);
   const [activeInput, setActiveInput] = useState<HTMLElement | null>(null);
   
-  // Ne rien faire si ce n'est pas un appareil mobile
+  // Don't do anything if not a mobile device
   if (!isMobile) {
     return <div className={className}>{children}</div>;
   }
@@ -67,7 +67,7 @@ const MobileFormOptimizer: React.FC<MobileFormOptimizerProps> = ({
     >
       {children}
       
-      {/* Bouton de soumission flottant qui apparaît quand le clavier est visible */}
+      {/* Done button that appears when keyboard is visible */}
       {isKeyboardVisible && (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-end z-50">
           <button
