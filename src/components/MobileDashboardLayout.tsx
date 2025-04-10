@@ -10,7 +10,7 @@ import LogoutButton from "@/components/auth/LogoutButton";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  type: "client" | "partner" | "admin";
+  type: "client" | "partner" | "admin" | "guest";
 }
 
 const MobileDashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => {

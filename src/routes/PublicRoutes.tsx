@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 // Public pages
 import HomePage from "@/pages/HomePage";
@@ -23,7 +23,7 @@ interface PublicRoutesProps {
 
 const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
   return (
-    <>
+    <React.Fragment>
       {/* Page d'accueil - redirige vers la version mobile si nécessaire */}
       <Route 
         path="/" 
@@ -48,7 +48,7 @@ const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
       
       {/* Page 404 */}
       <Route path="*" element={<NotFound />} />
-    </>
+    </React.Fragment>
   );
 };
 

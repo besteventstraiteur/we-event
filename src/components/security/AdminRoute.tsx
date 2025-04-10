@@ -1,17 +1,15 @@
 
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { UserRole } from "@/utils/accessControl";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 interface AdminRouteProps {
-  children: React.ReactNode;
   fallbackPath?: string;
 }
 
 const AdminRoute: React.FC<AdminRouteProps> = ({
-  children,
   fallbackPath = "/login"
 }) => {
   const { user, isLoading, hasRole } = useAuth();
@@ -41,7 +39,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
 
   console.log("AdminRoute - Admin access granted");
   // Si toutes les vérifications sont réussies, afficher le contenu protégé
-  return <>{children}</>;
+  return <Outlet />;
 };
 
 export default AdminRoute;

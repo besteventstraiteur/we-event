@@ -3,7 +3,7 @@ import React from "react";
 
 interface MobileAppWrapperProps {
   children: React.ReactNode;
-  type: "client" | "partner" | "admin";
+  type: "client" | "partner" | "admin" | "guest";
 }
 
 const MobileAppWrapper: React.FC<MobileAppWrapperProps> = ({ children, type }) => {

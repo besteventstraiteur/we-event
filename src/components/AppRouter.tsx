@@ -34,17 +34,13 @@ const AppRouter: React.FC<AppRouterProps> = () => {
   return (
     <MapProvider>
       <Routes>
-        {/* Public and Guest Routes */}
+        {/* Use the individual routes from PublicRoutes component */}
         <PublicRoutes isMobileInterface={isMobileInterface} />
         
-        {/* Client Routes */}
-        <ClientRoutes />
-        
-        {/* Partner Routes */}
-        <PartnerRoutes />
-        
-        {/* Admin Routes */}
-        <AdminRoutes />
+        {/* Client, Partner and Admin Routes */}
+        <Route path="/client/*" element={<ClientRoutes />} />
+        <Route path="/partner/*" element={<PartnerRoutes />} />
+        <Route path="/admin/*" element={<AdminRoutes />} />
       </Routes>
     </MapProvider>
   );
