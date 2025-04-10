@@ -15,6 +15,18 @@ export default {
     administration: "Administration",
     welcome: "Bienvenue sur We Event",
   },
+  partners: {
+    title: "Nos partenaires",
+    subtitle: "Découvrez notre réseau de prestataires professionnels pour votre événement",
+    searchPlaceholder: "Rechercher un prestataire...",
+    vipAdvantage: "Avantage VIP:",
+    vipDescription: "En tant que client VIP, bénéficiez de réductions exclusives chez tous nos partenaires.",
+    allCategory: "Toutes les catégories",
+    seeDetails: "Voir les détails",
+    joinVipTitle: "Rejoignez notre programme VIP",
+    joinVipDescription: "Bénéficiez d'avantages exclusifs et de réductions auprès de tous nos prestataires partenaires.",
+    joinVipButton: "S'inscrire au programme VIP"
+  },
   home: {
     heroTitle: "Organisez votre événement parfait",
     heroSubtitle: "Planifiez, coordonnez et profitez de votre journée spéciale avec nos outils professionnels.",
