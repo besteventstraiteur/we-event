@@ -1,18 +1,22 @@
 
 import React from "react";
 import { Navigate, useLocation, Outlet } from "react-router-dom";
-import { UserRole } from "@/utils/accessControl";
+import { UserRole, PartnerType } from "@/utils/accessControl";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 interface PartnerTypeRouteProps {
-  requiredRole: UserRole.PARTNER;
+  requiredRole?: UserRole.PARTNER;
   fallbackPath?: string;
+  allowedTypes?: PartnerType[];
+  children?: React.ReactNode;
 }
 
 const PartnerTypeRoute: React.FC<PartnerTypeRouteProps> = ({
-  requiredRole,
-  fallbackPath = "/login"
+  requiredRole = UserRole.PARTNER,
+  fallbackPath = "/login",
+  allowedTypes,
+  children
 }) => {
   const { user, isLoading, hasRole } = useAuth();
   const location = useLocation();
@@ -38,9 +42,19 @@ const PartnerTypeRoute: React.FC<PartnerTypeRouteProps> = ({
     console.log("PartnerTypeRoute - User is not a partner:", user.role);
     return <Navigate to="/unauthorized" replace />;
   }
+  
+  // If specific partner types are required, check for those
+  if (allowedTypes && allowedTypes.length > 0) {
+    // Assuming user has a partnerType property
+    const hasAllowedType = user.partnerType && allowedTypes.includes(user.partnerType);
+    if (!hasAllowedType) {
+      console.log("PartnerTypeRoute - Partner type not allowed:", user.partnerType);
+      return <Navigate to="/unauthorized" replace />;
+    }
+  }
 
   // Si toutes les vérifications sont réussies, afficher le contenu protégé
-  return <Outlet />;
+  return children ? <>{children}</> : <Outlet />;
 };
 
 export default PartnerTypeRoute;

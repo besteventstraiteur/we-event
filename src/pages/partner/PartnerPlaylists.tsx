@@ -7,7 +7,7 @@ import { PlusCircle, Music, Search, Share } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useDjPlaylists } from "@/hooks/useDjPlaylists";
 import PartnerTypeRoute from "@/components/security/PartnerTypeRoute";
-import { PartnerType } from "@/utils/accessControl";
+import { PartnerType, UserRole } from "@/utils/accessControl";
 import { useToast } from "@/hooks/use-toast";
 
 // This component will be wrapped with PartnerTypeRoute later
@@ -164,7 +164,10 @@ const PartnerPlaylistsContent = () => {
 
 // Wrap the component with the PartnerTypeRoute to restrict access
 const PartnerPlaylists = () => (
-  <PartnerTypeRoute allowedTypes={[PartnerType.DJ, PartnerType.GENERAL]}>
+  <PartnerTypeRoute 
+    requiredRole={UserRole.PARTNER}
+    allowedTypes={[PartnerType.DJ, PartnerType.GENERAL]}
+  >
     <PartnerPlaylistsContent />
   </PartnerTypeRoute>
 );

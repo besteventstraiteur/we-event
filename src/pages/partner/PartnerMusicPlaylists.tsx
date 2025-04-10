@@ -2,7 +2,7 @@
 import React from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import PartnerTypeRoute from "@/components/security/PartnerTypeRoute";
-import { PartnerType } from "@/utils/accessControl";
+import { PartnerType, UserRole } from "@/utils/accessControl";
 
 // This component will be wrapped with PartnerTypeRoute later
 const PartnerMusicPlaylistsContent = () => {
@@ -18,7 +18,10 @@ const PartnerMusicPlaylistsContent = () => {
 
 // Wrap the component to restrict access to DJs only
 const PartnerMusicPlaylists = () => (
-  <PartnerTypeRoute allowedTypes={[PartnerType.DJ, PartnerType.GENERAL]}>
+  <PartnerTypeRoute 
+    requiredRole={UserRole.PARTNER}
+    allowedTypes={[PartnerType.DJ, PartnerType.GENERAL]}
+  >
     <PartnerMusicPlaylistsContent />
   </PartnerTypeRoute>
 );

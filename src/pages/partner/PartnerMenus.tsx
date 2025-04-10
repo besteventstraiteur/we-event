@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import PartnerTypeRoute from "@/components/security/PartnerTypeRoute";
-import { PartnerType } from "@/utils/accessControl";
+import { PartnerType, UserRole } from "@/utils/accessControl";
 import { Input } from "@/components/ui/input";
 
 const PartnerMenus = () => {
@@ -81,7 +81,10 @@ const PartnerMenus = () => {
 
 // Wrap the component with the PartnerTypeRoute to restrict access
 const ProtectedPartnerMenus = () => (
-  <PartnerTypeRoute allowedTypes={[PartnerType.CATERER, PartnerType.GENERAL]}>
+  <PartnerTypeRoute 
+    requiredRole={UserRole.PARTNER}
+    allowedTypes={[PartnerType.CATERER, PartnerType.GENERAL]}
+  >
     <PartnerMenus />
   </PartnerTypeRoute>
 );

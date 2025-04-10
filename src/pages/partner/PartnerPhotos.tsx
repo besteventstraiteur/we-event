@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import PartnerTypeRoute from "@/components/security/PartnerTypeRoute";
-import { PartnerType } from "@/utils/accessControl";
+import { PartnerType, UserRole } from "@/utils/accessControl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -111,7 +111,10 @@ const PartnerPhotos = () => {
 
 // Wrap the component to restrict access to photographers only
 const ProtectedPartnerPhotos = () => (
-  <PartnerTypeRoute allowedTypes={[PartnerType.PHOTOGRAPHER, PartnerType.GENERAL]}>
+  <PartnerTypeRoute 
+    requiredRole={UserRole.PARTNER}
+    allowedTypes={[PartnerType.PHOTOGRAPHER, PartnerType.GENERAL]}
+  >
     <PartnerPhotos />
   </PartnerTypeRoute>
 );

@@ -1,59 +1,58 @@
 
-// Types d'utilisateur du système
 export enum UserRole {
   CLIENT = "client",
   PARTNER = "partner",
   ADMIN = "admin",
-  GUEST = "guest",
-  UNREGISTERED = "unregistered"
+  GUEST = "guest"
 }
 
-// Types de partenaires
 export enum PartnerType {
+  VENUE = "venue",
+  CATERER = "caterer",
   PHOTOGRAPHER = "photographer",
   DJ = "dj",
-  CATERER = "caterer",
-  VENUE = "venue",
-  DECORATOR = "decorator",
-  VIDEOGRAPHER = "videographer",
-  ARTIST = "artist",
   FLORIST = "florist",
-  WEDDING_PLANNER = "wedding_planner",
-  GENERAL = "general",
+  DECORATOR = "decorator",
+  BEAUTY = "beauty",
+  TRANSPORT = "transport",
+  ENTERTAINMENT = "entertainment",
+  GENERAL = "general"
 }
 
-// Permissions du système
-export enum Permission {
-  VIEW_DASHBOARD = "view_dashboard",
-  MANAGE_GUESTS = "manage_guests",
-  MANAGE_VENUES = "manage_venues",
-  MANAGE_PARTNERS = "manage_partners",
-  MANAGE_CLIENTS = "manage_clients",
-  MANAGE_REQUESTS = "manage_requests",
-  ACCESS_ADMIN = "access_admin",
+export enum GuestType {
+  STANDARD = "standard",
+  VIP = "vip",
+  FAMILY = "family",
+  VENDOR = "vendor"
 }
 
-// Type pour les utilisateurs avec contrôle d'accès
-export interface AccessControlUser {
-  id: string;
-  role: UserRole;
-  partnerType?: PartnerType;
-  permissions?: Permission[];
-  email?: string;
-  name?: string;
-}
-
-// Fonctions auxiliaires pour le contrôle d'accès
-export const hasPermission = (user: AccessControlUser | null, permission: Permission, resourceOwnerId?: string): boolean => {
-  if (!user) return false;
-  
-  if (user.role === UserRole.ADMIN) return true;
-  
-  // If checking resource ownership
-  if (resourceOwnerId && user.id === resourceOwnerId) return true;
-  
-  return !!user.permissions?.includes(permission);
+// Access control utilities
+export const canAccessPartnerFeature = (userRole: UserRole | undefined): boolean => {
+  return userRole === UserRole.PARTNER || userRole === UserRole.ADMIN;
 };
 
-// Explicitly export the alias for use in useAccessControl
-export const userHasPermission = hasPermission;
+export const canAccessAdminFeature = (userRole: UserRole | undefined): boolean => {
+  return userRole === UserRole.ADMIN;
+};
+
+export const canAccessClientFeature = (userRole: UserRole | undefined): boolean => {
+  return userRole === UserRole.CLIENT || userRole === UserRole.ADMIN;
+};
+
+export const canManageVenues = (
+  userRole: UserRole | undefined,
+  partnerType?: PartnerType
+): boolean => {
+  if (userRole === UserRole.ADMIN) return true;
+  if (userRole === UserRole.PARTNER && partnerType === PartnerType.VENUE) return true;
+  return false;
+};
+
+export const canEditGuestSettings = (
+  userRole: UserRole | undefined,
+  isEventCreator = false
+): boolean => {
+  if (userRole === UserRole.ADMIN) return true;
+  if (userRole === UserRole.CLIENT && isEventCreator) return true;
+  return false;
+};

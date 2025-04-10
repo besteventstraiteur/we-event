@@ -34,7 +34,6 @@ const AppRouter: React.FC<AppRouterProps> = () => {
   return (
     <MapProvider>
       <Routes>
-        {/* Use the individual routes from PublicRoutes component */}
         <PublicRoutes isMobileInterface={isMobileInterface} />
         
         {/* Client, Partner and Admin Routes */}

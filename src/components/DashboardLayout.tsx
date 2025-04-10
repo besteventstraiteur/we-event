@@ -10,7 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  type: "client" | "partner" | "admin";
+  type: "client" | "partner" | "admin" | "guest";
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => {
