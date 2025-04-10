@@ -56,7 +56,6 @@ if (window.navigator && (window.navigator as any).standalone === true) {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
-    <Toaster />
   </React.StrictMode>,
 );
 

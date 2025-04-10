@@ -1,47 +1,16 @@
 
-import React, { useRef } from "react";
-import { useLocation } from "react-router-dom";
-import MobileNavigation from "./MobileNavigation";
-import { useDeviceType } from "@/hooks/use-mobile";
-import { useTouchGestures } from "@/hooks/use-touch-gestures";
-import MobileFormOptimizer from "./MobileFormOptimizer";
+import React from "react";
 
 interface MobileAppWrapperProps {
   children: React.ReactNode;
-  type: "client" | "partner" | "admin" | "guest";
-  hasBottomNav?: boolean;
+  type: "client" | "partner" | "admin";
 }
 
-const MobileAppWrapper: React.FC<MobileAppWrapperProps> = ({ 
-  children, 
-  type,
-  hasBottomNav = true
-}) => {
-  const deviceType = useDeviceType();
-  const isMobile = deviceType === 'mobile' || deviceType === 'tablet';
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { swiping, direction } = useTouchGestures(containerRef);
-  const location = useLocation();
-  
-  // Si ce n'est pas un appareil mobile, simplement retourner les enfants
-  if (!isMobile) {
-    return <>{children}</>;
-  }
-  
+const MobileAppWrapper: React.FC<MobileAppWrapperProps> = ({ children, type }) => {
+  // Add any mobile-specific setup here
   return (
-    <div 
-      ref={containerRef}
-      className="mobile-view min-h-screen bg-white overflow-x-hidden"
-    >
-      <div className={`${hasBottomNav ? 'pb-16' : ''}`}>
-        {/* Applique l'optimisateur de formulaire à tout le contenu */}
-        <MobileFormOptimizer className="min-h-screen">
-          {children}
-        </MobileFormOptimizer>
-        
-        {/* Ajoute la navigation mobile */}
-        {hasBottomNav && <MobileNavigation type={type} />}
-      </div>
+    <div className="mobile-app-wrapper" data-app-type={type}>
+      {children}
     </div>
   );
 };

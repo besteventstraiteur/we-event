@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AuthLayout from "@/components/AuthLayout";
@@ -45,7 +44,6 @@ const LoginPage = () => {
     handleBiometricAuth
   } = useBiometricLogin();
 
-  // Rediriger si déjà connecté
   useEffect(() => {
     if (isAuthenticated && user) {
       const redirectTo = getRedirectPathForUser(user.role);
@@ -69,7 +67,6 @@ const LoginPage = () => {
             description: "Veuillez entrer le code de sécurité envoyé à votre appareil.",
           });
         } else {
-          // La redirection sera gérée par l'effet useEffect qui surveille isAuthenticated
           toast({
             title: "Connexion réussie",
             description: "Bienvenue sur votre espace VIP",
@@ -120,7 +117,6 @@ const LoginPage = () => {
     const isValid = code === "123456"; // Code de démo
     
     if (isValid) {
-      // Redirection gérée par l'effet useEffect
       return true;
     }
     
@@ -129,11 +125,9 @@ const LoginPage = () => {
 
   const handleSocialLoginSuccess = async (provider: string, userData?: any) => {
     try {
-      // Utiliser le service d'authentification pour la connexion sociale
       const result = await loginWithProvider(provider);
       
       if (result.success) {
-        // Redirection gérée par l'effet useEffect
         toast({
           title: "Connexion réussie",
           description: `Bienvenue ${result.user?.name || ''}`,
@@ -158,11 +152,10 @@ const LoginPage = () => {
   const handleBiometricLogin = async () => {
     const result = await handleBiometricAuth();
     if (result.success) {
-      // Simuler une connexion avec l'e-mail stocké
       const storedEmail = localStorage.getItem('weddingPlannerEmail') || 'client@example.com';
       await login({
         email: storedEmail,
-        password: "biometric-auth", // Mot de passe factice pour l'authentification biométrique
+        password: "biometric-auth",
         rememberMe: true
       });
     }
