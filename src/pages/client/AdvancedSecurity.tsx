@@ -53,7 +53,7 @@ const AdvancedSecurity: React.FC = () => {
   // Check if the user has access to view advanced settings
   // Let's check for a permission that exists in the enum
   const canAccessAdvancedSettings = currentUser?.role === UserRole.ADMIN || 
-                                   hasPermission(Permission.MANAGE_CLIENTS);
+                                   hasPermission(Permission.ACCESS_ADVANCED_SECURITY);
 
   return (
     <DashboardLayout type="client">
