@@ -1,17 +1,19 @@
 
 import React, { useState } from "react";
 import { ArrowRight } from "lucide-react";
-import VideoPresentation from "@/components/video-presentation/VideoPresentation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import PlatformPresentation from "@/components/video-presentation/PlatformPresentation";
 
 interface PresentationSectionProps {}
 
 const PresentationSection: React.FC<PresentationSectionProps> = () => {
   const isMobile = useIsMobile();
   const { t } = useLanguage();
+  const [showClientPresentation, setShowClientPresentation] = useState(false);
+  const [showPartnerPresentation, setShowPartnerPresentation] = useState(false);
   
   return (
     <section className="py-12 bg-we-white">
@@ -24,7 +26,6 @@ const PresentationSection: React.FC<PresentationSectionProps> = () => {
             <p className="text-we-gray-700 mb-6">
               {t('home.presentationDescription')}
             </p>
-            <VideoPresentation buttonText={t('home.watchPresentation')} />
           </div>
           <div className="w-full md:w-1/2">
             <img
@@ -48,7 +49,12 @@ const PresentationSection: React.FC<PresentationSectionProps> = () => {
                 {t('home.clientPresentationDescription')}
               </p>
             </div>
-            <VideoPresentation buttonText={t('home.watchClientPresentation')} />
+            <Button 
+              onClick={() => setShowClientPresentation(true)}
+              className="flex items-center gap-2 bg-vip-gold hover:bg-amber-600 text-white"
+            >
+              {t('home.watchClientPresentation')}
+            </Button>
           </div>
           
           {/* Partner Presentation */}
@@ -59,9 +65,33 @@ const PresentationSection: React.FC<PresentationSectionProps> = () => {
                 {t('home.partnerPresentationDescription')}
               </p>
             </div>
-            <VideoPresentation buttonText={t('home.watchPartnerPresentation')} />
+            <Button 
+              onClick={() => setShowPartnerPresentation(true)}
+              className="flex items-center gap-2 bg-vip-gold hover:bg-amber-600 text-white"
+            >
+              {t('home.watchPartnerPresentation')}
+            </Button>
           </div>
         </div>
+
+        {/* Conditional rendering of presentations */}
+        {showClientPresentation && (
+          <PlatformPresentation 
+            onClose={() => setShowClientPresentation(false)} 
+            title={t('home.clientPresentationTitle')}
+            description={t('home.clientPresentationDescription')}
+            clientOnly={true}
+          />
+        )}
+        
+        {showPartnerPresentation && (
+          <PlatformPresentation 
+            onClose={() => setShowPartnerPresentation(false)} 
+            title={t('home.partnerPresentationTitle')}
+            description={t('home.partnerPresentationDescription')}
+            partnerOnly={true}
+          />
+        )}
       </div>
     </section>
   );
