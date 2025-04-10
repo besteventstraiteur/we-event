@@ -1,13 +1,11 @@
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
 import Header from "@/components/dashboard/Header";
 import Sidebar from "@/components/dashboard/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileAppWrapper from "@/components/mobile/MobileAppWrapper";
+import { useAuth } from "@/hooks/useAuth";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -16,12 +14,12 @@ interface DashboardLayoutProps {
 
 const MobileDashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { logout } = useAuth();
   
   const handleLogout = () => {
-    // Simulation de déconnexion - redirection vers la page de connexion
-    navigate("/login");
+    // Utiliser notre service d'authentification
+    logout();
   };
   
   const toggleSidebar = () => {

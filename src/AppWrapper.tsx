@@ -7,6 +7,8 @@ import AppRouter from "@/components/AppRouter";
 import { CartProvider } from "@/contexts/CartContext";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { AuthProvider } from "@/hooks/useAuth";
+import TokenRefresher from "@/components/security/TokenRefresher";
+import SessionTimeout from "@/components/security/SessionTimeout";
 
 const AppWrapper: React.FC = () => {
   return (
@@ -14,10 +16,14 @@ const AppWrapper: React.FC = () => {
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <LanguageProvider>
           <AuthProvider>
-            <CartProvider>
-              <AppRouter />
-              <Toaster />
-            </CartProvider>
+            <TokenRefresher>
+              <SessionTimeout>
+                <CartProvider>
+                  <AppRouter />
+                  <Toaster />
+                </CartProvider>
+              </SessionTimeout>
+            </TokenRefresher>
           </AuthProvider>
         </LanguageProvider>
       </ThemeProvider>
