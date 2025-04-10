@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import WeEventButton from "@/components/WeEventButton";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Testimonial {
   name: string;
@@ -15,23 +16,25 @@ interface Testimonial {
 interface TestimonialsSectionProps {}
 
 const TestimonialsSection: React.FC<TestimonialsSectionProps> = () => {
+  const { t } = useLanguage();
+
   const testimonials: Testimonial[] = [
     {
-      name: "Marie & Pierre",
-      event: "Mariage à Paris",
-      text: "We Event a transformé notre mariage en un moment d'exception. L'équipe est à l'écoute et vraiment professionnelle.",
+      name: t('home.testimonials.person1.name'),
+      event: t('home.testimonials.person1.event'),
+      text: t('home.testimonials.person1.text'),
       rating: 5
     },
     {
-      name: "Sophie L.",
-      event: "Anniversaire d'entreprise",
-      text: "Organiser un événement professionnel n'a jamais été aussi simple. Merci pour votre accompagnement !",
+      name: t('home.testimonials.person2.name'),
+      event: t('home.testimonials.person2.event'),
+      text: t('home.testimonials.person2.text'),
       rating: 4.5
     },
     {
-      name: "Thomas & Julie",
-      event: "Mariage champêtre",
-      text: "Des prestataires de qualité et un suivi impeccable. Nous recommandons vivement !",
+      name: t('home.testimonials.person3.name'),
+      event: t('home.testimonials.person3.event'),
+      text: t('home.testimonials.person3.text'),
       rating: 5
     }
   ];
@@ -40,8 +43,8 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = () => {
     <section className="py-12 sm:py-16 bg-we-beige/30">
       <div className="container">
         <div className="text-center mb-10">
-          <h2 className="font-display text-2xl sm:text-3xl mb-2 text-we-green">Ce qu'ils en disent</h2>
-          <p className="text-we-gray-600">Des événements réussis et des clients satisfaits</p>
+          <h2 className="font-display text-2xl sm:text-3xl mb-2 text-we-green">{t('home.testimonialsTitle')}</h2>
+          <p className="text-we-gray-600">{t('home.testimonialsSubtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -69,7 +72,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = () => {
         <div className="mt-8 text-center">
           <Link to="/partners">
             <WeEventButton>
-              Voir tous les avis
+              {t('home.seeAllReviews')}
             </WeEventButton>
           </Link>
         </div>

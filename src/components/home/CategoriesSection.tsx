@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ChevronDown, Star, MessageSquare, Image, Calendar } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import WeEventButton from "@/components/WeEventButton";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CategoryItem {
   name: string;
@@ -14,19 +15,21 @@ interface CategoryItem {
 interface CategoriesSectionProps {}
 
 const CategoriesSection: React.FC<CategoriesSectionProps> = () => {
+  const { t } = useLanguage();
+  
   const categories: CategoryItem[] = [
-    { name: "Traiteurs", icon: <Image size={24} />, count: 42 },
-    { name: "Lieux de réception", icon: <Calendar size={24} />, count: 38 },
-    { name: "Décoration", icon: <Star size={24} />, count: 29 },
-    { name: "Animation", icon: <MessageSquare size={24} />, count: 25 }
+    { name: t('home.categories.catering'), icon: <Image size={24} />, count: 42 },
+    { name: t('home.categories.venues'), icon: <Calendar size={24} />, count: 38 },
+    { name: t('home.categories.decoration'), icon: <Star size={24} />, count: 25 },
+    { name: t('home.categories.entertainment'), icon: <MessageSquare size={24} />, count: 29 }
   ];
 
   return (
     <section className="py-12 sm:py-16 bg-white">
       <div className="container">
         <div className="text-center mb-10">
-          <h2 className="font-display text-2xl sm:text-3xl mb-2 text-we-green">Trouvez le prestataire idéal</h2>
-          <p className="text-we-gray-600">Des professionnels sélectionnés pour chaque aspect de votre événement</p>
+          <h2 className="font-display text-2xl sm:text-3xl mb-2 text-we-green">{t('home.categoriesTitle')}</h2>
+          <p className="text-we-gray-600">{t('home.categoriesSubtitle')}</p>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
@@ -37,7 +40,7 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = () => {
                   {category.icon}
                 </div>
                 <h3 className="font-medium mb-1">{category.name}</h3>
-                <p className="text-sm text-we-gray-500">{category.count} prestataires</p>
+                <p className="text-sm text-we-gray-500">{t('home.categoriesCount', { count: category.count })}</p>
               </CardContent>
             </Card>
           ))}
@@ -46,7 +49,7 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = () => {
         <div className="mt-8 text-center">
           <Link to="/partners">
             <WeEventButton variant="ghost" className="inline-flex items-center">
-              Toutes les catégories
+              {t('home.allCategories')}
               <ChevronDown size={16} className="ml-1" />
             </WeEventButton>
           </Link>

@@ -22,6 +22,40 @@ export default {
     becomePartner: "Je suis un prestataire",
     discoverFeatures: "Découvrir nos fonctionnalités",
     explorePartners: "Explorer nos partenaires",
+    presentationTitle: "Découvrez la plateforme We Event",
+    presentationDescription: "Notre plateforme offre des outils puissants pour planifier, organiser et gérer vos événements en toute simplicité.",
+    watchPresentation: "Voir la présentation",
+    platformPreviewAlt: "Aperçu de la plateforme",
+    categoriesTitle: "Trouvez le prestataire idéal",
+    categoriesSubtitle: "Des professionnels sélectionnés pour chaque aspect de votre événement",
+    categoriesCount: "{count} prestataires",
+    allCategories: "Toutes les catégories",
+    categories: {
+      catering: "Traiteurs",
+      venues: "Lieux de réception",
+      decoration: "Décoration",
+      entertainment: "Animation"
+    },
+    testimonialsTitle: "Ce qu'ils en disent",
+    testimonialsSubtitle: "Des événements réussis et des clients satisfaits",
+    seeAllReviews: "Voir tous les avis",
+    testimonials: {
+      person1: {
+        name: "Marie & Pierre",
+        event: "Mariage à Paris",
+        text: "We Event a transformé notre mariage en un moment d'exception. L'équipe est à l'écoute et vraiment professionnelle."
+      },
+      person2: {
+        name: "Sophie L.",
+        event: "Anniversaire d'entreprise",
+        text: "Organiser un événement professionnel n'a jamais été aussi simple. Merci pour votre accompagnement !"
+      },
+      person3: {
+        name: "Thomas & Julie",
+        event: "Mariage champêtre",
+        text: "Des prestataires de qualité et un suivi impeccable. Nous recommandons vivement !"
+      }
+    },
     footer: {
       copyright: "© {year} We Event. Tous droits réservés.",
       privacy: "Confidentialité",

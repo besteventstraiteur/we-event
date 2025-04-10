@@ -22,6 +22,40 @@ export default {
     becomePartner: "I am a vendor",
     discoverFeatures: "Discover our features",
     explorePartners: "Explore our partners",
+    presentationTitle: "Discover the We Event Platform",
+    presentationDescription: "Our platform offers powerful tools to plan, organize, and manage your events with ease.",
+    watchPresentation: "Watch presentation",
+    platformPreviewAlt: "Platform preview",
+    categoriesTitle: "Find the Perfect Vendor",
+    categoriesSubtitle: "Selected professionals for every aspect of your event",
+    categoriesCount: "{count} vendors",
+    allCategories: "All categories",
+    categories: {
+      catering: "Catering",
+      venues: "Venues",
+      decoration: "Decoration",
+      entertainment: "Entertainment"
+    },
+    testimonialsTitle: "What They Say",
+    testimonialsSubtitle: "Successful events and satisfied clients",
+    seeAllReviews: "See all reviews",
+    testimonials: {
+      person1: {
+        name: "Marie & Pierre",
+        event: "Wedding in Paris",
+        text: "We Event transformed our wedding into an exceptional moment. The team is attentive and truly professional."
+      },
+      person2: {
+        name: "Sophie L.",
+        event: "Corporate Anniversary",
+        text: "Organizing a professional event has never been so easy. Thank you for your support!"
+      },
+      person3: {
+        name: "Thomas & Julie",
+        event: "Countryside Wedding",
+        text: "Quality vendors and impeccable follow-up. We highly recommend!"
+      }
+    },
     footer: {
       copyright: "© {year} We Event. All rights reserved.",
       privacy: "Privacy Policy",

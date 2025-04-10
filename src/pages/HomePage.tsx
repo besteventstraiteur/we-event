@@ -21,6 +21,7 @@ const HomePage: React.FC<HomePageProps> = () => {
 
         <main className="flex-1">
           <HeroSection />
+          <PresentationSection />
           <CategoriesSection />
           <TestimonialsSection />
         </main>
