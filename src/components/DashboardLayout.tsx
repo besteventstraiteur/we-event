@@ -20,8 +20,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => 
   const { logout } = useAuth();
   
   const handleLogout = () => {
-    // Utiliser notre service d'authentification
-    logout();
+    // This is now handled by the LogoutButton component
+    // The onLogout prop is still passed to Sidebar but not used
   };
   
   const toggleSidebar = () => {

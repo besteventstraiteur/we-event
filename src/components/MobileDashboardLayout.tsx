@@ -6,6 +6,7 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileAppWrapper from "@/components/mobile/MobileAppWrapper";
 import { useAuth } from "@/hooks/useAuth";
+import LogoutButton from "@/components/auth/LogoutButton";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -15,12 +16,6 @@ interface DashboardLayoutProps {
 const MobileDashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
-  const { logout } = useAuth();
-  
-  const handleLogout = () => {
-    // Utiliser notre service d'authentification
-    logout();
-  };
   
   const toggleSidebar = () => {
     setSidebarOpen(prev => !prev);
@@ -31,7 +26,7 @@ const MobileDashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type 
       <div className="flex h-screen overflow-hidden bg-white">
         {/* Sidebar pour Desktop */}
         {!isMobile && (
-          <Sidebar type={type} onLogout={handleLogout} />
+          <Sidebar type={type} onLogout={() => {}} />
         )}
         
         {/* Menu latéral pour Mobile */}
@@ -40,7 +35,7 @@ const MobileDashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type 
             <SheetContent side="left" className="p-0 w-[280px]">
               <Sidebar 
                 type={type} 
-                onLogout={handleLogout} 
+                onLogout={() => {}}
                 mobile={true} 
                 onMenuClose={() => setSidebarOpen(false)}
               />
