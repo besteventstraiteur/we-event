@@ -34,8 +34,10 @@ const AppRouter: React.FC<AppRouterProps> = () => {
   return (
     <MapProvider>
       <Routes>
-        {/* Public Routes - wrapped in Route with path="/*" to properly handle nested routes */}
-        <Route path="/*" element={<PublicRoutes isMobileInterface={isMobileInterface} />} />
+        {/* Public Routes */}
+        <Route path="/" element={<PublicRoutes isMobileInterface={isMobileInterface} />}>
+          {/* The child routes are defined within PublicRoutes component */}
+        </Route>
         
         {/* Client, Partner and Admin Routes */}
         <Route path="/client/*" element={<ClientRoutes />} />
