@@ -12,7 +12,7 @@ const HeroSection: React.FC = () => {
       <div className="container">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-we-green mb-6">
-            {t('home.heroTitle')}
+            {t('common.welcome')}
           </h1>
           <p className="text-we-gray-700 text-lg md:text-xl mb-8">
             {t('home.heroSubtitle')}
