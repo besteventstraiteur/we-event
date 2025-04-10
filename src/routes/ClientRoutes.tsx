@@ -2,6 +2,7 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
+import { UserRole } from "@/utils/accessControl";
 
 // Client pages
 import ClientDashboard from "@/pages/client/ClientDashboard";
@@ -32,30 +33,30 @@ import AdvancedSecurity from "@/pages/client/AdvancedSecurity";
 const ClientRoutes = () => {
   return (
     <>
-      <Route path="/client/dashboard" element={<ProtectedRoute role="client"><ClientDashboard /></ProtectedRoute>} />
-      <Route path="/client/guests" element={<ProtectedRoute role="client"><ClientGuests /></ProtectedRoute>} />
-      <Route path="/client/partners" element={<ProtectedRoute role="client"><ClientPartners /></ProtectedRoute>} />
-      <Route path="/client/requests" element={<ProtectedRoute role="client"><ClientRequests /></ProtectedRoute>} />
-      <Route path="/client/todo" element={<ProtectedRoute role="client"><ClientTodoList /></ProtectedRoute>} />
-      <Route path="/client/account" element={<ProtectedRoute role="client"><ClientAccount /></ProtectedRoute>} />
-      <Route path="/client/budget" element={<ProtectedRoute role="client"><ClientBudget /></ProtectedRoute>} />
-      <Route path="/client/floor-plans" element={<ProtectedRoute role="client"><ClientFloorPlans /></ProtectedRoute>} />
-      <Route path="/client/menus" element={<ProtectedRoute role="client"><ClientMenus /></ProtectedRoute>} />
-      <Route path="/client/payments" element={<ProtectedRoute role="client"><ClientPayments /></ProtectedRoute>} />
-      <Route path="/client/tasks" element={<ProtectedRoute role="client"><ClientTasks /></ProtectedRoute>} />
-      <Route path="/client/photos" element={<ProtectedRoute role="client"><ClientPhotos /></ProtectedRoute>} />
-      <Route path="/client/pinterbest" element={<ProtectedRoute role="client"><ClientPinterbest /></ProtectedRoute>} />
-      <Route path="/client/playlists" element={<ProtectedRoute role="client"><ClientMusicPlaylists /></ProtectedRoute>} />
-      <Route path="/client/wedding-packages" element={<ProtectedRoute role="client"><ClientWeddingPackages /></ProtectedRoute>} />
-      <Route path="/client/live-streaming" element={<ProtectedRoute role="client"><ClientLiveStreaming /></ProtectedRoute>} />
-      <Route path="/client/mini-site" element={<ProtectedRoute role="client"><ClientMiniSite /></ProtectedRoute>} />
-      <Route path="/client/day-of" element={<ProtectedRoute role="client"><ClientDayOfCommunication /></ProtectedRoute>} />
-      <Route path="/client/podcasts" element={<ProtectedRoute role="client"><ClientPodcasts /></ProtectedRoute>} />
-      <Route path="/client/project-dashboard" element={<ProtectedRoute role="client"><ClientProjectDashboard /></ProtectedRoute>} />
-      <Route path="/client/talkshows" element={<ProtectedRoute role="client"><ClientTalkshows /></ProtectedRoute>} />
-      <Route path="/client/ratings" element={<ProtectedRoute role="client"><ClientPartnerRatings /></ProtectedRoute>} />
-      <Route path="/client/security/two-factor" element={<ProtectedRoute role="client"><TwoFactorSetup /></ProtectedRoute>} />
-      <Route path="/client/security" element={<ProtectedRoute role="client"><AdvancedSecurity /></ProtectedRoute>} />
+      <Route path="/client/dashboard" element={<ProtectedRoute role={UserRole.CLIENT}><ClientDashboard /></ProtectedRoute>} />
+      <Route path="/client/guests" element={<ProtectedRoute role={UserRole.CLIENT}><ClientGuests /></ProtectedRoute>} />
+      <Route path="/client/partners" element={<ProtectedRoute role={UserRole.CLIENT}><ClientPartners /></ProtectedRoute>} />
+      <Route path="/client/requests" element={<ProtectedRoute role={UserRole.CLIENT}><ClientRequests /></ProtectedRoute>} />
+      <Route path="/client/todo" element={<ProtectedRoute role={UserRole.CLIENT}><ClientTodoList /></ProtectedRoute>} />
+      <Route path="/client/account" element={<ProtectedRoute role={UserRole.CLIENT}><ClientAccount /></ProtectedRoute>} />
+      <Route path="/client/budget" element={<ProtectedRoute role={UserRole.CLIENT}><ClientBudget /></ProtectedRoute>} />
+      <Route path="/client/floor-plans" element={<ProtectedRoute role={UserRole.CLIENT}><ClientFloorPlans /></ProtectedRoute>} />
+      <Route path="/client/menus" element={<ProtectedRoute role={UserRole.CLIENT}><ClientMenus /></ProtectedRoute>} />
+      <Route path="/client/payments" element={<ProtectedRoute role={UserRole.CLIENT}><ClientPayments /></ProtectedRoute>} />
+      <Route path="/client/tasks" element={<ProtectedRoute role={UserRole.CLIENT}><ClientTasks /></ProtectedRoute>} />
+      <Route path="/client/photos" element={<ProtectedRoute role={UserRole.CLIENT}><ClientPhotos /></ProtectedRoute>} />
+      <Route path="/client/pinterbest" element={<ProtectedRoute role={UserRole.CLIENT}><ClientPinterbest /></ProtectedRoute>} />
+      <Route path="/client/playlists" element={<ProtectedRoute role={UserRole.CLIENT}><ClientMusicPlaylists /></ProtectedRoute>} />
+      <Route path="/client/wedding-packages" element={<ProtectedRoute role={UserRole.CLIENT}><ClientWeddingPackages /></ProtectedRoute>} />
+      <Route path="/client/live-streaming" element={<ProtectedRoute role={UserRole.CLIENT}><ClientLiveStreaming /></ProtectedRoute>} />
+      <Route path="/client/mini-site" element={<ProtectedRoute role={UserRole.CLIENT}><ClientMiniSite /></ProtectedRoute>} />
+      <Route path="/client/day-of" element={<ProtectedRoute role={UserRole.CLIENT}><ClientDayOfCommunication /></ProtectedRoute>} />
+      <Route path="/client/podcasts" element={<ProtectedRoute role={UserRole.CLIENT}><ClientPodcasts /></ProtectedRoute>} />
+      <Route path="/client/project-dashboard" element={<ProtectedRoute role={UserRole.CLIENT}><ClientProjectDashboard /></ProtectedRoute>} />
+      <Route path="/client/talkshows" element={<ProtectedRoute role={UserRole.CLIENT}><ClientTalkshows /></ProtectedRoute>} />
+      <Route path="/client/ratings" element={<ProtectedRoute role={UserRole.CLIENT}><ClientPartnerRatings /></ProtectedRoute>} />
+      <Route path="/client/security/two-factor" element={<ProtectedRoute role={UserRole.CLIENT}><TwoFactorSetup /></ProtectedRoute>} />
+      <Route path="/client/security" element={<ProtectedRoute role={UserRole.CLIENT}><AdvancedSecurity /></ProtectedRoute>} />
     </>
   );
 };
