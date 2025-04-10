@@ -15,7 +15,7 @@ const HeroSection: React.FC = () => {
             {t('common.welcome')}
           </h1>
           <p className="text-we-gray-700 text-lg md:text-xl mb-8">
-            {t('home.heroSubtitle')}
+            Planifiez simplement, célébrez pleinement
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register-client">
