@@ -13,11 +13,11 @@ const WeEventLogo: React.FC<LogoProps> = ({
   size = "medium",
   withText = true
 }) => {
-  // Définir les dimensions en fonction de la taille (doublées)
+  // Définir les dimensions en fonction de la taille (quadruplées par rapport à l'original)
   const dimensions = {
-    small: { logo: "h-12", text: "text-base" },
-    medium: { logo: "h-16", text: "text-xl" },
-    large: { logo: "h-20", text: "text-2xl" },
+    small: { logo: "h-24", text: "text-base" },
+    medium: { logo: "h-32", text: "text-xl" },
+    large: { logo: "h-40", text: "text-2xl" },
   };
 
   const LogoContent = (
