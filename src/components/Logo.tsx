@@ -15,9 +15,12 @@ const Logo: React.FC<LogoProps> = ({ size = "medium", asButton = true }) => {
   };
 
   const LogoContent = (
-    <div className={`flex items-center ${sizeClasses[size]}`}>
-      <span className="text-amber-600 font-bold">We</span>
-      <span className="text-gray-800 ml-1">Event</span>
+    <div className={`flex items-center`}>
+      <img 
+        src="/lovable-uploads/b9084086-687c-4556-8914-cc674205a61c.png" 
+        alt="We Event Logo" 
+        className={`${sizeClasses[size]}`}
+      />
     </div>
   );
 
