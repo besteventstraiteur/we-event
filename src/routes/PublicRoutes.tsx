@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 // Public pages
 import HomePage from "@/pages/HomePage";
@@ -24,23 +24,23 @@ interface PublicRoutesProps {
 const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
   return (
     <Routes>
-      <Route index element={isMobileInterface ? <MobileAppHome /> : <HomePage />} />
+      <Route path="/" element={isMobileInterface ? <MobileAppHome /> : <HomePage />} />
       
       {/* Routes d'authentification */}
-      <Route path="login" element={<LoginPage />} />
-      <Route path="register-client" element={<RegisterClientPage />} />
-      <Route path="register-partner" element={<RegisterPartnerPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register-client" element={<RegisterClientPage />} />
+      <Route path="/register-partner" element={<RegisterPartnerPage />} />
       
       {/* Routes publiques */}
-      <Route path="partners" element={<PartnersPage />} />
-      <Route path="privacy" element={<PrivacyPage />} />
-      <Route path="terms" element={<TermsPage />} />
-      <Route path="contact" element={<ContactPage />} />
-      <Route path="unauthorized" element={<Unauthorized />} />
+      <Route path="/partners" element={<PartnersPage />} />
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
       
       {/* Routes invités */}
-      <Route path="guest" element={<GuestDashboard />} />
-      <Route path="guest/menu" element={<GuestMenuSelection />} />
+      <Route path="/guest" element={<GuestDashboard />} />
+      <Route path="/guest/menu" element={<GuestMenuSelection />} />
       
       {/* Page 404 */}
       <Route path="*" element={<NotFound />} />
