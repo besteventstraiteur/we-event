@@ -2,15 +2,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useKeyboard } from "@/hooks/use-keyboard";
 import { useDeviceType } from "@/hooks/use-mobile";
+import { X } from "lucide-react";
 
 interface MobileFormOptimizerProps {
   children: React.ReactNode;
   className?: string;
+  showDoneButton?: boolean;
 }
 
 const MobileFormOptimizer: React.FC<MobileFormOptimizerProps> = ({ 
   children,
-  className = ""
+  className = "",
+  showDoneButton = true
 }) => {
   const { isVisible: isKeyboardVisible, height: keyboardHeight } = useKeyboard();
   const deviceType = useDeviceType();
@@ -62,23 +65,24 @@ const MobileFormOptimizer: React.FC<MobileFormOptimizerProps> = ({
       ref={formRef}
       className={`${className} ${isKeyboardVisible ? 'pb-keyboard' : ''}`}
       style={{
-        paddingBottom: isKeyboardVisible ? `${keyboardHeight}px` : undefined
+        paddingBottom: isKeyboardVisible ? `${keyboardHeight + 50}px` : undefined
       }}
     >
       {children}
       
       {/* Done button that appears when keyboard is visible */}
-      {isKeyboardVisible && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-end z-50">
+      {showDoneButton && isKeyboardVisible && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-end z-50 safe-area-bottom">
           <button
             type="button"
-            className="bg-vip-gold text-white px-4 py-2 rounded-md"
+            className="bg-vip-gold text-white px-4 py-2 rounded-md flex items-center"
             onClick={() => {
               if (activeInput) {
                 activeInput.blur();
               }
             }}
           >
+            <X size={16} className="mr-1" />
             Done
           </button>
         </div>

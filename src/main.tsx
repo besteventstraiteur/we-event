@@ -53,9 +53,24 @@ if (window.navigator && (window.navigator as any).standalone === true) {
   document.body.classList.add('ios-pwa');
 }
 
+// Enhanced mobile detection
+const isTouchDevice = () => {
+  return (('ontouchstart' in window) ||
+    (navigator.maxTouchPoints > 0) ||
+    (navigator as any).msMaxTouchPoints > 0);
+};
+
+if (isTouchDevice()) {
+  document.body.classList.add('touch-device');
+  
+  // Optimize click delays
+  document.addEventListener('touchstart', function() {}, {passive: true});
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
+    <Toaster />
   </React.StrictMode>,
 );
 
@@ -80,3 +95,28 @@ document.addEventListener('resume', () => {
   console.log('App resumed');
   // Par exemple, rafraîchissez les données ici
 }, false);
+
+// Fast Click polyfill for older devices
+if (isTouchDevice() && 'addEventListener' in document) {
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add a slight delay to prevent double-tap issues
+    let touchStartTime: number, touchEndTime: number;
+    
+    document.body.addEventListener('touchstart', function(e) {
+      touchStartTime = Date.now();
+    }, false);
+    
+    document.body.addEventListener('touchend', function(e) {
+      touchEndTime = Date.now();
+      
+      // If touch event was short enough, it was likely a tap
+      if (touchEndTime - touchStartTime < 300) {
+        const target = e.target as HTMLElement;
+        if (target.tagName === 'A' || target.tagName === 'BUTTON') {
+          e.preventDefault();
+          target.click();
+        }
+      }
+    }, false);
+  }, false);
+}

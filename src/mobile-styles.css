@@ -8,28 +8,41 @@
   /* Suppression du défilement horizontal */
   max-width: 100%;
   overflow-x: hidden;
+  
+  /* Empêcher le zoom sur les inputs */
+  font-size: 16px;
 }
 
 /* Classes de sécurité pour les zones insécables iOS */
 .safe-area-top {
-  padding-top: env(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .safe-area-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .safe-area-left {
-  padding-left: env(safe-area-inset-left);
+  padding-left: env(safe-area-inset-left, 0px);
 }
 
 .safe-area-right {
-  padding-right: env(safe-area-inset-right);
+  padding-right: env(safe-area-inset-right, 0px);
 }
 
 /* Styles spécifiques au clavier mobile */
 .pb-keyboard {
   transition: padding-bottom 0.3s;
+}
+
+/* Amélioration des scrollbars sur iOS */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 /* Feedback tactile amélioré */
@@ -70,6 +83,25 @@
   }
 }
 
+/* Optimisation pour la taille du texte */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+  
+  h3 {
+    font-size: 1.125rem;
+  }
+  
+  p, span, div {
+    font-size: 0.9375rem;
+  }
+}
+
 /* Ajustements pour les petits écrans de mobile */
 @media (max-width: 640px) {
   .mobile-view input,
@@ -86,4 +118,63 @@
     max-height: 100%;
     border-radius: 0;
   }
+  
+  .mobile-view .fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background-color: white;
+    border-top: 1px solid #e2e8f0;
+    padding: 0.5rem;
+    padding-bottom: env(safe-area-inset-bottom, 0.5rem);
+  }
+}
+
+/* Fix pour les modales mobile */
+.mobile-view .fixed-dialog {
+  height: calc(100% - env(safe-area-inset-bottom));
+}
+
+/* Amélioration du rendu des cartes sur mobile */
+.mobile-view .card-shadow {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Animations optimisées pour les appareils mobiles */
+@media (prefers-reduced-motion: no-preference) {
+  .mobile-fade-in {
+    animation: mobileFadeIn 0.3s ease-out;
+  }
+  
+  .mobile-slide-up {
+    animation: mobileSlideUp 0.3s ease-out;
+  }
+  
+  @keyframes mobileFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes mobileSlideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+/* Correction pour l'utilisation avec la barre de navigation mobile */
+.has-bottom-nav {
+  padding-bottom: 4rem;
 }

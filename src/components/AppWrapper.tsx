@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { useIsMobile, useDeviceType, useOrientation } from '@/hooks/use-mobile';
@@ -22,22 +21,23 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
   const [isInstallable, setIsInstallable] = useState(false);
   
   useEffect(() => {
-    // Check if app is running as native application
     setIsNative(Capacitor.isNativePlatform());
     
-    // Disable zoom on mobile
     if (isMobile) {
       const metaViewport = document.querySelector('meta[name=viewport]');
       if (metaViewport) {
         metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
       }
       
-      // Disable horizontal scrolling at the document level
       document.documentElement.style.overflowX = 'hidden';
       document.body.style.overflowX = 'hidden';
+      
+      document.body.classList.add('safe-area-top');
+      document.body.classList.add('safe-area-bottom');
+      
+      document.addEventListener('touchstart', function() {}, {passive: true});
     }
 
-    // Online/offline detection
     const handleOnlineStatus = () => {
       const online = navigator.onLine;
       setIsOnline(online);
@@ -59,27 +59,25 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
     window.addEventListener('online', handleOnlineStatus);
     window.addEventListener('offline', handleOnlineStatus);
     
-    // Check for PWA installability
     window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
-      // Stash the event so it can be triggered later
       setInstallPrompt(e);
-      // Update UI to notify the user they can install the PWA
       setIsInstallable(true);
     });
     
-    // Set initial online status
     setIsOnline(navigator.onLine);
 
     return () => {
       window.removeEventListener('online', handleOnlineStatus);
       window.removeEventListener('offline', handleOnlineStatus);
       window.removeEventListener('beforeinstallprompt', () => {});
+      
+      if (isMobile) {
+        document.removeEventListener('touchstart', function() {}, {passive: true} as EventListenerOptions);
+      }
     };
   }, [isMobile]);
 
-  // Show offline notification
   const renderOfflineNotification = () => {
     if (!isOnline) {
       return (
@@ -94,14 +92,11 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
     return null;
   };
 
-  // Install PWA handler
   const handleInstallClick = () => {
     if (!installPrompt) return;
     
-    // Show the install prompt
     installPrompt.prompt();
     
-    // Wait for the user to respond to the prompt
     installPrompt.userChoice.then((choiceResult: {outcome: string}) => {
       if (choiceResult.outcome === 'accepted') {
         toast({
@@ -115,7 +110,6 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
     setIsInstallable(false);
   };
 
-  // Create quick actions menu for mobile
   const renderQuickActions = () => {
     if (!isMobile) return null;
     
@@ -175,9 +169,20 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
 
   return (
     <div className={`app-container ${isNative ? 'native-app' : 'web-app'} ${isMobile ? 'mobile-view' : ''} ${orientation === 'portrait' ? 'portrait' : 'landscape'} w-full max-w-full overflow-x-hidden`}>
-      {/* Status bar spacer for native apps */}
       {isNative && (
         <div className="status-bar-spacer h-6 bg-white w-full"></div>
+      )}
+      
+      {isMobile && !localStorage.getItem('mobile-optimized-notice-shown') && (
+        <div 
+          className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-vip-gold text-white px-4 py-2 rounded-lg shadow-lg z-50 max-w-[90%]"
+          onClick={() => {
+            localStorage.setItem('mobile-optimized-notice-shown', 'true');
+            document.body.removeChild(document.querySelector('.mobile-optimize-notice')!);
+          }}
+        >
+          <p className="text-center text-sm">Cette application est optimisée pour mobile</p>
+        </div>
       )}
       
       {renderOfflineNotification()}
@@ -187,11 +192,9 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
   );
 };
 
-// Helper component for quick action buttons
 const MobileQuickAction = ({ icon, label, href }: { icon: string, label: string, href: string }) => {
   let IconComponent;
   
-  // Import the right icon based on name
   switch (icon) {
     case 'home': 
       IconComponent = () => <Home size={20} />;
@@ -234,7 +237,6 @@ const MobileQuickAction = ({ icon, label, href }: { icon: string, label: string,
   );
 };
 
-// Quick menu item component with chevron
 const QuickMenuItem = ({ icon, label, href }: { icon: React.ReactNode, label: string, href: string }) => {
   return (
     <a href={href} className="flex items-center justify-between p-3 hover:bg-gray-100 rounded-lg">
