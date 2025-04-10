@@ -1,15 +1,15 @@
 
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { Permission, UserRole, AccessControlUser } from "@/utils/accessControl";
-import { useAccessControl } from "@/hooks/useAccessControl";
+import { Permission, UserRole } from "@/utils/accessControl";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredPermission?: Permission;
   allowedRoles?: UserRole[];
-  role?: string; // Add the role prop to the interface
+  role?: UserRole;
   fallbackPath?: string;
 }
 
@@ -17,13 +17,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredPermission,
   allowedRoles,
-  role, // Include role in the component props
+  role,
   fallbackPath = "/login"
 }) => {
-  const { currentUser, isLoading, hasPermission } = useAccessControl();
+  const { user, isLoading, hasPermission, hasRole } = useAuth();
   const location = useLocation();
 
-  console.log("ProtectedRoute - currentUser:", currentUser);
+  console.log("ProtectedRoute - user:", user);
   console.log("ProtectedRoute - allowedRoles:", allowedRoles);
   
   // Afficher un indicateur de chargement pendant la vérification
@@ -37,22 +37,22 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Vérifier si l'utilisateur est connecté
-  if (!currentUser) {
+  if (!user) {
     console.log("ProtectedRoute - User not authenticated, redirecting to:", fallbackPath);
     // Rediriger vers la page de connexion tout en enregistrant la page actuelle
     return <Navigate to={fallbackPath} state={{ from: location.pathname }} replace />;
   }
 
-  // If role is specified, check if user has that role
-  if (role && currentUser.role !== role) {
+  // Si un rôle spécifique est requis
+  if (role && user.role !== role) {
     console.log("ProtectedRoute - User doesn't have required role:", role);
     return <Navigate to="/unauthorized" replace />;
   }
 
   // Vérifier les rôles si spécifiés
   if (allowedRoles && allowedRoles.length > 0) {
-    const hasAllowedRole = allowedRoles.includes(currentUser.role as UserRole);
-    console.log("ProtectedRoute - hasAllowedRole:", hasAllowedRole, "user role:", currentUser.role);
+    const hasAllowedRole = allowedRoles.some(allowedRole => hasRole(allowedRole));
+    console.log("ProtectedRoute - hasAllowedRole:", hasAllowedRole, "user role:", user.role);
     if (!hasAllowedRole) {
       console.log("ProtectedRoute - User doesn't have any of the allowed roles");
       return <Navigate to="/unauthorized" replace />;

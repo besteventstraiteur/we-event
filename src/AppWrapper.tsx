@@ -1,14 +1,27 @@
 
 import React from "react";
-import { Outlet } from "react-router-dom";
-import FloatingAIAssistant from "./components/ai-assistant/FloatingAIAssistant";
+import { BrowserRouter as Router } from "react-router-dom";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { Toaster } from "@/components/ui/toaster";
+import AppRouter from "@/components/AppRouter";
+import { CartProvider } from "@/contexts/CartContext";
+import { ThemeProvider } from "@/components/ui/theme-provider";
+import { AuthProvider } from "@/hooks/useAuth";
 
 const AppWrapper: React.FC = () => {
   return (
-    <>
-      <Outlet />
-      <FloatingAIAssistant />
-    </>
+    <Router>
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <LanguageProvider>
+          <AuthProvider>
+            <CartProvider>
+              <AppRouter />
+              <Toaster />
+            </CartProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </Router>
   );
 };
 

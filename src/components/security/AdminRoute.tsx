@@ -1,9 +1,9 @@
 
-import React, { useEffect } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import { UserRole } from "@/utils/accessControl";
-import { useAccessControl } from "@/hooks/useAccessControl";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AdminRouteProps {
   children: React.ReactNode;
@@ -14,43 +14,8 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
   children,
   fallbackPath = "/login"
 }) => {
-  const { currentUser, isLoading } = useAccessControl();
+  const { user, isLoading, hasRole } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Debug info
-    console.log("AdminRoute - Current User:", currentUser);
-    console.log("AdminRoute - Is Loading:", isLoading);
-    
-    // Si toujours en cours de chargement ou si l'utilisateur est déjà un admin, ne rien faire
-    if (isLoading || (currentUser && currentUser.role === UserRole.ADMIN)) {
-      return;
-    }
-    
-    // Si pas d'utilisateur actuel après chargement, vérification supplémentaire
-    if (!currentUser) {
-      // Vérifier localStorage directement comme solution de secours
-      const storedUser = localStorage.getItem('currentUser');
-      if (storedUser) {
-        try {
-          const parsedUser = JSON.parse(storedUser);
-          console.log("AdminRoute - Stored User:", parsedUser);
-          
-          // Si nous avons un admin dans localStorage mais pas dans currentUser (peut-être un problème de timing)
-          if (parsedUser.role === UserRole.ADMIN || parsedUser.role === 'admin') {
-            console.log("AdminRoute - Admin found in localStorage but not in currentUser");
-            
-            // Forcer un rechargement complet pour récupérer l'utilisateur du localStorage
-            window.location.reload();
-            return;
-          }
-        } catch (error) {
-          console.error("AdminRoute - Error parsing stored user:", error);
-        }
-      }
-    }
-  }, [currentUser, isLoading, navigate, location.pathname]);
 
   // Afficher un indicateur de chargement pendant la vérification d'accès
   if (isLoading) {
@@ -63,14 +28,14 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
   }
 
   // Vérifier si l'utilisateur est connecté
-  if (!currentUser) {
+  if (!user) {
     console.log("AdminRoute - No current user, redirecting to:", fallbackPath);
     return <Navigate to={fallbackPath} state={{ from: location.pathname }} replace />;
   }
 
   // Vérifier si l'utilisateur est administrateur
-  if (currentUser.role !== UserRole.ADMIN) {
-    console.log("AdminRoute - User is not admin:", currentUser.role);
+  if (!hasRole(UserRole.ADMIN)) {
+    console.log("AdminRoute - User is not admin:", user.role);
     return <Navigate to="/unauthorized" replace />;
   }
 

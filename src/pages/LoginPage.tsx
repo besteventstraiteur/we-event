@@ -1,19 +1,20 @@
 
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import AuthLayout from "@/components/AuthLayout";
-import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
 import SocialLoginButtons from "@/components/auth/SocialLoginButtons";
 import LoginForm from "@/components/auth/LoginForm";
 import PasswordResetForm from "@/components/auth/PasswordResetForm";
 import TwoFactorVerification from "@/components/auth/TwoFactorVerification";
-import { useBiometricLogin } from "@/hooks/useBiometricLogin";
-import { prepareUserData, getRedirectPathForUser } from "@/utils/loginUtils";
-import { useDeviceType } from "@/hooks/use-mobile";
-import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
 import BiometricLoginPrompt from "@/components/auth/BiometricLoginPrompt";
 import LoginDebugInfo from "@/components/auth/LoginDebugInfo";
+import { useBiometricLogin } from "@/hooks/useBiometricLogin";
+import { useDeviceType } from "@/hooks/use-mobile";
+import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
+import { useAuth } from "@/hooks/useAuth";
+import { UserRole } from "@/utils/accessControl";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,9 +22,11 @@ const LoginPage = () => {
   const [resetSent, setResetSent] = useState(false);
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const deviceType = useDeviceType();
   const isMobileDevice = deviceType === 'mobile' || deviceType === 'tablet';
+  const { login, loginWithProvider, isAuthenticated, user } = useAuth();
   
   const [authDebugInfo, setAuthDebugInfo] = useState<{
     email?: string;
@@ -42,43 +45,51 @@ const LoginPage = () => {
     handleBiometricAuth
   } = useBiometricLogin();
 
+  // Rediriger si déjà connecté
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const redirectTo = getRedirectPathForUser(user.role);
+      navigate(redirectTo, { replace: true });
+    }
+  }, [isAuthenticated, user, navigate]);
+
   const handleLoginSubmit = async (email: string, password: string, rememberMe: boolean) => {
     setIsLoading(true);
 
     try {
-      if (rememberMe) {
-        localStorage.setItem("weddingPlannerEmail", email);
-        localStorage.setItem("weddingPlannerRememberMe", "true");
-      } else {
-        localStorage.removeItem("weddingPlannerEmail");
-        localStorage.removeItem("weddingPlannerRememberMe");
-      }
-
-      const userData = prepareUserData(email);
-      localStorage.setItem('currentUser', JSON.stringify(userData));
+      const result = await login({ email, password, rememberMe });
       
-      console.log("Login - User data stored in localStorage:", userData);
-
-      setTimeout(() => {
+      if (result.success) {
         const requires2FA = email.includes("secure") || localStorage.getItem('2fa_enabled') === 'true';
         
         if (requires2FA) {
           setShowTwoFactor(true);
-          setIsLoading(false);
           toast({
             title: "Vérification supplémentaire requise",
             description: "Veuillez entrer le code de sécurité envoyé à votre appareil.",
           });
         } else {
-          redirectAfterLogin(email);
+          // La redirection sera gérée par l'effet useEffect qui surveille isAuthenticated
+          toast({
+            title: "Connexion réussie",
+            description: "Bienvenue sur votre espace VIP",
+          });
         }
-      }, 1000);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Erreur de connexion",
+          description: result.message || "Identifiants incorrects. Veuillez réessayer.",
+        });
+      }
     } catch (error) {
+      console.error("Login error:", error);
       toast({
         variant: "destructive",
         title: "Erreur de connexion",
-        description: "Identifiants incorrects. Veuillez réessayer.",
+        description: "Une erreur inattendue s'est produite. Veuillez réessayer.",
       });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -106,45 +117,66 @@ const LoginPage = () => {
   };
 
   const handleVerifyOTP = async (code: string): Promise<boolean> => {
-    const isValid = code === "123456";
+    const isValid = code === "123456"; // Code de démo
     
     if (isValid) {
-      setTimeout(() => {
-        redirectAfterLogin();
-      }, 500);
+      // Redirection gérée par l'effet useEffect
+      return true;
     }
     
-    return isValid;
+    return false;
   };
 
-  const redirectAfterLogin = (userEmail: string = '') => {
-    const email = userEmail || localStorage.getItem('weddingPlannerEmail') || '';
-    const redirectPath = getRedirectPathForUser(email);
-    
-    setAuthDebugInfo({
-      email,
-      userType: email.includes("admin") ? "admin" : 
-               email.includes("partner") ? "partner" : 
-               email.includes("client") ? "client" : "unknown",
-      redirectPath,
-      redirectAttempted: true
-    });
-    
-    console.log(`Redirecting to ${redirectPath}`);
-    
-    // Utiliser navigate au lieu de window.location.href pour une navigation SPA
-    navigate(redirectPath, { replace: true });
-    
-    toast({
-      title: "Connexion réussie",
-      description: "Bienvenue sur votre espace VIP",
-    });
+  const handleSocialLoginSuccess = async (provider: string, userData?: any) => {
+    try {
+      // Utiliser le service d'authentification pour la connexion sociale
+      const result = await loginWithProvider(provider);
+      
+      if (result.success) {
+        // Redirection gérée par l'effet useEffect
+        toast({
+          title: "Connexion réussie",
+          description: `Bienvenue ${result.user?.name || ''}`,
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Échec de connexion",
+          description: result.message || `Problème de connexion avec ${provider}`,
+        });
+      }
+    } catch (error) {
+      console.error("Social login error:", error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: `Problème de connexion avec ${provider}. Veuillez réessayer.`,
+      });
+    }
   };
 
   const handleBiometricLogin = async () => {
     const result = await handleBiometricAuth();
     if (result.success) {
-      redirectAfterLogin(result.userId);
+      // Simuler une connexion avec l'e-mail stocké
+      const storedEmail = localStorage.getItem('weddingPlannerEmail') || 'client@example.com';
+      await login({
+        email: storedEmail,
+        password: "biometric-auth", // Mot de passe factice pour l'authentification biométrique
+        rememberMe: true
+      });
+    }
+  };
+
+  const getRedirectPathForUser = (role: UserRole): string => {
+    switch (role) {
+      case UserRole.ADMIN:
+        return '/admin/dashboard';
+      case UserRole.PARTNER:
+        return '/partner/dashboard';
+      case UserRole.CLIENT:
+      default:
+        return '/client/dashboard';
     }
   };
 
@@ -191,7 +223,7 @@ const LoginPage = () => {
               onBiometricLogin={handleBiometricLogin}
             />
 
-            <SocialLoginButtons onLoginSuccess={redirectAfterLogin} />
+            <SocialLoginButtons onLoginSuccess={handleSocialLoginSuccess} />
 
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
