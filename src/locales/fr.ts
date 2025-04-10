@@ -28,7 +28,7 @@ export default {
     platformPreviewAlt: "Aperçu de la plateforme",
     categoriesTitle: "Trouvez le prestataire idéal",
     categoriesSubtitle: "Des professionnels sélectionnés pour chaque aspect de votre événement",
-    categoriesCount: "{count} prestataires",
+    categoriesCount: "prestataires",
     allCategories: "Toutes les catégories",
     categories: {
       catering: "Traiteurs",

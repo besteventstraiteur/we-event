@@ -28,7 +28,7 @@ export default {
     platformPreviewAlt: "Platform preview",
     categoriesTitle: "Find the Perfect Vendor",
     categoriesSubtitle: "Selected professionals for every aspect of your event",
-    categoriesCount: "{count} vendors",
+    categoriesCount: "vendors",
     allCategories: "All categories",
     categories: {
       catering: "Catering",

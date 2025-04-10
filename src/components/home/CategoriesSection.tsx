@@ -40,7 +40,7 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = () => {
                   {category.icon}
                 </div>
                 <h3 className="font-medium mb-1">{category.name}</h3>
-                <p className="text-sm text-we-gray-500">{t('home.categoriesCount', { count: category.count })}</p>
+                <p className="text-sm text-we-gray-500">{`${category.count} ${t('home.categoriesCount')}`}</p>
               </CardContent>
             </Card>
           ))}
