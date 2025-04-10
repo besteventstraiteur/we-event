@@ -23,7 +23,7 @@ interface PublicRoutesProps {
 
 const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
   return (
-    <Route path="/">
+    <>
       <Route index element={isMobileInterface ? <MobileAppHome /> : <HomePage />} />
       
       {/* Routes d'authentification */}
@@ -44,7 +44,7 @@ const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
       
       {/* Page 404 */}
       <Route path="*" element={<NotFound />} />
-    </Route>
+    </>
   );
 };
 
