@@ -8,10 +8,12 @@ import { partnerCategories, allPartners } from "@/components/partners/partnersDa
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
 import MobileNavigation from "@/components/mobile/MobileNavigation";
 import { useDeviceType } from "@/hooks/use-mobile";
+import { getDeviceType } from "@/utils/mobileDetection";
 
 const PartnersPage: React.FC = () => {
   const deviceType = useDeviceType();
   const isMobile = deviceType === 'mobile';
+  const isRealMobileDevice = getDeviceType() === 'mobile';
   
   return (
     <MobileOptimizedLayout fullHeight={true}>
@@ -25,7 +27,7 @@ const PartnersPage: React.FC = () => {
 
         <PartnersFooter />
         
-        {isMobile && <MobileNavigation type="client" />}
+        {isRealMobileDevice && <MobileNavigation type="client" />}
       </div>
     </MobileOptimizedLayout>
   );

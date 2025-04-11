@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AuthLayout from "@/components/AuthLayout";
@@ -16,6 +15,7 @@ import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
 import { useAuth } from "@/hooks/useAuth";
 import { UserRole } from "@/utils/accessControl";
 import MobileNavigation from "@/components/mobile/MobileNavigation";
+import { getDeviceType } from "@/utils/mobileDetection";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +27,7 @@ const LoginPage = () => {
   const { toast } = useToast();
   const deviceType = useDeviceType();
   const isMobileDevice = deviceType === 'mobile' || deviceType === 'tablet';
+  const isRealMobileDevice = getDeviceType() === 'mobile';
   const { login, loginWithProvider, isAuthenticated, user } = useAuth();
   
   const [authDebugInfo, setAuthDebugInfo] = useState<{
@@ -195,7 +196,7 @@ const LoginPage = () => {
           <div className="text-center text-sm text-gray-500 mt-4">
             <p>Pour les besoins de la démo, le code valide est: 123456</p>
           </div>
-          {isMobileDevice && <MobileNavigation type="guest" />}
+          {isRealMobileDevice && <MobileNavigation type="guest" />}
         </AuthLayout>
       </MobileOptimizedLayout>
     );
@@ -247,7 +248,7 @@ const LoginPage = () => {
         
         <LoginDebugInfo {...authDebugInfo} />
       </AuthLayout>
-      {isMobileDevice && <MobileNavigation type="guest" />}
+      {isRealMobileDevice && <MobileNavigation type="guest" />}
     </MobileOptimizedLayout>
   );
 };
