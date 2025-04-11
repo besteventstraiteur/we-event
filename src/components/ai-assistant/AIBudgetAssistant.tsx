@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
+import { useDeviceType } from "@/hooks/use-mobile";
 
 interface AIBudgetAssistantProps {
   budgetTotal: number;
@@ -23,6 +24,8 @@ const AIBudgetAssistant: React.FC<AIBudgetAssistantProps> = ({
   categories
 }) => {
   const [showAllInsights, setShowAllInsights] = useState(false);
+  const deviceType = useDeviceType();
+  const isMobile = deviceType === 'mobile';
   
   // Calculate budget percentage used
   const percentageUsed = Math.round((spentAmount / budgetTotal) * 100);
@@ -65,14 +68,23 @@ const AIBudgetAssistant: React.FC<AIBudgetAssistantProps> = ({
   const visibleInsights = showAllInsights ? insights : insights.slice(0, 1);
 
   return (
-    <Card className="border-2 border-vip-gold/20">
-      <CardHeader className="pb-2">
+    <Card className={cn(
+      "border-2 border-vip-gold/20",
+      isMobile && "mx-0 px-0"
+    )}>
+      <CardHeader className={cn(
+        "pb-2",
+        isMobile && "px-3 py-3"
+      )}>
         <CardTitle className="text-base flex items-center gap-2">
           <DollarSign className="h-5 w-5 text-vip-gold" />
           Assistant Budget IA
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className={cn(
+        "space-y-4",
+        isMobile && "px-3 py-2"
+      )}>
         <div className="space-y-1">
           <div className="flex justify-between text-sm">
             <span>Budget utilisé</span>
@@ -94,18 +106,31 @@ const AIBudgetAssistant: React.FC<AIBudgetAssistantProps> = ({
 
         <div className="space-y-3">
           {visibleInsights.map((insight, i) => (
-            <Alert key={i} variant={insight.type as any}>
-              <insight.icon className="h-4 w-4" />
-              <AlertTitle>{insight.title}</AlertTitle>
-              <AlertDescription>{insight.description}</AlertDescription>
+            <Alert 
+              key={i} 
+              variant={insight.type as any}
+              className={cn(
+                isMobile && "py-2 text-sm"
+              )}
+            >
+              <insight.icon className={cn("h-4 w-4", isMobile && "h-3 w-3")} />
+              <AlertTitle className={cn(isMobile && "text-sm")}>
+                {insight.title}
+              </AlertTitle>
+              <AlertDescription className={cn(isMobile && "text-xs")}>
+                {insight.description}
+              </AlertDescription>
             </Alert>
           ))}
 
           {insights.length > 1 && (
             <Button 
               variant="outline" 
-              size="sm" 
-              className="w-full text-xs" 
+              size={isMobile ? "sm" : "default"} 
+              className={cn(
+                "w-full", 
+                isMobile ? "text-xs py-1 h-8" : "text-sm"
+              )} 
               onClick={() => setShowAllInsights(!showAllInsights)}
             >
               {showAllInsights ? "Afficher moins" : `Afficher ${insights.length - 1} autres conseils`}
