@@ -5,7 +5,6 @@ import { Separator } from "@/components/ui/separator";
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
 import MobileNavigation from "@/components/mobile/MobileNavigation";
 import { useDeviceType } from "@/hooks/use-mobile";
-import { getDeviceType } from "@/utils/mobileDetection";
 
 // Components
 import SocialLoginButtons from "@/components/auth/SocialLoginButtons";
@@ -21,7 +20,6 @@ import { useLoginPageLogic } from "@/hooks/useLoginPageLogic";
 const LoginPage = () => {
   const deviceType = useDeviceType();
   const isMobileDevice = deviceType === 'mobile' || deviceType === 'tablet';
-  const isRealMobileDevice = getDeviceType() === 'mobile';
   
   const {
     // State
@@ -47,9 +45,9 @@ const LoginPage = () => {
     handleBiometricLogin,
   } = useLoginPageLogic();
 
-  if (showTwoFactor) {
-    return (
-      <MobileOptimizedLayout fullHeight>
+  const content = (
+    <>
+      {showTwoFactor ? (
         <AuthLayout 
           title="Vérification en deux étapes" 
           subtitle="Un code de vérification a été envoyé à votre appareil"
@@ -64,62 +62,61 @@ const LoginPage = () => {
           <div className="text-center text-sm text-gray-500 mt-4">
             <p>Pour les besoins de la démo, le code valide est: 123456</p>
           </div>
-          {/* Always show navigation for better usability */}
-          <MobileNavigation type="guest" />
         </AuthLayout>
-      </MobileOptimizedLayout>
-    );
-  }
+      ) : (
+        <AuthLayout 
+          title={forgotPassword ? "Récupération de mot de passe" : "Connexion"} 
+          subtitle={forgotPassword ? "Nous vous enverrons un lien de récupération" : "Accédez à votre espace VIP"}
+        >
+          {!forgotPassword ? (
+            <>
+              <BiometricLoginPrompt 
+                biometricAttempt={biometricAttempt}
+                isBiometricEnabled={isBiometricEnabled}
+                isNative={isNative}
+                isMobileDevice={isMobileDevice}
+                biometricError={biometricError}
+                isLoading={biometricLoading}
+                onBiometricLogin={handleBiometricLogin}
+              />
+
+              <SocialLoginButtons onLoginSuccess={handleSocialLoginSuccess} />
+
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-white px-2 text-sm text-gray-500">ou</span>
+                </div>
+              </div>
+
+              <LoginForm 
+                onSubmit={handleLoginSubmit} 
+                onForgotPassword={() => setForgotPassword(true)} 
+                isLoading={isLoading} 
+              />
+            </>
+          ) : (
+            <PasswordResetForm 
+              onSubmit={handleResetPassword}
+              onCancel={() => setForgotPassword(false)}
+              isLoading={isLoading}
+              resetSent={resetSent}
+            />
+          )}
+          
+          <LoginDebugInfo {...authDebugInfo} />
+        </AuthLayout>
+      )}
+    </>
+  );
 
   return (
     <MobileOptimizedLayout fullHeight>
-      <AuthLayout 
-        title={forgotPassword ? "Récupération de mot de passe" : "Connexion"} 
-        subtitle={forgotPassword ? "Nous vous enverrons un lien de récupération" : "Accédez à votre espace VIP"}
-      >
-        {!forgotPassword ? (
-          <>
-            <BiometricLoginPrompt 
-              biometricAttempt={biometricAttempt}
-              isBiometricEnabled={isBiometricEnabled}
-              isNative={isNative}
-              isMobileDevice={isMobileDevice}
-              biometricError={biometricError}
-              isLoading={biometricLoading}
-              onBiometricLogin={handleBiometricLogin}
-            />
-
-            <SocialLoginButtons onLoginSuccess={handleSocialLoginSuccess} />
-
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-white px-2 text-sm text-gray-500">ou</span>
-              </div>
-            </div>
-
-            <LoginForm 
-              onSubmit={handleLoginSubmit} 
-              onForgotPassword={() => setForgotPassword(true)} 
-              isLoading={isLoading} 
-            />
-          </>
-        ) : (
-          <PasswordResetForm 
-            onSubmit={handleResetPassword}
-            onCancel={() => setForgotPassword(false)}
-            isLoading={isLoading}
-            resetSent={resetSent}
-          />
-        )}
-        
-        <LoginDebugInfo {...authDebugInfo} />
-        
-        {/* Always show navigation for better usability */}
-        <MobileNavigation type="guest" />
-      </AuthLayout>
+      {content}
+      {/* Position the navigation outside the main content to avoid nesting issues */}
+      <MobileNavigation type="guest" />
     </MobileOptimizedLayout>
   );
 };

@@ -1,10 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Home, Users, Calendar, Menu, X, Settings, CreditCard, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useDeviceType } from "@/hooks/use-mobile";
 import Logo from "@/components/Logo";
 
 interface NavItem {
@@ -21,10 +19,6 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ type }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const deviceType = useDeviceType();
-  const isMobile = deviceType === 'mobile' || deviceType === 'tablet';
-  
-  if (!isMobile) return null;
   
   // Navigation items by user type
   const getNavItems = (): NavItem[] => {
