@@ -16,7 +16,7 @@ const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
           <Logo />
         </div>
       </header>
-      <main className="flex flex-col items-center justify-center flex-1 py-10 px-4">
+      <main className="flex flex-col items-center justify-center flex-1 py-10 px-4 pb-20">
         <div className="w-full max-w-md mx-auto space-y-6">
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold gold-gradient">{title}</h1>

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AuthLayout from "@/components/AuthLayout";
@@ -14,6 +15,7 @@ import { useDeviceType } from "@/hooks/use-mobile";
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
 import { useAuth } from "@/hooks/useAuth";
 import { UserRole } from "@/utils/accessControl";
+import MobileNavigation from "@/components/mobile/MobileNavigation";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -193,6 +195,7 @@ const LoginPage = () => {
           <div className="text-center text-sm text-gray-500 mt-4">
             <p>Pour les besoins de la démo, le code valide est: 123456</p>
           </div>
+          {isMobileDevice && <MobileNavigation type="guest" />}
         </AuthLayout>
       </MobileOptimizedLayout>
     );
@@ -244,6 +247,7 @@ const LoginPage = () => {
         
         <LoginDebugInfo {...authDebugInfo} />
       </AuthLayout>
+      {isMobileDevice && <MobileNavigation type="guest" />}
     </MobileOptimizedLayout>
   );
 };
