@@ -46,7 +46,7 @@ const ClientNavigation = () => {
       />
       <NavItem
         icon={<Building2 size={20} />}
-        title="Vendors"
+        title="Prestataires"
         href="/client/partners"
       />
       <NavItem

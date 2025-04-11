@@ -6,6 +6,7 @@ import ClientAccount from '@/pages/client/ClientAccount';
 import ClientTodoList from '@/pages/client/ClientTodoList';
 import ClientBudget from '@/pages/client/ClientBudget';
 import ClientPayments from '@/pages/client/ClientPayments';
+import ClientPartners from '@/pages/client/ClientPartners';
 import { useAuth } from '@/hooks/useAuth';
 import ProtectedRoute from '@/components/security/ProtectedRoute';
 import { UserRole } from '@/utils/accessControl';
@@ -22,6 +23,7 @@ const ClientRoutes: React.FC = () => {
           <Route path="todolist" element={<ClientTodoList />} /> {/* Keep compatibility with old route */}
           <Route path="budget" element={<ClientBudget />} />
           <Route path="payments" element={<ClientPayments />} />
+          <Route path="partners" element={<ClientPartners />} /> {/* Added this route */}
           {/* Add more client routes here */}
         </Route>
       </Route>

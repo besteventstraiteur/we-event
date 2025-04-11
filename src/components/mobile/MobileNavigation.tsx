@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Home, Users, Calendar, Menu, X, Settings, CreditCard, Star } from "lucide-react";
@@ -29,7 +28,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ type }) => {
           { icon: <Home size={20} />, label: "Accueil", path: "/client/dashboard" },
           { icon: <Calendar size={20} />, label: "Événements", path: "/client/events" },
           { icon: <Users size={20} />, label: "Invités", path: "/client/guests" },
-          { icon: <Star size={20} />, label: "Partenaires", path: "/client/partners" },
+          { icon: <Star size={20} />, label: "Prestataires", path: "/client/partners" },
           { icon: <CreditCard size={20} />, label: "Budget", path: "/client/budget" },
         ];
       case "partner":
@@ -43,7 +42,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ type }) => {
         return [
           { icon: <Home size={20} />, label: "Accueil", path: "/admin/dashboard" },
           { icon: <Users size={20} />, label: "Clients", path: "/admin/clients" },
-          { icon: <Star size={20} />, label: "Partenaires", path: "/admin/partners" },
+          { icon: <Star size={20} />, label: "Prestataires", path: "/admin/partners" },
           { icon: <Settings size={20} />, label: "Paramètres", path: "/admin/settings" },
         ];
       case "guest":
