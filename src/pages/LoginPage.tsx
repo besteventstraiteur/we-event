@@ -113,11 +113,14 @@ const LoginPage = () => {
   );
 
   return (
-    <MobileOptimizedLayout fullHeight>
-      {content}
-      {/* Position the navigation outside the main content to avoid nesting issues */}
+    <>
+      <MobileOptimizedLayout fullHeight>
+        {content}
+      </MobileOptimizedLayout>
+      
+      {/* Navigation en dehors du MobileOptimizedLayout pour éviter les problèmes d'imbrication */}
       <MobileNavigation type="guest" />
-    </MobileOptimizedLayout>
+    </>
   );
 };
 

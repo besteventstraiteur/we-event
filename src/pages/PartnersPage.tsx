@@ -14,21 +14,23 @@ const PartnersPage: React.FC = () => {
   const isMobile = deviceType === 'mobile';
   
   return (
-    <MobileOptimizedLayout fullHeight={true}>
-      <div className="min-h-screen bg-white flex flex-col">
-        <PartnersHeader />
+    <>
+      <MobileOptimizedLayout fullHeight={true}>
+        <div className="min-h-screen bg-white flex flex-col">
+          <PartnersHeader />
 
-        <main className={`flex-1 container ${isMobile ? 'py-3 px-3' : 'py-4 md:py-8'}`}>
-          <PartnersList partnerCategories={partnerCategories} allPartners={allPartners} />
-          <VIPPromotion />
-        </main>
+          <main className={`flex-1 container ${isMobile ? 'py-3 px-3' : 'py-4 md:py-8'}`}>
+            <PartnersList partnerCategories={partnerCategories} allPartners={allPartners} />
+            <VIPPromotion />
+          </main>
 
-        <PartnersFooter />
-      </div>
+          <PartnersFooter />
+        </div>
+      </MobileOptimizedLayout>
       
-      {/* Position the navigation outside the flex container to avoid nesting issues */}
+      {/* La navigation est maintenant rendue en dehors du MobileOptimizedLayout */}
       <MobileNavigation type="client" />
-    </MobileOptimizedLayout>
+    </>
   );
 };
 

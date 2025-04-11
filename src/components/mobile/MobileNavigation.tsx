@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Home, Users, Calendar, Menu, X, Settings, CreditCard, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -58,10 +59,10 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ type }) => {
   
   const navItems = getNavItems();
   
-  // Bottom tab bar for mobile devices
+  // Nous supprimons la classe conditional pour afficher la navigation sur tous les appareils
   return (
     <>
-      {/* Mobile tab bar */}
+      {/* Navigation bar - shown on all devices now */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 grid grid-cols-5 py-2 px-1 z-50 safe-area-bottom">
         {navItems.slice(0, 4).map((item, index) => (
           <button
