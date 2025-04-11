@@ -6,7 +6,7 @@ import PartnersList from "@/components/partners/PartnersList";
 import VIPPromotion from "@/components/partners/VIPPromotion";
 import { partnerCategories, allPartners } from "@/components/partners/partnersData";
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
-import MobileNavigation from "@/components/mobile/MobileNavigation";
+import HomeHeader from "@/components/home/HomeHeader";
 import { useDeviceType } from "@/hooks/use-mobile";
 
 const PartnersPage: React.FC = () => {
@@ -14,23 +14,18 @@ const PartnersPage: React.FC = () => {
   const isMobile = deviceType === 'mobile';
   
   return (
-    <>
-      <MobileOptimizedLayout fullHeight={true}>
-        <div className="min-h-screen bg-white flex flex-col">
-          <PartnersHeader />
+    <MobileOptimizedLayout fullHeight={true}>
+      <div className="min-h-screen bg-white flex flex-col">
+        <HomeHeader />
 
-          <main className={`flex-1 container ${isMobile ? 'py-3 px-3' : 'py-4 md:py-8'}`}>
-            <PartnersList partnerCategories={partnerCategories} allPartners={allPartners} />
-            <VIPPromotion />
-          </main>
+        <main className={`flex-1 container ${isMobile ? 'py-3 px-3' : 'py-4 md:py-8'}`}>
+          <PartnersList partnerCategories={partnerCategories} allPartners={allPartners} />
+          <VIPPromotion />
+        </main>
 
-          <PartnersFooter />
-        </div>
-      </MobileOptimizedLayout>
-      
-      {/* Navigation displayed outside of the MobileOptimizedLayout */}
-      <MobileNavigation type="client" />
-    </>
+        <PartnersFooter />
+      </div>
+    </MobileOptimizedLayout>
   );
 };
 

@@ -22,7 +22,7 @@ const MobileOptimizedLayout: React.FC<MobileOptimizedLayoutProps> = ({
       className={cn(
         "w-full max-w-full overflow-x-hidden",
         isMobile && "mobile-view px-3",
-        fullHeight && "min-h-[calc(100vh-4rem)]", // Reduce height to account for bottom nav
+        fullHeight && "min-h-screen", // Revenir à la hauteur complète
         className
       )}
     >
