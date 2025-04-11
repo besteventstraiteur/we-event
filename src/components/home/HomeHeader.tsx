@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import WeEventLogo from "@/components/WeEventLogo";
 import WeEventButton from "@/components/WeEventButton";
 import { Search } from "lucide-react";
@@ -34,6 +34,12 @@ interface HomeHeaderProps {}
 const HomeHeader: React.FC<HomeHeaderProps> = () => {
   const isMobile = useIsMobile();
   const { t } = useLanguage();
+  const location = useLocation();
+  
+  // Determine which link is active based on the current path
+  const isHomePage = location.pathname === "/" || location.pathname === "/home";
+  const isPartnersPage = location.pathname === "/partners";
+  const isContactPage = location.pathname === "/contact";
   
   return (
     <header className="border-b border-we-beige py-4">
@@ -42,9 +48,9 @@ const HomeHeader: React.FC<HomeHeaderProps> = () => {
           <WeEventLogo size={isMobile ? "small" : "medium"} />
         </Link>
         <div className="hidden md:flex items-center space-x-6">
-          <NavLink href="/" isActive>{t('common.home')}</NavLink>
-          <NavLink href="/partners">{t('common.partners')}</NavLink>
-          <NavLink href="/contact">{t('common.contact')}</NavLink>
+          <NavLink href="/" isActive={isHomePage}>{t('common.home')}</NavLink>
+          <NavLink href="/partners" isActive={isPartnersPage}>{t('common.partners')}</NavLink>
+          <NavLink href="/contact" isActive={isContactPage}>{t('common.contact')}</NavLink>
         </div>
         <div className="flex items-center space-x-2 sm:space-x-4">
           <LanguageSelector variant={isMobile ? 'minimal' : 'standard'} />
