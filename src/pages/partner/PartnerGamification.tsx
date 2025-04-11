@@ -7,6 +7,73 @@ import BadgesCollection from "@/components/partner/gamification/BadgesCollection
 import GamificationStats from "@/components/partner/gamification/GamificationStats";
 import LoyaltyTierCard from "@/components/partner/gamification/LoyaltyTierCard";
 import PointsHistory from "@/components/partner/gamification/PointsHistory";
+import { PartnerBadge, PointsTransaction } from "@/models/partnerGamification";
+
+// Mock data
+const mockBadges: PartnerBadge[] = [
+  {
+    id: "badge-1",
+    type: "speed",
+    name: "Réponse Éclair",
+    description: "Répond aux clients en moins de 2 heures",
+    iconName: "Zap",
+    dateAwarded: "2024-03-15",
+    points: 100
+  },
+  {
+    id: "badge-2",
+    type: "quality",
+    name: "Service 5 Étoiles",
+    description: "A reçu plus de 10 avis 5 étoiles",
+    iconName: "Star",
+    dateAwarded: "2024-02-10",
+    points: 200
+  },
+  {
+    id: "badge-3",
+    type: "recommended",
+    name: "Super Networker",
+    description: "A fait plus de 20 recommandations acceptées",
+    iconName: "Users",
+    dateAwarded: "2024-01-05",
+    points: 150
+  }
+];
+
+const mockTransactions: PointsTransaction[] = [
+  {
+    id: "tx-1",
+    date: "2024-04-05",
+    points: 100,
+    reason: "Réponse rapide à une demande",
+    type: "earned"
+  },
+  {
+    id: "tx-2",
+    date: "2024-03-20",
+    points: 200,
+    reason: "Événement complété avec succès",
+    type: "earned"
+  },
+  {
+    id: "tx-3",
+    date: "2024-02-15",
+    points: 50,
+    reason: "Avis 5 étoiles reçu",
+    type: "earned"
+  }
+];
+
+const mockStats = {
+  responseRate: 95,
+  averageResponseTime: 1.5,
+  clientSatisfaction: 4.8,
+  completedEvents: 12,
+  recommendationsGiven: 8,
+  recommendationsReceived: 3,
+  averageRating: 4.9,
+  totalRatings: 15
+};
 
 const PartnerGamification = () => {
   return (
@@ -54,13 +121,13 @@ const PartnerGamification = () => {
           </TabsList>
           
           <TabsContent value="badges" className="mt-6">
-            <BadgesCollection />
+            <BadgesCollection badges={mockBadges} />
           </TabsContent>
           
           <TabsContent value="tiers" className="mt-6">
             <div className="space-y-4">
               <LoyaltyTierCard 
-                tier="Bronze" 
+                tier="bronze" 
                 pointsRequired={0} 
                 currentPoints={750} 
                 benefits={[
@@ -71,7 +138,7 @@ const PartnerGamification = () => {
                 current={false}
               />
               <LoyaltyTierCard 
-                tier="Argent" 
+                tier="silver" 
                 pointsRequired={500} 
                 currentPoints={750} 
                 benefits={[
@@ -82,7 +149,7 @@ const PartnerGamification = () => {
                 current={true}
               />
               <LoyaltyTierCard 
-                tier="Or" 
+                tier="gold" 
                 pointsRequired={1000} 
                 currentPoints={750} 
                 benefits={[
@@ -93,7 +160,7 @@ const PartnerGamification = () => {
                 current={false}
               />
               <LoyaltyTierCard 
-                tier="Platine" 
+                tier="platinum" 
                 pointsRequired={2000} 
                 currentPoints={750} 
                 benefits={[
@@ -108,11 +175,11 @@ const PartnerGamification = () => {
           </TabsContent>
           
           <TabsContent value="points" className="mt-6">
-            <PointsHistory />
+            <PointsHistory transactions={mockTransactions} />
           </TabsContent>
           
           <TabsContent value="stats" className="mt-6">
-            <GamificationStats />
+            <GamificationStats stats={mockStats} />
           </TabsContent>
         </Tabs>
       </div>
