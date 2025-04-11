@@ -76,6 +76,9 @@ const mockStats = {
 };
 
 const PartnerGamification = () => {
+  // Current points and tier calculation for demo
+  const currentPoints = 750;
+  
   return (
     <DashboardLayout type="partner">
       <div className="space-y-6">
@@ -127,49 +130,28 @@ const PartnerGamification = () => {
           <TabsContent value="tiers" className="mt-6">
             <div className="space-y-4">
               <LoyaltyTierCard 
-                tier="bronze" 
-                pointsRequired={0} 
-                currentPoints={750} 
-                benefits={[
-                  "Apparition sur la plateforme",
-                  "Création d'un profil simple",
-                  "Accès aux demandes clients"
-                ]}
-                current={false}
+                tier="bronze"
+                points={currentPoints}
+                nextTierPoints={1000}
+                levelProgress={75}
               />
               <LoyaltyTierCard 
-                tier="silver" 
-                pointsRequired={500} 
-                currentPoints={750} 
-                benefits={[
-                  "Tous les avantages Bronze",
-                  "Badges de niveau Argent",
-                  "Recommandations clients prioritaires"
-                ]}
-                current={true}
+                tier="silver"
+                points={currentPoints} 
+                nextTierPoints={5000}
+                levelProgress={15}
               />
               <LoyaltyTierCard 
-                tier="gold" 
-                pointsRequired={1000} 
-                currentPoints={750} 
-                benefits={[
-                  "Tous les avantages Argent",
-                  "Badges exclusifs Or",
-                  "Mise en avant dans les résultats de recherche"
-                ]}
-                current={false}
+                tier="gold"
+                points={currentPoints}
+                nextTierPoints={15000}
+                levelProgress={5}
               />
               <LoyaltyTierCard 
-                tier="platinum" 
-                pointsRequired={2000} 
-                currentPoints={750} 
-                benefits={[
-                  "Tous les avantages Or",
-                  "Badge Platine exclusif",
-                  "Apparition en tête des résultats de recherche",
-                  "Invitation aux événements VIP"
-                ]}
-                current={false}
+                tier="platinum"
+                points={currentPoints}
+                nextTierPoints={0}
+                levelProgress={0}
               />
             </div>
           </TabsContent>

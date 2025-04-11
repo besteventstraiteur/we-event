@@ -19,7 +19,6 @@ interface PartnerCardProps {
     rating: number;
     status?: string;
     appointmentDate?: string | null;
-    availability?: any[]; // This would come from the API in a real app
   };
   categoryName: string;
   onContact: (partner: any) => void;
@@ -37,15 +36,6 @@ const PartnerCard: React.FC<PartnerCardProps> = ({
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const [showAvailability, setShowAvailability] = useState(false);
-
-  // Mock data for demonstration - in a real app this would come from the API
-  const mockAvailability = [
-    { date: "2025-04-10", status: "available" },
-    { date: "2025-04-11", status: "available" },
-    { date: "2025-04-12", status: "busy" },
-    { date: "2025-04-15", status: "unavailable" },
-    { date: "2025-04-20", status: "tentative" }
-  ];
 
   return (
     <>
@@ -141,7 +131,7 @@ const PartnerCard: React.FC<PartnerCardProps> = ({
             <DialogTitle>Disponibilités de {partner.name}</DialogTitle>
           </DialogHeader>
           <PartnerAvailabilityCalendar
-            availability={partner.availability || mockAvailability}
+            partnerId="partner-001"
             partnerName={partner.name}
           />
         </DialogContent>
