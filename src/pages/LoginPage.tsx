@@ -118,7 +118,7 @@ const LoginPage = () => {
         {content}
       </MobileOptimizedLayout>
       
-      {/* Navigation en dehors du MobileOptimizedLayout pour éviter les problèmes d'imbrication */}
+      {/* Navigation displayed outside of the MobileOptimizedLayout */}
       <MobileNavigation type="guest" />
     </>
   );

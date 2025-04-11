@@ -174,6 +174,13 @@
   }
 }
 
+/* Navigation bar styles - to ensure visibility on all devices */
+.fixed bottom-0 {
+  display: block !important;
+  visibility: visible !important;
+  z-index: 9999;
+}
+
 /* Correction pour l'utilisation avec la barre de navigation mobile */
 .has-bottom-nav {
   padding-bottom: 4rem;

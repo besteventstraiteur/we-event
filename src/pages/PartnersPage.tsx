@@ -28,7 +28,7 @@ const PartnersPage: React.FC = () => {
         </div>
       </MobileOptimizedLayout>
       
-      {/* La navigation est maintenant rendue en dehors du MobileOptimizedLayout */}
+      {/* Navigation displayed outside of the MobileOptimizedLayout */}
       <MobileNavigation type="client" />
     </>
   );

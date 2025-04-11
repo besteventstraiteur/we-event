@@ -59,10 +59,10 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ type }) => {
   
   const navItems = getNavItems();
   
-  // Nous supprimons la classe conditional pour afficher la navigation sur tous les appareils
+  // Always display the navigation bar regardless of device type
   return (
     <>
-      {/* Navigation bar - shown on all devices now */}
+      {/* Navigation bar - shown on all devices */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 grid grid-cols-5 py-2 px-1 z-50 safe-area-bottom">
         {navItems.slice(0, 4).map((item, index) => (
           <button
