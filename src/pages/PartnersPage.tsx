@@ -27,7 +27,8 @@ const PartnersPage: React.FC = () => {
 
         <PartnersFooter />
         
-        {isRealMobileDevice && <MobileNavigation type="client" />}
+        {/* Always show the mobile navigation on these pages for better usability */}
+        <MobileNavigation type="client" />
       </div>
     </MobileOptimizedLayout>
   );

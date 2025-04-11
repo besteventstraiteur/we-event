@@ -64,7 +64,8 @@ const LoginPage = () => {
           <div className="text-center text-sm text-gray-500 mt-4">
             <p>Pour les besoins de la démo, le code valide est: 123456</p>
           </div>
-          {isRealMobileDevice && <MobileNavigation type="guest" />}
+          {/* Always show navigation for better usability */}
+          <MobileNavigation type="guest" />
         </AuthLayout>
       </MobileOptimizedLayout>
     );
@@ -115,8 +116,10 @@ const LoginPage = () => {
         )}
         
         <LoginDebugInfo {...authDebugInfo} />
+        
+        {/* Always show navigation for better usability */}
+        <MobileNavigation type="guest" />
       </AuthLayout>
-      {isRealMobileDevice && <MobileNavigation type="guest" />}
     </MobileOptimizedLayout>
   );
 };
