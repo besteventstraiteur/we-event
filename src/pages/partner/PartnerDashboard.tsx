@@ -1,204 +1,194 @@
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserRound, BarChart, MessageSquare, Calendar, CreditCard } from "lucide-react";
-import GoldButton from "@/components/GoldButton";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { SubscriptionTier } from "@/models/subscription";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CalendarCheck, Users, AlertTriangle, TrendingUp, MessageSquare, Clock } from "lucide-react";
 
 const PartnerDashboard = () => {
-  const navigate = useNavigate();
-  // Date d'expiration fictive (dans 8 mois)
-  const expiryDate = new Date();
-  expiryDate.setMonth(expiryDate.getMonth() + 8);
-  
-  // Calcul du pourcentage restant avant expiration
-  const totalDays = 365; // Abonnement annuel
-  const daysRemaining = Math.floor((expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-  const percentageRemaining = Math.floor((daysRemaining / totalDays) * 100);
-
-  // Example subscription tier using the enum
-  const subscriptionTier = SubscriptionTier.STANDARD;
-  
-  const handleSubscriptionClick = () => {
-    navigate("/partner/subscription");
-  };
-
-  // Helper function to get badge styling based on subscription tier
-  const getBadgeStyling = (tier: SubscriptionTier): string => {
-    switch (tier) {
-      case SubscriptionTier.PREMIUM:
-        return 'bg-amber-500/20 text-amber-500 border-amber-500/50';
-      case SubscriptionTier.STANDARD:
-        return 'bg-blue-500/20 text-blue-500 border-blue-500/50';
-      default:
-        return 'bg-vip-gray-700/20 text-vip-gray-400 border-vip-gray-700/50';
-    }
-  };
-
-  // Helper function to get subscription tier display name
-  const getSubscriptionName = (tier: SubscriptionTier): string => {
-    switch (tier) {
-      case SubscriptionTier.PREMIUM:
-        return 'Premium';
-      case SubscriptionTier.STANDARD:
-        return 'Standard';
-      default:
-        return 'Gratuit';
-    }
-  };
-
   return (
     <DashboardLayout type="partner">
-      <div className="space-y-8">
+      <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Tableau de bord Partenaire</h1>
-          <p className="text-vip-gray-400">Gérez votre profil, suivez vos demandes et vos statistiques</p>
+          <h1 className="text-3xl font-bold">Tableau de Bord</h1>
+          <p className="text-gray-500">
+            Bienvenue dans votre espace partenaire. Consultez vos dernières statistiques et activités.
+          </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="bg-vip-gray-900 border-vip-gray-800">
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-vip-gold flex items-center gap-2">
-                <BarChart size={18} /> Vues
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Demandes en attente</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-vip-white">143</p>
-              <p className="text-sm text-vip-gray-400">Vues de votre profil ce mois</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-vip-gray-900 border-vip-gray-800">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-vip-gold flex items-center gap-2">
-                <MessageSquare size={18} /> Demandes
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-vip-white">12</p>
-              <p className="text-sm text-vip-gray-400">Demandes clients reçues</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-vip-gray-900 border-vip-gray-800">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-vip-gold flex items-center gap-2">
-                <UserRound size={18} /> Conversion
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-vip-white">32%</p>
-              <p className="text-sm text-vip-gray-400">Taux de conversion</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-vip-gray-900 border-vip-gray-800">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-vip-gold flex items-center gap-2">
-                <CreditCard size={18} /> Abonnement
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between mb-1">
-                <p className="text-vip-white">
-                  <Badge 
-                    variant="outline" 
-                    className={getBadgeStyling(subscriptionTier)}
-                  >
-                    {getSubscriptionName(subscriptionTier)}
-                  </Badge>
-                </p>
-                <p className="text-xs text-vip-gray-400 cursor-pointer hover:text-vip-gold" onClick={handleSubscriptionClick}>
-                  Gérer
-                </p>
+              <div className="flex items-center">
+                <AlertTriangle className="h-4 w-4 text-amber-500 mr-2" />
+                <p className="text-2xl font-bold">4</p>
               </div>
-              <div className="space-y-1">
-                <Progress value={percentageRemaining} className="h-2 bg-vip-gray-700" />
-                <p className="text-xs text-vip-gray-400">
-                  Expire dans {daysRemaining} jours
-                </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Événements à venir</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center">
+                <CalendarCheck className="h-4 w-4 text-green-500 mr-2" />
+                <p className="text-2xl font-bold">8</p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Visites du profil</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center">
+                <Users className="h-4 w-4 text-blue-500 mr-2" />
+                <p className="text-2xl font-bold">347</p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Taux de conversion</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center">
+                <TrendingUp className="h-4 w-4 text-purple-500 mr-2" />
+                <p className="text-2xl font-bold">18.5%</p>
               </div>
             </CardContent>
           </Card>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="bg-vip-gray-900 border-vip-gray-800 lg:col-span-2">
-            <CardHeader>
-              <CardTitle>Dernières demandes</CardTitle>
-              <CardDescription>Demandes clients récentes nécessitant votre attention</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {[
-                { name: "Sophie Dupont", date: "18/06/2023", status: "new" },
-                { name: "Thomas Martin", date: "15/06/2023", status: "viewed" },
-                { name: "Emma Bernard", date: "10/06/2023", status: "replied" },
-              ].map((request, i) => (
-                <div key={i} className="flex items-center gap-4 p-3 rounded-md hover:bg-vip-gray-800 transition-colors">
-                  <div className="w-10 h-10 bg-vip-gray-800 rounded-full flex items-center justify-center text-vip-white border border-vip-gray-700">
-                    {request.name.charAt(0)}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-medium text-vip-white">{request.name}</h4>
-                      {request.status === "new" && (
-                        <span className="px-2 py-0.5 rounded-full bg-vip-gold/20 text-vip-gold text-xs">
-                          Nouveau
-                        </span>
-                      )}
+        
+        <Tabs defaultValue="upcoming" className="w-full">
+          <TabsList>
+            <TabsTrigger value="upcoming">À venir</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
+            <TabsTrigger value="tasks">Tâches</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="upcoming" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Événements à venir</CardTitle>
+                <CardDescription>
+                  Les événements pour lesquels vous êtes réservé dans les prochaines semaines
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-start border-b pb-4">
+                    <div className="bg-blue-100 p-2 rounded-md mr-4">
+                      <CalendarCheck className="h-5 w-5 text-blue-700" />
                     </div>
-                    <p className="text-sm text-vip-gray-400">Reçue le {request.date}</p>
+                    <div className="flex-1">
+                      <h3 className="font-medium">Mariage de Sophie & Thomas</h3>
+                      <p className="text-sm text-gray-500">12 Juin 2025</p>
+                    </div>
+                    <div className="bg-amber-100 px-2 py-1 rounded text-amber-800 text-xs font-medium">
+                      Dans 2 mois
+                    </div>
                   </div>
-                  <GoldButton variant={request.status === "replied" ? "outline" : "default"} size="sm">
-                    {request.status === "replied" ? "Déjà répondu" : "Répondre"}
-                  </GoldButton>
+                  
+                  <div className="flex items-start border-b pb-4">
+                    <div className="bg-blue-100 p-2 rounded-md mr-4">
+                      <CalendarCheck className="h-5 w-5 text-blue-700" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-medium">Mariage de Marie & Jean</h3>
+                      <p className="text-sm text-gray-500">26 Juillet 2025</p>
+                    </div>
+                    <div className="bg-amber-100 px-2 py-1 rounded text-amber-800 text-xs font-medium">
+                      Dans 3 mois
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          <Card className="bg-vip-gray-900 border-vip-gray-800">
-            <CardHeader>
-              <CardTitle>Informations profil</CardTitle>
-              <CardDescription>Gérez votre profil et vos informations</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex justify-center mb-4">
-                <div className="w-24 h-24 bg-vip-gray-800 rounded-full flex items-center justify-center text-vip-gold text-3xl font-bold border-2 border-vip-gold">
-                  B
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="messages" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Messages récents</CardTitle>
+                <CardDescription>
+                  Derniers messages reçus de vos clients
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-start border-b pb-4">
+                    <div className="bg-green-100 p-2 rounded-md mr-4">
+                      <MessageSquare className="h-5 w-5 text-green-700" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Sophie & Thomas</p>
+                      <p className="text-sm text-gray-700">Nous aimerions discuter des derniers détails pour notre événement...</p>
+                      <p className="text-xs text-gray-500 mt-1">Il y a 2 heures</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <div className="bg-green-100 p-2 rounded-md mr-4">
+                      <MessageSquare className="h-5 w-5 text-green-700" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Claire & Antoine</p>
+                      <p className="text-sm text-gray-700">Pouvez-vous nous envoyer un devis détaillé pour les services demandés ?</p>
+                      <p className="text-xs text-gray-500 mt-1">Il y a 1 jour</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-vip-white text-center">Best Events Traiteur</h3>
-                <p className="text-sm text-vip-gray-400 text-center">Traiteur • Réduction: 25%</p>
-              </div>
-              
-              <div className="pt-4 border-t border-vip-gray-800 space-y-3">
-                <div>
-                  <p className="text-xs text-vip-gray-500">Adresse</p>
-                  <p className="text-sm text-vip-white">123 Avenue des Champs-Élysées, 75008 Paris</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="tasks" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Tâches en cours</CardTitle>
+                <CardDescription>
+                  Tâches prioritaires à effectuer
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-start border-b pb-4">
+                    <div className="bg-red-100 p-2 rounded-md mr-4">
+                      <Clock className="h-5 w-5 text-red-700" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-medium">Confirmer le menu avec Sophie & Thomas</h3>
+                      <p className="text-sm text-gray-500">Échéance: 15 avril 2025</p>
+                    </div>
+                    <div className="bg-red-100 px-2 py-1 rounded text-red-800 text-xs font-medium">
+                      Urgent
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <div className="bg-amber-100 p-2 rounded-md mr-4">
+                      <Clock className="h-5 w-5 text-amber-700" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-medium">Mettre à jour le portfolio</h3>
+                      <p className="text-sm text-gray-500">Échéance: 30 avril 2025</p>
+                    </div>
+                    <div className="bg-amber-100 px-2 py-1 rounded text-amber-800 text-xs font-medium">
+                      Important
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs text-vip-gray-500">Contact</p>
-                  <p className="text-sm text-vip-white">contact@best-events.com</p>
-                </div>
-                <div>
-                  <p className="text-xs text-vip-gray-500">Téléphone</p>
-                  <p className="text-sm text-vip-white">01 23 45 67 89</p>
-                </div>
-              </div>
-              
-              <GoldButton className="w-full mt-4">
-                Modifier mon profil
-              </GoldButton>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </DashboardLayout>
   );
