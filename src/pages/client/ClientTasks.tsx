@@ -1,33 +1,35 @@
 
 import React from "react";
 import DashboardLayout from "@/components/DashboardLayout";
-import EnhancedTaskList from "@/components/tasks/EnhancedTaskList";
-
-const initialCategories = [
-  { value: "venue", label: "Lieu" },
-  { value: "catering", label: "Traiteur" },
-  { value: "decoration", label: "Décoration" },
-  { value: "music", label: "Musique" },
-  { value: "photography", label: "Photographie" },
-  { value: "clothing", label: "Tenues" },
-  { value: "ceremony", label: "Cérémonie" },
-  { value: "reception", label: "Réception" },
-  { value: "honeymoon", label: "Lune de miel" },
-  { value: "guest", label: "Invités" },
-  { value: "other", label: "Autre" }
-];
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { ListTodo } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ClientTasks = () => {
+  const navigate = useNavigate();
+  
   return (
     <DashboardLayout type="client">
-      <div className="bg-white p-4">
-        <EnhancedTaskList
-          userId="client-001"
-          userName="Sophie et Thomas"
-          userType="client"
-          initialCategories={initialCategories}
-          storageKey="clientTasks"
-        />
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold">Gestion des tâches</h1>
+        
+        <Alert>
+          <ListTodo className="h-4 w-4" />
+          <AlertTitle>Notification</AlertTitle>
+          <AlertDescription>
+            Notre nouvelle liste de tâches améliorée est maintenant disponible.
+          </AlertDescription>
+        </Alert>
+        
+        <div className="flex justify-center my-8">
+          <Button 
+            onClick={() => navigate("/client/todo")} 
+            size="lg"
+          >
+            Accéder à la liste de tâches
+          </Button>
+        </div>
       </div>
     </DashboardLayout>
   );
