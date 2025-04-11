@@ -38,6 +38,7 @@ export const useLoginPageLogic = () => {
   useEffect(() => {
     if (isAuthenticated && user) {
       const redirectTo = getRedirectPathForUser(user.role);
+      console.log("Authenticated user with role:", user.role, "redirecting to:", redirectTo);
       navigate(redirectTo, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
@@ -58,10 +59,15 @@ export const useLoginPageLogic = () => {
             description: "Veuillez entrer le code de sécurité envoyé à votre appareil.",
           });
         } else {
+          const redirectPath = getRedirectPathForUser(result.user?.role);
+          console.log("Login successful, redirecting to:", redirectPath);
+          
           toast({
             title: "Connexion réussie",
             description: "Bienvenue sur votre espace VIP",
           });
+          
+          navigate(redirectPath, { replace: true });
         }
       } else {
         toast({
@@ -144,15 +150,25 @@ export const useLoginPageLogic = () => {
     const result = await handleBiometricAuth();
     if (result.success) {
       const storedEmail = localStorage.getItem('weddingPlannerEmail') || 'client@example.com';
-      await login({
+      const loginResult = await login({
         email: storedEmail,
         password: "biometric-auth",
         rememberMe: true
       });
+      
+      if (loginResult.success) {
+        const redirectPath = getRedirectPathForUser(loginResult.user?.role);
+        console.log("Biometric login successful, redirecting to:", redirectPath);
+        navigate(redirectPath, { replace: true });
+      }
     }
   };
 
-  const getRedirectPathForUser = (role: UserRole): string => {
+  const getRedirectPathForUser = (role?: UserRole): string => {
+    if (!role) {
+      return '/client/dashboard';
+    }
+    
     switch (role) {
       case UserRole.ADMIN:
         return '/admin/dashboard';

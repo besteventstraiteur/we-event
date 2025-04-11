@@ -84,9 +84,9 @@ const PartnerCard: React.FC<PartnerCardProps> = ({
               <Calendar size={16} className="mr-1" /> Disponibilités
             </GoldButton>
             
-            <Link to={`/client/partners/${partner.id}/ratings`}>
+            <Link to={`/partner/profile/${partner.id}`}>
               <GoldButton size="sm" variant="outline" className="border-amber-200 hover:bg-amber-50">
-                <Star size={16} className="mr-1" /> Avis
+                <Star size={16} className="mr-1" /> Voir la vitrine
               </GoldButton>
             </Link>
             

@@ -33,7 +33,16 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Login submission:", { email, password: "***" });
     onSubmit(email, password, rememberMe);
+  };
+
+  // Debug buttons for quick access to different roles
+  const loginAsRole = (role: string) => {
+    const roleEmail = `${role}@example.com`;
+    setEmail(roleEmail);
+    setPassword("password123");
+    onSubmit(roleEmail, "password123", true);
   };
 
   return (
@@ -93,6 +102,22 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <Link to="/register-partner" className="text-vip-gold hover:underline">
           Inscription Partenaire
         </Link>
+      </div>
+
+      {/* Debug section for quick login - can be removed in production */}
+      <div className="pt-2 border-t border-gray-200 mt-4">
+        <div className="text-xs text-gray-500 mb-2">Connexion rapide (pour test):</div>
+        <div className="flex gap-2">
+          <button type="button" onClick={() => loginAsRole('admin')} className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
+            Admin
+          </button>
+          <button type="button" onClick={() => loginAsRole('partner')} className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
+            Partenaire
+          </button>
+          <button type="button" onClick={() => loginAsRole('client')} className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
+            Client
+          </button>
+        </div>
       </div>
     </form>
   );
