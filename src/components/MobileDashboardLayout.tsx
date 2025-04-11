@@ -6,7 +6,6 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileAppWrapper from "@/components/mobile/MobileAppWrapper";
 import { useAuth } from "@/hooks/useAuth";
-import LogoutButton from "@/components/auth/LogoutButton";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;

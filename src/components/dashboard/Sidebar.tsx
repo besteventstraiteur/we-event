@@ -7,6 +7,7 @@ import ClientNavigation from "./ClientNavigation";
 import PartnerNavigation from "./PartnerNavigation";
 import AdminNavigation from "./AdminNavigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import LogoutButton from "../auth/LogoutButton";
 
 interface SidebarProps {
   type: "client" | "partner" | "admin" | "guest";
@@ -38,14 +39,11 @@ const Sidebar = ({ type, onLogout, mobile = false, onMenuClose }: SidebarProps) 
         {/* Guest Navigation would be added here if needed */}
       </nav>
 
-      <Button
+      <LogoutButton 
         variant="outline"
         className="text-we-gray-700 hover:text-we-green hover:bg-we-beige/50 w-full justify-start mt-auto border-we-beige h-11 transition-colors"
-        onClick={onLogout}
-      >
-        <LogOut size={18} className="mr-2" />
-        {t('common.logout')}
-      </Button>
+        showIcon={true}
+      />
     </div>
   );
 };
