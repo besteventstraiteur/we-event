@@ -52,7 +52,7 @@ const PartnerCardSimple: React.FC<PartnerCardSimpleProps> = ({ partner, category
         </p>
         
         <div className={`${isMobile ? 'mt-3' : 'mt-4'} flex justify-end`}>
-          <Link to="/login" className="touch-ripple">
+          <Link to={`/partner/profile/${partner.id}`} className="touch-ripple">
             <GoldButton size={isMobile ? "sm" : "default"}>
               {t('partners.seeDetails')}
               {isMobile && <ExternalLink size={16} className="ml-1" />}

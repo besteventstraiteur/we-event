@@ -16,6 +16,7 @@ import GuestMenuSelection from "@/pages/GuestMenuSelection";
 import NotFound from "@/pages/NotFound";
 import Unauthorized from "@/pages/Unauthorized";
 import MobileAppHome from "@/pages/MobileAppHome";
+import PartnerProfilePage from "@/pages/PartnerProfilePage";
 
 interface PublicRoutesProps {
   isMobileInterface: boolean;
@@ -33,6 +34,7 @@ const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
       
       {/* Routes publiques */}
       <Route path="/partners" element={<PartnersPage />} />
+      <Route path="/partner/profile/:id" element={<PartnerProfilePage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/contact" element={<ContactPage />} />
