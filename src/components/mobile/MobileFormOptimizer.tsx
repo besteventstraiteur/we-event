@@ -21,13 +21,11 @@ const MobileFormOptimizer: React.FC<MobileFormOptimizerProps> = ({
   const formRef = useRef<HTMLDivElement>(null);
   const [activeInput, setActiveInput] = useState<HTMLElement | null>(null);
   
-  // Don't do anything if not a mobile device
-  if (!isMobile) {
-    return <div className={className}>{children}</div>;
-  }
+  // The key issue is here - we're conditionally rendering hooks based on isMobile
+  // Instead, we need to move all hook declarations above any conditionals
   
   useEffect(() => {
-    if (!formRef.current) return;
+    if (!isMobile || !formRef.current) return;
     
     const handleFocus = (e: Event) => {
       const target = e.target as HTMLElement;
@@ -49,16 +47,21 @@ const MobileFormOptimizer: React.FC<MobileFormOptimizerProps> = ({
         formRef.current.removeEventListener('focusout', handleBlur);
       }
     };
-  }, []);
+  }, [isMobile]);
   
   // Scroll to the active input when keyboard appears
   useEffect(() => {
-    if (isKeyboardVisible && activeInput) {
-      setTimeout(() => {
-        activeInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
-    }
-  }, [isKeyboardVisible, activeInput]);
+    if (!isMobile || !isKeyboardVisible || !activeInput) return;
+    
+    setTimeout(() => {
+      activeInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }, [isKeyboardVisible, activeInput, isMobile]);
+  
+  // We handle the conditional rendering here, after all hooks are defined
+  if (!isMobile) {
+    return <div className={className}>{children}</div>;
+  }
   
   return (
     <div 
