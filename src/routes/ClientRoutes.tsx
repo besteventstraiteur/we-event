@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ClientDashboard from '@/pages/client/ClientDashboard';
@@ -15,7 +16,8 @@ const ClientRoutes: React.FC = () => {
         <Route element={<ClientAppWrapper />}>
           <Route path="dashboard" element={<ClientDashboard />} />
           <Route path="account" element={<ClientAccount />} />
-          <Route path="todolist" element={<ClientTodoList />} />
+          <Route path="todo" element={<ClientTodoList />} />
+          <Route path="todolist" element={<ClientTodoList />} /> {/* Keep compatibility with old route */}
           {/* Add more client routes here */}
         </Route>
       </Route>
