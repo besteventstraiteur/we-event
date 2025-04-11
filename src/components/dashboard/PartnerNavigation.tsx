@@ -2,7 +2,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { BarChart, MessageSquare, Calendar, CheckSquare, Image, Music, Video, Users, Trophy, Award, FileText, Grid3X3, HeadphonesIcon, CreditCard } from "lucide-react";
+import { BarChart, MessageSquare, Calendar, CheckSquare, Image, Music, Video, Users, Trophy, Award, FileText, Grid3X3, HeadphonesIcon, CreditCard, UserSquare } from "lucide-react";
 import { useAccessControl } from "@/hooks/useAccessControl";
 import { PartnerType } from "@/utils/accessControl";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -23,6 +23,13 @@ const PartnerNavigation = () => {
         active={location.pathname === "/partner/dashboard"}
       >
         {t('common.dashboard')}
+      </NavItem>
+      <NavItem
+        href="/partner/profile"
+        icon={<UserSquare size={18} />}
+        active={location.pathname === "/partner/profile"}
+      >
+        Mon profil
       </NavItem>
       <NavItem
         href="/partner/subscription"
