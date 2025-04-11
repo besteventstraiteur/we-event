@@ -6,8 +6,11 @@ import TaskFilter from "@/components/client-todo/TaskFilter";
 import TaskCardList from "@/components/client-todo/TaskCardList";
 import TodoListHeader from "@/components/client-todo/TodoListHeader";
 import TaskDialog from "@/components/client-todo/TaskDialog";
+import FavoriteTasks from "@/components/client-todo/FavoriteTasks";
 import { useTaskList, Task } from "@/hooks/useTaskList";
 import { useTaskDialog } from "@/hooks/useTaskDialog";
+import { useDeviceType } from "@/hooks/use-mobile";
+import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
 
 // Données initiales pour la démo
 const initialTasks: Task[] = [
@@ -46,6 +49,9 @@ const initialTasks: Task[] = [
 ];
 
 const ClientTodoList = () => {
+  const deviceType = useDeviceType();
+  const isMobile = deviceType === 'mobile';
+  
   const {
     tasks,
     favoriteTasks,
@@ -83,28 +89,31 @@ const ClientTodoList = () => {
     }
   };
 
-  return (
-    <DashboardLayout type="client">
-      <div className="space-y-6">
-        <TodoListHeader onAddTask={openAddDialog} />
-        
-        <TaskStats 
-          tasks={tasks} 
-          favoriteTasks={favoriteTasks}
-          onTaskClick={handleTaskClick}
-        />
-        
-        <TaskFilter filter={filter} onFilterChange={setFilter} />
-        
-        <TaskCardList 
-          tasks={tasks}
-          onToggleCompletion={toggleTaskCompletion}
-          onEdit={openEditDialog}
-          onDelete={deleteTask}
-          onToggleFavorite={toggleFavorite}
-          onAddTask={openAddDialog}
-        />
-      </div>
+  const content = (
+    <div className={isMobile ? "px-1" : ""}>
+      <TodoListHeader onAddTask={openAddDialog} />
+      
+      <TaskStats 
+        tasks={tasks} 
+        favoriteTasks={favoriteTasks}
+        onTaskClick={handleTaskClick}
+      />
+      
+      <FavoriteTasks 
+        tasks={favoriteTasks.filter(t => !t.completed)} 
+        onTaskClick={handleTaskClick} 
+      />
+      
+      <TaskFilter filter={filter} onFilterChange={setFilter} />
+      
+      <TaskCardList 
+        tasks={tasks}
+        onToggleCompletion={toggleTaskCompletion}
+        onEdit={openEditDialog}
+        onDelete={deleteTask}
+        onToggleFavorite={toggleFavorite}
+        onAddTask={openAddDialog}
+      />
       
       <TaskDialog 
         isOpen={isOpen}
@@ -113,6 +122,18 @@ const ClientTodoList = () => {
         onSave={handleSaveTask}
         onCancel={closeDialog}
       />
+    </div>
+  );
+
+  return isMobile ? (
+    <MobileOptimizedLayout>
+      <DashboardLayout type="client">
+        {content}
+      </DashboardLayout>
+    </MobileOptimizedLayout>
+  ) : (
+    <DashboardLayout type="client">
+      {content}
     </DashboardLayout>
   );
 };
