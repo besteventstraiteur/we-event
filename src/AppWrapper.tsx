@@ -9,26 +9,13 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { AuthProvider } from "@/hooks/useAuth";
 import TokenRefresher from "@/components/security/TokenRefresher";
 import SessionTimeout from "@/components/security/SessionTimeout";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 const AppWrapper: React.FC = () => {
   const [isSupabaseReady, setIsSupabaseReady] = useState(false);
   const [supabaseError, setSupabaseError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if Supabase is configured properly
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-    
-    if (!supabaseUrl || !supabaseAnonKey) {
-      console.error("Missing Supabase credentials:", { 
-        url: supabaseUrl ? "✓" : "✗", 
-        key: supabaseAnonKey ? "✓" : "✗"
-      });
-      setSupabaseError("Supabase credentials missing. Please check your environment variables.");
-      return;
-    }
-    
     // Test Supabase connection
     const checkConnection = async () => {
       try {
@@ -68,14 +55,7 @@ const AppWrapper: React.FC = () => {
         <div className="max-w-md mx-auto p-6 bg-vip-gray-800 rounded-lg shadow-lg">
           <h1 className="text-xl font-semibold text-red-400 mb-4">Erreur de configuration Supabase</h1>
           <p className="text-gray-300 mb-4">{supabaseError}</p>
-          <div className="bg-gray-700 p-4 rounded text-sm text-gray-300 mb-4">
-            <p className="font-semibold mb-2">Vérifiez que vos variables d'environnement sont correctement définies:</p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>VITE_SUPABASE_URL</li>
-              <li>VITE_SUPABASE_ANON_KEY</li>
-            </ul>
-          </div>
-          <p className="text-gray-400 text-sm">L'application fonctionnera avec des fonctionnalités limitées.</p>
+          <p className="text-gray-400 text-sm">Vérifiez que votre projet Supabase est bien configuré et que vous avez les bonnes informations de connexion.</p>
           <button
             className="mt-4 w-full bg-vip-gold hover:bg-vip-gold/90 text-white px-4 py-2 rounded"
             onClick={() => {
