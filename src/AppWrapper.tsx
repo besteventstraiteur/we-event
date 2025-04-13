@@ -59,9 +59,11 @@ const AppWrapper: React.FC = () => {
 
   const handleContinueAnyway = () => {
     toast({
-      variant: "warning",
+      // Fix: Change "warning" to "default" and add styling for warning appearance
+      variant: "default", 
       title: "Fonctionnalités limitées",
-      description: "Certaines fonctionnalités ne seront pas disponibles sans une connexion Supabase opérationnelle."
+      description: "Certaines fonctionnalités ne seront pas disponibles sans une connexion Supabase opérationnelle.",
+      className: "bg-amber-100 border-amber-300 text-amber-800" // Add warning styling
     });
     setSupabaseError(null);
     setIsSupabaseReady(true);

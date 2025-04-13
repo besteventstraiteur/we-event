@@ -21,7 +21,8 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
   global: {
     // Add global error handling
     fetch: (...args) => {
-      return fetch(...args).catch(err => {
+      // Fix: Properly type and spread the arguments
+      return fetch(args[0] as RequestInfo | URL, args[1] as RequestInit | undefined).catch(err => {
         console.error("Supabase fetch error:", err);
         // Still throw the error to be handled by the caller
         throw err;
