@@ -1,17 +1,20 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// Get the environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder-url.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
+// Get the environment variables - using import.meta.env to access Vite environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Supabase configuration using the environment variables with fallbacks
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-// Display a console warning if using fallbacks
-if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+// Check if the environment variables are defined
+if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('⚠️ Using placeholder Supabase credentials. Authentication and database features will not work until proper credentials are provided.');
 }
+
+// Create the Supabase client with proper error handling
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder-url.supabase.co',
+  supabaseAnonKey || 'placeholder-key'
+);
 
 // Add proper types for auth user
 export type Profile = {

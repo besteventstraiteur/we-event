@@ -21,8 +21,11 @@ const AppWrapper: React.FC = () => {
     const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
     
     if (!supabaseUrl || !supabaseAnonKey) {
-      console.warn("Using placeholder Supabase credentials. Some features may be limited.");
-      setIsSupabaseReady(true); // Set to true anyway to allow app to load with limited functionality
+      console.error("Missing Supabase credentials:", { 
+        url: supabaseUrl ? "✓" : "✗", 
+        key: supabaseAnonKey ? "✓" : "✗"
+      });
+      setSupabaseError("Supabase credentials missing. Please check your environment variables.");
       return;
     }
     
@@ -32,27 +35,56 @@ const AppWrapper: React.FC = () => {
         // Test a simple query
         const { error } = await supabase.from('profiles').select('id').limit(1);
         if (error) {
-          console.warn("Supabase connection warning: Using limited functionality");
+          console.error("Supabase connection error:", error);
+          setSupabaseError(`Failed to connect to Supabase: ${error.message}`);
         } else {
           console.log("Successfully connected to Supabase");
+          setIsSupabaseReady(true);
         }
-        setIsSupabaseReady(true);
       } catch (err) {
-        console.warn("Failed to connect to Supabase. Using limited functionality.");
-        setIsSupabaseReady(true); // Set to true anyway to allow app to load with limited functionality
+        console.error("Failed to connect to Supabase:", err);
+        setSupabaseError(`Failed to connect to Supabase: ${err instanceof Error ? err.message : String(err)}`);
       }
     };
     
     checkConnection();
   }, []);
 
-  if (!isSupabaseReady) {
+  if (!isSupabaseReady && !supabaseError) {
     return (
       <div className="flex items-center justify-center h-screen bg-vip-gray-900">
         <div className="text-center">
           <div className="h-16 w-16 border-4 border-t-vip-gold border-r-vip-gold border-b-transparent border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <h1 className="text-xl font-semibold text-white mb-2">Initialisation de l'application</h1>
           <p className="text-gray-400">Connexion à la base de données en cours...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (supabaseError) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-vip-gray-900">
+        <div className="max-w-md mx-auto p-6 bg-vip-gray-800 rounded-lg shadow-lg">
+          <h1 className="text-xl font-semibold text-red-400 mb-4">Erreur de configuration Supabase</h1>
+          <p className="text-gray-300 mb-4">{supabaseError}</p>
+          <div className="bg-gray-700 p-4 rounded text-sm text-gray-300 mb-4">
+            <p className="font-semibold mb-2">Vérifiez que vos variables d'environnement sont correctement définies:</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>VITE_SUPABASE_URL</li>
+              <li>VITE_SUPABASE_ANON_KEY</li>
+            </ul>
+          </div>
+          <p className="text-gray-400 text-sm">L'application fonctionnera avec des fonctionnalités limitées.</p>
+          <button
+            className="mt-4 w-full bg-vip-gold hover:bg-vip-gold/90 text-white px-4 py-2 rounded"
+            onClick={() => {
+              setSupabaseError(null);
+              setIsSupabaseReady(true);
+            }}
+          >
+            Continuer avec des fonctionnalités limitées
+          </button>
         </div>
       </div>
     );
