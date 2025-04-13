@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -37,7 +36,7 @@ export const useLoginPageLogic = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const redirectTo = getRedirectPathForUser(user.role);
+      const redirectTo = getRedirectPathForUser(user.role as UserRole);
       console.log("Authenticated user with role:", user.role, "redirecting to:", redirectTo);
       navigate(redirectTo, { replace: true });
     }
@@ -59,7 +58,7 @@ export const useLoginPageLogic = () => {
             description: "Veuillez entrer le code de sécurité envoyé à votre appareil.",
           });
         } else {
-          const redirectPath = getRedirectPathForUser(result.user?.role);
+          const redirectPath = getRedirectPathForUser(result.user?.role as UserRole);
           console.log("Login successful, redirecting to:", redirectPath);
           
           toast({
@@ -157,7 +156,7 @@ export const useLoginPageLogic = () => {
       });
       
       if (loginResult.success) {
-        const redirectPath = getRedirectPathForUser(loginResult.user?.role);
+        const redirectPath = getRedirectPathForUser(loginResult.user?.role as UserRole);
         console.log("Biometric login successful, redirecting to:", redirectPath);
         navigate(redirectPath, { replace: true });
       }
@@ -181,21 +180,16 @@ export const useLoginPageLogic = () => {
   };
 
   return {
-    // State
     isLoading,
     forgotPassword,
     resetSent,
     showTwoFactor,
     authDebugInfo,
-    
-    // Biometric
     biometricAttempt,
     isBiometricEnabled,
     isNative,
     biometricError,
     biometricLoading,
-    
-    // Functions
     setForgotPassword,
     handleLoginSubmit,
     handleResetPassword,

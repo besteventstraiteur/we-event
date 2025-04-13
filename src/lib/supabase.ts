@@ -14,7 +14,7 @@ export type Profile = {
   name: string | null;
   avatar_url: string | null;
   role: string;
-  partner_type?: string | null;
+  partner_type?: string | null; // Keep the snake_case naming for DB consistency
   phone?: string | null;
   created_at: string;
 }

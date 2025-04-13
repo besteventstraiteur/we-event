@@ -45,10 +45,10 @@ const PartnerTypeRoute: React.FC<PartnerTypeRouteProps> = ({
   
   // If specific partner types are required, check for those
   if (allowedTypes && allowedTypes.length > 0) {
-    // Assuming user has a partnerType property
-    const hasAllowedType = user.partnerType && allowedTypes.includes(user.partnerType);
+    // Use partner_type instead of partnerType to match the Profile type
+    const hasAllowedType = user.partner_type && allowedTypes.includes(user.partner_type as PartnerType);
     if (!hasAllowedType) {
-      console.log("PartnerTypeRoute - Partner type not allowed:", user.partnerType);
+      console.log("PartnerTypeRoute - Partner type not allowed:", user.partner_type);
       return <Navigate to="/unauthorized" replace />;
     }
   }
