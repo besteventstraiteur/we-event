@@ -14,5 +14,48 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
+  },
+  db: {
+    schema: 'public',
+  },
+  global: {
+    // Add global error handling
+    fetch: (...args) => {
+      return fetch(...args).catch(err => {
+        console.error("Supabase fetch error:", err);
+        // Still throw the error to be handled by the caller
+        throw err;
+      });
+    }
   }
 });
+
+// Helper function to test database connection
+export const testDatabaseConnection = async () => {
+  try {
+    // Try a simple query
+    const { data, error } = await supabase.from('profiles').select('id').limit(1);
+    
+    if (error) {
+      console.error("Database connection test failed:", error);
+      return {
+        success: false,
+        error: error.message,
+        errorCode: error.code,
+        details: error
+      };
+    }
+    
+    return { 
+      success: true,
+      message: "Successfully connected to Supabase database" 
+    };
+  } catch (err) {
+    console.error("Database connection exception:", err);
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+      exception: err
+    };
+  }
+};
