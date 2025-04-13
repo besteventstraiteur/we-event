@@ -9,13 +9,317 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      partner_images: {
+        Row: {
+          alt: string | null
+          created_at: string | null
+          featured: boolean | null
+          id: string
+          order_index: number | null
+          partner_id: string | null
+          type: string
+          url: string
+        }
+        Insert: {
+          alt?: string | null
+          created_at?: string | null
+          featured?: boolean | null
+          id?: string
+          order_index?: number | null
+          partner_id?: string | null
+          type: string
+          url: string
+        }
+        Update: {
+          alt?: string | null
+          created_at?: string | null
+          featured?: boolean | null
+          id?: string
+          order_index?: number | null
+          partner_id?: string | null
+          type?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_images_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partners: {
+        Row: {
+          availability: string[] | null
+          category: string
+          contact: Json | null
+          created_at: string | null
+          description: string | null
+          discount: string | null
+          id: string
+          name: string
+          pricing: Json | null
+          services: string[] | null
+          short_description: string | null
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          availability?: string[] | null
+          category: string
+          contact?: Json | null
+          created_at?: string | null
+          description?: string | null
+          discount?: string | null
+          id?: string
+          name: string
+          pricing?: Json | null
+          services?: string[] | null
+          short_description?: string | null
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          availability?: string[] | null
+          category?: string
+          contact?: Json | null
+          created_at?: string | null
+          description?: string | null
+          discount?: string | null
+          id?: string
+          name?: string
+          pricing?: Json | null
+          services?: string[] | null
+          short_description?: string | null
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partners_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      podcasts: {
+        Row: {
+          audio_url: string
+          category: string
+          created_at: string | null
+          date: string
+          description: string | null
+          duration: string | null
+          id: string
+          image_url: string | null
+          partner_id: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+          views: number | null
+        }
+        Insert: {
+          audio_url: string
+          category: string
+          created_at?: string | null
+          date: string
+          description?: string | null
+          duration?: string | null
+          id?: string
+          image_url?: string | null
+          partner_id?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          views?: number | null
+        }
+        Update: {
+          audio_url?: string
+          category?: string
+          created_at?: string | null
+          date?: string
+          description?: string | null
+          duration?: string | null
+          id?: string
+          image_url?: string | null
+          partner_id?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          views?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "podcasts_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string
+          id: string
+          name: string | null
+          partner_type: string | null
+          phone: string | null
+          role: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email: string
+          id: string
+          name?: string | null
+          partner_type?: string | null
+          phone?: string | null
+          role?: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string | null
+          partner_type?: string | null
+          phone?: string | null
+          role?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ratings: {
+        Row: {
+          categories: Json | null
+          client_id: string | null
+          comment: string | null
+          created_at: string | null
+          date: string | null
+          id: string
+          partner_id: string | null
+          response: string | null
+          score: number
+          status: string | null
+        }
+        Insert: {
+          categories?: Json | null
+          client_id?: string | null
+          comment?: string | null
+          created_at?: string | null
+          date?: string | null
+          id?: string
+          partner_id?: string | null
+          response?: string | null
+          score: number
+          status?: string | null
+        }
+        Update: {
+          categories?: Json | null
+          client_id?: string | null
+          comment?: string | null
+          created_at?: string | null
+          date?: string | null
+          id?: string
+          partner_id?: string | null
+          response?: string | null
+          score?: number
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ratings_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ratings_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      talkshows: {
+        Row: {
+          category: string
+          created_at: string | null
+          date: string
+          description: string | null
+          duration: string | null
+          id: string
+          image_url: string | null
+          partner_id: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+          video_url: string
+          views: number | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          date: string
+          description?: string | null
+          duration?: string | null
+          id?: string
+          image_url?: string | null
+          partner_id?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          video_url: string
+          views?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          date?: string
+          description?: string | null
+          duration?: string | null
+          id?: string
+          image_url?: string | null
+          partner_id?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          video_url?: string
+          views?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "talkshows_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
