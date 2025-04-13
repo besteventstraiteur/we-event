@@ -1,6 +1,7 @@
 
 // Import the supabase client from our integrations folder
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from '@/types/supabase-db';
 
 // Add proper types for auth user
 export type Profile = {
@@ -46,3 +47,6 @@ export const signOut = async () => {
 
 // Re-export supabase for backward compatibility
 export { supabase };
+
+// Re-export our Database type
+export type { Database };
