@@ -17,6 +17,7 @@ import NotFound from "@/pages/NotFound";
 import Unauthorized from "@/pages/Unauthorized";
 import MobileAppHome from "@/pages/MobileAppHome";
 import PartnerProfilePage from "@/pages/PartnerProfilePage";
+import AuthCallback from "@/pages/AuthCallback";
 
 interface PublicRoutesProps {
   isMobileInterface: boolean;
@@ -31,6 +32,7 @@ const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register-client" element={<RegisterClientPage />} />
       <Route path="/register-partner" element={<RegisterPartnerPage />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
       
       {/* Routes publiques */}
       <Route path="/partners" element={<PartnersPage />} />

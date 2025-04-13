@@ -1,190 +1,316 @@
 
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Search, Filter, Plus } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Filter, ArrowUpDown, CheckCircle, AlertCircle, Star } from "lucide-react";
-import GoldButton from "@/components/GoldButton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 const AdminPartners = () => {
+  const [partners, setPartners] = useState<any[]>([]);
+  const [filteredPartners, setFilteredPartners] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  
-  // Exemple de données prestataires
-  const activePartners = [
-    { id: 1, name: "Domaine du Château", category: "Domaine", date: "15/04/2023", status: "active", views: 128, contacts: 15, revenue: "890 €", rating: 4.8 },
-    { id: 2, name: "Fleurs Élégance", category: "Fleuriste", date: "03/02/2023", status: "active", views: 87, contacts: 9, revenue: "890 €", rating: 4.6 },
-    { id: 3, name: "Studio Photo Elite", category: "Photographe", date: "21/05/2023", status: "active", views: 203, contacts: 24, revenue: "890 €", rating: 4.9 },
-    { id: 4, name: "DJ Mix Master", category: "DJ", date: "10/01/2023", status: "active", views: 156, contacts: 18, revenue: "890 €", rating: 4.7 },
-    { id: 5, name: "Pâtisserie Royale", category: "Traiteur", date: "08/03/2023", status: "active", views: 112, contacts: 14, revenue: "890 €", rating: 4.5 },
-  ];
-  
-  const pendingPartners = [
-    { id: 6, name: "Château des Lumières", category: "Domaine", date: "18/06/2023", status: "pending" },
-    { id: 7, name: "Harmony Musique", category: "DJ", date: "20/06/2023", status: "pending" },
-    { id: 8, name: "Décor de Rêve", category: "Décorateur", date: "22/06/2023", status: "pending" },
-  ];
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [categories, setCategories] = useState<string[]>([]);
+  const { toast } = useToast();
 
-  const filterPartners = (partners) => {
-    if (!searchTerm) return partners;
-    return partners.filter(partner => 
-      partner.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      partner.category.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  useEffect(() => {
+    const fetchPartners = async () => {
+      try {
+        setIsLoading(true);
+        
+        const { data, error } = await supabase
+          .from('partners')
+          .select(`
+            *,
+            user:user_id (
+              email,
+              name,
+              role,
+              avatar_url
+            )
+          `);
+          
+        if (error) throw error;
+        
+        const partnersList = data || [];
+        setPartners(partnersList);
+        
+        // Extract unique categories
+        const uniqueCategories = [...new Set(partnersList.map(p => p.category))];
+        setCategories(uniqueCategories);
+        
+        // Apply initial filters
+        applyFilters(partnersList, searchTerm, statusFilter, categoryFilter);
+      } catch (error) {
+        console.error('Error fetching partners:', error);
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: "Impossible de charger la liste des partenaires"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchPartners();
+  }, [toast]);
+  
+  const applyFilters = (
+    partnersList: any[], 
+    search: string, 
+    status: string, 
+    category: string
+  ) => {
+    let filtered = partnersList;
+    
+    // Filter by status
+    if (status !== 'all') {
+      filtered = filtered.filter(partner => partner.status === status);
+    }
+    
+    // Filter by category
+    if (category !== 'all') {
+      filtered = filtered.filter(partner => partner.category === category);
+    }
+    
+    // Filter by search term
+    if (search) {
+      const lowerSearch = search.toLowerCase();
+      filtered = filtered.filter(
+        partner =>
+          partner.name.toLowerCase().includes(lowerSearch) ||
+          partner.user?.email.toLowerCase().includes(lowerSearch) ||
+          partner.category.toLowerCase().includes(lowerSearch)
+      );
+    }
+    
+    setFilteredPartners(filtered);
+  };
+  
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    applyFilters(partners, value, statusFilter, categoryFilter);
+  };
+  
+  const handleStatusFilter = (value: string) => {
+    setStatusFilter(value);
+    applyFilters(partners, searchTerm, value, categoryFilter);
+  };
+  
+  const handleCategoryFilter = (value: string) => {
+    setCategoryFilter(value);
+    applyFilters(partners, searchTerm, statusFilter, value);
+  };
+  
+  const handleUpdateStatus = async (partnerId: string, status: string) => {
+    try {
+      const { error } = await supabase
+        .from('partners')
+        .update({ status })
+        .eq('id', partnerId);
+        
+      if (error) throw error;
+      
+      // Update local state
+      const updatedPartners = partners.map(partner => 
+        partner.id === partnerId ? { ...partner, status } : partner
+      );
+      
+      setPartners(updatedPartners);
+      applyFilters(updatedPartners, searchTerm, statusFilter, categoryFilter);
+      
+      toast({
+        title: "Statut mis à jour",
+        description: `Le partenaire a été ${status === 'approved' ? 'approuvé' : status === 'rejected' ? 'rejeté' : 'mis en attente'}`
+      });
+    } catch (error) {
+      console.error('Error updating partner status:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Impossible de mettre à jour le statut du partenaire"
+      });
+    }
   };
 
   return (
     <DashboardLayout type="admin">
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Gestion des Prestataires</h1>
-          <p className="text-vip-gray-400">Gérez les prestataires inscrits, validez les nouveaux et suivez leur activité</p>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
-          <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-vip-gray-400" />
-            <Input
-              type="search"
-              placeholder="Rechercher un prestataire..."
-              className="pl-9 bg-vip-gray-900 border-vip-gray-800 text-vip-white"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold">Gestion des Partenaires</h1>
+            <p className="text-vip-gray-400">
+              Tous les prestataires enregistrés sur la plateforme
+            </p>
           </div>
-          <Button variant="outline" className="gap-2 border-vip-gray-800 text-vip-gray-400 hover:text-vip-white">
-            <Filter size={16} /> Filtrer
+          <Button className="bg-vip-gold hover:bg-amber-600 text-white" onClick={() => toast({ description: "Fonctionnalité à implémenter" })}>
+            <Plus size={18} className="mr-2" />
+            Ajouter un partenaire
           </Button>
-          <GoldButton>
-            Exporter CSV
-          </GoldButton>
         </div>
 
-        <Tabs defaultValue="active" className="w-full">
-          <TabsList className="bg-vip-gray-900 border border-vip-gray-800 mb-4">
-            <TabsTrigger value="active" className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black">
-              Prestataires actifs ({activePartners.length})
-            </TabsTrigger>
-            <TabsTrigger value="pending" className="data-[state=active]:bg-vip-gold data-[state=active]:text-vip-black">
-              En attente ({pendingPartners.length})
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="active" className="mt-0">
-            <Card className="bg-vip-gray-900 border-vip-gray-800">
-              <CardHeader>
-                <CardTitle>Prestataires actifs</CardTitle>
-                <CardDescription>Liste des prestataires ayant un abonnement actif</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-vip-gray-800">
-                        <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">
-                          <div className="flex items-center gap-1 cursor-pointer hover:text-vip-white">
-                            Nom <ArrowUpDown size={14} />
-                          </div>
-                        </th>
-                        <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Catégorie</th>
-                        <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Date d'inscription</th>
-                        <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Vues</th>
-                        <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Contacts</th>
-                        <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Note</th>
-                        <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Revenus</th>
-                        <th className="text-left px-4 py-3 text-vip-gray-400 font-medium">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filterPartners(activePartners).map((partner) => (
-                        <tr key={partner.id} className="border-b border-vip-gray-800 hover:bg-vip-gray-800/50">
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 bg-vip-gray-800 rounded-full flex items-center justify-center text-vip-white">
-                                {partner.name.charAt(0)}
-                              </div>
-                              <span className="font-medium text-vip-white">{partner.name}</span>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <Badge variant="outline" className="bg-vip-gray-800 text-vip-white border-vip-gray-700">
-                              {partner.category}
-                            </Badge>
-                          </td>
-                          <td className="px-4 py-3 text-vip-gray-400">{partner.date}</td>
-                          <td className="px-4 py-3 text-vip-white">{partner.views}</td>
-                          <td className="px-4 py-3 text-vip-white">{partner.contacts}</td>
-                          <td className="px-4 py-3">
-                            <div className="flex items-center text-amber-500">
-                              {partner.rating} <Star size={14} className="ml-1 fill-amber-500" />
-                            </div>
-                          </td>
-                          <td className="px-4 py-3 text-vip-gold">{partner.revenue}</td>
-                          <td className="px-4 py-3">
-                            <div className="flex gap-2">
-                              <Button variant="ghost" size="sm" className="h-8 text-vip-gray-400 hover:text-vip-white">
-                                Voir
+        {/* Filters */}
+        <Card className="bg-vip-gray-900 border-vip-gray-800">
+          <CardHeader>
+            <CardTitle className="text-vip-white">Filtres</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="relative">
+                <Search
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-vip-gray-400"
+                  size={18}
+                />
+                <Input
+                  placeholder="Rechercher un partenaire..."
+                  className="pl-10 bg-vip-gray-800 border-vip-gray-700 text-vip-white"
+                  value={searchTerm}
+                  onChange={handleSearch}
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={handleStatusFilter}>
+                <SelectTrigger className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
+                  <SelectValue placeholder="Statut" />
+                </SelectTrigger>
+                <SelectContent className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
+                  <SelectItem value="all">Tous les statuts</SelectItem>
+                  <SelectItem value="pending">En attente</SelectItem>
+                  <SelectItem value="approved">Approuvé</SelectItem>
+                  <SelectItem value="rejected">Rejeté</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={categoryFilter} onValueChange={handleCategoryFilter}>
+                <SelectTrigger className="bg-vip-gray-800 border-vip-gray-700 text-vip-white">
+                  <SelectValue placeholder="Catégorie" />
+                </SelectTrigger>
+                <SelectContent className="bg-vip-gray-800 border-vip-gray-700 text-vip-white max-h-60 overflow-y-auto">
+                  <SelectItem value="all">Toutes les catégories</SelectItem>
+                  {categories.map(category => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Partners List */}
+        <Card className="bg-vip-gray-900 border-vip-gray-800">
+          <CardHeader>
+            <CardTitle className="text-vip-white">
+              Partenaires {filteredPartners.length > 0 ? `(${filteredPartners.length})` : ''}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="py-10 text-center text-vip-gray-400">Chargement...</div>
+            ) : filteredPartners.length > 0 ? (
+              <div className="space-y-4">
+                {filteredPartners.map((partner) => (
+                  <Card
+                    key={partner.id}
+                    className="bg-vip-gray-800 border-vip-gray-700"
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-vip-gray-700 border border-vip-gray-600 flex items-center justify-center text-vip-gold font-bold">
+                          {partner.name.charAt(0)}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-medium text-vip-white text-lg">
+                            {partner.name}
+                          </h3>
+                          <p className="text-vip-gray-400 text-sm">
+                            {partner.category} • {partner.user?.email || "Email non disponible"}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {partner.status === "pending" ? (
+                            <span className="px-3 py-1 text-xs rounded-full bg-amber-600/20 text-amber-400">
+                              En attente
+                            </span>
+                          ) : partner.status === "approved" ? (
+                            <span className="px-3 py-1 text-xs rounded-full bg-green-600/20 text-green-400">
+                              Approuvé
+                            </span>
+                          ) : (
+                            <span className="px-3 py-1 text-xs rounded-full bg-red-600/20 text-red-400">
+                              Rejeté
+                            </span>
+                          )}
+                          <Button
+                            size="sm"
+                            className="bg-vip-gray-700 hover:bg-vip-gray-600 text-vip-white"
+                            onClick={() => toast({ description: "Fonctionnalité à implémenter" })}
+                          >
+                            Voir
+                          </Button>
+                          {partner.status === "pending" && (
+                            <>
+                              <Button
+                                size="sm"
+                                className="bg-green-600 hover:bg-green-700 text-white"
+                                onClick={() => handleUpdateStatus(partner.id, "approved")}
+                              >
+                                Approuver
                               </Button>
-                              <Link to="/admin/ratings">
-                                <Button variant="ghost" size="sm" className="h-8 text-vip-gray-400 hover:text-amber-500">
-                                  Avis
-                                </Button>
-                              </Link>
-                              <Button variant="ghost" size="sm" className="h-8 text-vip-gray-400 hover:text-red-500">
-                                Désactiver
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="border-red-600 text-red-500 hover:bg-red-600/10"
+                                onClick={() => handleUpdateStatus(partner.id, "rejected")}
+                              >
+                                Refuser
                               </Button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  {filterPartners(activePartners).length === 0 && (
-                    <p className="text-center py-8 text-vip-gray-400">Aucun résultat trouvé</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="pending" className="mt-0">
-            <Card className="bg-vip-gray-900 border-vip-gray-800">
-              <CardHeader>
-                <CardTitle>Prestataires en attente</CardTitle>
-                <CardDescription>Liste des prestataires en attente de validation</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {filterPartners(pendingPartners).map((partner) => (
-                  <div key={partner.id} className="flex items-center justify-between p-4 rounded-md hover:bg-vip-gray-800 transition-colors border-b border-vip-gray-800 last:border-b-0">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-vip-gray-800 rounded-full flex items-center justify-center text-vip-white border border-vip-gray-700">
-                        {partner.name.charAt(0)}
+                            </>
+                          )}
+                          {partner.status === "approved" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="border-amber-600 text-amber-500 hover:bg-amber-600/10"
+                              onClick={() => handleUpdateStatus(partner.id, "pending")}
+                            >
+                              Mettre en attente
+                            </Button>
+                          )}
+                          {partner.status === "rejected" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="border-green-600 text-green-500 hover:bg-green-600/10"
+                              onClick={() => handleUpdateStatus(partner.id, "approved")}
+                            >
+                              Approuver
+                            </Button>
+                          )}
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-medium text-vip-white">{partner.name}</h4>
-                        <p className="text-sm text-vip-gray-400">{partner.category} • Inscrit le {partner.date}</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <GoldButton size="sm" className="gap-2">
-                        <CheckCircle size={16} /> Valider
-                      </GoldButton>
-                      <GoldButton variant="outline" size="sm" className="gap-2">
-                        <AlertCircle size={16} /> Refuser
-                      </GoldButton>
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
                 ))}
-                {filterPartners(pendingPartners).length === 0 && (
-                  <p className="text-center py-8 text-vip-gray-400">Aucun prestataire en attente</p>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+              </div>
+            ) : (
+              <div className="py-10 text-center text-vip-gray-400">
+                Aucun partenaire trouvé
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );

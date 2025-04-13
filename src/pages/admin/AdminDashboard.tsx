@@ -1,13 +1,169 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, User, CreditCard, BarChart, Download, FileDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import GoldButton from "@/components/GoldButton";
 import ExportBackupButton from "@/components/admin/ExportBackupButton";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminDashboard = () => {
+  const [stats, setStats] = useState({
+    totalPartners: 0,
+    pendingPartners: 0,
+    totalClients: 0,
+    newClientsThisMonth: 0,
+    revenue: 0,
+    revenueThisMonth: 0,
+    interactions: 0,
+    interactionsGrowth: 0
+  });
+  
+  const [pendingPartners, setPendingPartners] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Get counts
+        const [
+          { count: totalPartners },
+          { count: pendingPartnersCount },
+          { count: totalClients },
+          { data: recentPartners }
+        ] = await Promise.all([
+          supabase.from('partners').select('*', { count: 'exact', head: true }),
+          supabase.from('partners').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+          supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'CLIENT'),
+          supabase.from('partners')
+            .select(`
+              id, 
+              name, 
+              category, 
+              created_at,
+              user:user_id (
+                email,
+                name
+              )
+            `)
+            .eq('status', 'pending')
+            .order('created_at', { ascending: false })
+            .limit(3)
+        ]);
+        
+        // Get new clients this month
+        const thisMonth = new Date();
+        thisMonth.setDate(1);
+        thisMonth.setHours(0, 0, 0, 0);
+        
+        const { count: newClientsThisMonth } = await supabase
+          .from('profiles')
+          .select('*', { count: 'exact', head: true })
+          .eq('role', 'CLIENT')
+          .gte('created_at', thisMonth.toISOString());
+        
+        // Set mock revenue data for now (this would come from a payment integration)
+        const revenue = 6870;
+        const revenueThisMonth = 1075;
+        
+        // Mock interaction data (this would be tracked in a real app)
+        const interactions = 248;
+        const interactionsGrowth = 18;
+        
+        setStats({
+          totalPartners: totalPartners || 0,
+          pendingPartners: pendingPartnersCount || 0,
+          totalClients: totalClients || 0,
+          newClientsThisMonth: newClientsThisMonth || 0,
+          revenue,
+          revenueThisMonth,
+          interactions,
+          interactionsGrowth
+        });
+        
+        setPendingPartners(recentPartners || []);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: "Impossible de charger les données du tableau de bord"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchDashboardData();
+  }, [toast]);
+  
+  const handleApprovePartner = async (partnerId: string) => {
+    try {
+      const { error } = await supabase
+        .from('partners')
+        .update({ status: 'approved' })
+        .eq('id', partnerId);
+        
+      if (error) throw error;
+      
+      // Update local state
+      setPendingPartners(prev => prev.filter(p => p.id !== partnerId));
+      setStats(prev => ({
+        ...prev,
+        pendingPartners: prev.pendingPartners - 1,
+        totalPartners: prev.totalPartners // The count stays the same, just the status changed
+      }));
+      
+      toast({
+        title: "Partenaire approuvé",
+        description: "Le partenaire a été approuvé avec succès"
+      });
+    } catch (error) {
+      console.error('Error approving partner:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Impossible d'approuver le partenaire"
+      });
+    }
+  };
+  
+  const handleRejectPartner = async (partnerId: string) => {
+    try {
+      const { error } = await supabase
+        .from('partners')
+        .update({ status: 'rejected' })
+        .eq('id', partnerId);
+        
+      if (error) throw error;
+      
+      // Update local state
+      setPendingPartners(prev => prev.filter(p => p.id !== partnerId));
+      setStats(prev => ({
+        ...prev,
+        pendingPartners: prev.pendingPartners - 1,
+        totalPartners: prev.totalPartners - 1
+      }));
+      
+      toast({
+        title: "Partenaire rejeté",
+        description: "Le partenaire a été rejeté avec succès"
+      });
+    } catch (error) {
+      console.error('Error rejecting partner:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Impossible de rejeter le partenaire"
+      });
+    }
+  };
+
   return (
     <DashboardLayout type="admin">
       <div className="space-y-8">
@@ -24,9 +180,9 @@ const AdminDashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-vip-white">23</p>
+              <p className="text-2xl font-bold text-vip-white">{stats.totalPartners}</p>
               <p className="text-sm text-vip-gray-400">Partenaires actifs</p>
-              <p className="text-xs text-vip-gold mt-2">+3 en attente de validation</p>
+              <p className="text-xs text-vip-gold mt-2">+{stats.pendingPartners} en attente de validation</p>
             </CardContent>
           </Card>
           
@@ -37,9 +193,9 @@ const AdminDashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-vip-white">156</p>
+              <p className="text-2xl font-bold text-vip-white">{stats.totalClients}</p>
               <p className="text-sm text-vip-gray-400">Clients VIP inscrits</p>
-              <p className="text-xs text-vip-gold mt-2">+12 ce mois-ci</p>
+              <p className="text-xs text-vip-gold mt-2">+{stats.newClientsThisMonth} ce mois-ci</p>
             </CardContent>
           </Card>
           
@@ -50,9 +206,9 @@ const AdminDashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-vip-white">6 870 €</p>
+              <p className="text-2xl font-bold text-vip-white">{stats.revenue} €</p>
               <p className="text-sm text-vip-gray-400">Revenus partenaires</p>
-              <p className="text-xs text-vip-gold mt-2">+1 075 € ce mois-ci</p>
+              <p className="text-xs text-vip-gold mt-2">+{stats.revenueThisMonth} € ce mois-ci</p>
             </CardContent>
           </Card>
           
@@ -63,9 +219,9 @@ const AdminDashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-vip-white">248</p>
+              <p className="text-2xl font-bold text-vip-white">{stats.interactions}</p>
               <p className="text-sm text-vip-gray-400">Demandes ce mois</p>
-              <p className="text-xs text-vip-gold mt-2">+18% vs mois précédent</p>
+              <p className="text-xs text-vip-gold mt-2">+{stats.interactionsGrowth}% vs mois précédent</p>
             </CardContent>
           </Card>
         </div>
@@ -77,30 +233,37 @@ const AdminDashboard = () => {
               <CardDescription>Nouvelles inscriptions à valider</CardDescription>
             </CardHeader>
             <CardContent>
-              {[
-                { name: "Studio Photo Elite", category: "Photographe", date: "21/06/2023" },
-                { name: "Domaine du Château", category: "Domaine", date: "20/06/2023" },
-                { name: "DJ Mix Master", category: "DJ", date: "19/06/2023" },
-              ].map((partner, i) => (
-                <div key={i} className="flex items-center gap-4 p-3 rounded-md hover:bg-vip-gray-800 transition-colors border-b border-vip-gray-800 last:border-b-0">
-                  <div className="w-10 h-10 bg-vip-gray-800 rounded-full flex items-center justify-center text-vip-white border border-vip-gray-700">
-                    {partner.name.charAt(0)}
+              {isLoading ? (
+                <p className="text-center text-vip-gray-400 py-6">Chargement...</p>
+              ) : pendingPartners.length > 0 ? (
+                pendingPartners.map((partner, i) => (
+                  <div key={partner.id} className="flex items-center gap-4 p-3 rounded-md hover:bg-vip-gray-800 transition-colors border-b border-vip-gray-800 last:border-b-0">
+                    <div className="w-10 h-10 bg-vip-gray-800 rounded-full flex items-center justify-center text-vip-white border border-vip-gray-700">
+                      {partner.name.charAt(0)}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-vip-white">{partner.name}</h4>
+                      <p className="text-sm text-vip-gray-400">
+                        {partner.category} • Inscrit le {
+                          new Date(partner.created_at).toLocaleDateString('fr-FR', { 
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                          })
+                        }
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <GoldButton size="sm" onClick={() => handleApprovePartner(partner.id)}>
+                        Valider
+                      </GoldButton>
+                      <GoldButton variant="outline" size="sm" onClick={() => handleRejectPartner(partner.id)}>
+                        Refuser
+                      </GoldButton>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-medium text-vip-white">{partner.name}</h4>
-                    <p className="text-sm text-vip-gray-400">{partner.category} • Inscrit le {partner.date}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <GoldButton size="sm">
-                      Valider
-                    </GoldButton>
-                    <GoldButton variant="outline" size="sm">
-                      Refuser
-                    </GoldButton>
-                  </div>
-                </div>
-              ))}
-              {[1, 2, 3].length === 0 && (
+                ))
+              ) : (
                 <p className="text-center text-vip-gray-400 py-6">Aucun partenaire en attente</p>
               )}
             </CardContent>
@@ -134,21 +297,26 @@ const AdminDashboard = () => {
                     <BarChart className="h-4 w-4 mr-2" /> Voir statistiques
                   </GoldButton>
                 </Link>
-                <GoldButton className="w-full">
-                  Ajouter un podcast
-                </GoldButton>
-                <GoldButton className="w-full">
-                  Envoyer newsletter
-                </GoldButton>
-                <GoldButton className="w-full">
-                  Gestion des catégories
-                </GoldButton>
+                <Link to="/admin/podcasts">
+                  <GoldButton className="w-full">
+                    Gérer les podcasts
+                  </GoldButton>
+                </Link>
+                <Link to="/admin/partners">
+                  <GoldButton className="w-full">
+                    Gérer les partenaires
+                  </GoldButton>
+                </Link>
+                <Link to="/admin/partner-types">
+                  <GoldButton className="w-full">
+                    Gestion des catégories
+                  </GoldButton>
+                </Link>
               </div>
             </CardContent>
           </Card>
         </div>
         
-        {/* Nouvelle carte pour la sauvegarde complète */}
         <div className="grid grid-cols-1 gap-6">
           <Card className="bg-vip-gray-900 border-vip-gray-800 border-2 border-vip-gold/30">
             <CardHeader>
