@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import PartnerDashboard from '@/pages/partner/PartnerDashboard';
@@ -18,6 +17,7 @@ import PartnerFloorPlans from '@/pages/partner/PartnerFloorPlans';
 import PartnerPodcasts from '@/pages/partner/PartnerPodcasts';
 import PartnerTalkshows from '@/pages/partner/PartnerTalkshows';
 import PartnerMusicPlaylists from '@/pages/partner/PartnerMusicPlaylists';
+import PartnerTraining from '@/pages/partner/PartnerTraining';
 import { UserRole } from '@/utils/accessControl';
 import PartnerTypeRoute from '@/components/security/PartnerTypeRoute';
 
@@ -41,6 +41,7 @@ const PartnerRoutes: React.FC = () => {
         <Route path="floor-plans" element={<PartnerFloorPlans />} />
         <Route path="podcasts" element={<PartnerPodcasts />} />
         <Route path="talkshows" element={<PartnerTalkshows />} />
+        <Route path="training" element={<PartnerTraining />} />
       </Route>
     </Routes>
   );

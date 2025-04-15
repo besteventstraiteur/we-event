@@ -1,8 +1,11 @@
-
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
-import { BarChart, MessageSquare, Calendar, CheckSquare, Image, Music, Video, Users, Trophy, Award, FileText, Grid3X3, HeadphonesIcon, CreditCard, UserSquare } from "lucide-react";
+import { 
+  BarChart, MessageSquare, Calendar, CheckSquare, Image, 
+  Music, Video, Users, Trophy, Award, FileText, Grid3X3, 
+  HeadphonesIcon, CreditCard, UserSquare, GraduationCap 
+} from "lucide-react";
 import { useAccessControl } from "@/hooks/useAccessControl";
 import { PartnerType } from "@/utils/accessControl";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -12,7 +15,6 @@ const PartnerNavigation = () => {
   const { currentUser } = useAccessControl();
   const { t } = useLanguage();
   
-  // Get partner type from current user (default to general if not specified)
   const partnerType = currentUser?.partnerType || PartnerType.GENERAL;
   
   return (
@@ -86,6 +88,14 @@ const PartnerNavigation = () => {
         active={location.pathname === "/partner/calendar"}
       >
         {t('partner.calendar')}
+      </NavItem>
+
+      <NavItem
+        href="/partner/training"
+        icon={<GraduationCap size={18} />}
+        active={location.pathname === "/partner/training"}
+      >
+        {t('partner.training')}
       </NavItem>
 
       {/* Photo section - only for photographers */}
