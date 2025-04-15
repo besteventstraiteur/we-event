@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from "react";
 import { supabase, getSession, getUserProfile, Profile, signOut as supabaseSignOut } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +37,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Load user on mount
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -52,7 +50,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           return;
         }
         
-        // Get user profile from profiles table
         const { profile, error: profileError } = await getUserProfile(session.user.id);
         
         if (profileError || !profile) {
@@ -74,7 +71,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     loadUser();
     
-    // Setup auth state change listener
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event, session?.user?.id);
       if (event === 'SIGNED_IN' && session) {
@@ -91,7 +87,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  // Login with email and password
   const login = async (credentials: LoginCredentials): Promise<AuthResult> => {
     setIsLoading(true);
     try {
@@ -121,7 +116,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
       }
       
-      // Save email if rememberMe is true
       if (credentials.rememberMe) {
         localStorage.setItem("weddingPlannerEmail", credentials.email);
         localStorage.setItem("weddingPlannerRememberMe", "true");
@@ -146,7 +140,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Login with social provider
   const loginWithProvider = async (provider: string): Promise<AuthResult> => {
     setIsLoading(true);
     try {
@@ -182,7 +175,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Logout
   const logout = useCallback(async () => {
     console.log("Logging out...");
     const { error } = await supabaseSignOut();
@@ -199,7 +191,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
   }, [navigate, toast]);
 
-  // Register
   const register = async (userData: { email: string; password: string; role?: UserRole; name?: string }): Promise<AuthResult> => {
     setIsLoading(true);
     try {
@@ -231,7 +222,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
       }
 
-      // If email confirmation is required
       if (data?.user && !data?.session) {
         console.log("Registration successful, email confirmation required");
         return {
@@ -240,7 +230,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
       }
 
-      // If auto-confirmed
       console.log("Registration with auto-confirmation successful");
       const { profile } = await getUserProfile(data.user.id);
       
@@ -260,9 +249,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Check permissions
   const hasPermission = useCallback((permission: string): boolean => {
-    // TODO: Implement permission checking logic based on roles
     if (!user) return false;
     
     if (user.role === UserRole.ADMIN) return true;
@@ -270,13 +257,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return false;
   }, [user]);
 
-  // Check role
   const hasRole = useCallback((role: UserRole): boolean => {
     if (!user) return false;
-    return user.role === role;
+    
+    const userRoleStr = String(user.role).toLowerCase();
+    const checkRoleStr = String(role).toLowerCase();
+    
+    return userRoleStr === checkRoleStr;
   }, [user]);
 
-  // Update user
   const updateUser = async (updates: Partial<Profile>): Promise<void> => {
     if (!user) return;
     

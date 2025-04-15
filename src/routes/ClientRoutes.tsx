@@ -1,56 +1,65 @@
 
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import ClientDashboard from '@/pages/client/ClientDashboard';
-import ClientAccount from '@/pages/client/ClientAccount';
-import ClientTodoList from '@/pages/client/ClientTodoList';
-import ClientBudget from '@/pages/client/ClientBudget';
-import ClientPayments from '@/pages/client/ClientPayments';
-import ClientPartners from '@/pages/client/ClientPartners';
-import ClientGuests from '@/pages/client/ClientGuests';
-import ClientPhotos from '@/pages/client/ClientPhotos';
-import ClientPinterbest from '@/pages/client/ClientPinterbest';
-import ClientMusicPlaylists from '@/pages/client/ClientMusicPlaylists';
-import ClientMenus from '@/pages/client/ClientMenus';
-import ClientFloorPlans from '@/pages/client/ClientFloorPlans';
-import ClientRequests from '@/pages/client/ClientRequests';
-import ClientMiniSite from '@/pages/client/ClientMiniSite';
-import ClientWeddingPackages from '@/pages/client/ClientWeddingPackages';
-import ClientPodcasts from '@/pages/client/ClientPodcasts';
-import ClientTalkshows from '@/pages/client/ClientTalkshows';
-import AdvancedSecurity from '@/pages/client/AdvancedSecurity';
-import ClientPartnerRatings from '@/pages/client/ClientPartnerRatings';
-import { useAuth } from '@/hooks/useAuth';
-import ProtectedRoute from '@/components/security/ProtectedRoute';
-import { UserRole } from '@/utils/accessControl';
-import ClientAppWrapper from '@/components/client/ClientAppWrapper';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "@/components/security/ProtectedRoute";
+import { UserRole } from "@/utils/accessControl";
+import NotFound from "@/pages/NotFound";
 
-const ClientRoutes: React.FC = () => {
+// Client Pages
+import ClientDashboard from "@/pages/client/ClientDashboard";
+import ClientTasks from "@/pages/client/ClientTasks";
+import ClientGuests from "@/pages/client/ClientGuests";
+import ClientBudget from "@/pages/client/ClientBudget";
+import ClientPartners from "@/pages/client/ClientPartners";
+import ClientAccount from "@/pages/client/ClientAccount";
+import ClientPhotos from "@/pages/client/ClientPhotos";
+import ClientMenus from "@/pages/client/ClientMenus";
+import ClientFloorPlans from "@/pages/client/ClientFloorPlans";
+import ClientMusicPlaylists from "@/pages/client/ClientMusicPlaylists";
+import ClientMiniSite from "@/pages/client/ClientMiniSite";
+import ClientPinterbest from "@/pages/client/ClientPinterbest";
+import ClientTodoList from "@/pages/client/ClientTodoList";
+import ClientRequests from "@/pages/client/ClientRequests";
+import ClientProjectDashboard from "@/pages/client/ClientProjectDashboard";
+import ClientPayments from "@/pages/client/ClientPayments";
+import ClientWeddingPackages from "@/pages/client/ClientWeddingPackages";
+import ClientLiveStreaming from "@/pages/client/ClientLiveStreaming";
+import ClientPodcasts from "@/pages/client/ClientPodcasts";
+import ClientTalkshows from "@/pages/client/ClientTalkshows";
+import ClientPartnerRatings from "@/pages/client/ClientPartnerRatings";
+import ClientDayOfCommunication from "@/pages/client/ClientDayOfCommunication";
+import AdvancedSecurity from "@/pages/client/AdvancedSecurity";
+import TwoFactorSetup from "@/pages/client/TwoFactorSetup";
+
+const ClientRoutes = () => {
   return (
     <Routes>
-      <Route element={<ProtectedRoute requiredRole={UserRole.CLIENT} fallbackPath="/login" />}>
-        <Route element={<ClientAppWrapper />}>
-          <Route path="dashboard" element={<ClientDashboard />} />
-          <Route path="account" element={<ClientAccount />} />
-          <Route path="todo" element={<ClientTodoList />} />
-          <Route path="todolist" element={<ClientTodoList />} /> {/* Keep compatibility with old route */}
-          <Route path="budget" element={<ClientBudget />} />
-          <Route path="payments" element={<ClientPayments />} />
-          <Route path="partners" element={<ClientPartners />} />
-          <Route path="guests" element={<ClientGuests />} />
-          <Route path="photos" element={<ClientPhotos />} />
-          <Route path="pinterbest" element={<ClientPinterbest />} />
-          <Route path="music" element={<ClientMusicPlaylists />} />
-          <Route path="menus" element={<ClientMenus />} />
-          <Route path="floor-plans" element={<ClientFloorPlans />} />
-          <Route path="requests" element={<ClientRequests />} />
-          <Route path="mini-site" element={<ClientMiniSite />} />
-          <Route path="wedding-packages" element={<ClientWeddingPackages />} />
-          <Route path="podcasts" element={<ClientPodcasts />} />
-          <Route path="talkshows" element={<ClientTalkshows />} />
-          <Route path="security" element={<AdvancedSecurity />} />
-          <Route path="ratings" element={<ClientPartnerRatings />} />
-        </Route>
+      <Route element={<ProtectedRoute requiredRole={UserRole.CLIENT} />}>
+        <Route path="dashboard" element={<ClientDashboard />} />
+        <Route path="tasks" element={<ClientTasks />} />
+        <Route path="guests" element={<ClientGuests />} />
+        <Route path="budget" element={<ClientBudget />} />
+        <Route path="partners" element={<ClientPartners />} />
+        <Route path="account" element={<ClientAccount />} />
+        <Route path="photos" element={<ClientPhotos />} />
+        <Route path="menus" element={<ClientMenus />} />
+        <Route path="floor-plans" element={<ClientFloorPlans />} />
+        <Route path="music" element={<ClientMusicPlaylists />} />
+        <Route path="mini-site" element={<ClientMiniSite />} />
+        <Route path="pinterbest" element={<ClientPinterbest />} />
+        <Route path="todo" element={<ClientTodoList />} />
+        <Route path="requests" element={<ClientRequests />} />
+        <Route path="project" element={<ClientProjectDashboard />} />
+        <Route path="payments" element={<ClientPayments />} />
+        <Route path="wedding-packages" element={<ClientWeddingPackages />} />
+        <Route path="live" element={<ClientLiveStreaming />} />
+        <Route path="podcasts" element={<ClientPodcasts />} />
+        <Route path="talkshows" element={<ClientTalkshows />} />
+        <Route path="ratings" element={<ClientPartnerRatings />} />
+        <Route path="day-of" element={<ClientDayOfCommunication />} />
+        <Route path="security" element={<AdvancedSecurity />} />
+        <Route path="2fa" element={<TwoFactorSetup />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

@@ -18,6 +18,7 @@ import LoginDebugInfo from "@/components/auth/LoginDebugInfo";
 // Custom hook
 import { useLoginPageLogic } from "@/hooks/useLoginPageLogic";
 import { useAuth } from "@/hooks/useAuth";
+import { UserRole } from "@/utils/accessControl";
 
 const LoginPage = () => {
   const deviceType = useDeviceType();
@@ -30,7 +31,10 @@ const LoginPage = () => {
       // Redirect based on user role
       let redirectPath = '/client/dashboard';
       
-      switch (user.role) {
+      // Convertir le rôle utilisateur en string pour la comparaison
+      const roleStr = String(user.role).toUpperCase();
+      
+      switch (roleStr) {
         case 'ADMIN':
           redirectPath = '/admin/dashboard';
           break;
@@ -41,7 +45,7 @@ const LoginPage = () => {
           redirectPath = '/client/dashboard';
       }
       
-      console.log("User already authenticated, redirecting to:", redirectPath);
+      console.log("User already authenticated, redirecting to:", redirectPath, "Role:", roleStr);
       navigate(redirectPath, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
