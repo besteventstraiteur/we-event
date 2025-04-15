@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from "react";
 import { supabase, getSession, getUserProfile, Profile, signOut as supabaseSignOut } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
@@ -261,14 +260,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const hasRole = useCallback((role: UserRole): boolean => {
     if (!user) return false;
     
-    // Use direct comparison for role checking
-    if (typeof user.role === 'string' && typeof role === 'string') {
-      return user.role.toLowerCase() === role.toLowerCase();
-    }
-    
-    // Fallback to string conversion if needed
-    const userRoleStr = String(user.role).toLowerCase();
-    const checkRoleStr = String(role).toLowerCase();
+    const userRoleStr = String(user.role || '').toLowerCase();
+    const checkRoleStr = String(role || '').toLowerCase();
     
     console.log("Comparing roles:", userRoleStr, checkRoleStr, userRoleStr === checkRoleStr);
     

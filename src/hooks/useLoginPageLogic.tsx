@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -38,7 +37,7 @@ export const useLoginPageLogic = () => {
   useEffect(() => {
     if (isAuthenticated && user) {
       const redirectTo = getRedirectPathForUser(user.role as UserRole);
-      console.log("Authenticated user with role:", user.role, "redirecting to:", redirectTo);
+      console.log("useLoginPageLogic - Authenticated user with role:", user.role, "redirecting to:", redirectTo);
       navigate(redirectTo, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
@@ -46,7 +45,7 @@ export const useLoginPageLogic = () => {
   const handleLoginSubmit = async (email: string, password: string, rememberMe: boolean) => {
     setIsLoading(true);
     
-    // Determine user type from email for test accounts
+    // Determine user type from email for debug info
     const userType = email.includes("admin") ? "admin" : 
                     email.includes("partner") ? "partner" : 
                     email.includes("client") ? "client" : "unknown";
@@ -73,7 +72,7 @@ export const useLoginPageLogic = () => {
           // Get user role from the result
           const userRole = result.user?.role as UserRole;
           
-          // Determine redirect path based on actual user role
+          // Determine redirect path based on user role
           const redirectPath = getRedirectPathForUser(userRole);
           
           setAuthDebugInfo(prev => ({ 
@@ -113,7 +112,6 @@ export const useLoginPageLogic = () => {
 
   const handleResetPassword = async (email: string) => {
     setIsLoading(true);
-
     try {
       // In a real app, this would call supabase.auth.resetPasswordForEmail
       console.log("Password reset requested for:", email);
@@ -140,7 +138,7 @@ export const useLoginPageLogic = () => {
 
   const handleVerifyOTP = async (code: string): Promise<boolean> => {
     console.log("Verifying OTP code:", code);
-    const isValid = code === "123456"; // Code de démo
+    const isValid = code === "123456"; // Demo code
     
     if (isValid) {
       return true;
@@ -232,9 +230,87 @@ export const useLoginPageLogic = () => {
     biometricLoading,
     setForgotPassword,
     handleLoginSubmit,
-    handleResetPassword,
-    handleVerifyOTP,
-    handleSocialLoginSuccess,
-    handleBiometricLogin,
+    handleResetPassword: async (email: string) => {
+      setIsLoading(true);
+      try {
+        // In a real app, this would call supabase.auth.resetPasswordForEmail
+        console.log("Password reset requested for:", email);
+        
+        // For demo, we'll simulate success
+        setTimeout(() => {
+          setResetSent(true);
+          toast({
+            title: "Email envoyé",
+            description: "Instructions de récupération envoyées à votre adresse email",
+          });
+        }, 1000);
+      } catch (error) {
+        console.error("Password reset error:", error);
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: "Impossible d'envoyer l'email de récupération. Veuillez réessayer.",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    handleVerifyOTP: async (code: string): Promise<boolean> => {
+      console.log("Verifying OTP code:", code);
+      const isValid = code === "123456"; // Demo code
+      
+      if (isValid) {
+        return true;
+      }
+      
+      return false;
+    },
+    handleSocialLoginSuccess: async (provider: string, userData?: any) => {
+      try {
+        console.log("Social login attempt with provider:", provider);
+        const result = await loginWithProvider(provider);
+        
+        if (result.success) {
+          toast({
+            title: "Connexion initiée",
+            description: "Vous allez être redirigé vers le fournisseur d'authentification",
+          });
+        } else {
+          console.error("Social login failed:", result.message);
+          toast({
+            variant: "destructive",
+            title: "Échec de connexion",
+            description: result.message || `Problème de connexion avec ${provider}`,
+          });
+        }
+      } catch (error) {
+        console.error("Social login error:", error);
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: `Problème de connexion avec ${provider}. Veuillez réessayer.`,
+        });
+      }
+    },
+    handleBiometricLogin: async () => {
+      console.log("Biometric login attempt");
+      const result = await handleBiometricAuth();
+      if (result.success) {
+        const storedEmail = localStorage.getItem('weddingPlannerEmail') || 'client@example.com';
+        console.log("Biometric success, logging in with stored email:", storedEmail);
+        
+        const loginResult = await login({
+          email: storedEmail,
+          password: "biometric-auth",
+          rememberMe: true
+        });
+        
+        if (loginResult.success) {
+          const redirectPath = getRedirectPathForUser(loginResult.user?.role as UserRole);
+          console.log("Biometric login successful, redirecting to:", redirectPath);
+          navigate(redirectPath, { replace: true });
+        }
+      }
+    },
   };
 };

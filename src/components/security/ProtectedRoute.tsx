@@ -17,7 +17,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { user, isLoading, hasRole } = useAuth();
   const location = useLocation();
 
-  // Afficher un indicateur de chargement pendant la vérification d'accès
+  // Show a loading indicator while checking access
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -27,34 +27,29 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  // Vérifier si l'utilisateur est connecté
+  // Check if user is logged in
   if (!user) {
     console.log("ProtectedRoute - No current user, redirecting to:", fallbackPath);
     return <Navigate to={fallbackPath} state={{ from: location.pathname }} replace />;
   }
 
-  // Si un rôle est requis, vérifier que l'utilisateur a ce rôle
+  // If a role is required, verify that user has this role
   if (requiredRole) {
-    // Normalize roles for comparison
-    const userRoleStr = String(user.role).toLowerCase();
-    const requiredRoleStr = String(requiredRole).toLowerCase();
-    
-    // Check role using the hasRole function
     const hasRequiredRole = hasRole(requiredRole);
     
     console.log("ProtectedRoute - Role check:", { 
-      userRole: userRoleStr, 
-      requiredRole: requiredRoleStr,
+      userRole: String(user.role).toLowerCase(), 
+      requiredRole: String(requiredRole).toLowerCase(),
       hasRequiredRole 
     });
     
     if (!hasRequiredRole) {
-      console.log("ProtectedRoute - User doesn't have required role:", requiredRoleStr);
+      console.log("ProtectedRoute - User doesn't have required role:", requiredRole);
       return <Navigate to="/unauthorized" replace />;
     }
   }
 
-  // Si toutes les vérifications sont réussies, afficher le contenu protégé
+  // If all checks pass, render the protected content
   return <Outlet />;
 };
 
