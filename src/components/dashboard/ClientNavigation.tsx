@@ -19,14 +19,13 @@ import {
   Star,
   Building2
 } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 const ClientNavigation = () => {
-  const { t } = useLanguage();
+  const { features } = useFeatureFlags();
   
   return (
     <div className="space-y-4">
-      {/* Main Planning & Dashboard */}
       <NavItem
         icon={<LayoutDashboard size={20} />}
         title="Dashboard"
@@ -38,7 +37,6 @@ const ClientNavigation = () => {
         href="/client/todo"
       />
       
-      {/* Budget & Vendors */}
       <NavItem
         icon={<CreditCard size={20} />}
         title="Budget"
@@ -49,74 +47,87 @@ const ClientNavigation = () => {
         title="Prestataires"
         href="/client/partners"
       />
-      <NavItem
-        icon={<Package size={20} />}
-        title="Marketplace"
-        href="/client/wedding-packages"
-      />
-      <NavItem
-        icon={<Star size={20} />}
-        title="Ratings"
-        href="/client/ratings"
-      />
+
+      {features.guests && (
+        <NavItem
+          icon={<Users size={20} />}
+          title="Guests"
+          href="/client/guests"
+        />
+      )}
       
-      {/* Guests & Floor Plans */}
-      <NavItem
-        icon={<Users size={20} />}
-        title="Guests"
-        href="/client/guests"
-      />
-      <NavItem
-        icon={<Calendar size={20} />}
-        title="Floor Plan"
-        href="/client/floor-plans"
-      />
-      <NavItem
-        icon={<Package size={20} />}
-        title="Menus"
-        href="/client/menus"
-      />
+      {features.floorPlan && (
+        <NavItem
+          icon={<Calendar size={20} />}
+          title="Floor Plan"
+          href="/client/floor-plans"
+        />
+      )}
       
-      {/* Media & Content */}
-      <NavItem
-        icon={<Heart size={20} />}
-        title="Inspiration"
-        href="/client/pinterbest"
-      />
-      <NavItem
-        icon={<Image size={20} />}
-        title="Photos"
-        href="/client/photos"
-      />
-      <NavItem
-        icon={<SquareStack size={20} />}
-        title="Playlists"
-        href="/client/music"
-      />
-      <NavItem
-        icon={<Radio size={20} />}
-        title="Talkshows"
-        href="/client/talkshows"
-      />
-      <NavItem
-        icon={<Headphones size={20} />}
-        title="Podcasts"
-        href="/client/podcasts"
-      />
+      {features.menus && (
+        <NavItem
+          icon={<Package size={20} />}
+          title="Menus"
+          href="/client/menus"
+        />
+      )}
       
-      {/* Communication & Mini-site */}
-      <NavItem
-        icon={<MessageSquare size={20} />}
-        title="Requests"
-        href="/client/requests"
-      />
-      <NavItem
-        icon={<PanelLeft size={20} />}
-        title="Mini-site"
-        href="/client/mini-site"
-      />
+      {features.pinterbest && (
+        <NavItem
+          icon={<Heart size={20} />}
+          title="Inspiration"
+          href="/client/pinterbest"
+        />
+      )}
       
-      {/* Account */}
+      {features.photos && (
+        <NavItem
+          icon={<Image size={20} />}
+          title="Photos"
+          href="/client/photos"
+        />
+      )}
+      
+      {features.playlists && (
+        <NavItem
+          icon={<SquareStack size={20} />}
+          title="Playlists"
+          href="/client/music"
+        />
+      )}
+      
+      {features.talkshows && (
+        <NavItem
+          icon={<Radio size={20} />}
+          title="Talkshows"
+          href="/client/talkshows"
+        />
+      )}
+      
+      {features.podcasts && (
+        <NavItem
+          icon={<Headphones size={20} />}
+          title="Podcasts"
+          href="/client/podcasts"
+        />
+      )}
+      
+      {features.requests && (
+        <NavItem
+          icon={<MessageSquare size={20} />}
+          title="Requests"
+          href="/client/requests"
+        />
+      )}
+      
+      {features.miniSite && (
+        <NavItem
+          icon={<PanelLeft size={20} />}
+          title="Mini-site"
+          href="/client/mini-site"
+        />
+      )}
+      
       <NavItem
         icon={<User size={20} />}
         title="Account"
