@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Headphones, Clock, Users, Bell } from "lucide-react";
+import { Headphones, Clock, Users, Bell, ClipboardCheck } from "lucide-react";
 import GoldButton from "@/components/GoldButton";
 import EventCountdown from "@/components/client/EventCountdown";
 import VendorChecklist from "@/components/client/VendorChecklist";
