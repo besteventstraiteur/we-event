@@ -19,6 +19,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState("");
 
   // Load saved credentials if available
   useEffect(() => {
@@ -33,7 +34,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login submission:", { email, password: "***" });
+    setError("");
+    
+    if (!email || !password) {
+      setError("Veuillez remplir tous les champs");
+      return;
+    }
+    
+    console.log("Login submission:", { email, password: "***", rememberMe });
     onSubmit(email, password, rememberMe);
   };
 
@@ -47,6 +55,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded">
+          {error}
+        </div>
+      )}
+      
       <InputField
         label="Email"
         id="email"

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -44,8 +45,15 @@ export const useLoginPageLogic = () => {
 
   const handleLoginSubmit = async (email: string, password: string, rememberMe: boolean) => {
     setIsLoading(true);
+    setAuthDebugInfo({
+      email,
+      userType: email.includes("admin") ? "admin" : 
+                email.includes("partner") ? "partner" : 
+                email.includes("client") ? "client" : "unknown"
+    });
 
     try {
+      console.log("Login attempt:", { email, password: "******", rememberMe });
       const result = await login({ email, password, rememberMe });
       
       if (result.success) {
@@ -59,6 +67,11 @@ export const useLoginPageLogic = () => {
           });
         } else {
           const redirectPath = getRedirectPathForUser(result.user?.role as UserRole);
+          setAuthDebugInfo(prev => ({ 
+            ...prev, 
+            redirectPath,
+            redirectAttempted: true
+          }));
           console.log("Login successful, redirecting to:", redirectPath);
           
           toast({
@@ -69,6 +82,7 @@ export const useLoginPageLogic = () => {
           navigate(redirectPath, { replace: true });
         }
       } else {
+        console.error("Login failed:", result.message);
         toast({
           variant: "destructive",
           title: "Erreur de connexion",
@@ -91,6 +105,10 @@ export const useLoginPageLogic = () => {
     setIsLoading(true);
 
     try {
+      // In a real app, this would call supabase.auth.resetPasswordForEmail
+      console.log("Password reset requested for:", email);
+      
+      // For demo, we'll simulate success
       setTimeout(() => {
         setResetSent(true);
         toast({
@@ -99,6 +117,7 @@ export const useLoginPageLogic = () => {
         });
       }, 1000);
     } catch (error) {
+      console.error("Password reset error:", error);
       toast({
         variant: "destructive",
         title: "Erreur",
@@ -110,6 +129,7 @@ export const useLoginPageLogic = () => {
   };
 
   const handleVerifyOTP = async (code: string): Promise<boolean> => {
+    console.log("Verifying OTP code:", code);
     const isValid = code === "123456"; // Code de démo
     
     if (isValid) {
@@ -121,14 +141,16 @@ export const useLoginPageLogic = () => {
 
   const handleSocialLoginSuccess = async (provider: string, userData?: any) => {
     try {
+      console.log("Social login attempt with provider:", provider);
       const result = await loginWithProvider(provider);
       
       if (result.success) {
         toast({
-          title: "Connexion réussie",
-          description: `Bienvenue ${result.user?.name || ''}`,
+          title: "Connexion initiée",
+          description: "Vous allez être redirigé vers le fournisseur d'authentification",
         });
       } else {
+        console.error("Social login failed:", result.message);
         toast({
           variant: "destructive",
           title: "Échec de connexion",
@@ -146,9 +168,12 @@ export const useLoginPageLogic = () => {
   };
 
   const handleBiometricLogin = async () => {
+    console.log("Biometric login attempt");
     const result = await handleBiometricAuth();
     if (result.success) {
       const storedEmail = localStorage.getItem('weddingPlannerEmail') || 'client@example.com';
+      console.log("Biometric success, logging in with stored email:", storedEmail);
+      
       const loginResult = await login({
         email: storedEmail,
         password: "biometric-auth",

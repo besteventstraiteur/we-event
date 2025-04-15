@@ -1,10 +1,11 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
 import MobileNavigation from "@/components/mobile/MobileNavigation";
 import { useDeviceType } from "@/hooks/use-mobile";
+import { useNavigate } from "react-router-dom";
 
 // Components
 import SocialLoginButtons from "@/components/auth/SocialLoginButtons";
@@ -16,10 +17,34 @@ import LoginDebugInfo from "@/components/auth/LoginDebugInfo";
 
 // Custom hook
 import { useLoginPageLogic } from "@/hooks/useLoginPageLogic";
+import { useAuth } from "@/hooks/useAuth";
 
 const LoginPage = () => {
   const deviceType = useDeviceType();
   const isMobileDevice = deviceType === 'mobile' || deviceType === 'tablet';
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
+  
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      // Redirect based on user role
+      let redirectPath = '/client/dashboard';
+      
+      switch (user.role) {
+        case 'ADMIN':
+          redirectPath = '/admin/dashboard';
+          break;
+        case 'PARTNER':
+          redirectPath = '/partner/dashboard';
+          break;
+        default:
+          redirectPath = '/client/dashboard';
+      }
+      
+      console.log("User already authenticated, redirecting to:", redirectPath);
+      navigate(redirectPath, { replace: true });
+    }
+  }, [isAuthenticated, user, navigate]);
   
   const {
     // State
