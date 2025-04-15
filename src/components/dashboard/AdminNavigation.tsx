@@ -14,7 +14,8 @@ import {
   Presentation,
   UserCog,
   BarChart,
-  CreditCard
+  CreditCard,
+  Network
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -52,6 +53,11 @@ const AdminNavigation = () => {
         icon={<CreditCard size={20} />}
         title="Subscriptions"
         href="/admin/subscriptions"
+      />
+      <NavItem
+        icon={<Network size={20} />}
+        title="MLM Network"
+        href="/admin/mlm"
       />
       <NavItem
         icon={<Users size={20} />}

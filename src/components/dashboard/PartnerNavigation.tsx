@@ -1,10 +1,12 @@
+
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
 import { 
   BarChart, MessageSquare, Calendar, CheckSquare, Image, 
   Music, Video, Users, Trophy, Award, FileText, Grid3X3, 
-  HeadphonesIcon, CreditCard, UserSquare, GraduationCap 
+  HeadphonesIcon, CreditCard, UserSquare, GraduationCap,
+  Network
 } from "lucide-react";
 import { useAccessControl } from "@/hooks/useAccessControl";
 import { PartnerType } from "@/utils/accessControl";
@@ -39,6 +41,13 @@ const PartnerNavigation = () => {
         active={location.pathname === "/partner/subscription"}
       >
         {t('partner.subscription')}
+      </NavItem>
+      <NavItem
+        href="/partner/mlm"
+        icon={<Network size={18} />}
+        active={location.pathname === "/partner/mlm"}
+      >
+        Mon réseau
       </NavItem>
       <NavItem
         href="/partner/tasks"

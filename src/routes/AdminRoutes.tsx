@@ -15,6 +15,7 @@ import AdminRecommendations from '@/pages/admin/AdminRecommendations';
 import AdminTalkshows from '@/pages/admin/AdminTalkshows';
 import AdminPodcasts from '@/pages/admin/AdminPodcasts';
 import AdminPresentationManagement from '@/pages/admin/AdminPresentationManagement';
+import AdminMLM from '@/pages/admin/AdminMLM';
 import AdminRoute from '@/components/security/AdminRoute';
 
 const AdminRoutes: React.FC = () => {
@@ -35,6 +36,7 @@ const AdminRoutes: React.FC = () => {
         <Route path="talkshows" element={<AdminTalkshows />} />
         <Route path="podcasts" element={<AdminPodcasts />} />
         <Route path="presentation" element={<AdminPresentationManagement />} />
+        <Route path="mlm" element={<AdminMLM />} />
       </Route>
     </Routes>
   );
