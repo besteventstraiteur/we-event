@@ -4,6 +4,7 @@ import InputField from "@/components/InputField";
 import GoldButton from "@/components/GoldButton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
+import { UserRole } from "@/utils/accessControl";
 
 interface LoginFormProps {
   onSubmit: (email: string, password: string, rememberMe: boolean) => void;
@@ -50,6 +51,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
     const roleEmail = `${role}@example.com`;
     setEmail(roleEmail);
     setPassword("password123");
+    
+    console.log(`Quick login as ${role} with email: ${roleEmail}`);
     onSubmit(roleEmail, "password123", true);
   };
 
@@ -122,13 +125,22 @@ const LoginForm: React.FC<LoginFormProps> = ({
       <div className="pt-2 border-t border-gray-200 mt-4">
         <div className="text-xs text-gray-500 mb-2">Connexion rapide (pour test):</div>
         <div className="flex gap-2">
-          <button type="button" onClick={() => loginAsRole('admin')} className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
+          <button 
+            type="button" 
+            onClick={() => loginAsRole('admin')} 
+            className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
             Admin
           </button>
-          <button type="button" onClick={() => loginAsRole('partner')} className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
+          <button 
+            type="button" 
+            onClick={() => loginAsRole('partner')} 
+            className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
             Partenaire
           </button>
-          <button type="button" onClick={() => loginAsRole('client')} className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
+          <button 
+            type="button" 
+            onClick={() => loginAsRole('client')} 
+            className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
             Client
           </button>
         </div>

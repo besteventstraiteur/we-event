@@ -45,11 +45,15 @@ export const useLoginPageLogic = () => {
 
   const handleLoginSubmit = async (email: string, password: string, rememberMe: boolean) => {
     setIsLoading(true);
+    
+    // Determine user type from email for test accounts
+    const userType = email.includes("admin") ? "admin" : 
+                    email.includes("partner") ? "partner" : 
+                    email.includes("client") ? "client" : "unknown";
+                    
     setAuthDebugInfo({
       email,
-      userType: email.includes("admin") ? "admin" : 
-                email.includes("partner") ? "partner" : 
-                email.includes("client") ? "client" : "unknown"
+      userType
     });
 
     try {
@@ -66,13 +70,19 @@ export const useLoginPageLogic = () => {
             description: "Veuillez entrer le code de sécurité envoyé à votre appareil.",
           });
         } else {
-          const redirectPath = getRedirectPathForUser(result.user?.role as UserRole);
+          // Get user role from the result
+          const userRole = result.user?.role as UserRole;
+          
+          // Determine redirect path based on actual user role
+          const redirectPath = getRedirectPathForUser(userRole);
+          
           setAuthDebugInfo(prev => ({ 
             ...prev, 
             redirectPath,
             redirectAttempted: true
           }));
-          console.log("Login successful, redirecting to:", redirectPath);
+          
+          console.log("Login successful for", userType, "user, redirecting to:", redirectPath);
           
           toast({
             title: "Connexion réussie",
@@ -193,12 +203,17 @@ export const useLoginPageLogic = () => {
       return '/client/dashboard';
     }
     
-    switch (role) {
-      case UserRole.ADMIN:
+    // Normalize role for comparison
+    const normalizedRole = String(role).toLowerCase();
+    
+    console.log("Getting redirect path for role:", normalizedRole);
+    
+    switch (normalizedRole) {
+      case 'admin':
         return '/admin/dashboard';
-      case UserRole.PARTNER:
+      case 'partner':
         return '/partner/dashboard';
-      case UserRole.CLIENT:
+      case 'client':
       default:
         return '/client/dashboard';
     }

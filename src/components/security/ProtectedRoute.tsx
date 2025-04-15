@@ -34,19 +34,22 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Si un rôle est requis, vérifier que l'utilisateur a ce rôle
-  // CORRECTION: Conversion de la chaîne de caractères en UserRole pour la comparaison
   if (requiredRole) {
-    const userRole = user.role as unknown as UserRole;
-    const hasRequiredRole = userRole === requiredRole || hasRole(requiredRole);
+    // Normalize roles for comparison
+    const userRoleStr = String(user.role).toLowerCase();
+    const requiredRoleStr = String(requiredRole).toLowerCase();
+    
+    // Check role using the hasRole function
+    const hasRequiredRole = hasRole(requiredRole);
     
     console.log("ProtectedRoute - Role check:", { 
-      userRole, 
-      requiredRole, 
+      userRole: userRoleStr, 
+      requiredRole: requiredRoleStr,
       hasRequiredRole 
     });
     
     if (!hasRequiredRole) {
-      console.log("ProtectedRoute - User doesn't have required role:", requiredRole);
+      console.log("ProtectedRoute - User doesn't have required role:", requiredRoleStr);
       return <Navigate to="/unauthorized" replace />;
     }
   }
