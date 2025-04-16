@@ -48,20 +48,20 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
   // Debug buttons for quick access to different roles
   const loginAsRole = (role: string) => {
-    // Use specific emails for each role to ensure proper redirection
+    // Corriger l'utilisation des emails pour éviter les confusions
     let roleEmail;
     switch (role.toLowerCase()) {
       case 'admin':
-        roleEmail = "admin@example.com";
+        roleEmail = "admin@weevent.com";
         break;
       case 'partner':
-        roleEmail = "partner@example.com";
+        roleEmail = "partner@weevent.com";
         break;
       case 'client':
-        roleEmail = "client@example.com";
+        roleEmail = "client@weevent.com";
         break;
       default:
-        roleEmail = `${role}@example.com`;
+        roleEmail = `${role}@weevent.com`;
     }
     
     setEmail(roleEmail);

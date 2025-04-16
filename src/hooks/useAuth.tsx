@@ -249,23 +249,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const hasPermission = useCallback((permission: string): boolean => {
-    if (!user) return false;
-    
-    if (user.role === UserRole.ADMIN) return true;
-    
-    return false;
-  }, [user]);
-
   const hasRole = useCallback((role: UserRole): boolean => {
     if (!user) return false;
     
     const userRoleStr = String(user.role || '').toLowerCase();
     const checkRoleStr = String(role || '').toLowerCase();
     
-    console.log("Comparing roles:", userRoleStr, checkRoleStr, userRoleStr === checkRoleStr);
+    console.log("useAuth hasRole - Comparing roles:", userRoleStr, checkRoleStr, userRoleStr === checkRoleStr);
     
     return userRoleStr === checkRoleStr;
+  }, [user]);
+
+  const hasPermission = useCallback((permission: string): boolean => {
+    if (!user) return false;
+    
+    // Les administrateurs ont toutes les permissions
+    if (String(user.role).toLowerCase() === 'admin') return true;
+    
+    return false;
   }, [user]);
 
   const updateUser = async (updates: Partial<Profile>): Promise<void> => {
