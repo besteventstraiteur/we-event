@@ -36,11 +36,11 @@ export const useLoginPageLogic = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const userRole = String(user.role).toLowerCase();
-      const redirectTo = getRedirectPathForRole(userRole);
+      const userRole = String(user.role || '').toLowerCase();
+      let redirectPath = getRedirectPathForRole(userRole);
       
-      console.log("useLoginPageLogic - Authenticated user with role:", userRole, "redirecting to:", redirectTo);
-      navigate(redirectTo, { replace: true });
+      console.log("useLoginPageLogic - Authenticated user with role:", userRole, "redirecting to:", redirectPath);
+      navigate(redirectPath, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
 
@@ -223,86 +223,9 @@ export const useLoginPageLogic = () => {
     biometricLoading,
     setForgotPassword,
     handleLoginSubmit,
-    handleResetPassword: async (email: string) => {
-      setIsLoading(true);
-      try {
-        console.log("Password reset requested for:", email);
-        
-        setTimeout(() => {
-          setResetSent(true);
-          toast({
-            title: "Email envoyé",
-            description: "Instructions de récupération envoyées à votre adresse email",
-          });
-        }, 1000);
-      } catch (error) {
-        console.error("Password reset error:", error);
-        toast({
-          variant: "destructive",
-          title: "Erreur",
-          description: "Impossible d'envoyer l'email de récupération. Veuillez réessayer.",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    handleVerifyOTP: async (code: string): Promise<boolean> => {
-      console.log("Verifying OTP code:", code);
-      const isValid = code === "123456"; // Demo code
-      
-      if (isValid) {
-        return true;
-      }
-      
-      return false;
-    },
-    handleSocialLoginSuccess: async (provider: string, userData?: any) => {
-      try {
-        console.log("Social login attempt with provider:", provider);
-        const result = await loginWithProvider(provider);
-        
-        if (result.success) {
-          toast({
-            title: "Connexion initiée",
-            description: "Vous allez être redirigé vers le fournisseur d'authentification",
-          });
-        } else {
-          console.error("Social login failed:", result.message);
-          toast({
-            variant: "destructive",
-            title: "Échec de connexion",
-            description: result.message || `Problème de connexion avec ${provider}`,
-          });
-        }
-      } catch (error) {
-        console.error("Social login error:", error);
-        toast({
-          variant: "destructive",
-          title: "Erreur",
-          description: `Problème de connexion avec ${provider}. Veuillez réessayer.`,
-        });
-      }
-    },
-    handleBiometricLogin: async () => {
-      console.log("Biometric login attempt");
-      const result = await handleBiometricAuth();
-      if (result.success) {
-        const storedEmail = localStorage.getItem('weddingPlannerEmail') || 'client@example.com';
-        console.log("Biometric success, logging in with stored email:", storedEmail);
-        
-        const loginResult = await login({
-          email: storedEmail,
-          password: "biometric-auth",
-          rememberMe: true
-        });
-        
-        if (loginResult.success && loginResult.user) {
-          const userRole = String(loginResult.user.role || "client").toLowerCase();
-          const redirectPath = getRedirectPathForRole(userRole);
-          console.log("Biometric login successful, redirecting to:", redirectPath);
-          navigate(redirectPath, { replace: true });
-        }
-      }
-    },
+    handleResetPassword,
+    handleVerifyOTP,
+    handleSocialLoginSuccess,
+    handleBiometricLogin
   };
 };
