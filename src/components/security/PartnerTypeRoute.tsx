@@ -38,15 +38,35 @@ const PartnerTypeRoute: React.FC<PartnerTypeRouteProps> = ({
   }
 
   // Vérifier si l'utilisateur est partenaire
-  if (!hasRole(requiredRole)) {
+  const userRoleStr = String(user.role || '').toLowerCase().trim();
+  const requiredRoleStr = String(requiredRole).toLowerCase().trim();
+  const isPartner = userRoleStr === requiredRoleStr;
+  
+  console.log("PartnerTypeRoute - Role check:", { 
+    userRole: userRoleStr, 
+    requiredRole: requiredRoleStr,
+    isPartner 
+  });
+  
+  if (!isPartner) {
     console.log("PartnerTypeRoute - User is not a partner:", user.role);
     return <Navigate to="/unauthorized" replace />;
   }
   
-  // If specific partner types are required, check for those
+  // Si des types de partenaires spécifiques sont requis, vérifier ceux-ci
   if (allowedTypes && allowedTypes.length > 0) {
-    // Use partner_type instead of partnerType to match the Profile type
-    const hasAllowedType = user.partner_type && allowedTypes.includes(user.partner_type as PartnerType);
+    // Utiliser partner_type au lieu de partnerType pour correspondre au type Profile
+    const userPartnerType = String(user.partner_type || '').toLowerCase().trim();
+    const hasAllowedType = allowedTypes.some(type => 
+      String(type).toLowerCase().trim() === userPartnerType
+    );
+    
+    console.log("PartnerTypeRoute - Partner type check:", {
+      userPartnerType,
+      allowedTypes: allowedTypes.map(t => String(t).toLowerCase().trim()),
+      hasAllowedType
+    });
+    
     if (!hasAllowedType) {
       console.log("PartnerTypeRoute - Partner type not allowed:", user.partner_type);
       return <Navigate to="/unauthorized" replace />;

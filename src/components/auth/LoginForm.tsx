@@ -64,9 +64,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
         break;
     }
     
-    // Définir l'email et le mot de passe puis déclencher la soumission
+    // Définir l'email et le mot de passe
     setEmail(roleEmail);
     setPassword("password123");
+    setRememberMe(true);
     
     console.log(`Quick login as ${role} with email: ${roleEmail}`);
     

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -34,22 +35,19 @@ export const useLoginPageLogic = () => {
     handleBiometricAuth
   } = useBiometricLogin();
 
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      const userRole = String(user.role || '').toLowerCase();
-      let redirectPath = getRedirectPathForRole(userRole);
-      
-      console.log("useLoginPageLogic - Authenticated user with role:", userRole, "redirecting to:", redirectPath);
-      navigate(redirectPath, { replace: true });
-    }
-  }, [isAuthenticated, user, navigate]);
+  // Suppression de cet effet - c'est LoginPage qui gère cette redirection
+  // Le double effet crée des problèmes de redirection
 
   const handleLoginSubmit = async (email: string, password: string, rememberMe: boolean) => {
     setIsLoading(true);
     
-    const userType = email.includes("admin") ? "admin" : 
-                    email.includes("partner") ? "partner" : 
-                    email.includes("client") ? "client" : "unknown";
+    // Détecter le type d'utilisateur basé sur l'email
+    let userType = "client";
+    if (email.includes("admin")) {
+      userType = "admin";
+    } else if (email.includes("partner")) {
+      userType = "partner";
+    }
                     
     setAuthDebugInfo({
       email,
@@ -57,7 +55,7 @@ export const useLoginPageLogic = () => {
     });
 
     try {
-      console.log("Login attempt:", { email, password: "******", rememberMe });
+      console.log("Login attempt:", { email, password: "******", rememberMe, userType });
       const result = await login({ email, password, rememberMe });
       
       if (result.success) {
@@ -70,9 +68,10 @@ export const useLoginPageLogic = () => {
             description: "Veuillez entrer le code de sécurité envoyé à votre appareil.",
           });
         } else {
-          const userRole = String(result.user?.role || "client").toLowerCase();
+          // Utiliser le rôle de l'utilisateur retourné par l'API
+          const userRole = String(result.user?.role || userType).toLowerCase();
           
-          const redirectPath = getRedirectPathForRole(userRole);
+          let redirectPath = getRedirectPathForRole(userRole);
           
           setAuthDebugInfo(prev => ({ 
             ...prev, 
@@ -195,7 +194,8 @@ export const useLoginPageLogic = () => {
   };
 
   const getRedirectPathForRole = (role: string): string => {
-    const normalizedRole = String(role).toLowerCase();
+    // Normaliser le rôle pour une comparaison cohérente
+    const normalizedRole = String(role).toLowerCase().trim();
     
     console.log("Getting redirect path for role:", normalizedRole);
     

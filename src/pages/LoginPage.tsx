@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
@@ -17,7 +18,6 @@ import LoginDebugInfo from "@/components/auth/LoginDebugInfo";
 // Custom hook
 import { useLoginPageLogic } from "@/hooks/useLoginPageLogic";
 import { useAuth } from "@/hooks/useAuth";
-import { UserRole } from "@/utils/accessControl";
 
 const LoginPage = () => {
   const deviceType = useDeviceType();
@@ -27,11 +27,11 @@ const LoginPage = () => {
   
   useEffect(() => {
     if (isAuthenticated && user) {
-      // Standardiser la valeur du rôle pour la comparaison
-      const userRoleStr = String(user.role || '').toLowerCase();
+      // Toujours normaliser le rôle pour la comparaison
+      const userRoleStr = String(user.role || '').toLowerCase().trim();
       
       // Redirection basée sur le rôle utilisateur
-      let redirectPath = '/client/dashboard';
+      let redirectPath;
       
       switch (userRoleStr) {
         case 'admin':

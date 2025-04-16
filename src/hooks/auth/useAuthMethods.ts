@@ -1,3 +1,4 @@
+
 import { useCallback } from "react";
 import { supabase, getUserProfile } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,47 @@ export function useAuthMethods(setUser: Function) {
     try {
       console.log("Attempting to log in with:", credentials.email);
       
+      // Pour la démo, permettre des connexions de test avec des emails spécifiques
+      if (credentials.email.includes("admin@") || credentials.email.includes("partner@") || credentials.email.includes("client@")) {
+        console.log("Using demo login for:", credentials.email);
+        
+        // Déterminer le rôle basé sur l'email
+        let role = "client";
+        if (credentials.email.includes("admin@")) {
+          role = "admin";
+        } else if (credentials.email.includes("partner@")) {
+          role = "partner";
+        }
+        
+        // Créer un profil utilisateur simulé pour la démo
+        const demoUser = {
+          id: `demo-${Date.now()}`,
+          email: credentials.email,
+          name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+          avatar_url: null,
+          role: role,
+          created_at: new Date().toISOString()
+        };
+        
+        // Stocker les infos de connexion si "se souvenir de moi" est activé
+        if (credentials.rememberMe) {
+          localStorage.setItem("weddingPlannerEmail", credentials.email);
+          localStorage.setItem("weddingPlannerRememberMe", "true");
+        }
+        
+        // Simuler un délai de connexion
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Définir l'utilisateur dans le contexte d'authentification
+        setUser(demoUser);
+        
+        return {
+          success: true,
+          user: demoUser
+        };
+      }
+      
+      // Authentification réelle avec Supabase si ce n'est pas un compte de démo
       const { data, error } = await supabase.auth.signInWithPassword({
         email: credentials.email,
         password: credentials.password
@@ -93,7 +135,15 @@ export function useAuthMethods(setUser: Function) {
     console.log("Logging out...");
     
     try {
-      // Déconnexion de Supabase
+      // Nettoyer les données utilisateur en local d'abord
+      setUser(null);
+      
+      // Nettoyer les données stockées localement
+      localStorage.removeItem("weddingPlannerEmail");
+      localStorage.removeItem("weddingPlannerRememberMe");
+      localStorage.removeItem("2fa_enabled");
+      
+      // Déconnexion de Supabase ensuite
       const { error } = await supabase.auth.signOut();
       
       if (error) {
@@ -101,18 +151,12 @@ export function useAuthMethods(setUser: Function) {
         throw error;
       }
       
-      // Nettoyage des données utilisateur en local
-      setUser(null);
-      
-      // Nettoyage des données stockées localement
-      localStorage.removeItem("weddingPlannerEmail");
-      localStorage.removeItem("weddingPlannerRememberMe");
-      localStorage.removeItem("2fa_enabled");
-      
       console.log("Logout successful, navigating to login page");
-      navigate("/login", { replace: true });
       
       // Le toast sera affiché par le composant LogoutButton
+      
+      // Important: navigation après toutes les opérations de nettoyage
+      navigate("/login", { replace: true });
     } catch (error) {
       console.error("Error during logout:", error);
       throw error;

@@ -44,12 +44,20 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({
 
   const performLogout = async () => {
     try {
+      toast({
+        description: "Déconnexion en cours...",
+      });
+      
+      // Déconnexion via le hook d'authentification
       await logout();
+      
+      // Notification de succès
       toast({
         description: "Vous avez été déconnecté avec succès",
       });
+      
       // Force redirection vers la page de login
-      navigate('/login', { replace: true });
+      // Cette redirection est gérée dans le hook de déconnexion
     } catch (error) {
       console.error("Erreur lors de la déconnexion:", error);
       toast({

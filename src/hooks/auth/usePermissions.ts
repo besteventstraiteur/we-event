@@ -8,8 +8,8 @@ export function usePermissions(user: Profile | null) {
     if (!user) return false;
     
     // Standardiser les deux valeurs pour la comparaison
-    const userRoleStr = String(user.role || '').toLowerCase();
-    const checkRoleStr = String(role || '').toLowerCase();
+    const userRoleStr = String(user.role || '').toLowerCase().trim();
+    const checkRoleStr = String(role || '').toLowerCase().trim();
     
     console.log("usePermissions hasRole - Comparing roles:", userRoleStr, checkRoleStr, userRoleStr === checkRoleStr);
     
@@ -20,7 +20,9 @@ export function usePermissions(user: Profile | null) {
     if (!user) return false;
     
     // Les administrateurs ont toutes les permissions
-    if (String(user.role).toLowerCase() === 'admin') return true;
+    if (String(user.role).toLowerCase().trim() === 'admin') return true;
+    
+    // Ajouter ici la logique pour vérifier d'autres permissions spécifiques
     
     return false;
   }, [user]);
