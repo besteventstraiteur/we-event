@@ -1,4 +1,3 @@
-
 import { useCallback } from "react";
 import { supabase, getUserProfile } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
@@ -92,19 +91,33 @@ export function useAuthMethods(setUser: Function) {
 
   const logout = useCallback(async () => {
     console.log("Logging out...");
-    const { error } = await supabase.auth.signOut();
     
-    if (error) {
-      console.error("Error signing out:", error);
+    try {
+      // Déconnexion de Supabase
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error("Error signing out from Supabase:", error);
+        throw error;
+      }
+      
+      // Nettoyage des données utilisateur en local
+      setUser(null);
+      
+      // Nettoyage des données stockées localement
+      localStorage.removeItem("weddingPlannerEmail");
+      localStorage.removeItem("weddingPlannerRememberMe");
+      localStorage.removeItem("2fa_enabled");
+      
+      console.log("Logout successful, navigating to login page");
+      navigate("/login", { replace: true });
+      
+      // Le toast sera affiché par le composant LogoutButton
+    } catch (error) {
+      console.error("Error during logout:", error);
+      throw error;
     }
-    
-    setUser(null);
-    navigate("/login");
-    toast({
-      title: "Déconnexion réussie",
-      description: "Vous avez été déconnecté avec succès"
-    });
-  }, [navigate, toast, setUser]);
+  }, [navigate, setUser]);
 
   const register = async (userData: { email: string; password: string; role?: UserRole; name?: string }): Promise<AuthResult> => {
     try {

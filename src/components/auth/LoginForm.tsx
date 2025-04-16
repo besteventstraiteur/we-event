@@ -46,10 +46,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
     onSubmit(email, password, rememberMe);
   };
 
-  // Debug buttons for quick access to different roles
+  // Boutons de connexion rapide pour les différents rôles
   const loginAsRole = (role: string) => {
-    // Corriger l'utilisation des emails pour éviter les confusions
     let roleEmail;
+    
+    // Utiliser des adresses email distinctes pour chaque rôle
     switch (role.toLowerCase()) {
       case 'admin':
         roleEmail = "admin@weevent.com";
@@ -58,16 +59,18 @@ const LoginForm: React.FC<LoginFormProps> = ({
         roleEmail = "partner@weevent.com";
         break;
       case 'client':
+      default:
         roleEmail = "client@weevent.com";
         break;
-      default:
-        roleEmail = `${role}@weevent.com`;
     }
     
+    // Définir l'email et le mot de passe puis déclencher la soumission
     setEmail(roleEmail);
     setPassword("password123");
     
     console.log(`Quick login as ${role} with email: ${roleEmail}`);
+    
+    // Déclencher la soumission du formulaire avec les nouveaux identifiants
     onSubmit(roleEmail, "password123", true);
   };
 
@@ -136,7 +139,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         </Link>
       </div>
 
-      {/* Debug section for quick login - can be removed in production */}
+      {/* Section de débogage pour connexion rapide */}
       <div className="pt-2 border-t border-gray-200 mt-4">
         <div className="text-xs text-gray-500 mb-2">Connexion rapide (pour test):</div>
         <div className="flex gap-2">

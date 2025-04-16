@@ -36,8 +36,10 @@ export const useLoginPageLogic = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const redirectTo = getRedirectPathForUser(user.role as UserRole);
-      console.log("useLoginPageLogic - Authenticated user with role:", user.role, "redirecting to:", redirectTo);
+      const userRole = String(user.role).toLowerCase();
+      const redirectTo = getRedirectPathForRole(userRole);
+      
+      console.log("useLoginPageLogic - Authenticated user with role:", userRole, "redirecting to:", redirectTo);
       navigate(redirectTo, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
@@ -45,7 +47,6 @@ export const useLoginPageLogic = () => {
   const handleLoginSubmit = async (email: string, password: string, rememberMe: boolean) => {
     setIsLoading(true);
     
-    // Determine user type from email for debug info
     const userType = email.includes("admin") ? "admin" : 
                     email.includes("partner") ? "partner" : 
                     email.includes("client") ? "client" : "unknown";
@@ -69,11 +70,9 @@ export const useLoginPageLogic = () => {
             description: "Veuillez entrer le code de sécurité envoyé à votre appareil.",
           });
         } else {
-          // Get user role from the result
-          const userRole = result.user?.role as UserRole;
+          const userRole = String(result.user?.role || "client").toLowerCase();
           
-          // Determine redirect path based on user role
-          const redirectPath = getRedirectPathForUser(userRole);
+          const redirectPath = getRedirectPathForRole(userRole);
           
           setAuthDebugInfo(prev => ({ 
             ...prev, 
@@ -113,10 +112,8 @@ export const useLoginPageLogic = () => {
   const handleResetPassword = async (email: string) => {
     setIsLoading(true);
     try {
-      // In a real app, this would call supabase.auth.resetPasswordForEmail
       console.log("Password reset requested for:", email);
       
-      // For demo, we'll simulate success
       setTimeout(() => {
         setResetSent(true);
         toast({
@@ -188,20 +185,16 @@ export const useLoginPageLogic = () => {
         rememberMe: true
       });
       
-      if (loginResult.success) {
-        const redirectPath = getRedirectPathForUser(loginResult.user?.role as UserRole);
+      if (loginResult.success && loginResult.user) {
+        const userRole = String(loginResult.user.role || "client").toLowerCase();
+        const redirectPath = getRedirectPathForRole(userRole);
         console.log("Biometric login successful, redirecting to:", redirectPath);
         navigate(redirectPath, { replace: true });
       }
     }
   };
 
-  const getRedirectPathForUser = (role?: UserRole): string => {
-    if (!role) {
-      return '/client/dashboard';
-    }
-    
-    // Normalize role for comparison
+  const getRedirectPathForRole = (role: string): string => {
     const normalizedRole = String(role).toLowerCase();
     
     console.log("Getting redirect path for role:", normalizedRole);
@@ -233,10 +226,8 @@ export const useLoginPageLogic = () => {
     handleResetPassword: async (email: string) => {
       setIsLoading(true);
       try {
-        // In a real app, this would call supabase.auth.resetPasswordForEmail
         console.log("Password reset requested for:", email);
         
-        // For demo, we'll simulate success
         setTimeout(() => {
           setResetSent(true);
           toast({
@@ -305,8 +296,9 @@ export const useLoginPageLogic = () => {
           rememberMe: true
         });
         
-        if (loginResult.success) {
-          const redirectPath = getRedirectPathForUser(loginResult.user?.role as UserRole);
+        if (loginResult.success && loginResult.user) {
+          const userRole = String(loginResult.user.role || "client").toLowerCase();
+          const redirectPath = getRedirectPathForRole(userRole);
           console.log("Biometric login successful, redirecting to:", redirectPath);
           navigate(redirectPath, { replace: true });
         }

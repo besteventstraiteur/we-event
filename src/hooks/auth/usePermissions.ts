@@ -7,10 +7,11 @@ export function usePermissions(user: Profile | null) {
   const hasRole = useCallback((role: UserRole): boolean => {
     if (!user) return false;
     
+    // Standardiser les deux valeurs pour la comparaison
     const userRoleStr = String(user.role || '').toLowerCase();
     const checkRoleStr = String(role || '').toLowerCase();
     
-    console.log("useAuth hasRole - Comparing roles:", userRoleStr, checkRoleStr, userRoleStr === checkRoleStr);
+    console.log("usePermissions hasRole - Comparing roles:", userRoleStr, checkRoleStr, userRoleStr === checkRoleStr);
     
     return userRoleStr === checkRoleStr;
   }, [user]);

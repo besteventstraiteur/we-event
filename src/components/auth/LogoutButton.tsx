@@ -4,6 +4,7 @@ import { Button, ButtonProps } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,6 +31,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({
 }) => {
   const { logout } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const handleLogout = () => {
@@ -40,11 +42,21 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({
     }
   };
 
-  const performLogout = () => {
-    logout();
-    toast({
-      description: "Vous avez été déconnecté avec succès",
-    });
+  const performLogout = async () => {
+    try {
+      await logout();
+      toast({
+        description: "Vous avez été déconnecté avec succès",
+      });
+      // Force redirection vers la page de login
+      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion:", error);
+      toast({
+        variant: "destructive",
+        description: "Erreur lors de la déconnexion. Veuillez réessayer.",
+      });
+    }
   };
 
   return (
