@@ -1,6 +1,6 @@
 
 import { createContext, useContext, ReactNode } from "react";
-import { Profile } from "@/lib/supabase";
+import { Profile, supabase } from "@/lib/supabase";
 import { AuthContextType } from "./types";
 import { useAuthState } from "./useAuthState";
 import { useAuthMethods } from "./useAuthMethods";
