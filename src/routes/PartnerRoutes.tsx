@@ -22,6 +22,13 @@ import PartnerTraining from '@/pages/partner/PartnerTraining';
 import PartnerMLM from '@/pages/partner/PartnerMLM';
 import { UserRole } from '@/utils/accessControl';
 import PartnerTypeRoute from '@/components/security/PartnerTypeRoute';
+import CrmDashboard from '@/pages/crm/CrmDashboard';
+import CrmContacts from '@/pages/crm/contacts/CrmContacts';
+import CrmOpportunities from '@/pages/crm/opportunities/CrmOpportunities';
+import CrmQuotes from '@/pages/crm/quotes/CrmQuotes';
+import CrmInvoices from '@/pages/crm/invoices/CrmInvoices';
+import CrmProducts from '@/pages/crm/products/CrmProducts';
+import CrmReports from '@/pages/crm/reports/CrmReports';
 
 const PartnerRoutes: React.FC = () => {
   return (
@@ -45,6 +52,15 @@ const PartnerRoutes: React.FC = () => {
         <Route path="talkshows" element={<PartnerTalkshows />} />
         <Route path="training" element={<PartnerTraining />} />
         <Route path="mlm" element={<PartnerMLM />} />
+        
+        {/* Routes CRM */}
+        <Route path="crm" element={<CrmDashboard />} />
+        <Route path="crm/contacts" element={<CrmContacts />} />
+        <Route path="crm/opportunities" element={<CrmOpportunities />} />
+        <Route path="crm/quotes" element={<CrmQuotes />} />
+        <Route path="crm/invoices" element={<CrmInvoices />} />
+        <Route path="crm/products" element={<CrmProducts />} />
+        <Route path="crm/reports" element={<CrmReports />} />
       </Route>
     </Routes>
   );

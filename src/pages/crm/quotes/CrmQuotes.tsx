@@ -2,10 +2,10 @@
 import React from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ContactsList from "@/components/crm/contacts/ContactsList";
+import QuotesList from "@/components/crm/quotes/QuotesList";
 import { useAuth } from "@/hooks/useAuth";
 
-const CrmContacts = () => {
+const CrmQuotes = () => {
   const { user } = useAuth();
   const userRole = user?.role?.toLowerCase();
   
@@ -13,18 +13,18 @@ const CrmContacts = () => {
     <DashboardLayout type={userRole === "admin" ? "admin" : "partner"}>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Contacts et clients</h1>
+          <h1 className="text-3xl font-bold">Devis</h1>
           <p className="text-muted-foreground">
-            Gérez vos contacts et suivez vos interactions clients
+            Gérez vos devis et convertissez-les en factures
           </p>
         </div>
         
         <Card>
           <CardHeader>
-            <CardTitle>Contacts</CardTitle>
+            <CardTitle>Liste des devis</CardTitle>
           </CardHeader>
           <CardContent>
-            <ContactsList />
+            <QuotesList />
           </CardContent>
         </Card>
       </div>
@@ -32,4 +32,4 @@ const CrmContacts = () => {
   );
 };
 
-export default CrmContacts;
+export default CrmQuotes;

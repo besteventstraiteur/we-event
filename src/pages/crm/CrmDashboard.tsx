@@ -5,10 +5,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, Briefcase, FileText, ShoppingBag, BarChart3, Mail, Bell } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const CrmDashboard = () => {
   const { user } = useAuth();
   const userRole = user?.role?.toLowerCase();
+  const location = useLocation();
+  
+  // Déterminer le préfixe d'URL basé sur le chemin actuel
+  const isPartnerPath = location.pathname.includes('/partner/');
+  const urlPrefix = isPartnerPath ? '/partner' : '';
   
   return (
     <DashboardLayout type={userRole === "admin" ? "admin" : "partner"}>
@@ -116,9 +123,11 @@ const CrmDashboard = () => {
                   <p className="text-muted-foreground mb-4">
                     Commencez à ajouter des contacts pour construire votre base clients
                   </p>
-                  <a href="/crm/contacts" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2">
+                  <Link 
+                    to={`${urlPrefix}/crm/contacts`} 
+                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2">
                     Ajouter un contact
-                  </a>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -139,9 +148,11 @@ const CrmDashboard = () => {
                   <p className="text-muted-foreground mb-4">
                     Commencez à ajouter des opportunités pour suivre votre pipeline commercial
                   </p>
-                  <a href="/crm/opportunities" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2">
+                  <Link 
+                    to={`${urlPrefix}/crm/opportunities`} 
+                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2">
                     Ajouter une opportunité
-                  </a>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -163,12 +174,16 @@ const CrmDashboard = () => {
                     Commencez à créer des devis et factures pour vos clients
                   </p>
                   <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                    <a href="/crm/quotes" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2">
+                    <Link 
+                      to={`${urlPrefix}/crm/quotes`}
+                      className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2">
                       Créer un devis
-                    </a>
-                    <a href="/crm/invoices" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/90 px-4 py-2">
+                    </Link>
+                    <Link 
+                      to={`${urlPrefix}/crm/invoices`}
+                      className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/90 px-4 py-2">
                       Créer une facture
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </CardContent>
@@ -190,9 +205,11 @@ const CrmDashboard = () => {
                   <p className="text-muted-foreground mb-4">
                     Commencez à ajouter des produits et services à votre catalogue
                   </p>
-                  <a href="/crm/products" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2">
+                  <Link 
+                    to={`${urlPrefix}/crm/products`}
+                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2">
                     Ajouter un produit
-                  </a>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -213,6 +230,11 @@ const CrmDashboard = () => {
                   <p className="text-muted-foreground mb-4">
                     Les rapports seront générés lorsque vous aurez des données dans votre CRM
                   </p>
+                  <Link 
+                    to={`${urlPrefix}/crm/reports`}
+                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2">
+                    Voir les rapports
+                  </Link>
                 </div>
               </CardContent>
             </Card>
