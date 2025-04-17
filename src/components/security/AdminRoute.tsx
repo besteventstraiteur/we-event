@@ -31,12 +31,10 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
     return <Navigate to={fallbackPath} state={{ from: location.pathname }} replace />;
   }
 
-  // Vérifier si l'utilisateur est administrateur
-  const userRoleStr = String(user.role || '').toLowerCase().trim();
-  const isAdmin = userRoleStr === 'admin';
+  // Vérifier si l'utilisateur est administrateur en utilisant la fonction hasRole
+  const isAdmin = hasRole(UserRole.ADMIN);
   
-  console.log("AdminRoute - User role check:", user.role, "Is admin:", isAdmin, "Role comparison:", 
-    userRoleStr, "=?=", "admin", "Result:", userRoleStr === 'admin');
+  console.log("AdminRoute - User role check:", user.role, "Is admin:", isAdmin);
   
   if (!isAdmin) {
     console.log("AdminRoute - User is not admin:", user.role);

@@ -35,14 +35,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Si un rôle est requis, vérifier que l'utilisateur a ce rôle
   if (requiredRole) {
-    // Utiliser directement la fonction hasRole du contexte
-    const userRoleStr = String(user.role || '').toLowerCase().trim();
-    const requiredRoleStr = String(requiredRole).toLowerCase().trim();
     const hasRequiredRole = hasRole(requiredRole);
     
     console.log("ProtectedRoute - Role check:", { 
-      userRole: userRoleStr, 
-      requiredRole: requiredRoleStr,
+      userRole: user.role, 
+      requiredRole: requiredRole,
       hasRequiredRole 
     });
     

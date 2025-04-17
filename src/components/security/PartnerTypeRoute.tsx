@@ -18,7 +18,7 @@ const PartnerTypeRoute: React.FC<PartnerTypeRouteProps> = ({
   allowedTypes,
   children
 }) => {
-  const { user, isLoading, hasRole } = useAuth();
+  const { user, isLoading, hasRole, hasPartnerType } = useAuth();
   const location = useLocation();
 
   // Afficher un indicateur de chargement pendant la vérification d'accès
@@ -37,14 +37,12 @@ const PartnerTypeRoute: React.FC<PartnerTypeRouteProps> = ({
     return <Navigate to={fallbackPath} state={{ from: location.pathname }} replace />;
   }
 
-  // Vérifier si l'utilisateur est partenaire
-  const userRoleStr = String(user.role || '').toLowerCase().trim();
-  const requiredRoleStr = String(requiredRole).toLowerCase().trim();
-  const isPartner = userRoleStr === requiredRoleStr;
+  // Vérifier si l'utilisateur est partenaire en utilisant la fonction hasRole
+  const isPartner = hasRole(requiredRole);
   
   console.log("PartnerTypeRoute - Role check:", { 
-    userRole: userRoleStr, 
-    requiredRole: requiredRoleStr,
+    userRole: user.role, 
+    requiredRole: requiredRole,
     isPartner 
   });
   
@@ -55,15 +53,11 @@ const PartnerTypeRoute: React.FC<PartnerTypeRouteProps> = ({
   
   // Si des types de partenaires spécifiques sont requis, vérifier ceux-ci
   if (allowedTypes && allowedTypes.length > 0) {
-    // Utiliser partner_type au lieu de partnerType pour correspondre au type Profile
-    const userPartnerType = String(user.partner_type || '').toLowerCase().trim();
-    const hasAllowedType = allowedTypes.some(type => 
-      String(type).toLowerCase().trim() === userPartnerType
-    );
+    const hasAllowedType = allowedTypes.some(type => hasPartnerType(type));
     
     console.log("PartnerTypeRoute - Partner type check:", {
-      userPartnerType,
-      allowedTypes: allowedTypes.map(t => String(t).toLowerCase().trim()),
+      userPartnerType: user.partner_type,
+      allowedTypes: allowedTypes,
       hasAllowedType
     });
     
