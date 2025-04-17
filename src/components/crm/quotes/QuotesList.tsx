@@ -53,7 +53,7 @@ const QuotesList = () => {
       sent: { label: "Envoyé", variant: "default" as const },
       accepted: { label: "Accepté", variant: "success" as const },
       rejected: { label: "Refusé", variant: "destructive" as const },
-      expired: { label: "Expiré", variant: "warning" as const },
+      expired: { label: "Expiré", variant: "default" as const }, // Changed from "warning"
     };
     
     return <Badge variant={statusConfig[status].variant}>{statusConfig[status].label}</Badge>;

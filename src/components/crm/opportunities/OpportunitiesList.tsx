@@ -53,7 +53,7 @@ const OpportunitiesList = () => {
       case "prospection": return "outline";
       case "qualification": return "secondary";
       case "proposition": return "default";
-      case "négociation": return "warning";
+      case "négociation": return "default"; // Changed from "warning"
       case "gagné": return "success";
       case "perdu": return "destructive";
       default: return "outline";
