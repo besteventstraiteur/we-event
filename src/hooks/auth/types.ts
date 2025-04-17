@@ -24,5 +24,6 @@ export interface AuthContextType {
   register: (userData: { email: string; password: string; role?: UserRole; name?: string }) => Promise<AuthResult>;
   hasPermission: (permission: string) => boolean;
   hasRole: (role: UserRole) => boolean;
+  hasPartnerType: (partnerType: string) => boolean;
   updateUser: (user: Partial<Profile>) => Promise<void>;
 }
