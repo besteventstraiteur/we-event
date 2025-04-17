@@ -33,7 +33,68 @@ interface Opportunity {
 }
 
 // Données de démo pour l'interface
-const mockOpportunities: Opportunity[] = [];
+const mockOpportunities: Opportunity[] = [
+  {
+    id: "opp1",
+    name: "Événement d'entreprise annuel",
+    client: "Société ABC",
+    value: 15000,
+    stage: "Prospection",
+    probability: 20,
+    expectedCloseDate: "30/06/2025",
+    tags: ["Événement d'entreprise", "Grand budget"]
+  },
+  {
+    id: "opp2",
+    name: "Mariage VIP",
+    client: "Famille Martin",
+    value: 25000,
+    stage: "Qualification",
+    probability: 40,
+    expectedCloseDate: "15/07/2025",
+    tags: ["Mariage", "VIP", "Été"]
+  },
+  {
+    id: "opp3",
+    name: "Lancement de produit",
+    client: "Tech Innovations",
+    value: 18500,
+    stage: "Proposition",
+    probability: 60,
+    expectedCloseDate: "10/05/2025",
+    tags: ["Corporatif", "Technologie"]
+  },
+  {
+    id: "opp4",
+    name: "Gala de bienfaisance",
+    client: "Association Espoir",
+    value: 12000,
+    stage: "Négociation",
+    probability: 80,
+    expectedCloseDate: "20/08/2025",
+    tags: ["Caritatif", "Gala"]
+  },
+  {
+    id: "opp5",
+    name: "Conférence internationale",
+    client: "Global Summit",
+    value: 35000,
+    stage: "Gagné",
+    probability: 100,
+    expectedCloseDate: "15/09/2025",
+    tags: ["International", "Conférence", "Premium"]
+  },
+  {
+    id: "opp6",
+    name: "Festival musical",
+    client: "MelodyFest",
+    value: 22000,
+    stage: "Perdu",
+    probability: 0,
+    expectedCloseDate: "01/06/2025",
+    tags: ["Festival", "Musique"]
+  }
+];
 
 const OpportunitiesList = () => {
   const [opportunities, setOpportunities] = useState<Opportunity[]>(mockOpportunities);

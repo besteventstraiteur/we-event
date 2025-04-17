@@ -32,7 +32,53 @@ interface Quote {
 }
 
 // Données de démo pour l'interface
-const mockQuotes: Quote[] = [];
+const mockQuotes: Quote[] = [
+  {
+    id: "q1",
+    reference: "DEVIS-2025-001",
+    clientName: "Entreprise Martin",
+    totalAmount: 2500,
+    status: "draft",
+    issueDate: "15/04/2025",
+    expiryDate: "15/05/2025"
+  },
+  {
+    id: "q2",
+    reference: "DEVIS-2025-002",
+    clientName: "Société Dupont",
+    totalAmount: 1800,
+    status: "sent",
+    issueDate: "12/04/2025",
+    expiryDate: "12/05/2025"
+  },
+  {
+    id: "q3",
+    reference: "DEVIS-2025-003",
+    clientName: "Restaurant Le Gourmet",
+    totalAmount: 3200,
+    status: "accepted",
+    issueDate: "10/04/2025",
+    expiryDate: "10/05/2025"
+  },
+  {
+    id: "q4",
+    reference: "DEVIS-2025-004",
+    clientName: "Boutique Élégance",
+    totalAmount: 950,
+    status: "rejected",
+    issueDate: "05/04/2025",
+    expiryDate: "05/05/2025"
+  },
+  {
+    id: "q5",
+    reference: "DEVIS-2025-005",
+    clientName: "Café de Paris",
+    totalAmount: 1500,
+    status: "expired",
+    issueDate: "01/03/2025",
+    expiryDate: "01/04/2025"
+  }
+];
 
 const QuotesList = () => {
   const [quotes, setQuotes] = useState<Quote[]>(mockQuotes);
