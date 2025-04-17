@@ -20,8 +20,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Edit, MoreHorizontal, Trash2, PlusCircle, FileText, Calendar, User, Search, Filter, FileUp, Printer } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import QuoteFormDialog from "./QuoteFormDialog";
+import { useToast } from "@/hooks/use-toast";
 
-interface Quote {
+export interface Quote {
   id: string;
   reference: string;
   clientName: string;
@@ -83,9 +85,53 @@ const mockQuotes: Quote[] = [
 const QuotesList = () => {
   const [quotes, setQuotes] = useState<Quote[]>(mockQuotes);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingQuote, setEditingQuote] = useState<Quote | undefined>(undefined);
+  const { toast } = useToast();
   
   const handleDelete = (id: string) => {
     setQuotes(quotes.filter(quote => quote.id !== id));
+    toast({
+      title: "Devis supprimé",
+      description: "Le devis a été supprimé avec succès",
+    });
+  };
+
+  const handleEdit = (quote: Quote) => {
+    setEditingQuote(quote);
+    setIsFormOpen(true);
+  };
+
+  const handleNewQuote = () => {
+    setEditingQuote(undefined);
+    setIsFormOpen(true);
+  };
+  
+  const handleSaveQuote = (quoteData: Omit<Quote, "id">) => {
+    if (editingQuote) {
+      // Updating existing quote
+      setQuotes(quotes.map(q => 
+        q.id === editingQuote.id 
+          ? { ...quoteData, id: editingQuote.id } 
+          : q
+      ));
+      toast({
+        title: "Devis mis à jour",
+        description: `Le devis ${quoteData.reference} a été mis à jour`,
+      });
+    } else {
+      // Creating new quote
+      const newQuote: Quote = {
+        ...quoteData,
+        id: `q${quotes.length + 1}`,
+      };
+      setQuotes([...quotes, newQuote]);
+      toast({
+        title: "Devis créé",
+        description: `Le devis ${newQuote.reference} a été créé avec succès`,
+      });
+    }
+    setIsFormOpen(false);
   };
   
   const filteredQuotes = quotes.filter(quote => 
@@ -122,7 +168,7 @@ const QuotesList = () => {
             <Filter className="h-4 w-4 mr-2" />
             Filtrer
           </Button>
-          <Button size="sm">
+          <Button size="sm" onClick={handleNewQuote}>
             <PlusCircle className="h-4 w-4 mr-2" />
             Nouveau devis
           </Button>
@@ -172,7 +218,7 @@ const QuotesList = () => {
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEdit(quote)}>
                         <Edit className="h-4 w-4 mr-2" />
                         Modifier
                       </DropdownMenuItem>
@@ -203,12 +249,19 @@ const QuotesList = () => {
           <p className="text-muted-foreground mb-4">
             {searchQuery ? "Aucun devis ne correspond à votre recherche" : "Commencez par créer votre premier devis"}
           </p>
-          <Button>
+          <Button onClick={handleNewQuote}>
             <PlusCircle className="h-4 w-4 mr-2" />
             Créer un devis
           </Button>
         </div>
       )}
+
+      <QuoteFormDialog 
+        open={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        quote={editingQuote}
+        onSave={handleSaveQuote}
+      />
     </div>
   );
 };
