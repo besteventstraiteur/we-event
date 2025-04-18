@@ -5,12 +5,13 @@ import { NetworkError, formatNetworkError } from './networkErrorTypes';
 export const useNetworkStatus = () => {
   const { toast } = useToast();
   
-  const showToast = (title: string, description: string) => {
+  const showToast = (title: string, description: string, variant: 'default' | 'destructive' = 'default') => {
     try {
       toast({
         title,
         description,
-        variant: 'default'
+        variant,
+        duration: variant === 'destructive' ? 5000 : 3000
       });
     } catch (error) {
       console.error('Error showing toast notification:', formatNetworkError(error));
@@ -21,12 +22,13 @@ export const useNetworkStatus = () => {
     try {
       showToast(
         "Mode hors-ligne activé",
-        "Vos modifications seront enregistrées localement"
+        "Vos modifications seront enregistrées localement",
+        'destructive'
       );
     } catch (error) {
       throw new NetworkError(
-        'Failed to show offline notification',
-        'CONNECTION_LOST',
+        'Impossible d\'afficher la notification hors-ligne',
+        'OFFLINE_MODE',
         error
       );
     }
@@ -40,7 +42,7 @@ export const useNetworkStatus = () => {
       );
     } catch (error) {
       throw new NetworkError(
-        'Failed to show online notification',
+        'Impossible d\'afficher la notification de reconnexion',
         'SYNC_FAILED',
         error
       );
@@ -55,7 +57,7 @@ export const useNetworkStatus = () => {
       );
     } catch (error) {
       throw new NetworkError(
-        'Failed to show local save notification',
+        'Impossible d\'afficher la notification de sauvegarde locale',
         'STORAGE_ERROR',
         error
       );
@@ -63,9 +65,11 @@ export const useNetworkStatus = () => {
   };
   
   const notifyError = (error: unknown) => {
+    const formattedError = formatNetworkError(error);
     showToast(
       "Erreur de synchronisation",
-      formatNetworkError(error)
+      formattedError,
+      'destructive'
     );
   };
   

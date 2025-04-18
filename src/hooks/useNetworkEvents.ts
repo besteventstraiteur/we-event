@@ -6,27 +6,50 @@ interface NetworkEventsProps {
   onOnline: () => void;
   onOffline: () => void;
   onError?: (error: unknown) => void;
+  retryDelay?: number;
 }
 
-export const useNetworkEvents = ({ onOnline, onOffline, onError }: NetworkEventsProps) => {
+export const useNetworkEvents = ({ 
+  onOnline, 
+  onOffline, 
+  onError,
+  retryDelay = 3000 
+}: NetworkEventsProps) => {
   useEffect(() => {
+    let retryTimeout: number;
+
     const updateOnlineStatus = () => {
       try {
         const online = navigator.onLine;
         if (online) {
           onOnline();
+          if (retryTimeout) {
+            window.clearTimeout(retryTimeout);
+          }
         } else {
           onOffline();
+          
+          // Retry check after delay
+          retryTimeout = window.setTimeout(() => {
+            if (!navigator.onLine) {
+              const networkError = new NetworkError(
+                'La connexion n\'a pas pu être rétablie',
+                'NETWORK_TIMEOUT',
+                null,
+                true
+              );
+              onError?.(networkError);
+            }
+          }, retryDelay);
         }
       } catch (error) {
         const networkError = new NetworkError(
-          'Failed to update network status',
+          'Erreur lors de la mise à jour du statut réseau',
           'CONNECTION_LOST',
           error
         );
-        console.error('Error updating network status:', formatNetworkError(networkError));
+        console.error('Erreur de mise à jour du statut:', formatNetworkError(networkError));
         onError?.(networkError);
-        // Fall back to offline mode if we can't determine the status
         onOffline();
       }
     };
@@ -35,34 +58,37 @@ export const useNetworkEvents = ({ onOnline, onOffline, onError }: NetworkEvents
       window.addEventListener('online', updateOnlineStatus);
       window.addEventListener('offline', updateOnlineStatus);
       
-      // Initial check with error handling
+      // Vérification initiale
       updateOnlineStatus();
       
       return () => {
         try {
+          if (retryTimeout) {
+            window.clearTimeout(retryTimeout);
+          }
           window.removeEventListener('online', updateOnlineStatus);
           window.removeEventListener('offline', updateOnlineStatus);
         } catch (error) {
           const networkError = new NetworkError(
-            'Failed to remove network event listeners',
+            'Erreur lors de la suppression des écouteurs d\'événements réseau',
             'UNKNOWN_ERROR',
             error
           );
-          console.error('Error removing event listeners:', formatNetworkError(networkError));
+          console.error('Erreur de nettoyage:', formatNetworkError(networkError));
           onError?.(networkError);
         }
       };
     } catch (error) {
       const networkError = new NetworkError(
-        'Failed to set up network event listeners',
+        'Erreur lors de la configuration des écouteurs d\'événements réseau',
         'UNKNOWN_ERROR',
         error
       );
-      console.error('Error setting up event listeners:', formatNetworkError(networkError));
+      console.error('Erreur de configuration:', formatNetworkError(networkError));
       onError?.(networkError);
       onOffline();
       return () => {};
     }
-  }, [onOnline, onOffline, onError]);
+  }, [onOnline, onOffline, onError, retryDelay]);
 };
 
