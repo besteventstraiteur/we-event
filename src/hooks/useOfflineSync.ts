@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
 import type { Guest } from '@/types/floorPlanTypes';
+import { getCachedGuests, setCachedGuests } from '@/utils/localStorageUtils';
+import { useNetworkStatus } from '@/utils/networkUtils';
 
 interface UseOfflineSyncProps {
   guests: Guest[];
@@ -11,37 +12,40 @@ interface UseOfflineSyncProps {
 export const useOfflineSync = ({ guests, onSave }: UseOfflineSyncProps) => {
   const [isOnline, setIsOnline] = useState(true);
   const [localGuests, setLocalGuests] = useState<Guest[]>([]);
-  const { toast } = useToast();
+  const { notifyOffline, notifyOnline, notifySavedLocally } = useNetworkStatus();
 
   useEffect(() => {
+    const handleOffline = () => {
+      setIsOnline(false);
+      const cached = getCachedGuests();
+      
+      if (cached) {
+        setLocalGuests(cached);
+      } else {
+        setLocalGuests(guests);
+        setCachedGuests(guests);
+      }
+      
+      notifyOffline();
+    };
+
+    const handleOnline = () => {
+      setIsOnline(true);
+      if (localGuests.length > 0) {
+        notifyOnline();
+        onSave(localGuests);
+        setLocalGuests([]);
+      }
+    };
+
     const updateOnlineStatus = () => {
       const online = navigator.onLine;
       setIsOnline(online);
       
       if (!online) {
-        const cachedGuests = localStorage.getItem('cached_guests');
-        if (cachedGuests) {
-          try {
-            setLocalGuests(JSON.parse(cachedGuests));
-          } catch (e) {
-            console.error('Error parsing cached guests:', e);
-          }
-        } else {
-          setLocalGuests(guests);
-          localStorage.setItem('cached_guests', JSON.stringify(guests));
-        }
-        
-        toast({
-          title: "Mode hors-ligne activé",
-          description: "Vos modifications seront enregistrées localement"
-        });
-      } else if (localGuests.length > 0) {
-        toast({
-          title: "Reconnecté",
-          description: "Synchronisation des modifications locales en cours"
-        });
-        onSave(localGuests);
-        setLocalGuests([]);
+        handleOffline();
+      } else {
+        handleOnline();
       }
     };
     
@@ -54,19 +58,16 @@ export const useOfflineSync = ({ guests, onSave }: UseOfflineSyncProps) => {
       window.removeEventListener('online', updateOnlineStatus);
       window.removeEventListener('offline', updateOnlineStatus);
     };
-  }, [guests, localGuests, onSave, toast]);
+  }, [guests, localGuests, onSave]);
 
   const handleSave = (updatedGuests: Guest[]) => {
-    localStorage.setItem('cached_guests', JSON.stringify(updatedGuests));
+    setCachedGuests(updatedGuests);
     
     if (isOnline) {
       onSave(updatedGuests);
     } else {
       setLocalGuests(updatedGuests);
-      toast({
-        title: "Enregistré localement",
-        description: "Les modifications seront synchronisées lorsque vous serez en ligne"
-      });
+      notifySavedLocally();
     }
   };
 
