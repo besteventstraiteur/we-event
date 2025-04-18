@@ -1,5 +1,7 @@
+
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
+import { HelmetProvider } from 'react-helmet-async';
 import App from './App.tsx';
 import './index.css';
 import './styles/calendar.css'; // Import our calendar styles
@@ -70,10 +72,12 @@ if (isTouchDevice()) {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Suspense fallback={<LoadingFallback />}>
-      <App />
-    </Suspense>
-    <Toaster />
+    <HelmetProvider>
+      <Suspense fallback={<LoadingFallback />}>
+        <App />
+      </Suspense>
+      <Toaster />
+    </HelmetProvider>
   </React.StrictMode>,
 );
 

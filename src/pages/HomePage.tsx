@@ -1,34 +1,27 @@
 
-import React from "react";
-import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
-import HomeHeader from "@/components/home/HomeHeader";
-import HeroSection from "@/components/home/HeroSection";
-import PresentationSection from "@/components/home/PresentationSection";
-import CategoriesSection from "@/components/home/CategoriesSection";
-import TestimonialsSection from "@/components/home/TestimonialsSection";
-import HomeFooter from "@/components/home/HomeFooter";
-import { useLanguage } from "@/contexts/LanguageContext";
+import React from 'react';
+import MetaTags from '@/components/seo/MetaTags';
+import HeroSection from '@/components/home/HeroSection';
+import PresentationSection from '@/components/home/PresentationSection';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
+import HomeHeader from '@/components/home/HomeHeader';
+import HomeFooter from '@/components/home/HomeFooter';
 
-interface HomePageProps {}
-
-const HomePage: React.FC<HomePageProps> = () => {
-  const { t } = useLanguage();
-  
+const HomePage: React.FC = () => {
   return (
-    <MobileOptimizedLayout fullHeight={true}>
-      <div className="min-h-screen bg-we-white flex flex-col">
-        <HomeHeader />
-
-        <main className="flex-1">
-          <HeroSection />
-          <PresentationSection />
-          <CategoriesSection />
-          <TestimonialsSection />
-        </main>
-
-        <HomeFooter />
-      </div>
-    </MobileOptimizedLayout>
+    <>
+      <MetaTags
+        title="Planifiez votre mariage de rêve"
+        description="WeEvent est la plateforme tout-en-un pour organiser votre mariage. Trouvez les meilleurs prestataires, gérez vos invités et créez un événement inoubliable."
+      />
+      <HomeHeader />
+      <main>
+        <HeroSection />
+        <PresentationSection />
+        <TestimonialsSection />
+      </main>
+      <HomeFooter />
+    </>
   );
 };
 
