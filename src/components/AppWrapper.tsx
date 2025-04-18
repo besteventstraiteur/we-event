@@ -7,10 +7,11 @@ import { QuickActions } from './app/QuickActions';
 
 interface MobileAppWrapperProps {
   children: React.ReactNode;
+  type: "client" | "partner" | "admin" | "guest";
 }
 
 // Renamed from AppWrapper to MobileAppWrapper to avoid conflict
-const MobileAppWrapper = ({ children }: MobileAppWrapperProps) => {
+const MobileAppWrapper = ({ children, type }: MobileAppWrapperProps) => {
   const [isNative, setIsNative] = useState(false);
   const isMobile = useIsMobile();
   const deviceType = useDeviceType();
@@ -50,7 +51,7 @@ const MobileAppWrapper = ({ children }: MobileAppWrapperProps) => {
   }, [isMobile]);
 
   return (
-    <div className={`app-container ${isNative ? 'native-app' : 'web-app'} ${isMobile ? 'mobile-view' : ''} ${orientation === 'portrait' ? 'portrait' : 'landscape'} w-full max-w-full overflow-x-hidden`}>
+    <div className={`app-container ${isNative ? 'native-app' : 'web-app'} ${isMobile ? 'mobile-view' : ''} ${orientation === 'portrait' ? 'portrait' : 'landscape'} w-full max-w-full overflow-x-hidden`} data-app-type={type}>
       {isNative && (
         <div className="status-bar-spacer h-6 bg-white w-full"></div>
       )}
