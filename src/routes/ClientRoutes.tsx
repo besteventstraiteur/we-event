@@ -1,7 +1,5 @@
-
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Loader2 } from "lucide-react";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
 import ClientAppWrapper from "@/components/client/ClientAppWrapper";
 import LoadingFallback from "@/components/LoadingFallback";

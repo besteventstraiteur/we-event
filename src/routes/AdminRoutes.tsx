@@ -1,7 +1,5 @@
-
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Loader2 } from "lucide-react";
 import AdminRoute from "@/components/security/AdminRoute";
 import LoadingFallback from "@/components/LoadingFallback";
 
