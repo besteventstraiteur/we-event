@@ -1,9 +1,11 @@
 
 import { useState, useEffect } from "react";
 import { supabase, getSession, getUserProfile, Profile } from "@/lib/supabase";
+import { Session } from '@supabase/supabase-js';
 
 export function useAuthState() {
   const [user, setUser] = useState<Profile | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -15,6 +17,7 @@ export function useAuthState() {
         if (sessionError || !session) {
           console.log("Session error or no session:", sessionError);
           setUser(null);
+          setSession(null);
           setIsLoading(false);
           return;
         }
@@ -24,15 +27,18 @@ export function useAuthState() {
         if (profileError || !profile) {
           console.log("Profile error or no profile:", profileError);
           setUser(null);
+          setSession(null);
           setIsLoading(false);
           return;
         }
         
         console.log("User loaded successfully:", profile);
         setUser(profile);
+        setSession(session);
       } catch (error) {
         console.error("Error loading user:", error);
         setUser(null);
+        setSession(null);
       } finally {
         setIsLoading(false);
       }
@@ -46,8 +52,10 @@ export function useAuthState() {
         const { profile } = await getUserProfile(session.user.id);
         console.log("Profile after sign in:", profile);
         setUser(profile);
+        setSession(session);
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
+        setSession(null);
       }
     });
 
@@ -56,5 +64,5 @@ export function useAuthState() {
     };
   }, []);
 
-  return { user, setUser, isLoading };
+  return { user, session, setUser, setSession, isLoading };
 }
