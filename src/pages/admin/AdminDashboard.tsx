@@ -8,7 +8,7 @@ import StatisticsCards from "@/components/admin/dashboard/StatisticsCards";
 import PendingPartners from "@/components/admin/dashboard/PendingPartners";
 import QuickActions from "@/components/admin/dashboard/QuickActions";
 import BackupSection from "@/components/admin/dashboard/BackupSection";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import RevenueChart from "@/components/admin/dashboard/RevenueChart";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -123,19 +123,7 @@ const AdminDashboard = () => {
             isLoading={isLoading}
           />
           
-          <Card className="bg-vip-gray-900 border-vip-gray-800">
-            <CardHeader>
-              <CardTitle>Revenus mensuels</CardTitle>
-              <CardDescription>Abonnements partenaires</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-60 flex items-center justify-center">
-                <div className="text-center text-vip-gray-400">
-                  Graphique de revenus mensuels
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <RevenueChart isLoading={isLoading} />
         </div>
 
         <QuickActions />
