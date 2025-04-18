@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
 import LoadingFallback from "@/components/LoadingFallback";
+import { UserRole } from "@/utils/accessControl";
 
 // Lazy loading des composants client
 const ClientDashboard = React.lazy(() => import("@/pages/client/ClientDashboard"));
@@ -37,7 +38,7 @@ const ClientRoutes: React.FC = () => {
       <Route
         element={
           <Suspense fallback={<LoadingFallback />}>
-            <ProtectedRoute allowedRoles={["CLIENT"]} />
+            <ProtectedRoute allowedRoles={[UserRole.CLIENT]} />
           </Suspense>
         }
       >

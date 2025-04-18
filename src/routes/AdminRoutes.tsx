@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import AdminRoute from "@/components/security/AdminRoute";
 import LoadingFallback from "@/components/LoadingFallback";
+import { UserRole } from "@/utils/accessControl";
 
 // Chargement paresseux des composants administrateur
 const AdminDashboard = React.lazy(() => import("@/pages/admin/AdminDashboard"));
