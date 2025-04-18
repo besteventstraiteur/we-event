@@ -19,10 +19,12 @@ const MobileOptimizedLayout: React.FC<MobileOptimizedLayoutProps> = ({
   
   return (
     <div 
+      role="main"
+      aria-label="Contenu principal"
       className={cn(
         "w-full max-w-full overflow-x-hidden",
         isMobile && "mobile-view px-3",
-        fullHeight && "min-h-screen", // Revenir à la hauteur complète
+        fullHeight && "min-h-screen",
         className
       )}
     >
