@@ -1,14 +1,14 @@
 
 import React, { useEffect, useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-
+import DashboardLayout from "@/components/DashboardLayout";
 import DashboardHeader from "@/components/admin/dashboard/DashboardHeader";
 import StatisticsCards from "@/components/admin/dashboard/StatisticsCards";
 import PendingPartners from "@/components/admin/dashboard/PendingPartners";
 import QuickActions from "@/components/admin/dashboard/QuickActions";
 import BackupSection from "@/components/admin/dashboard/BackupSection";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
