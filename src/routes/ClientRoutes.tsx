@@ -1,67 +1,78 @@
 
-import React from "react";
+import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
-import { UserRole } from "@/utils/accessControl";
-import NotFound from "@/pages/NotFound";
+import ClientAppWrapper from "@/components/client/ClientAppWrapper";
 
-// Client Pages
-import ClientDashboard from "@/pages/client/ClientDashboard";
-import ClientTasks from "@/pages/client/ClientTasks";
-import ClientGuests from "@/pages/client/ClientGuests";
-import ClientBudget from "@/pages/client/ClientBudget";
-import ClientPartners from "@/pages/client/ClientPartners";
-import ClientAccount from "@/pages/client/ClientAccount";
-import ClientPhotos from "@/pages/client/ClientPhotos";
-import ClientMenus from "@/pages/client/ClientMenus";
-import ClientFloorPlans from "@/pages/client/ClientFloorPlans";
-import ClientMusicPlaylists from "@/pages/client/ClientMusicPlaylists";
-import ClientMiniSite from "@/pages/client/ClientMiniSite";
-import ClientPinterbest from "@/pages/client/ClientPinterbest";
-import ClientTodoList from "@/pages/client/ClientTodoList";
-import ClientRequests from "@/pages/client/ClientRequests";
-import ClientProjectDashboard from "@/pages/client/ClientProjectDashboard";
-import ClientPayments from "@/pages/client/ClientPayments";
-import ClientWeddingPackages from "@/pages/client/ClientWeddingPackages";
-import ClientLiveStreaming from "@/pages/client/ClientLiveStreaming";
-import ClientPodcasts from "@/pages/client/ClientPodcasts";
-import ClientTalkshows from "@/pages/client/ClientTalkshows";
-import ClientPartnerRatings from "@/pages/client/ClientPartnerRatings";
-import ClientDayOfCommunication from "@/pages/client/ClientDayOfCommunication";
-import AdvancedSecurity from "@/pages/client/AdvancedSecurity";
-import TwoFactorSetup from "@/pages/client/TwoFactorSetup";
+// Chargement paresseux des composants client
+const ClientDashboard = React.lazy(() => import("@/pages/client/ClientDashboard"));
+const ClientTasks = React.lazy(() => import("@/pages/client/ClientTasks"));
+const ClientTodoList = React.lazy(() => import("@/pages/client/ClientTodoList"));
+const ClientGuests = React.lazy(() => import("@/pages/client/ClientGuests"));
+const ClientBudget = React.lazy(() => import("@/pages/client/ClientBudget"));
+const ClientPartners = React.lazy(() => import("@/pages/client/ClientPartners"));
+const ClientMusicPlaylists = React.lazy(() => import("@/pages/client/ClientMusicPlaylists"));
+const ClientFloorPlans = React.lazy(() => import("@/pages/client/ClientFloorPlans"));
+const ClientMenus = React.lazy(() => import("@/pages/client/ClientMenus"));
+const ClientProjectDashboard = React.lazy(() => import("@/pages/client/ClientProjectDashboard"));
+const ClientMiniSite = React.lazy(() => import("@/pages/client/ClientMiniSite"));
+const ClientDayOfCommunication = React.lazy(() => import("@/pages/client/ClientDayOfCommunication"));
+const ClientPinterbest = React.lazy(() => import("@/pages/client/ClientPinterbest"));
+const ClientLiveStreaming = React.lazy(() => import("@/pages/client/ClientLiveStreaming"));
+const ClientPhotos = React.lazy(() => import("@/pages/client/ClientPhotos"));
+const ClientRequests = React.lazy(() => import("@/pages/client/ClientRequests"));
+const ClientAccount = React.lazy(() => import("@/pages/client/ClientAccount"));
+const ClientPartnerRatings = React.lazy(() => import("@/pages/client/ClientPartnerRatings"));
+const ClientWeddingPackages = React.lazy(() => import("@/pages/client/ClientWeddingPackages"));
+const ClientPayments = React.lazy(() => import("@/pages/client/ClientPayments"));
+const TwoFactorSetup = React.lazy(() => import("@/pages/client/TwoFactorSetup"));
+const AdvancedSecurity = React.lazy(() => import("@/pages/client/AdvancedSecurity"));
+const ClientTalkshows = React.lazy(() => import("@/pages/client/ClientTalkshows"));
+const ClientPodcasts = React.lazy(() => import("@/pages/client/ClientPodcasts"));
 
-const ClientRoutes = () => {
+// Composant de chargement
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center h-screen">
+    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    <span className="ml-2 text-lg font-medium">Chargement...</span>
+  </div>
+);
+
+const ClientRoutes: React.FC = () => {
   return (
-    <Routes>
-      <Route element={<ProtectedRoute requiredRole={UserRole.CLIENT} />}>
-        <Route path="dashboard" element={<ClientDashboard />} />
-        <Route path="tasks" element={<ClientTasks />} />
-        <Route path="guests" element={<ClientGuests />} />
-        <Route path="budget" element={<ClientBudget />} />
-        <Route path="partners" element={<ClientPartners />} />
-        <Route path="account" element={<ClientAccount />} />
-        <Route path="photos" element={<ClientPhotos />} />
-        <Route path="menus" element={<ClientMenus />} />
-        <Route path="floor-plans" element={<ClientFloorPlans />} />
-        <Route path="music" element={<ClientMusicPlaylists />} />
-        <Route path="mini-site" element={<ClientMiniSite />} />
-        <Route path="pinterbest" element={<ClientPinterbest />} />
-        <Route path="todo" element={<ClientTodoList />} />
-        <Route path="requests" element={<ClientRequests />} />
-        <Route path="project" element={<ClientProjectDashboard />} />
-        <Route path="payments" element={<ClientPayments />} />
-        <Route path="wedding-packages" element={<ClientWeddingPackages />} />
-        <Route path="live" element={<ClientLiveStreaming />} />
-        <Route path="podcasts" element={<ClientPodcasts />} />
-        <Route path="talkshows" element={<ClientTalkshows />} />
-        <Route path="ratings" element={<ClientPartnerRatings />} />
-        <Route path="day-of" element={<ClientDayOfCommunication />} />
-        <Route path="security" element={<AdvancedSecurity />} />
-        <Route path="2fa" element={<TwoFactorSetup />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+    <ProtectedRoute>
+      <ClientAppWrapper>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="dashboard" element={<ClientDashboard />} />
+            <Route path="tasks" element={<ClientTasks />} />
+            <Route path="todo" element={<ClientTodoList />} />
+            <Route path="guests" element={<ClientGuests />} />
+            <Route path="budget" element={<ClientBudget />} />
+            <Route path="partners" element={<ClientPartners />} />
+            <Route path="music-playlists" element={<ClientMusicPlaylists />} />
+            <Route path="floor-plans" element={<ClientFloorPlans />} />
+            <Route path="menus" element={<ClientMenus />} />
+            <Route path="project" element={<ClientProjectDashboard />} />
+            <Route path="mini-site" element={<ClientMiniSite />} />
+            <Route path="day-of-communication" element={<ClientDayOfCommunication />} />
+            <Route path="pinterbest" element={<ClientPinterbest />} />
+            <Route path="livestream" element={<ClientLiveStreaming />} />
+            <Route path="photos" element={<ClientPhotos />} />
+            <Route path="requests" element={<ClientRequests />} />
+            <Route path="account" element={<ClientAccount />} />
+            <Route path="ratings" element={<ClientPartnerRatings />} />
+            <Route path="wedding-packages" element={<ClientWeddingPackages />} />
+            <Route path="payments" element={<ClientPayments />} />
+            <Route path="2fa-setup" element={<TwoFactorSetup />} />
+            <Route path="security" element={<AdvancedSecurity />} />
+            <Route path="talkshows" element={<ClientTalkshows />} />
+            <Route path="podcasts" element={<ClientPodcasts />} />
+          </Routes>
+        </Suspense>
+      </ClientAppWrapper>
+    </ProtectedRoute>
   );
 };
 
