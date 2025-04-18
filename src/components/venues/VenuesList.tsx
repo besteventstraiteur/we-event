@@ -1,6 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -15,28 +14,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Search, Eye, Download, MapPin } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 import { useToast } from '@/hooks/use-toast';
 import FloorPlanner from '../floor-planner/FloorPlanner';
-
-interface Venue {
-  id: string;
-  name: string;
-  partner: string;
-  location: string;
-  capacity: number;
-  floorPlan: string;
-  price?: string;
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
-  imageUrl?: string;
-}
+import VenueSearch from './list/VenueSearch';
+import VenueGrid from './list/VenueGrid';
+import { Venue } from '@/types/venueTypes';
 
 interface VenuesListProps {
   venues: Venue[];
@@ -49,31 +33,36 @@ const VenuesList: React.FC<VenuesListProps> = ({ venues = [], selectedVenueId })
   const [viewFloorPlan, setViewFloorPlan] = useState(false);
   const { toast } = useToast();
 
-  // Filtrer les salles selon le terme de recherche
   const filteredVenues = venues.filter(venue => 
     venue.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     venue.partner.toLowerCase().includes(searchTerm.toLowerCase()) ||
     venue.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Effet pour sélectionner la salle quand selectedVenueId change
-  useEffect(() => {
-    if (selectedVenueId) {
-      const venue = venues.find(v => v.id === selectedVenueId);
-      if (venue) {
-        // Faire défiler jusqu'à la carte de la salle sélectionnée
-        const element = document.getElementById(`venue-card-${selectedVenueId}`);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          // Ajouter une classe pour mettre en évidence brièvement la carte
-          element.classList.add('ring-2', 'ring-vip-gold', 'ring-opacity-70');
-          setTimeout(() => {
-            element.classList.remove('ring-2', 'ring-vip-gold', 'ring-opacity-70');
-          }, 2000);
-        }
-      }
+  const handleViewFloorPlan = (venue: Venue) => {
+    setSelectedVenue(venue);
+    setViewFloorPlan(true);
+  };
+
+  const handleDownloadPlan = (venue: Venue) => {
+    if (venue.floorPlan) {
+      const blob = new Blob([venue.floorPlan], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${venue.name.replace(/\s+/g, '_').toLowerCase()}.json`;
+      link.click();
+      
+      toast({
+        description: `Plan téléchargé: ${venue.name}`
+      });
+    } else {
+      toast({
+        title: "Erreur",
+        description: "Plan non disponible",
+        variant: "destructive"
+      });
     }
-  }, [selectedVenueId, venues]);
+  };
 
   return (
     <div className="flex flex-col">
@@ -89,108 +78,18 @@ const VenuesList: React.FC<VenuesListProps> = ({ venues = [], selectedVenueId })
           </div>
         </CardHeader>
         <CardContent>
-          <div className="relative flex w-full max-w-sm mb-6">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-vip-gray-400" />
-            <Input
-              type="search"
-              placeholder="Rechercher une salle..."
-              className="pl-9 bg-vip-gray-800 border-vip-gray-700 text-vip-white"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredVenues.length > 0 ? (
-              filteredVenues.map((venue) => (
-                <Card 
-                  key={venue.id} 
-                  id={`venue-card-${venue.id}`}
-                  className={`bg-vip-gray-800 border-vip-gray-700 overflow-hidden transition-all duration-300 ${
-                    selectedVenueId === venue.id ? 'ring-2 ring-vip-gold' : ''
-                  }`}
-                >
-                  <div className="h-40 bg-vip-gray-700 flex items-center justify-center relative overflow-hidden">
-                    {venue.imageUrl ? (
-                      <img 
-                        src={venue.imageUrl} 
-                        alt={venue.name}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                      />
-                    ) : (
-                      <svg className="h-12 w-12 text-vip-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                      </svg>
-                    )}
-                    
-                    {venue.price && (
-                      <Badge className="absolute top-2 right-2 bg-vip-gold text-vip-black">
-                        {venue.price}
-                      </Badge>
-                    )}
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="text-lg font-bold text-vip-white mb-1">{venue.name}</h3>
-                    <p className="text-sm text-vip-gray-400 mb-2">{venue.partner}</p>
-                    <div className="flex justify-between items-center text-sm text-vip-gray-400 mb-3">
-                      <div className="flex items-center">
-                        <MapPin size={12} className="mr-1" />
-                        <span>{venue.location}</span>
-                      </div>
-                      <span>{venue.capacity} personnes</span>
-                    </div>
-                    <div className="flex mt-4 justify-between">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-vip-gray-400 border-vip-gray-600 hover:text-vip-white"
-                        onClick={() => {
-                          setSelectedVenue(venue);
-                          setViewFloorPlan(true);
-                        }}
-                      >
-                        <Eye size={16} className="mr-1" /> Voir le plan
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-vip-gray-400 hover:text-vip-white"
-                        onClick={() => {
-                          if (venue.floorPlan) {
-                            const blob = new Blob([venue.floorPlan], { type: 'application/json' });
-                            const link = document.createElement('a');
-                            link.href = URL.createObjectURL(blob);
-                            link.download = `${venue.name.replace(/\s+/g, '_').toLowerCase()}.json`;
-                            link.click();
-                            
-                            toast({
-                              description: `Plan téléchargé: ${venue.name}`
-                            });
-                          } else {
-                            toast({
-                              title: "Erreur",
-                              description: "Plan non disponible",
-                              variant: "destructive"
-                            });
-                          }
-                        }}
-                      >
-                        <Download size={16} className="mr-1" /> Télécharger
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-10 text-vip-gray-400">
-                Aucune salle trouvée
-              </div>
-            )}
-          </div>
+          <VenueSearch 
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+          />
+          <VenueGrid 
+            venues={filteredVenues}
+            onViewFloorPlan={handleViewFloorPlan}
+            onDownloadPlan={handleDownloadPlan}
+          />
         </CardContent>
       </Card>
 
-      {/* Modal pour afficher le plan */}
       <Dialog open={viewFloorPlan} onOpenChange={setViewFloorPlan}>
         <DialogContent className="bg-vip-gray-900 border-vip-gray-800 text-vip-white max-w-5xl">
           <DialogHeader>
