@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
+import { UserRole } from '@/utils/accessControl';
 
 const HomePage: React.FC = () => {
   const { user, isAuthenticated, hasRole } = useAuth();
@@ -11,9 +12,9 @@ const HomePage: React.FC = () => {
   // Role-based dashboard redirection
   const getDashboardPath = () => {
     if (!user) return '/login';
-    if (hasRole('ADMIN')) return '/admin/dashboard';
-    if (hasRole('PARTNER')) return '/partner/dashboard';
-    if (hasRole('CLIENT')) return '/client/dashboard';
+    if (hasRole(UserRole.ADMIN)) return '/admin/dashboard';
+    if (hasRole(UserRole.PARTNER)) return '/partner/dashboard';
+    if (hasRole(UserRole.CLIENT)) return '/client/dashboard';
     return '/unauthorized';
   };
 
