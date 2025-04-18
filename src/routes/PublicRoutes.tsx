@@ -3,7 +3,7 @@ import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import LoadingFallback from "@/components/LoadingFallback";
 
-// Chargement paresseux des composants publics
+// Lazy loading des composants publics
 const HomePage = React.lazy(() => import("@/pages/HomePage"));
 const LoginPage = React.lazy(() => import("@/pages/LoginPage"));
 const RegisterClientPage = React.lazy(() => import("@/pages/RegisterClientPage"));
@@ -33,7 +33,6 @@ const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
         </Suspense>
       } />
       
-      {/* Routes d'authentification */}
       <Route path="/login" element={
         <Suspense fallback={<LoadingFallback />}>
           <LoginPage />
@@ -55,7 +54,6 @@ const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
         </Suspense>
       } />
       
-      {/* Routes publiques */}
       <Route path="/partners" element={
         <Suspense fallback={<LoadingFallback />}>
           <PartnersPage />
@@ -87,7 +85,6 @@ const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
         </Suspense>
       } />
       
-      {/* Routes invités */}
       <Route path="/guest" element={
         <Suspense fallback={<LoadingFallback />}>
           <GuestDashboard />
@@ -99,7 +96,6 @@ const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
         </Suspense>
       } />
       
-      {/* Page 404 */}
       <Route path="*" element={
         <Suspense fallback={<LoadingFallback />}>
           <NotFound />

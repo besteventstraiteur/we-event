@@ -6,7 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import LoadingFallback from "@/components/LoadingFallback";
 import { MapProvider } from "@/components/venues/map/MapContext";
 
-// Lazy loading main route modules
+// Lazy loading des modules principaux
 const PublicRoutes = React.lazy(() => import("@/routes/PublicRoutes"));
 const ClientRoutes = React.lazy(() => import("@/routes/ClientRoutes"));
 const PartnerRoutes = React.lazy(() => import("@/routes/PartnerRoutes"));
