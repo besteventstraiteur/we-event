@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
 import ClientAppWrapper from "@/components/client/ClientAppWrapper";
+import LoadingFallback from "@/components/LoadingFallback";
 
 // Chargement paresseux des composants client
 const ClientDashboard = React.lazy(() => import("@/pages/client/ClientDashboard"));
@@ -31,48 +32,134 @@ const AdvancedSecurity = React.lazy(() => import("@/pages/client/AdvancedSecurit
 const ClientTalkshows = React.lazy(() => import("@/pages/client/ClientTalkshows"));
 const ClientPodcasts = React.lazy(() => import("@/pages/client/ClientPodcasts"));
 
-// Composant de chargement
-const LoadingFallback = () => (
-  <div className="flex items-center justify-center h-screen">
-    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-    <span className="ml-2 text-lg font-medium">Chargement...</span>
-  </div>
-);
-
 const ClientRoutes: React.FC = () => {
   return (
-    <ProtectedRoute>
-      <ClientAppWrapper>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="dashboard" element={<ClientDashboard />} />
-            <Route path="tasks" element={<ClientTasks />} />
-            <Route path="todo" element={<ClientTodoList />} />
-            <Route path="guests" element={<ClientGuests />} />
-            <Route path="budget" element={<ClientBudget />} />
-            <Route path="partners" element={<ClientPartners />} />
-            <Route path="music-playlists" element={<ClientMusicPlaylists />} />
-            <Route path="floor-plans" element={<ClientFloorPlans />} />
-            <Route path="menus" element={<ClientMenus />} />
-            <Route path="project" element={<ClientProjectDashboard />} />
-            <Route path="mini-site" element={<ClientMiniSite />} />
-            <Route path="day-of-communication" element={<ClientDayOfCommunication />} />
-            <Route path="pinterbest" element={<ClientPinterbest />} />
-            <Route path="livestream" element={<ClientLiveStreaming />} />
-            <Route path="photos" element={<ClientPhotos />} />
-            <Route path="requests" element={<ClientRequests />} />
-            <Route path="account" element={<ClientAccount />} />
-            <Route path="ratings" element={<ClientPartnerRatings />} />
-            <Route path="wedding-packages" element={<ClientWeddingPackages />} />
-            <Route path="payments" element={<ClientPayments />} />
-            <Route path="2fa-setup" element={<TwoFactorSetup />} />
-            <Route path="security" element={<AdvancedSecurity />} />
-            <Route path="talkshows" element={<ClientTalkshows />} />
-            <Route path="podcasts" element={<ClientPodcasts />} />
-          </Routes>
-        </Suspense>
-      </ClientAppWrapper>
-    </ProtectedRoute>
+    <Routes>
+      <Route element={<ProtectedRoute />}>
+        <Route element={<ClientAppWrapper />}>
+          <Route path="dashboard" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientDashboard />
+            </Suspense>
+          } />
+          <Route path="tasks" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientTasks />
+            </Suspense>
+          } />
+          <Route path="todo" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientTodoList />
+            </Suspense>
+          } />
+          <Route path="guests" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientGuests />
+            </Suspense>
+          } />
+          <Route path="budget" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientBudget />
+            </Suspense>
+          } />
+          <Route path="partners" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientPartners />
+            </Suspense>
+          } />
+          <Route path="music-playlists" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientMusicPlaylists />
+            </Suspense>
+          } />
+          <Route path="floor-plans" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientFloorPlans />
+            </Suspense>
+          } />
+          <Route path="menus" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientMenus />
+            </Suspense>
+          } />
+          <Route path="project" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientProjectDashboard />
+            </Suspense>
+          } />
+          <Route path="mini-site" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientMiniSite />
+            </Suspense>
+          } />
+          <Route path="day-of-communication" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientDayOfCommunication />
+            </Suspense>
+          } />
+          <Route path="pinterbest" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientPinterbest />
+            </Suspense>
+          } />
+          <Route path="livestream" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientLiveStreaming />
+            </Suspense>
+          } />
+          <Route path="photos" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientPhotos />
+            </Suspense>
+          } />
+          <Route path="requests" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientRequests />
+            </Suspense>
+          } />
+          <Route path="account" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientAccount />
+            </Suspense>
+          } />
+          <Route path="ratings" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientPartnerRatings />
+            </Suspense>
+          } />
+          <Route path="wedding-packages" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientWeddingPackages />
+            </Suspense>
+          } />
+          <Route path="payments" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientPayments />
+            </Suspense>
+          } />
+          <Route path="2fa-setup" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <TwoFactorSetup />
+            </Suspense>
+          } />
+          <Route path="security" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <AdvancedSecurity />
+            </Suspense>
+          } />
+          <Route path="talkshows" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientTalkshows />
+            </Suspense>
+          } />
+          <Route path="podcasts" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ClientPodcasts />
+            </Suspense>
+          } />
+        </Route>
+      </Route>
+    </Routes>
   );
 };
 

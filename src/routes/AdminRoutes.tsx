@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import AdminRoute from "@/components/security/AdminRoute";
+import LoadingFallback from "@/components/LoadingFallback";
 
 // Chargement paresseux des composants administrateur
 const AdminDashboard = React.lazy(() => import("@/pages/admin/AdminDashboard"));
@@ -24,40 +25,102 @@ const AdminSubscriptions = React.lazy(() => import("@/pages/admin/AdminSubscript
 const AdminBackup = React.lazy(() => import("@/pages/admin/AdminBackup"));
 const AdminPartnerGamification = React.lazy(() => import("@/pages/admin/AdminPartnerGamification"));
 
-// Composant de chargement
-const LoadingFallback = () => (
-  <div className="flex items-center justify-center h-screen">
-    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-    <span className="ml-2 text-lg font-medium">Chargement...</span>
-  </div>
-);
-
 const AdminRoutes: React.FC = () => {
   return (
-    <AdminRoute>
-      <Suspense fallback={<LoadingFallback />}>
-        <Routes>
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="clients" element={<AdminClients />} />
-          <Route path="partners" element={<AdminPartners />} />
-          <Route path="partner-types" element={<AdminPartnerTypes />} />
-          <Route path="guests" element={<AdminGuests />} />
-          <Route path="venues" element={<AdminVenues />} />
-          <Route path="presentations" element={<AdminPresentationManagement />} />
-          <Route path="mlm" element={<AdminMLM />} />
-          <Route path="statistics" element={<AdminStatistics />} />
-          <Route path="kpi-dashboard" element={<AdminKpiDashboard />} />
-          <Route path="recommendations" element={<AdminRecommendations />} />
-          <Route path="ratings" element={<AdminRatings />} />
-          <Route path="talkshows" element={<AdminTalkshows />} />
-          <Route path="podcasts" element={<AdminPodcasts />} />
-          <Route path="wedding-packages" element={<AdminWeddingPackages />} />
-          <Route path="subscriptions" element={<AdminSubscriptions />} />
-          <Route path="backup" element={<AdminBackup />} />
-          <Route path="partner-gamification" element={<AdminPartnerGamification />} />
-        </Routes>
-      </Suspense>
-    </AdminRoute>
+    <Routes>
+      <Route element={<AdminRoute />}>
+        <Route path="dashboard" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminDashboard />
+          </Suspense>
+        } />
+        <Route path="clients" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminClients />
+          </Suspense>
+        } />
+        <Route path="partners" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminPartners />
+          </Suspense>
+        } />
+        <Route path="partner-types" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminPartnerTypes />
+          </Suspense>
+        } />
+        <Route path="guests" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminGuests />
+          </Suspense>
+        } />
+        <Route path="venues" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminVenues />
+          </Suspense>
+        } />
+        <Route path="presentations" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminPresentationManagement />
+          </Suspense>
+        } />
+        <Route path="mlm" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminMLM />
+          </Suspense>
+        } />
+        <Route path="statistics" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminStatistics />
+          </Suspense>
+        } />
+        <Route path="kpi-dashboard" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminKpiDashboard />
+          </Suspense>
+        } />
+        <Route path="recommendations" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminRecommendations />
+          </Suspense>
+        } />
+        <Route path="ratings" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminRatings />
+          </Suspense>
+        } />
+        <Route path="talkshows" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminTalkshows />
+          </Suspense>
+        } />
+        <Route path="podcasts" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminPodcasts />
+          </Suspense>
+        } />
+        <Route path="wedding-packages" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminWeddingPackages />
+          </Suspense>
+        } />
+        <Route path="subscriptions" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminSubscriptions />
+          </Suspense>
+        } />
+        <Route path="backup" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminBackup />
+          </Suspense>
+        } />
+        <Route path="partner-gamification" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminPartnerGamification />
+          </Suspense>
+        } />
+      </Route>
+    </Routes>
   );
 };
 

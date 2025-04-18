@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
+import LoadingFallback from "@/components/LoadingFallback";
 
 // Chargement paresseux des composants partenaire
 const PartnerDashboard = React.lazy(() => import("@/pages/partner/PartnerDashboard"));
@@ -33,51 +34,149 @@ const CrmInvoices = React.lazy(() => import("@/pages/crm/invoices/CrmInvoices"))
 const CrmProducts = React.lazy(() => import("@/pages/crm/products/CrmProducts"));
 const CrmReports = React.lazy(() => import("@/pages/crm/reports/CrmReports"));
 
-// Composant de chargement
-const LoadingFallback = () => (
-  <div className="flex items-center justify-center h-screen">
-    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-    <span className="ml-2 text-lg font-medium">Chargement...</span>
-  </div>
-);
-
 const PartnerRoutes: React.FC = () => {
   return (
-    <ProtectedRoute>
-      <Suspense fallback={<LoadingFallback />}>
-        <Routes>
-          <Route path="dashboard" element={<PartnerDashboard />} />
-          <Route path="profile" element={<PartnerProfile />} />
-          <Route path="tasks" element={<PartnerTasks />} />
-          <Route path="calendar" element={<PartnerCalendar />} />
-          <Route path="photos" element={<PartnerPhotos />} />
-          <Route path="requests" element={<PartnerRequests />} />
-          <Route path="stats" element={<PartnerStats />} />
-          <Route path="menus" element={<PartnerMenus />} />
-          <Route path="best-awards" element={<PartnerBestAwards />} />
-          <Route path="music-playlists" element={<PartnerMusicPlaylists />} />
-          <Route path="playlists" element={<PartnerPlaylists />} />
-          <Route path="floor-plans" element={<PartnerFloorPlans />} />
-          <Route path="livestream" element={<PartnerLiveStreaming />} />
-          <Route path="subscription" element={<PartnerSubscription />} />
-          <Route path="recommendations" element={<PartnerRecommendations />} />
-          <Route path="training" element={<PartnerTraining />} />
-          <Route path="gamification" element={<PartnerGamification />} />
-          <Route path="mlm" element={<PartnerMLM />} />
-          <Route path="talkshows" element={<PartnerTalkshows />} />
-          <Route path="podcasts" element={<PartnerPodcasts />} />
-          
-          {/* Routes CRM */}
-          <Route path="crm" element={<CrmDashboard />} />
-          <Route path="crm/opportunities" element={<CrmOpportunities />} />
-          <Route path="crm/contacts" element={<CrmContacts />} />
-          <Route path="crm/quotes" element={<CrmQuotes />} />
-          <Route path="crm/invoices" element={<CrmInvoices />} />
-          <Route path="crm/products" element={<CrmProducts />} />
-          <Route path="crm/reports" element={<CrmReports />} />
-        </Routes>
-      </Suspense>
-    </ProtectedRoute>
+    <Routes>
+      <Route element={<ProtectedRoute />}>
+        <Route path="dashboard" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerDashboard />
+          </Suspense>
+        } />
+        <Route path="profile" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerProfile />
+          </Suspense>
+        } />
+        <Route path="tasks" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerTasks />
+          </Suspense>
+        } />
+        <Route path="calendar" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerCalendar />
+          </Suspense>
+        } />
+        <Route path="photos" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerPhotos />
+          </Suspense>
+        } />
+        <Route path="requests" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerRequests />
+          </Suspense>
+        } />
+        <Route path="stats" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerStats />
+          </Suspense>
+        } />
+        <Route path="menus" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerMenus />
+          </Suspense>
+        } />
+        <Route path="best-awards" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerBestAwards />
+          </Suspense>
+        } />
+        <Route path="music-playlists" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerMusicPlaylists />
+          </Suspense>
+        } />
+        <Route path="playlists" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerPlaylists />
+          </Suspense>
+        } />
+        <Route path="floor-plans" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerFloorPlans />
+          </Suspense>
+        } />
+        <Route path="livestream" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerLiveStreaming />
+          </Suspense>
+        } />
+        <Route path="subscription" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerSubscription />
+          </Suspense>
+        } />
+        <Route path="recommendations" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerRecommendations />
+          </Suspense>
+        } />
+        <Route path="training" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerTraining />
+          </Suspense>
+        } />
+        <Route path="gamification" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerGamification />
+          </Suspense>
+        } />
+        <Route path="mlm" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerMLM />
+          </Suspense>
+        } />
+        <Route path="talkshows" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerTalkshows />
+          </Suspense>
+        } />
+        <Route path="podcasts" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PartnerPodcasts />
+          </Suspense>
+        } />
+        
+        {/* Routes CRM */}
+        <Route path="crm" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <CrmDashboard />
+          </Suspense>
+        } />
+        <Route path="crm/opportunities" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <CrmOpportunities />
+          </Suspense>
+        } />
+        <Route path="crm/contacts" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <CrmContacts />
+          </Suspense>
+        } />
+        <Route path="crm/quotes" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <CrmQuotes />
+          </Suspense>
+        } />
+        <Route path="crm/invoices" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <CrmInvoices />
+          </Suspense>
+        } />
+        <Route path="crm/products" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <CrmProducts />
+          </Suspense>
+        } />
+        <Route path="crm/reports" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <CrmReports />
+          </Suspense>
+        } />
+      </Route>
+    </Routes>
   );
 };
 
