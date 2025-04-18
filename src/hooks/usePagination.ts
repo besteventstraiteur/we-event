@@ -29,8 +29,9 @@ export const usePagination = ({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
 
-  const pageItems = Array.from({ length: totalItems })
-    .slice(startIndex, endIndex);
+  // Fix: Generate a properly typed array of indices
+  const pageItems = Array.from({ length: endIndex - startIndex }, 
+    (_, i) => startIndex + i);
 
   const goToPage = (page: number) => {
     const validPage = Math.max(1, Math.min(page, totalPages));

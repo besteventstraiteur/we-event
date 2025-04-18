@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import GuestList from '@/components/guests/GuestList';
 import type { Guest, Table } from '@/types/floorPlanTypes';
@@ -324,7 +323,7 @@ const GuestsTab: React.FC<GuestsTabProps> = ({ guests, onSave, tables }) => {
       </div>
       
       <GuestList 
-        initialGuests={isOnline ? guests : localGuests} 
+        guests={isOnline ? guests : localGuests} 
         onSave={handleSave}
         tables={tables.map(table => ({ id: table.id, name: table.name }))}
         menuOptions={[

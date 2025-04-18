@@ -7,13 +7,21 @@ import { Guest } from '@/types/floorPlanTypes';
 
 interface GuestListProps {
   guests: Guest[];
+  onSave?: (updatedGuests: Guest[]) => void;
+  tables?: { id: string; name: string }[];
+  menuOptions?: { id: string; name: string; menuName: string }[];
 }
 
 const ITEMS_PER_PAGE = 50;
 const ITEM_HEIGHT = 60;
 const LIST_HEIGHT = 400;
 
-const GuestList: React.FC<GuestListProps> = ({ guests }) => {
+const GuestList: React.FC<GuestListProps> = ({ 
+  guests, 
+  onSave,
+  tables = [],
+  menuOptions = []
+}) => {
   const {
     currentPage,
     totalPages,
