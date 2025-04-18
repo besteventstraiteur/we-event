@@ -28,7 +28,10 @@ export const ClientGuestListVirtual: React.FC = () => {
     enfant: i % 5 === 0,
     table: i % 10 === 0 ? i / 10 + 1 : null,
     commentaires: i % 3 === 0 ? 'Commentaire test' : undefined,
-    allergies: i % 4 === 0 ? ['gluten', 'lactose'] : undefined
+    allergies: i % 4 === 0 ? ['gluten', 'lactose'] : undefined,
+    conjoint: i % 6 === 0 ? `Conjoint ${i}` : undefined,
+    enfants: i % 7 === 0 ? [`Enfant 1 de ${i}`, `Enfant 2 de ${i}`] : undefined,
+    notes: i % 8 === 0 ? 'Notes additionnelles' : undefined
   }));
 
   return (

@@ -15,4 +15,7 @@ export interface Guest {
   table: number | null;
   commentaires?: string;
   allergies?: string[];
+  conjoint?: string;
+  enfants?: string[];
+  notes?: string;
 }
