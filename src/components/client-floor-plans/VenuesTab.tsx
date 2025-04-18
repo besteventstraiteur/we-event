@@ -4,21 +4,7 @@ import VenuesList from '@/components/venues/VenuesList';
 import VenuesMap from '@/components/venues/VenuesMap';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin, List } from 'lucide-react';
-
-interface Venue {
-  id: string;
-  name: string;
-  partner: string;
-  location: string;
-  capacity: number;
-  floorPlan: string;
-  price?: string;
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
-  imageUrl?: string;
-}
+import { Venue } from '@/types/venueTypes';
 
 interface VenuesTabProps {
   venues: Venue[];
