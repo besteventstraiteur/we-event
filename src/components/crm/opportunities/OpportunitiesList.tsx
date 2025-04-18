@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Table,
@@ -23,7 +22,6 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import OpportunityFormDialog, { type Opportunity } from "./OpportunityFormDialog";
 
-// Données de démo pour l'interface
 const mockOpportunities: Opportunity[] = [
   {
     id: "opp1",
@@ -114,7 +112,6 @@ const OpportunitiesList = () => {
   
   const handleSaveOpportunity = (opportunityData: Omit<Opportunity, "id">) => {
     if (editingOpportunity) {
-      // Updating existing opportunity
       setOpportunities(opportunities.map(opp => 
         opp.id === editingOpportunity.id 
           ? { ...opportunityData, id: editingOpportunity.id } 
@@ -125,7 +122,6 @@ const OpportunitiesList = () => {
         description: `L'opportunité ${opportunityData.name} a été mise à jour`,
       });
     } else {
-      // Creating new opportunity
       const newOpportunity: Opportunity = {
         ...opportunityData,
         id: `opp${opportunities.length + 1}`,
@@ -148,8 +144,8 @@ const OpportunitiesList = () => {
     const stageConfig = {
       new: { label: "Nouveau", variant: "default" as const },
       qualified: { label: "Qualifié", variant: "secondary" as const },
-      proposal: { label: "Proposition", variant: "info" as const },
-      negotiation: { label: "Négociation", variant: "warning" as const },
+      proposal: { label: "Proposition", variant: "outline" as const },
+      negotiation: { label: "Négociation", variant: "default" as const },
       closed_won: { label: "Gagné", variant: "success" as const },
       closed_lost: { label: "Perdu", variant: "destructive" as const },
     };
