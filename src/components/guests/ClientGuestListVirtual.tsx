@@ -4,23 +4,31 @@ import VirtualizedGuestList from './VirtualizedGuestList';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { Guest } from '@/types/guestTypes';
 
 export const ClientGuestListVirtual: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   
-  // Dans une application réelle, l'ID de l'événement serait récupéré du contexte ou des paramètres d'URL
   const eventId = 'current-event-id';
 
-  // Simuler une liste d'invités pour démonstration
-  const mockGuests = Array(50).fill(0).map((_, i) => ({
+  // Mock guests data with complete Guest type implementation
+  const mockGuests: Guest[] = Array(50).fill(0).map((_, i) => ({
     id: `guest-${i + 1}`,
     prenom: `Prénom ${i + 1}`,
     nom: `Nom ${i + 1}`,
     email: `invite${i + 1}@example.com`,
     telephone: i % 3 === 0 ? `+33 6 ${Math.floor(Math.random() * 90000000) + 10000000}` : undefined,
-    statut: ['confirmed', 'pending', 'declined'][i % 3],
-    menu_option: i % 5 === 0 ? 'vegetarian' : 'standard'
+    statut: ['confirmed', 'pending', 'declined'][i % 3] as Guest['statut'],
+    menu_option: ['standard', 'vegetarian', 'vegan', 'other'][i % 4] as Guest['menu_option'],
+    ceremonie: true,
+    vin: true,
+    repas: true,
+    brunch: i % 2 === 0,
+    enfant: i % 5 === 0,
+    table: i % 10 === 0 ? i / 10 + 1 : null,
+    commentaires: i % 3 === 0 ? 'Commentaire test' : undefined,
+    allergies: i % 4 === 0 ? ['gluten', 'lactose'] : undefined
   }));
 
   return (
