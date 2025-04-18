@@ -1,83 +1,138 @@
+# Architecture de We Event 2.0
 
-# Architecture de We Event
+## Mise à jour globale de l'architecture
 
-## Structure Modulaire Optimisée
-
-Notre application est construite avec une architecture modulaire avancée qui permet un chargement dynamique et optimisé des composants. Cette approche améliore significativement les performances et l'expérience utilisateur.
+### Structure modulaire améliorée
 
 ```mermaid
 graph TD
-    A[App] --> B[AppRouter]
-    B --> C[PublicRoutes]
-    B --> D[ClientRoutes]
-    B --> E[PartnerRoutes]
-    B --> F[AdminRoutes]
+    A[App] --> B[Modules]
+    B --> C[Admin]
+    B --> D[Client]
+    B --> E[Partner]
+    B --> F[Shared]
     
-    C --> C1[Pages publiques]
-    D --> D1[Pages client]
-    E --> E1[Pages partenaire]
-    F --> F1[Pages admin]
+    C --> C1[Dashboard]
+    C --> C2[UserManagement]
+    C --> C3[Analytics]
+    
+    D --> D1[EventPlanning]
+    D --> D2[Guests]
+    D --> D3[Budget]
+    
+    E --> E1[Profile]
+    E --> E2[Recommendations]
+    E --> E3[Services]
+    
+    F --> F1[Authentication]
+    F --> F2[UI Components]
+    F --> F3[Utilities]
 ```
 
-### Modules Principaux
+### Principes architecturaux
 
-- **Public Routes**: Pages accessibles sans authentification (accueil, connexion, inscription)
-- **Client Routes**: Fonctionnalités pour les clients (planification d'événements, gestion des invités)
-- **Partner Routes**: Fonctionnalités pour les partenaires (profil, calendrier, services)
-- **Admin Routes**: Fonctionnalités administratives (tableau de bord, gestion des utilisateurs)
+1. **Modularité**: Chaque module est découplé et indépendant
+2. **Lazy Loading**: Chargement dynamique des modules
+3. **Séparation des préoccupations**
+4. **Performance**: Optimisation des rendus et des requêtes
 
-### Stratégie de Chargement Optimisée
+### Stratégie de State Management
 
-Nous utilisons systématiquement `React.lazy()` et `Suspense` pour charger les modules et composants à la demande, ce qui permet de :
+- Utilisation de React Query pour la gestion des états serveur
+- Context API pour les états globaux légers
+- Zustand pour les états complexes nécessitant plus de logique
 
-- Réduire significativement la taille du bundle initial
-- Améliorer les temps de chargement initial et la performance perçue
-- Optimiser l'expérience utilisateur avec des écrans de chargement appropriés
-- Réduire la consommation de ressources sur les appareils mobiles
+### Sécurité et Authentification
 
-### Exemple de Chargement Dynamique
+- Authentification via Supabase Auth
+- Politiques de Row Level Security (RLS)
+- Gestion des rôles et permissions granulaires
+- Protection contre les injections et les attaques CSRF
 
-```typescript
-// Chargement paresseux des modules principaux
-const PublicRoutes = React.lazy(() => import("@/routes/PublicRoutes"));
+### Performance et Optimisation
 
-// Utilisation avec Suspense pour afficher un état de chargement
-<Suspense fallback={<LoadingFallback />}>
-  <Routes>
-    <Route path="/*" element={<PublicRoutes />} />
-  </Routes>
-</Suspense>
-```
+- Code splitting
+- Memoization avec `useMemo` et `useCallback`
+- Lazy loading des composants et des routes
+- Optimisation des requêtes avec React Query
+- Gestion efficace des re-rendus
 
-### Principes Architecturaux Clés
+### Intégrations Externes
 
-- **Séparation des Préoccupations**: Chaque module a une responsabilité unique et bien définie
-- **Chargement Conditionnel**: Les composants sont chargés uniquement lorsqu'ils sont nécessaires
-- **Isolation des Routes**: Routes protégées par rôle (client, partenaire, admin)
-- **Composants de Chargement**: Affichage d'états intermédiaires pendant les imports dynamiques
-- **Performance Mobile**: Optimisation spécifique pour les interfaces mobiles via la détection d'appareils
+- Supabase (Backend as a Service)
+- Stripe (Paiements)
+- OpenAI (Assistant IA)
+- Google Maps API
+- Systèmes de stockage et de médias
 
-### Avantages de cette Architecture
+## Évolution et Maintenabilité
 
-1. **Performance**: Chargement initial rapide, même sur connexions lentes
-2. **Scalabilité**: Facilité d'ajout de nouvelles fonctionnalités sans impacter les performances
-3. **Maintenabilité**: Structure claire et organisée par domaine fonctionnel
-4. **Expérience utilisateur**: Temps de réponse optimisés et transitions fluides
+- Architecture conçue pour une évolutivité horizontale
+- Séparation claire entre les couches présentation, logique et données
+- Documentation technique et commentaires explicites
+- Tests unitaires et d'intégration
 
-### Organisation des Fichiers
+## Roadmap Technique
 
-```
-src/
-├── components/     # Composants réutilisables
-├── routes/         # Configuration des routes par rôle
-│   ├── PublicRoutes.tsx
-│   ├── ClientRoutes.tsx
-│   ├── PartnerRoutes.tsx
-│   └── AdminRoutes.tsx
-├── pages/          # Pages de l'application organisées par rôle
-│   ├── public/
-│   ├── client/
-│   ├── partner/
-│   └── admin/
-└── AppRouter.tsx   # Routeur principal
-```
+### Tâches Prioritaires
+
+1. **Optimisation des Performances**
+   - Implémentation du code splitting par route
+   - Mise en place du lazy loading pour tous les composants lourds
+   - Optimisation des images et ressources statiques
+   - Mise en cache des requêtes API avec React Query
+
+2. **Sécurité et Authentification**
+   - Renforcement de la sécurité des routes
+   - Implémentation de la validation JWT
+   - Mise en place de la protection CSRF
+   - Tests de sécurité et audit
+
+3. **Interface Utilisateur**
+   - Développement des composants réutilisables
+   - Standardisation du design system
+   - Implémentation des transitions et animations
+   - Support multilingue complet
+
+4. **Gestion des Données**
+   - Optimisation des requêtes Supabase
+   - Mise en place du cache côté client
+   - Implémentation de la synchronisation offline
+   - Gestion des conflits de données
+
+5. **Tests et Qualité**
+   - Mise en place des tests unitaires
+   - Implémentation des tests d'intégration
+   - Configuration du CI/CD
+   - Documentation technique complète
+
+6. **Fonctionnalités Métier**
+   - Système de réservation avancé
+   - Gestion des paiements
+   - Intégration des fournisseurs
+   - Module de reporting
+
+7. **Mobile et Accessibilité**
+   - Optimisation mobile-first
+   - Support PWA complet
+   - Tests d'accessibilité WCAG
+   - Support des gestes tactiles
+
+8. **Infrastructure**
+   - Monitoring des performances
+   - Système de logging
+   - Backups automatisés
+   - Scale automatique
+
+### Suivi des Progrès
+
+- **En cours**: Optimisation des performances, Sécurité
+- **À venir**: Interface utilisateur, Tests
+- **Complété**: Architecture modulaire, Lazy loading
+
+### Notes Importantes
+
+- Prioriser la stabilité et la performance
+- Maintenir la compatibilité descendante
+- Documenter tous les changements majeurs
+- Tester sur tous les navigateurs cibles
