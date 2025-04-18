@@ -10,7 +10,11 @@ import TokenRefresher from "@/components/security/TokenRefresher";
 import SessionTimeout from "@/components/security/SessionTimeout";
 import { NetworkStatus } from "./components/app/NetworkStatus";
 
-const AppWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface AppWrapperProps {
+  children: React.ReactNode;
+}
+
+const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
   return (
     <Router>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
