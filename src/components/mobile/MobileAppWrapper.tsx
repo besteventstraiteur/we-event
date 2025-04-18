@@ -2,15 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { useIsMobile, useDeviceType, useOrientation } from '@/hooks/use-mobile';
-import { NetworkStatus } from './app/NetworkStatus';
-import { QuickActions } from './app/QuickActions';
+import { NetworkStatus } from '../app/NetworkStatus';
+import { QuickActions } from '../app/QuickActions';
 
 interface MobileAppWrapperProps {
   children: React.ReactNode;
   type: "client" | "partner" | "admin" | "guest";
 }
 
-// Renamed from AppWrapper to MobileAppWrapper to avoid conflict
 const MobileAppWrapper = ({ children, type }: MobileAppWrapperProps) => {
   const [isNative, setIsNative] = useState(false);
   const isMobile = useIsMobile();
