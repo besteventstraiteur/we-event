@@ -8,6 +8,7 @@ import { partnerCategories, allPartners } from "@/components/partners/partnersDa
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
 import HomeHeader from "@/components/home/HomeHeader";
 import { useDeviceType } from "@/hooks/use-mobile";
+import MetaTags from "@/components/seo/MetaTags";
 
 const PartnersPage: React.FC = () => {
   const deviceType = useDeviceType();
@@ -16,13 +17,15 @@ const PartnersPage: React.FC = () => {
   return (
     <MobileOptimizedLayout fullHeight={true}>
       <div className="min-h-screen bg-white flex flex-col">
+        <MetaTags
+          title="Nos Partenaires de Mariage"
+          description="Découvrez notre sélection exclusive de prestataires de mariage. Photographes, traiteurs, décorateurs et plus encore pour faire de votre mariage un moment inoubliable."
+        />
         <HomeHeader />
-
         <main className={`flex-1 container ${isMobile ? 'py-3 px-3' : 'py-4 md:py-8'}`}>
           <PartnersList partnerCategories={partnerCategories} allPartners={allPartners} />
           <VIPPromotion />
         </main>
-
         <PartnersFooter />
       </div>
     </MobileOptimizedLayout>

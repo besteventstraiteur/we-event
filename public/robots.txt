@@ -7,6 +7,7 @@ Allow: /$
 Allow: /contact$
 Allow: /privacy$
 Allow: /terms$
+Allow: /partners$
 
 # Pages privées
 Disallow: /login$
@@ -22,24 +23,28 @@ Allow: /
 Allow: /contact$
 Allow: /privacy$
 Allow: /terms$
+Allow: /partners$
 
 User-agent: Bingbot
 Allow: /
 Allow: /contact$
 Allow: /privacy$
 Allow: /terms$
+Allow: /partners$
 
 User-agent: Twitterbot
 Allow: /
 Allow: /contact$
 Allow: /privacy$
 Allow: /terms$
+Allow: /partners$
 
 User-agent: facebookexternalhit
 Allow: /
 Allow: /contact$
 Allow: /privacy$
 Allow: /terms$
+Allow: /partners$
 
 # Sitemap
 Sitemap: https://best-events-vip.com/sitemap.xml
