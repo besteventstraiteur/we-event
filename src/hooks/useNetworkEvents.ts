@@ -1,13 +1,14 @@
 
 import { useEffect } from 'react';
-import { formatErrorMessage } from '@/utils/errorHandling';
+import { NetworkError, formatNetworkError } from '@/utils/networkErrorTypes';
 
 interface NetworkEventsProps {
   onOnline: () => void;
   onOffline: () => void;
+  onError?: (error: unknown) => void;
 }
 
-export const useNetworkEvents = ({ onOnline, onOffline }: NetworkEventsProps) => {
+export const useNetworkEvents = ({ onOnline, onOffline, onError }: NetworkEventsProps) => {
   useEffect(() => {
     const updateOnlineStatus = () => {
       try {
@@ -18,7 +19,13 @@ export const useNetworkEvents = ({ onOnline, onOffline }: NetworkEventsProps) =>
           onOffline();
         }
       } catch (error) {
-        console.error('Error updating network status:', formatErrorMessage(error));
+        const networkError = new NetworkError(
+          'Failed to update network status',
+          'CONNECTION_LOST',
+          error
+        );
+        console.error('Error updating network status:', formatNetworkError(networkError));
+        onError?.(networkError);
         // Fall back to offline mode if we can't determine the status
         onOffline();
       }
@@ -36,15 +43,26 @@ export const useNetworkEvents = ({ onOnline, onOffline }: NetworkEventsProps) =>
           window.removeEventListener('online', updateOnlineStatus);
           window.removeEventListener('offline', updateOnlineStatus);
         } catch (error) {
-          console.error('Error removing network event listeners:', formatErrorMessage(error));
+          const networkError = new NetworkError(
+            'Failed to remove network event listeners',
+            'UNKNOWN_ERROR',
+            error
+          );
+          console.error('Error removing event listeners:', formatNetworkError(networkError));
+          onError?.(networkError);
         }
       };
     } catch (error) {
-      console.error('Error setting up network event listeners:', formatErrorMessage(error));
-      // Fall back to offline mode if we can't set up the listeners
+      const networkError = new NetworkError(
+        'Failed to set up network event listeners',
+        'UNKNOWN_ERROR',
+        error
+      );
+      console.error('Error setting up event listeners:', formatNetworkError(networkError));
+      onError?.(networkError);
       onOffline();
       return () => {};
     }
-  }, [onOnline, onOffline]);
+  }, [onOnline, onOffline, onError]);
 };
 

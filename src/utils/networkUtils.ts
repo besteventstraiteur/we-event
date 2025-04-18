@@ -1,47 +1,79 @@
 
 import { useToast } from '@/hooks/use-toast';
-import { formatErrorMessage } from '@/utils/errorHandling';
+import { NetworkError, formatNetworkError } from './networkErrorTypes';
 
 export const useNetworkStatus = () => {
   const { toast } = useToast();
   
-  const notifyOffline = () => {
+  const showToast = (title: string, description: string) => {
     try {
       toast({
-        title: "Mode hors-ligne activé",
-        description: "Vos modifications seront enregistrées localement"
+        title,
+        description,
+        variant: 'default'
       });
     } catch (error) {
-      console.error('Error showing offline notification:', formatErrorMessage(error));
+      console.error('Error showing toast notification:', formatNetworkError(error));
+    }
+  };
+
+  const notifyOffline = () => {
+    try {
+      showToast(
+        "Mode hors-ligne activé",
+        "Vos modifications seront enregistrées localement"
+      );
+    } catch (error) {
+      throw new NetworkError(
+        'Failed to show offline notification',
+        'CONNECTION_LOST',
+        error
+      );
     }
   };
   
   const notifyOnline = () => {
     try {
-      toast({
-        title: "Reconnecté",
-        description: "Synchronisation des modifications locales en cours"
-      });
+      showToast(
+        "Reconnecté",
+        "Synchronisation des modifications locales en cours"
+      );
     } catch (error) {
-      console.error('Error showing online notification:', formatErrorMessage(error));
+      throw new NetworkError(
+        'Failed to show online notification',
+        'SYNC_FAILED',
+        error
+      );
     }
   };
   
   const notifySavedLocally = () => {
     try {
-      toast({
-        title: "Enregistré localement",
-        description: "Les modifications seront synchronisées lorsque vous serez en ligne"
-      });
+      showToast(
+        "Enregistré localement",
+        "Les modifications seront synchronisées lorsque vous serez en ligne"
+      );
     } catch (error) {
-      console.error('Error showing local save notification:', formatErrorMessage(error));
+      throw new NetworkError(
+        'Failed to show local save notification',
+        'STORAGE_ERROR',
+        error
+      );
     }
+  };
+  
+  const notifyError = (error: unknown) => {
+    showToast(
+      "Erreur de synchronisation",
+      formatNetworkError(error)
+    );
   };
   
   return {
     notifyOffline,
     notifyOnline,
-    notifySavedLocally
+    notifySavedLocally,
+    notifyError
   };
 };
 
