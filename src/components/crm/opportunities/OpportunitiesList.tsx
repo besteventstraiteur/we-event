@@ -1,26 +1,9 @@
 import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Edit, MoreHorizontal, Trash2, PlusCircle, Briefcase, Calendar, Search, Filter } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import OpportunityFormDialog, { type Opportunity } from "./OpportunityFormDialog";
+import OpportunitySearch from "./OpportunitySearch";
+import OpportunityTable from "./OpportunityTable";
+import EmptyOpportunities from "./EmptyOpportunities";
 
 const mockOpportunities: Opportunity[] = [
   {
@@ -91,7 +74,7 @@ const OpportunitiesList = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingOpportunity, setEditingOpportunity] = useState<Opportunity | undefined>(undefined);
   const { toast } = useToast();
-  
+
   const handleDelete = (id: string) => {
     setOpportunities(opportunities.filter(opportunity => opportunity.id !== id));
     toast({
@@ -109,7 +92,7 @@ const OpportunitiesList = () => {
     setEditingOpportunity(undefined);
     setIsFormOpen(true);
   };
-  
+
   const handleSaveOpportunity = (opportunityData: Omit<Opportunity, "id">) => {
     if (editingOpportunity) {
       setOpportunities(opportunities.map(opp => 
@@ -134,119 +117,31 @@ const OpportunitiesList = () => {
     }
     setIsFormOpen(false);
   };
-  
+
   const filteredOpportunities = opportunities.filter(opportunity => 
     opportunity.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     opportunity.company.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  
-  const getStatusBadge = (stage: Opportunity["stage"]) => {
-    const stageConfig = {
-      new: { label: "Nouveau", variant: "default" as const },
-      qualified: { label: "Qualifié", variant: "secondary" as const },
-      proposal: { label: "Proposition", variant: "outline" as const },
-      negotiation: { label: "Négociation", variant: "default" as const },
-      closed_won: { label: "Gagné", variant: "success" as const },
-      closed_lost: { label: "Perdu", variant: "destructive" as const },
-    };
-    
-    return <Badge variant={stageConfig[stage].variant}>{stageConfig[stage].label}</Badge>;
-  };
-  
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Rechercher une opportunité..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Filter className="h-4 w-4 mr-2" />
-            Filtrer
-          </Button>
-          <Button size="sm" onClick={handleNewOpportunity}>
-            <PlusCircle className="h-4 w-4 mr-2" />
-            Nouvelle opportunité
-          </Button>
-        </div>
-      </div>
+      <OpportunitySearch 
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onNewOpportunity={handleNewOpportunity}
+      />
       
       {filteredOpportunities.length > 0 ? (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nom</TableHead>
-              <TableHead>Entreprise/Client</TableHead>
-              <TableHead>Montant</TableHead>
-              <TableHead>Étape</TableHead>
-              <TableHead>Date de clôture</TableHead>
-              <TableHead>Prochaine étape</TableHead>
-              <TableHead className="w-[100px]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredOpportunities.map((opportunity) => (
-              <TableRow key={opportunity.id}>
-                <TableCell className="font-medium">
-                  <div className="flex items-center">
-                    <Briefcase className="h-4 w-4 mr-2 text-muted-foreground" />
-                    {opportunity.name}
-                  </div>
-                </TableCell>
-                <TableCell>{opportunity.company}</TableCell>
-                <TableCell>{opportunity.value.toLocaleString()} €</TableCell>
-                <TableCell>{getStatusBadge(opportunity.stage)}</TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-                    {opportunity.expectedCloseDate}
-                  </div>
-                </TableCell>
-                <TableCell>{opportunity.nextStep}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Ouvrir le menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => handleEdit(opportunity)}>
-                        <Edit className="h-4 w-4 mr-2" />
-                        Modifier
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(opportunity.id)}>
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Supprimer
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <OpportunityTable 
+          opportunities={filteredOpportunities}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       ) : (
-        <div className="border rounded-md p-8 text-center">
-          <Briefcase className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-lg font-medium mb-2">Aucune opportunité trouvée</h3>
-          <p className="text-muted-foreground mb-4">
-            {searchQuery ? "Aucune opportunité ne correspond à votre recherche" : "Commencez par ajouter des opportunités à votre pipeline"}
-          </p>
-          <Button onClick={handleNewOpportunity}>
-            <PlusCircle className="h-4 w-4 mr-2" />
-            Créer une opportunité
-          </Button>
-        </div>
+        <EmptyOpportunities 
+          onNewOpportunity={handleNewOpportunity}
+          searchQuery={searchQuery}
+        />
       )}
 
       <OpportunityFormDialog 
