@@ -10,7 +10,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import TokenRefresher from "@/components/security/TokenRefresher";
 import SessionTimeout from "@/components/security/SessionTimeout";
 
-const AppWrapper: React.FC = () => {
+const AppWrapper = () => {
   return (
     <Router>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
