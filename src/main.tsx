@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
@@ -7,6 +7,8 @@ import './styles/calendar.css'; // Import our calendar styles
 import './mobile-styles.css'; // Import mobile-specific styles
 import { Toaster } from "@/components/ui/toaster";
 import { Capacitor } from '@capacitor/core';
+import LoadingFallback from '@/components/LoadingFallback';
+import { useNetworkStatus } from './utils/networkUtils.tsx';
 
 // Pour une gestion correcte de la hauteur de viewport sur mobile
 const setVhProperty = () => {
@@ -69,21 +71,45 @@ if (isTouchDevice()) {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <Suspense fallback={<LoadingFallback />}>
+      <App />
+    </Suspense>
     <Toaster />
   </React.StrictMode>,
 );
 
-// Détection de la connectivité réseau
-window.addEventListener('online', () => {
-  console.log('App is online');
-  // Vous pourriez synchroniser des données ici
-});
-
-window.addEventListener('offline', () => {
-  console.log('App is offline');
-  // Notifier l'utilisateur et activer le mode hors ligne
-});
+// Network Status Manager - for improved network handling
+const NetworkStatusManager = () => {
+  const { notifyOnline, notifyOffline } = useNetworkStatus();
+  
+  // Setup network event listeners
+  React.useEffect(() => {
+    const handleOnline = () => {
+      console.log('App is online');
+      notifyOnline({
+        timestamp: Date.now(),
+        method: 'GET', 
+      });
+    };
+    
+    const handleOffline = () => {
+      console.log('App is offline');
+      notifyOffline({
+        timestamp: Date.now()
+      });
+    };
+    
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [notifyOnline, notifyOffline]);
+  
+  return null; // This component doesn't render anything
+};
 
 // Gestion de l'état de l'application pour les plates-formes natives
 document.addEventListener('pause', () => {
