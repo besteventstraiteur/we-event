@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -9,7 +8,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { AuthProvider } from "@/hooks/useAuth";
 import TokenRefresher from "@/components/security/TokenRefresher";
 import SessionTimeout from "@/components/security/SessionTimeout";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, testDatabaseConnection } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
@@ -17,25 +16,29 @@ const AppWrapper: React.FC = () => {
   const [isSupabaseReady, setIsSupabaseReady] = useState(false);
   const [supabaseError, setSupabaseError] = useState<string | null>(null);
   const [isTryingAgain, setIsTryingAgain] = useState(false);
+  const [connectionLatency, setConnectionLatency] = useState<number | null>(null);
 
   const checkConnection = async () => {
     try {
-      // Test a simple query
-      const { error } = await supabase.from('profiles').select('id').limit(1);
+      const result = await testDatabaseConnection();
       
-      if (error) {
-        console.error("Supabase connection error:", error);
+      if (!result.success) {
+        console.error("Supabase connection error:", result);
         
-        // Special handling for "relation does not exist" errors - tables might not be created yet
-        if (error.code === '42P01') {
+        // Gestion spéciale pour les erreurs de tables non créées
+        if (result.errorCode === '42P01') {
           setSupabaseError(`Les tables Supabase n'ont pas encore été créées. Veuillez exécuter les instructions SQL avant de continuer.`);
         } else {
-          setSupabaseError(`Échec de la connexion à Supabase: ${error.message}`);
+          setSupabaseError(`Échec de la connexion à Supabase: ${result.error}`);
         }
-      } else {
-        console.log("Successfully connected to Supabase");
-        setIsSupabaseReady(true);
-        setSupabaseError(null);
+        return;
+      }
+      
+      console.log("Successfully connected to Supabase:", result);
+      setIsSupabaseReady(true);
+      setSupabaseError(null);
+      if (result.latency) {
+        setConnectionLatency(result.latency);
       }
     } catch (err) {
       console.error("Failed to connect to Supabase:", err);
@@ -59,11 +62,10 @@ const AppWrapper: React.FC = () => {
 
   const handleContinueAnyway = () => {
     toast({
-      // Fix: Change "warning" to "default" and add styling for warning appearance
       variant: "default", 
       title: "Fonctionnalités limitées",
       description: "Certaines fonctionnalités ne seront pas disponibles sans une connexion Supabase opérationnelle.",
-      className: "bg-amber-100 border-amber-300 text-amber-800" // Add warning styling
+      className: "bg-amber-100 border-amber-300 text-amber-800"
     });
     setSupabaseError(null);
     setIsSupabaseReady(true);
@@ -76,6 +78,9 @@ const AppWrapper: React.FC = () => {
           <div className="h-16 w-16 border-4 border-t-vip-gold border-r-vip-gold border-b-transparent border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <h1 className="text-xl font-semibold text-white mb-2">Initialisation de l'application</h1>
           <p className="text-gray-400">Connexion à la base de données en cours...</p>
+          {connectionLatency && (
+            <p className="text-gray-500 text-sm mt-2">Latence: {Math.round(connectionLatency)}ms</p>
+          )}
         </div>
       </div>
     );

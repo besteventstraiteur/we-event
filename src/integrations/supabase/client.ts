@@ -6,53 +6,89 @@ import type { Database } from '@/types/supabase-db';
 const SUPABASE_URL = "https://awraiakbiahrzncoeyya.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3cmFpYWtiaWFocnpuY29leXlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1MjYwOTUsImV4cCI6MjA2MDEwMjA5NX0.8da1AC1m6DDwrLbRPlYZ9KHx89pE4xtw2AkTQFbciys";
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
-
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
     storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
+    detectSessionInUrl: true,
+    flowType: 'pkce'
   },
   db: {
-    schema: 'public',
+    schema: 'public'
   },
   global: {
-    // Add global error handling
     fetch: (...args) => {
-      // Fix: Properly type and spread the arguments
-      return fetch(args[0] as RequestInfo | URL, args[1] as RequestInit | undefined).catch(err => {
-        console.error("Supabase fetch error:", err);
-        // Still throw the error to be handled by the caller
-        throw err;
+      console.debug('Supabase API Call:', {
+        url: args[0],
+        method: (args[1] as RequestInit)?.method || 'GET',
+        timestamp: new Date().toISOString()
       });
+      
+      return fetch(args[0] as RequestInfo | URL, args[1] as RequestInit | undefined)
+        .then(async (response) => {
+          if (!response.ok) {
+            console.error('Supabase API Error:', {
+              status: response.status,
+              statusText: response.statusText,
+              url: response.url
+            });
+            const errorBody = await response.text();
+            console.error('Error details:', errorBody);
+          }
+          return response;
+        })
+        .catch(err => {
+          console.error('Supabase Network Error:', {
+            message: err.message,
+            type: err.name,
+            stack: err.stack
+          });
+          throw err;
+        });
     }
   }
 });
 
-// Helper function to test database connection
+// Helper function pour tester la connexion à la base de données
 export const testDatabaseConnection = async () => {
   try {
-    // Try a simple query
+    const startTime = performance.now();
     const { data, error } = await supabase.from('profiles').select('id').limit(1);
+    const endTime = performance.now();
     
     if (error) {
-      console.error("Database connection test failed:", error);
+      console.error("Database connection test failed:", {
+        error: error.message,
+        code: error.code,
+        details: error,
+        timestamp: new Date().toISOString()
+      });
       return {
         success: false,
         error: error.message,
         errorCode: error.code,
-        details: error
+        details: error,
+        latency: endTime - startTime
       };
     }
     
+    console.info("Database connection successful:", {
+      latency: endTime - startTime,
+      timestamp: new Date().toISOString()
+    });
+    
     return { 
       success: true,
-      message: "Successfully connected to Supabase database" 
+      message: "Successfully connected to Supabase database",
+      latency: endTime - startTime
     };
   } catch (err) {
-    console.error("Database connection exception:", err);
+    console.error("Database connection exception:", {
+      error: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+      timestamp: new Date().toISOString()
+    });
     return {
       success: false,
       error: err instanceof Error ? err.message : String(err),
@@ -60,3 +96,4 @@ export const testDatabaseConnection = async () => {
     };
   }
 };
+
