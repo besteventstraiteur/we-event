@@ -18,4 +18,13 @@ export interface Guest {
   conjoint?: string;
   enfants?: string[];
   notes?: string;
+  
+  // Properties from floorPlanTypes.Guest that might be needed
+  firstName?: string;
+  lastName?: string;
+  dietaryRestrictions?: string;
+  needsWheelchairAccess?: boolean;
+  seat?: string;
+  menuChoice?: string;
+  menuOption?: string;
 }

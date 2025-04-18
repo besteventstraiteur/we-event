@@ -5,7 +5,7 @@ export interface Guest {
   nom: string;
   prenom: string;
   email: string;
-  telephone: string;
+  telephone: string; // Changé à optionnel pour être compatible avec guestTypes
   ceremonie: boolean;
   vin: boolean;
   repas: boolean;
@@ -22,6 +22,13 @@ export interface Guest {
   lastName?: string;
   dietaryRestrictions?: string;
   needsWheelchairAccess?: boolean;
+  
+  // Add compatibility with guestTypes.Guest
+  statut?: 'confirmed' | 'pending' | 'declined';
+  menu_option?: 'standard' | 'vegetarian' | 'vegan' | 'other';
+  enfant?: boolean;
+  commentaires?: string;
+  allergies?: string[];
 }
 
 export interface Seat {

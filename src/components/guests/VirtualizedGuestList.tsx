@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { VirtualList } from '../ui/virtual-list';
-import { Guest } from '@/types/floorPlanTypes';
+import { Guest } from '@/types/guestTypes';
 
 interface VirtualizedGuestListProps {
   guests: Guest[];
