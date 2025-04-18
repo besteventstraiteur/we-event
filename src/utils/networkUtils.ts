@@ -1,6 +1,5 @@
-
 import { useToast } from '@/hooks/use-toast';
-import { NetworkError, formatNetworkError } from './networkErrorTypes';
+import { NetworkError, formatNetworkError, NetworkErrorContext } from './networkErrorTypes';
 
 export const useNetworkStatus = () => {
   const { toast } = useToast();
@@ -18,7 +17,12 @@ export const useNetworkStatus = () => {
     }
   };
 
-  const notifyOffline = () => {
+  const createErrorContext = (additionalContext: Partial<NetworkErrorContext> = {}): NetworkErrorContext => ({
+    timestamp: Date.now(),
+    ...additionalContext
+  });
+
+  const notifyOffline = (context: Partial<NetworkErrorContext> = {}) => {
     try {
       showToast(
         "Mode hors-ligne activé",
@@ -29,12 +33,13 @@ export const useNetworkStatus = () => {
       throw new NetworkError(
         'Impossible d\'afficher la notification hors-ligne',
         'OFFLINE_MODE',
+        createErrorContext(context),
         error
       );
     }
   };
   
-  const notifyOnline = () => {
+  const notifyOnline = (context: Partial<NetworkErrorContext> = {}) => {
     try {
       showToast(
         "Reconnecté",
@@ -44,12 +49,13 @@ export const useNetworkStatus = () => {
       throw new NetworkError(
         'Impossible d\'afficher la notification de reconnexion',
         'SYNC_FAILED',
+        createErrorContext(context),
         error
       );
     }
   };
   
-  const notifySavedLocally = () => {
+  const notifySavedLocally = (context: Partial<NetworkErrorContext> = {}) => {
     try {
       showToast(
         "Enregistré localement",
@@ -59,12 +65,16 @@ export const useNetworkStatus = () => {
       throw new NetworkError(
         'Impossible d\'afficher la notification de sauvegarde locale',
         'STORAGE_ERROR',
+        createErrorContext(context),
         error
       );
     }
   };
   
-  const notifyError = (error: unknown) => {
+  const notifyError = (error: unknown, context: Partial<NetworkErrorContext> = {}) => {
+    if (error instanceof NetworkError) {
+      error.context = { ...error.context, ...context };
+    }
     const formattedError = formatNetworkError(error);
     showToast(
       "Erreur de synchronisation",
@@ -77,7 +87,7 @@ export const useNetworkStatus = () => {
     notifyOffline,
     notifyOnline,
     notifySavedLocally,
-    notifyError
+    notifyError,
+    createErrorContext
   };
 };
-
