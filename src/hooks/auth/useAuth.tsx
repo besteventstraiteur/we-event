@@ -9,7 +9,7 @@ import { usePermissions } from "./usePermissions";
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { user, setUser, isLoading } = useAuthState();
+  const { user, session, setUser, isLoading } = useAuthState();
   const { login, loginWithProvider, logout, register } = useAuthMethods(setUser);
   const { hasRole, hasPermission, hasPartnerType } = usePermissions(user);
 
@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const value = {
     user,
+    session,
     isLoading,
     isAuthenticated: !!user,
     login,

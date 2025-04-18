@@ -3,7 +3,11 @@ import React, { useEffect } from 'react';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
-const TokenRefresher: React.FC = () => {
+interface TokenRefresherProps {
+  children: React.ReactNode;
+}
+
+const TokenRefresher: React.FC<TokenRefresherProps> = ({ children }) => {
   const { session, isAuthenticated } = useAuth();
 
   useEffect(() => {
@@ -26,7 +30,7 @@ const TokenRefresher: React.FC = () => {
     return () => clearInterval(refreshInterval);
   }, [isAuthenticated, session]);
 
-  return null;
+  return <>{children}</>;
 };
 
 export default TokenRefresher;

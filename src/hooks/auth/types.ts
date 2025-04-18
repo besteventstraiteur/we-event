@@ -1,6 +1,7 @@
 
 import { Profile } from "@/lib/supabase";
 import { UserRole } from "@/utils/accessControl";
+import { Session } from '@supabase/supabase-js';
 
 export interface LoginCredentials {
   email: string;
@@ -16,6 +17,7 @@ export interface AuthResult {
 
 export interface AuthContextType {
   user: Profile | null;
+  session: Session | null;  // Ajout de la propriété session
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (credentials: LoginCredentials) => Promise<AuthResult>;
