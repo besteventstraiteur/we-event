@@ -1,5 +1,6 @@
 
 import { useEffect } from 'react';
+import { formatErrorMessage } from '@/utils/errorHandling';
 
 interface NetworkEventsProps {
   onOnline: () => void;
@@ -9,23 +10,41 @@ interface NetworkEventsProps {
 export const useNetworkEvents = ({ onOnline, onOffline }: NetworkEventsProps) => {
   useEffect(() => {
     const updateOnlineStatus = () => {
-      const online = navigator.onLine;
-      if (online) {
-        onOnline();
-      } else {
+      try {
+        const online = navigator.onLine;
+        if (online) {
+          onOnline();
+        } else {
+          onOffline();
+        }
+      } catch (error) {
+        console.error('Error updating network status:', formatErrorMessage(error));
+        // Fall back to offline mode if we can't determine the status
         onOffline();
       }
     };
     
-    window.addEventListener('online', updateOnlineStatus);
-    window.addEventListener('offline', updateOnlineStatus);
-    
-    // Initial check
-    updateOnlineStatus();
-    
-    return () => {
-      window.removeEventListener('online', updateOnlineStatus);
-      window.removeEventListener('offline', updateOnlineStatus);
-    };
+    try {
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+      
+      // Initial check with error handling
+      updateOnlineStatus();
+      
+      return () => {
+        try {
+          window.removeEventListener('online', updateOnlineStatus);
+          window.removeEventListener('offline', updateOnlineStatus);
+        } catch (error) {
+          console.error('Error removing network event listeners:', formatErrorMessage(error));
+        }
+      };
+    } catch (error) {
+      console.error('Error setting up network event listeners:', formatErrorMessage(error));
+      // Fall back to offline mode if we can't set up the listeners
+      onOffline();
+      return () => {};
+    }
   }, [onOnline, onOffline]);
 };
+
