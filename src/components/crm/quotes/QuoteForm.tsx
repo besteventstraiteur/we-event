@@ -68,8 +68,11 @@ const QuoteForm: React.FC<QuoteFormProps> = ({
 
   const onSubmit = (data: QuoteFormValues) => {
     // Format dates back to DD/MM/YYYY format
-    const formattedQuote = {
-      ...data,
+    const formattedQuote: Omit<Quote, "id"> = {
+      reference: data.reference,
+      clientName: data.clientName,
+      totalAmount: data.totalAmount,
+      status: data.status,
       issueDate: format(data.issueDate, "dd/MM/yyyy"),
       expiryDate: format(data.expiryDate, "dd/MM/yyyy"),
     };
