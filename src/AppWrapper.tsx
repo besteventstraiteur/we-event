@@ -10,7 +10,11 @@ import { AuthProvider } from "@/hooks/useAuth";
 import TokenRefresher from "@/components/security/TokenRefresher";
 import SessionTimeout from "@/components/security/SessionTimeout";
 
-const AppWrapper = () => {
+interface AppWrapperProps {
+  children?: React.ReactNode;
+}
+
+const AppWrapper = ({ children }: AppWrapperProps) => {
   return (
     <Router>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
@@ -21,6 +25,7 @@ const AppWrapper = () => {
                 <CartProvider>
                   <AppRouter />
                   <Toaster />
+                  {children}
                 </CartProvider>
               </SessionTimeout>
             </TokenRefresher>
