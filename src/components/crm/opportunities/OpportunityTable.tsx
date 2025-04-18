@@ -1,9 +1,9 @@
+import React from 'react';
+import OpportunityStatusBadge from './OpportunityStatusBadge';
 
-import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
 import { PaginationControls } from '@/components/ui/pagination-controls';
-import { OpportunityStatusBadge } from './OpportunityStatusBadge';
 import { Button } from '@/components/ui/button';
 import { Eye, Edit, Trash } from 'lucide-react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';

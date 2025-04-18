@@ -1,9 +1,9 @@
-
 import React from 'react';
-import { toast } from '@/components/ui/toast';
+import { useToast } from "@/hooks/use-toast";
 
 export const NetworkStatus: React.FC = () => {
   const [isOnline, setIsOnline] = React.useState(true);
+  const { toast } = useToast();
 
   React.useEffect(() => {
     const handleOnlineStatus = () => {

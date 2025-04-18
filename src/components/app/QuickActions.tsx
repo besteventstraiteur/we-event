@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { MobileQuickAction } from './MobileQuickAction';
 import { QuickMenuItem } from './QuickMenuItem';
-import { toast } from '@/components/ui/toast';
+import { useToast } from "@/hooks/use-toast";
 import { User, Lock, LifeBuoy, Settings } from 'lucide-react';
 
 interface QuickActionsProps {
@@ -22,6 +21,8 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
   setIsInstallable
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+  const { toast } = useToast();
 
   const handleInstallClick = () => {
     if (!installPrompt) return;

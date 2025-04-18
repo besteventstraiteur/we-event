@@ -1,7 +1,7 @@
 
 import React from 'react';
-import VirtualList from '../ui/virtual-list';
-import PaginationControls from '../ui/pagination-controls';
+import { VirtualList } from '@/components/ui/virtual-list';
+import { PaginationControls } from '@/components/ui/pagination-controls';
 import { usePagination } from '@/hooks/usePagination';
 import { Guest } from '@/types/floorPlanTypes';
 
