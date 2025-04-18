@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { OpportunityTable } from './OpportunityTable';
 import { useOpportunities } from '@/hooks/useOpportunities';

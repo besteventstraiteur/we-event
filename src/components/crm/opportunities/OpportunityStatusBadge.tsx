@@ -1,10 +1,9 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { type Opportunity } from "./OpportunityFormDialog";
 
 interface OpportunityStatusBadgeProps {
-  stage: Opportunity["stage"];
+  stage: 'new' | 'qualified' | 'proposal' | 'negotiation' | 'closed_won' | 'closed_lost';
 }
 
 const stageConfig = {

@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState, useMemo } from 'react';
 import OpportunityStatusBadge from './OpportunityStatusBadge';
 
 import { useQuery } from '@tanstack/react-query';
@@ -36,23 +37,33 @@ const formatCurrency = (value: number) => {
 
 // Props pour le tableau d'opportunités
 interface OpportunityTableProps {
-  partnerId?: string;
+  opportunities?: Opportunity[];
   searchQuery?: string;
   statusFilter?: string;
   className?: string;
+  sortColumn?: string;
+  sortOrder?: 'asc' | 'desc';
+  setSortColumn?: (column: string) => void;
+  setSortOrder?: (order: 'asc' | 'desc') => void;
+  partnerId?: string;
 }
 
 export const OpportunityTable: React.FC<OpportunityTableProps> = ({
+  opportunities: providedOpportunities,
   partnerId,
   searchQuery = "",
   statusFilter,
-  className
+  className,
+  sortColumn,
+  sortOrder,
+  setSortColumn,
+  setSortOrder
 }) => {
   // Configuration de la pagination
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Simuler une requête avec React Query
+  // Simuler une requête avec React Query si des opportunités ne sont pas fournies
   // Dans une véritable application, remplacez ceci par un appel à Supabase ou une autre API
   const fetchOpportunities = async () => {
     // Simulons un délai pour montrer le chargement
@@ -80,12 +91,16 @@ export const OpportunityTable: React.FC<OpportunityTableProps> = ({
 
   const { data = [], isLoading } = useQuery({
     queryKey: ['opportunities', partnerId, searchQuery, statusFilter],
-    queryFn: fetchOpportunities
+    queryFn: fetchOpportunities,
+    enabled: !providedOpportunities
   });
+
+  // Use provided opportunities or fetched data
+  const allOpportunities = providedOpportunities || data;
 
   // Filtrer les données selon la recherche et le statut
   const filteredData = useMemo(() => {
-    return data.filter(opp => {
+    return allOpportunities.filter(opp => {
       const matchesSearch = !searchQuery || 
         opp.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
         opp.client_name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -94,7 +109,7 @@ export const OpportunityTable: React.FC<OpportunityTableProps> = ({
       
       return matchesSearch && matchesStatus;
     });
-  }, [data, searchQuery, statusFilter]);
+  }, [allOpportunities, searchQuery, statusFilter]);
 
   // Calculer la pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -143,7 +158,7 @@ export const OpportunityTable: React.FC<OpportunityTableProps> = ({
                   <TableCell className="hidden md:table-cell">{formatDate(opp.created_at)}</TableCell>
                   <TableCell className="text-right font-medium">{formatCurrency(opp.value)}</TableCell>
                   <TableCell className="hidden md:table-cell">
-                    <OpportunityStatusBadge status={opp.status} />
+                    <OpportunityStatusBadge stage={opp.status} />
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end space-x-1">

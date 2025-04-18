@@ -41,8 +41,8 @@ const GuestList: React.FC<GuestListProps> = ({
       <VirtualList
         items={currentGuests}
         height={LIST_HEIGHT}
-        itemHeight={ITEM_HEIGHT}
-        renderItem={(guest) => (
+        itemSize={ITEM_HEIGHT}
+        renderItem={(guest: Guest) => (
           <div className="p-4 border-b last:border-b-0 hover:bg-muted/50">
             <div className="flex justify-between items-center">
               <div>

@@ -3,9 +3,11 @@ import React from 'react';
 import { FixedSizeList, FixedSizeListProps } from 'react-window';
 import { cn } from '@/lib/utils';
 
-interface VirtualListProps<T> extends Omit<FixedSizeListProps, 'itemCount' | 'itemSize' | 'children'> {
+interface VirtualListProps<T> {
   items: T[];
+  height: number;
   itemSize: number;
+  width?: number | string;
   renderItem: (item: T, index: number) => React.ReactNode;
   className?: string;
   emptyMessage?: string;
@@ -13,11 +15,12 @@ interface VirtualListProps<T> extends Omit<FixedSizeListProps, 'itemCount' | 'it
 
 export function VirtualList<T>({
   items,
+  height,
   itemSize,
+  width = '100%',
   renderItem,
   className,
   emptyMessage = "Aucun élément à afficher",
-  ...props
 }: VirtualListProps<T>) {
   if (items.length === 0) {
     return (
@@ -32,8 +35,8 @@ export function VirtualList<T>({
       <FixedSizeList
         itemCount={items.length}
         itemSize={itemSize}
-        width="100%"
-        {...props}
+        height={height}
+        width={width}
       >
         {({ index, style }) => (
           <div style={style}>
@@ -43,45 +46,4 @@ export function VirtualList<T>({
       </FixedSizeList>
     </div>
   );
-}
-
-/**
- * Hooks pour la pagination
- */
-export function usePagination(totalItems: number, itemsPerPage: number = 10) {
-  const [currentPage, setCurrentPage] = React.useState(1);
-  
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const pageItems = React.useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    return { start, end };
-  }, [currentPage, itemsPerPage]);
-
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(prev => prev + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(prev => prev - 1);
-    }
-  };
-
-  const goToPage = (pageNumber: number) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
-  };
-
-  return {
-    currentPage,
-    totalPages,
-    pageItems,
-    nextPage,
-    prevPage,
-    goToPage
-  };
 }
