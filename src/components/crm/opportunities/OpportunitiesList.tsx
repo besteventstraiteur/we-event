@@ -18,107 +18,143 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Edit, MoreHorizontal, Trash2, PlusCircle, DollarSign, Calendar, Tag, Search, Filter } from "lucide-react";
+import { Edit, MoreHorizontal, Trash2, PlusCircle, Briefcase, Calendar, Search, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
-interface Opportunity {
-  id: string;
-  name: string;
-  client: string;
-  value: number;
-  stage: string;
-  probability: number;
-  expectedCloseDate: string;
-  tags: string[];
-}
+import { useToast } from "@/hooks/use-toast";
+import OpportunityFormDialog, { type Opportunity } from "./OpportunityFormDialog";
 
 // Données de démo pour l'interface
 const mockOpportunities: Opportunity[] = [
   {
     id: "opp1",
-    name: "Événement d'entreprise annuel",
-    client: "Société ABC",
+    name: "Mariage Dupont",
+    company: "Famille Dupont",
     value: 15000,
-    stage: "Prospection",
-    probability: 20,
-    expectedCloseDate: "30/06/2025",
-    tags: ["Événement d'entreprise", "Grand budget"]
+    stage: "proposal",
+    source: "Salon du mariage",
+    nextStep: "Présentation du devis",
+    expectedCloseDate: "15/06/2025"
   },
   {
     id: "opp2",
-    name: "Mariage VIP",
-    client: "Famille Martin",
-    value: 25000,
-    stage: "Qualification",
-    probability: 40,
-    expectedCloseDate: "15/07/2025",
-    tags: ["Mariage", "VIP", "Été"]
+    name: "Anniversaire 40 ans",
+    company: "Entreprise Martin",
+    value: 8000,
+    stage: "qualified",
+    source: "Recommandation",
+    nextStep: "Visite du lieu",
+    expectedCloseDate: "30/05/2025"
   },
   {
     id: "opp3",
-    name: "Lancement de produit",
-    client: "Tech Innovations",
-    value: 18500,
-    stage: "Proposition",
-    probability: 60,
-    expectedCloseDate: "10/05/2025",
-    tags: ["Corporatif", "Technologie"]
+    name: "Séminaire annuel",
+    company: "Tech Solutions",
+    value: 25000,
+    stage: "negotiation",
+    source: "LinkedIn",
+    nextStep: "Négociation budget",
+    expectedCloseDate: "10/07/2025"
   },
   {
     id: "opp4",
-    name: "Gala de bienfaisance",
-    client: "Association Espoir",
+    name: "Gala de charité",
+    company: "Association Espoir",
     value: 12000,
-    stage: "Négociation",
-    probability: 80,
-    expectedCloseDate: "20/08/2025",
-    tags: ["Caritatif", "Gala"]
+    stage: "closed_won",
+    source: "Contact direct",
+    nextStep: "Signature du contrat",
+    expectedCloseDate: "01/09/2025"
   },
   {
     id: "opp5",
-    name: "Conférence internationale",
-    client: "Global Summit",
-    value: 35000,
-    stage: "Gagné",
-    probability: 100,
-    expectedCloseDate: "15/09/2025",
-    tags: ["International", "Conférence", "Premium"]
+    name: "Conférence startup",
+    company: "Incubateur Future",
+    value: 18000,
+    stage: "new",
+    source: "Site web",
+    nextStep: "Premier contact",
+    expectedCloseDate: "20/08/2025"
   },
   {
     id: "opp6",
-    name: "Festival musical",
-    client: "MelodyFest",
-    value: 22000,
-    stage: "Perdu",
-    probability: 0,
-    expectedCloseDate: "01/06/2025",
-    tags: ["Festival", "Musique"]
+    name: "Soirée corporate",
+    company: "Finance Plus",
+    value: 30000,
+    stage: "closed_lost",
+    source: "Réseau professionnel",
+    nextStep: "Archivé",
+    expectedCloseDate: "25/04/2025"
   }
 ];
 
 const OpportunitiesList = () => {
   const [opportunities, setOpportunities] = useState<Opportunity[]>(mockOpportunities);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingOpportunity, setEditingOpportunity] = useState<Opportunity | undefined>(undefined);
+  const { toast } = useToast();
   
   const handleDelete = (id: string) => {
     setOpportunities(opportunities.filter(opportunity => opportunity.id !== id));
+    toast({
+      title: "Opportunité supprimée",
+      description: "L'opportunité a été supprimée avec succès",
+    });
+  };
+
+  const handleEdit = (opportunity: Opportunity) => {
+    setEditingOpportunity(opportunity);
+    setIsFormOpen(true);
+  };
+
+  const handleNewOpportunity = () => {
+    setEditingOpportunity(undefined);
+    setIsFormOpen(true);
+  };
+  
+  const handleSaveOpportunity = (opportunityData: Omit<Opportunity, "id">) => {
+    if (editingOpportunity) {
+      // Updating existing opportunity
+      setOpportunities(opportunities.map(opp => 
+        opp.id === editingOpportunity.id 
+          ? { ...opportunityData, id: editingOpportunity.id } 
+          : opp
+      ));
+      toast({
+        title: "Opportunité mise à jour",
+        description: `L'opportunité ${opportunityData.name} a été mise à jour`,
+      });
+    } else {
+      // Creating new opportunity
+      const newOpportunity: Opportunity = {
+        ...opportunityData,
+        id: `opp${opportunities.length + 1}`,
+      };
+      setOpportunities([...opportunities, newOpportunity]);
+      toast({
+        title: "Opportunité créée",
+        description: `L'opportunité ${newOpportunity.name} a été créée avec succès`,
+      });
+    }
+    setIsFormOpen(false);
   };
   
   const filteredOpportunities = opportunities.filter(opportunity => 
     opportunity.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    opportunity.client.toLowerCase().includes(searchQuery.toLowerCase())
+    opportunity.company.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
-  const stageBadgeVariant = (stage: string) => {
-    switch (stage.toLowerCase()) {
-      case "prospection": return "outline";
-      case "qualification": return "secondary";
-      case "proposition": return "default";
-      case "négociation": return "default"; // Changed from "warning"
-      case "gagné": return "success";
-      case "perdu": return "destructive";
-      default: return "outline";
-    }
+  const getStatusBadge = (stage: Opportunity["stage"]) => {
+    const stageConfig = {
+      new: { label: "Nouveau", variant: "default" as const },
+      qualified: { label: "Qualifié", variant: "secondary" as const },
+      proposal: { label: "Proposition", variant: "info" as const },
+      negotiation: { label: "Négociation", variant: "warning" as const },
+      closed_won: { label: "Gagné", variant: "success" as const },
+      closed_lost: { label: "Perdu", variant: "destructive" as const },
+    };
+    
+    return <Badge variant={stageConfig[stage].variant}>{stageConfig[stage].label}</Badge>;
   };
   
   return (
@@ -138,7 +174,7 @@ const OpportunitiesList = () => {
             <Filter className="h-4 w-4 mr-2" />
             Filtrer
           </Button>
-          <Button size="sm">
+          <Button size="sm" onClick={handleNewOpportunity}>
             <PlusCircle className="h-4 w-4 mr-2" />
             Nouvelle opportunité
           </Button>
@@ -150,48 +186,33 @@ const OpportunitiesList = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Nom</TableHead>
-              <TableHead>Client</TableHead>
-              <TableHead>Valeur</TableHead>
+              <TableHead>Entreprise/Client</TableHead>
+              <TableHead>Montant</TableHead>
               <TableHead>Étape</TableHead>
-              <TableHead>Probabilité</TableHead>
-              <TableHead>Date prévue</TableHead>
-              <TableHead>Tags</TableHead>
+              <TableHead>Date de clôture</TableHead>
+              <TableHead>Prochaine étape</TableHead>
               <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredOpportunities.map((opportunity) => (
               <TableRow key={opportunity.id}>
-                <TableCell className="font-medium">{opportunity.name}</TableCell>
-                <TableCell>{opportunity.client}</TableCell>
-                <TableCell>
+                <TableCell className="font-medium">
                   <div className="flex items-center">
-                    <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
-                    {opportunity.value.toLocaleString()} €
+                    <Briefcase className="h-4 w-4 mr-2 text-muted-foreground" />
+                    {opportunity.name}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <Badge variant={stageBadgeVariant(opportunity.stage)}>
-                    {opportunity.stage}
-                  </Badge>
-                </TableCell>
-                <TableCell>{opportunity.probability}%</TableCell>
+                <TableCell>{opportunity.company}</TableCell>
+                <TableCell>{opportunity.value.toLocaleString()} €</TableCell>
+                <TableCell>{getStatusBadge(opportunity.stage)}</TableCell>
                 <TableCell>
                   <div className="flex items-center">
                     <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                     {opportunity.expectedCloseDate}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap gap-1">
-                    {opportunity.tags.map(tag => (
-                      <span key={tag} className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                        <Tag className="h-3 w-3 mr-1" />
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </TableCell>
+                <TableCell>{opportunity.nextStep}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -203,15 +224,10 @@ const OpportunitiesList = () => {
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEdit(opportunity)}>
                         <Edit className="h-4 w-4 mr-2" />
                         Modifier
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <DollarSign className="h-4 w-4 mr-2" />
-                        Faire une proposition
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
                       <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(opportunity.id)}>
                         <Trash2 className="h-4 w-4 mr-2" />
                         Supprimer
@@ -225,17 +241,24 @@ const OpportunitiesList = () => {
         </Table>
       ) : (
         <div className="border rounded-md p-8 text-center">
-          <DollarSign className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+          <Briefcase className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
           <h3 className="text-lg font-medium mb-2">Aucune opportunité trouvée</h3>
           <p className="text-muted-foreground mb-4">
-            {searchQuery ? "Aucune opportunité ne correspond à votre recherche" : "Commencez par ajouter des opportunités à votre pipeline commercial"}
+            {searchQuery ? "Aucune opportunité ne correspond à votre recherche" : "Commencez par ajouter des opportunités à votre pipeline"}
           </p>
-          <Button>
+          <Button onClick={handleNewOpportunity}>
             <PlusCircle className="h-4 w-4 mr-2" />
-            Ajouter une opportunité
+            Créer une opportunité
           </Button>
         </div>
       )}
+
+      <OpportunityFormDialog 
+        open={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        opportunity={editingOpportunity}
+        onSave={handleSaveOpportunity}
+      />
     </div>
   );
 };
