@@ -4,7 +4,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import Header from "@/components/dashboard/Header";
 import Sidebar from "@/components/dashboard/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import MobileAppWrapper from "@/components/mobile/MobileAppWrapper";
+import MobileAppWrapper from "@/components/AppWrapper"; // The import still uses the file path
 import { useAuth } from "@/hooks/useAuth";
 
 interface DashboardLayoutProps {

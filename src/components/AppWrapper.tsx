@@ -5,11 +5,12 @@ import { useIsMobile, useDeviceType, useOrientation } from '@/hooks/use-mobile';
 import { NetworkStatus } from './app/NetworkStatus';
 import { QuickActions } from './app/QuickActions';
 
-interface AppWrapperProps {
+interface MobileAppWrapperProps {
   children: React.ReactNode;
 }
 
-const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
+// Renamed from AppWrapper to MobileAppWrapper to avoid conflict
+const MobileAppWrapper = ({ children }: MobileAppWrapperProps) => {
   const [isNative, setIsNative] = useState(false);
   const isMobile = useIsMobile();
   const deviceType = useDeviceType();
@@ -80,4 +81,4 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
   );
 };
 
-export default AppWrapper;
+export default MobileAppWrapper;
