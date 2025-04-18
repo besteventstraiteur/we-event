@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
@@ -8,7 +7,7 @@ import './mobile-styles.css'; // Import mobile-specific styles
 import { Toaster } from "@/components/ui/toaster";
 import { Capacitor } from '@capacitor/core';
 import LoadingFallback from '@/components/LoadingFallback';
-import { useNetworkStatus } from './utils/networkUtils.tsx';
+import { useNetworkStatus } from '@/utils/networkUtils'; // Changed from .tsx to .ts
 
 // Pour une gestion correcte de la hauteur de viewport sur mobile
 const setVhProperty = () => {
