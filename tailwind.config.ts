@@ -71,6 +71,24 @@ export default {
             900: '#1A1918',
           }
         },
+        vip: {
+          black: '#1A1918',
+          white: '#FCFBF8',
+          gold: '#D4BC8A',  // Adding vip-gold to match we-gold
+          beige: '#F2EBE3',
+          green: '#7D9D8C',
+          gray: {
+            100: '#F9F8F6',
+            200: '#F2F0ED',
+            300: '#E8E5E1',
+            400: '#D1CDC8',
+            500: '#AAA6A1',
+            600: '#837F7A',
+            700: '#5F5C58',
+            800: '#3B3936',
+            900: '#1A1918',
+          }
+        },
       },
       fontFamily: {
         sans: ['Poppins', 'sans-serif'],

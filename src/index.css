@@ -495,7 +495,7 @@ html, body, #root, .app-container {
 }
 
 .form-input {
-  @apply w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-vip-gold focus:border-transparent;
+  @apply w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-we-gold focus:border-transparent;
 }
 
 /* Floating label effect */
@@ -505,7 +505,7 @@ html, body, #root, .app-container {
 
 .float-label input,
 .float-label textarea {
-  @apply pt-6 pb-2 px-3 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-vip-gold focus:border-vip-gold;
+  @apply pt-6 pb-2 px-3 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-we-gold focus:border-we-gold;
 }
 
 .float-label label {
@@ -516,7 +516,7 @@ html, body, #root, .app-container {
 .float-label input:not(:placeholder-shown) ~ label,
 .float-label textarea:focus ~ label,
 .float-label textarea:not(:placeholder-shown) ~ label {
-  @apply transform scale-75 -translate-y-3 translate-x-1 text-vip-gold;
+  @apply transform scale-75 -translate-y-3 translate-x-1 text-we-gold;
 }
 
 /* Aspect ratio box for image-related content */
