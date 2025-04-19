@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface OptimizedImageProps {
@@ -6,13 +7,13 @@ interface OptimizedImageProps {
   className?: string;
   width?: number;
   height?: number;
+  role?: string;
 }
 
-const OptimizedImage = ({ src, alt, className, width, height }: OptimizedImageProps) => {
+const OptimizedImage = ({ src, alt, className, width, height, role = "img" }: OptimizedImageProps) => {
   // Convert image URL to WebP if it's not already
   const getWebPUrl = (url: string) => {
     if (url.includes('.webp')) return url;
-    // For uploaded images through Supabase storage, we keep the original format
     if (url.includes('storage.googleapis')) return url;
     return url.replace(/\.(jpe?g|png)$/i, '.webp');
   };
@@ -26,6 +27,8 @@ const OptimizedImage = ({ src, alt, className, width, height }: OptimizedImagePr
       width={width}
       height={height}
       decoding="async"
+      role={role}
+      aria-label={alt}
     />
   );
 };

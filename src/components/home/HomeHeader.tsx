@@ -20,32 +20,49 @@ const HomeHeader: React.FC = () => {
         aria-label="Navigation principale"
         className="container mx-auto px-4 py-4 flex justify-between items-center"
       >
-        <Link to="/" aria-label="Accueil">
+        <Link 
+          to="/" 
+          aria-label="Accueil"
+          className="focus:outline-none focus:ring-2 focus:ring-we-gold focus:ring-offset-2 rounded"
+        >
           <Logo size={isMobile ? "small" : "medium"} />
         </Link>
 
-        <div className="flex items-center gap-4">
-          <Link to="/partners">
+        <div 
+          className="flex items-center gap-4"
+          role="menubar"
+          aria-label="Menu principal"
+        >
+          <Link 
+            to="/partners"
+            role="menuitem"
+          >
             <Button 
               variant="ghost" 
-              className="text-gray-600"
+              className="text-gray-600 focus:ring-2 focus:ring-we-gold focus:ring-offset-2"
               aria-label="Voir nos partenaires"
             >
               Partenaires
             </Button>
           </Link>
-          <Link to="/contact">
+          <Link 
+            to="/contact"
+            role="menuitem"
+          >
             <Button 
               variant="ghost" 
-              className="text-gray-600"
+              className="text-gray-600 focus:ring-2 focus:ring-we-gold focus:ring-offset-2"
               aria-label="Contactez-nous"
             >
               Contact
             </Button>
           </Link>
-          <Link to="/login">
+          <Link 
+            to="/login"
+            role="menuitem"
+          >
             <Button 
-              className="bg-vip-gold hover:bg-vip-gold/90 text-white"
+              className="bg-vip-gold hover:bg-vip-gold/90 text-white focus:ring-2 focus:ring-we-gold focus:ring-offset-2"
               aria-label="Connexion"
             >
               Connexion
