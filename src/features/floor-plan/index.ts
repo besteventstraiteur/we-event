@@ -5,7 +5,3 @@ import { lazy } from 'react';
 export const FloorPlanner = lazy(() => 
   import("@/components/floor-planner/FloorPlanner" /* webpackChunkName: "floor-planner" */)
 );
-
-// Re-export types and utilities
-export * from './types';
-export * from './utils';

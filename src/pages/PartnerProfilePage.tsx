@@ -1,5 +1,6 @@
-
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
+import OptimizedImage from "@/components/shared/OptimizedImage";
+import { MediaLoadingFallback } from "@/components/shared/MediaLoadingFallback";
 import { useParams } from "react-router-dom";
 import { usePartnerProfile } from "@/hooks/usePartnerProfile";
 import { Card, CardContent } from "@/components/ui/card";
@@ -59,7 +60,6 @@ const PartnerProfilePage = () => {
       <main className={`flex-1 container ${isMobile ? 'py-3 px-3' : 'py-8'}`}>
         {profile && (
           <div className="max-w-7xl mx-auto">
-            {/* En-tête du profil */}
             <div className="bg-white shadow-sm rounded-lg p-6 mb-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="md:col-span-2">
@@ -104,7 +104,6 @@ const PartnerProfilePage = () => {
               </div>
             </div>
 
-            {/* Galerie photos */}
             {sortedImages.length > 0 && (
               <div className="mb-12">
                 <h2 className="text-2xl font-semibold mb-6">Galerie photos</h2>
@@ -113,11 +112,13 @@ const PartnerProfilePage = () => {
                     {sortedImages.map((image) => (
                       <CarouselItem key={image.id} className="md:basis-1/2 lg:basis-1/3">
                         <div className="aspect-square relative overflow-hidden rounded-lg">
-                          <img
-                            src={image.url}
-                            alt={image.alt || "Image de galerie"}
-                            className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
-                          />
+                          <Suspense fallback={<MediaLoadingFallback />}>
+                            <OptimizedImage
+                              src={image.url}
+                              alt={image.alt || "Image de galerie"}
+                              className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
+                            />
+                          </Suspense>
                           {image.featured && (
                             <Badge className="absolute bottom-2 left-2 bg-amber-500">
                               Photo mise en avant
@@ -133,7 +134,6 @@ const PartnerProfilePage = () => {
               </div>
             )}
 
-            {/* Services et Description */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
               <div className="md:col-span-2">
                 <Card>
@@ -158,7 +158,6 @@ const PartnerProfilePage = () => {
                 </Card>
               </div>
 
-              {/* Coordonnées */}
               <div>
                 <Card>
                   <CardContent className="p-6">
@@ -203,7 +202,6 @@ const PartnerProfilePage = () => {
               </div>
             </div>
 
-            {/* Formules et tarifs */}
             {profile.pricing?.packages && profile.pricing.packages.length > 0 && (
               <div className="mb-12">
                 <h2 className="text-2xl font-semibold mb-6">Formules et tarifs</h2>
@@ -234,7 +232,6 @@ const PartnerProfilePage = () => {
 
       <PartnersFooter />
 
-      {/* Dialog de contact */}
       <Dialog open={showContactDialog} onOpenChange={setShowContactDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>

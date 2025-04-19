@@ -1,10 +1,10 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle, Bookmark, Share2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import OptimizedImage from "@/components/shared/OptimizedImage";
 
 export interface InspirationImage {
   id: string;
@@ -31,7 +31,6 @@ const PinterbestGallery: React.FC<PinterbestGalleryProps> = ({ images }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-auto">
       {images.map((image) => {
-        // Calculer la hauteur en fonction du ratio de l'image (avec un minimum et un maximum)
         const aspectRatio = image.height / image.width;
         const rowSpan = Math.max(1, Math.min(3, Math.round(aspectRatio * 1.5)));
         
@@ -43,14 +42,12 @@ const PinterbestGallery: React.FC<PinterbestGalleryProps> = ({ images }) => {
             }`}
           >
             <div className="relative">
-              <img 
+              <OptimizedImage 
                 src={image.imageUrl} 
                 alt={image.title}
                 className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                style={{ 
-                  aspectRatio: `${image.width} / ${image.height}`,
-                  objectFit: 'cover' 
-                }}
+                width={image.width}
+                height={image.height}
               />
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
                 <div className="flex justify-between w-full text-white">
