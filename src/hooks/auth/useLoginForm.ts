@@ -9,11 +9,15 @@ import type { AuthDebugInfo } from "./types/loginTypes";
 export const useLoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [authDebugInfo, setAuthDebugInfo] = useState<AuthDebugInfo>({});
+  const [redirecting, setRedirecting] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { login } = useAuth();
 
   const handleLoginSubmit = async (email: string, password: string, rememberMe: boolean) => {
+    // Avoid duplicate login attempts
+    if (isLoading || redirecting) return { success: false };
+    
     setIsLoading(true);
     
     let userType = "client";
@@ -34,6 +38,12 @@ export const useLoginForm = () => {
       // Handle demo accounts directly
       if ((email.includes("admin@") || email.includes("partner@") || email.includes("client@")) && 
           password === "password123") {
+        
+        // Prevent multiple redirections
+        if (redirecting) {
+          return { success: false };
+        }
+        setRedirecting(true);
         
         console.log("Using demo account for:", email);
         let role = userType;
@@ -81,7 +91,8 @@ export const useLoginForm = () => {
         setTimeout(() => {
           window.location.href = redirectPath;
           setIsLoading(false);
-        }, 500);
+          setRedirecting(false);
+        }, 800);
         
         return { success: true };
       }
@@ -93,6 +104,12 @@ export const useLoginForm = () => {
         const requires2FA = email.includes("secure") || localStorage.getItem('2fa_enabled') === 'true';
         
         if (!requires2FA) {
+          // Prevent multiple redirections
+          if (redirecting) {
+            return { success: false };
+          }
+          setRedirecting(true);
+          
           // Fixed: Access role directly from the user object instead of user_metadata
           const userRole = result.user?.role?.toLowerCase() || userType;
           const redirectPath = getRedirectPathForRole(userRole);
@@ -114,7 +131,8 @@ export const useLoginForm = () => {
           setTimeout(() => {
             window.location.href = redirectPath;
             setIsLoading(false);
-          }, 500);
+            setRedirecting(false);
+          }, 800);
         }
         
         return { success: true, requires2FA };

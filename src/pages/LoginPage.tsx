@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
@@ -24,9 +24,13 @@ const LoginPage = () => {
   const isMobileDevice = deviceType === 'mobile' || deviceType === 'tablet';
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
+  const redirectAttempted = useRef(false);
   
   useEffect(() => {
-    if (isAuthenticated && user) {
+    if (isAuthenticated && user && !redirectAttempted.current) {
+      // Mark that we've attempted redirection to avoid loops
+      redirectAttempted.current = true;
+      
       // Normalize the role for comparison
       let userRole = '';
       
@@ -56,7 +60,7 @@ const LoginPage = () => {
       // Use setTimeout to ensure the redirection happens after the component is fully mounted
       setTimeout(() => {
         window.location.href = redirectPath;
-      }, 300);
+      }, 500);
     }
   }, [isAuthenticated, user, navigate]);
   

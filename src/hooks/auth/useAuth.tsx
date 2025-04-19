@@ -33,35 +33,42 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { user, session, setUser, setSession, isLoading } = useAuthState();
   const { login, loginWithProvider, logout, register } = useAuthMethods(setUser);
   const { hasRole, hasPermission, hasPartnerType } = usePermissions(user);
+  const [lastCheckTimestamp, setLastCheckTimestamp] = useState<number>(0);
 
   // Check if there's a demo user set in localStorage on component mount
   useEffect(() => {
     const checkForDemoUser = () => {
-      if (!user) {
-        try {
-          const localStorageAuth = localStorage.getItem("supabase.auth.token");
-          if (localStorageAuth) {
-            try {
-              const authData = JSON.parse(localStorageAuth);
-              if (authData && authData.currentSession && authData.currentSession.user) {
-                console.log("Found demo user in localStorage:", authData.currentSession.user);
-                setUser(authData.currentSession.user);
-                // Set session for demo users as well
-                setSession({ 
-                  access_token: 'demo-token',
-                  refresh_token: 'demo-refresh-token',
-                  expires_in: 3600,
-                  token_type: 'bearer',
-                  user: authData.currentSession.user
-                });
-              }
-            } catch (e) {
-              console.error("Error parsing auth data:", e);
+      // Skip check if user is already set or if less than 3 seconds have passed since last check
+      const now = Date.now();
+      if (user || (now - lastCheckTimestamp < 3000)) {
+        return;
+      }
+      
+      setLastCheckTimestamp(now);
+      
+      try {
+        const localStorageAuth = localStorage.getItem("supabase.auth.token");
+        if (localStorageAuth) {
+          try {
+            const authData = JSON.parse(localStorageAuth);
+            if (authData && authData.currentSession && authData.currentSession.user) {
+              console.log("Found demo user in localStorage:", authData.currentSession.user);
+              setUser(authData.currentSession.user);
+              // Set session for demo users as well
+              setSession({ 
+                access_token: 'demo-token',
+                refresh_token: 'demo-refresh-token',
+                expires_in: 3600,
+                token_type: 'bearer',
+                user: authData.currentSession.user
+              });
             }
+          } catch (e) {
+            console.error("Error parsing auth data:", e);
           }
-        } catch (error) {
-          console.error("Error checking for demo user:", error);
         }
+      } catch (error) {
+        console.error("Error checking for demo user:", error);
       }
     };
 
@@ -69,11 +76,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkForDemoUser();
 
     // Set up an interval to periodically check for auth changes (helps with demo login)
-    const intervalId = setInterval(checkForDemoUser, 1000);
+    // Reduced check frequency to avoid excessive refreshes
+    const intervalId = setInterval(checkForDemoUser, 3000);
     
     // Clean up interval on component unmount
     return () => clearInterval(intervalId);
-  }, []);
+  }, [user, lastCheckTimestamp]);
 
   // Update user profile
   const updateUser = async (updatedFields: Partial<Profile>): Promise<void> => {
