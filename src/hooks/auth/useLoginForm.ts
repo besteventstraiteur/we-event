@@ -30,6 +30,58 @@ export const useLoginForm = () => {
 
     try {
       console.log("Login attempt:", { email, password: "******", rememberMe, userType });
+      
+      // Handle demo accounts directly
+      if ((email.includes("admin@") || email.includes("partner@") || email.includes("client@")) && 
+          password === "password123") {
+        
+        console.log("Using demo account for:", email);
+        let role = userType;
+        
+        const demoUser = {
+          id: `demo-${Date.now()}`,
+          user_metadata: {
+            email: email,
+            name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+            role: role
+          },
+          email: email,
+          role: role
+        };
+        
+        // Store demo user information (simulating login)
+        localStorage.setItem("supabase.auth.token", JSON.stringify({
+          currentSession: {
+            user: demoUser
+          }
+        }));
+        
+        if (rememberMe) {
+          localStorage.setItem("weddingPlannerEmail", email);
+          localStorage.setItem("weddingPlannerRememberMe", "true");
+        }
+        
+        const redirectPath = getRedirectPathForRole(role);
+        
+        setAuthDebugInfo(prev => ({ 
+          ...prev, 
+          redirectPath,
+          redirectAttempted: true
+        }));
+        
+        console.log("Demo login successful for", role, "user, redirecting to:", redirectPath);
+        
+        toast({
+          title: "Connexion réussie",
+          description: "Bienvenue sur votre espace VIP",
+        });
+        
+        navigate(redirectPath, { replace: true });
+        setIsLoading(false);
+        return { success: true };
+      }
+      
+      // If not a demo account, proceed with regular authentication
       const result = await login({ email, password, rememberMe });
       
       if (result.success) {

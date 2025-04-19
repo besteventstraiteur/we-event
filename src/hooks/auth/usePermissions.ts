@@ -1,52 +1,38 @@
 
-import { Profile } from "@/lib/supabase";
-import { UserRole, Permission } from "@/utils/accessControl";
+import { Permission, UserRole, PartnerType } from "@/utils/accessControl";
 
-export function usePermissions(user: Profile | null) {
-  // Vérification si l'utilisateur a un certain rôle
-  const hasRole = (role: UserRole): boolean => {
+export function usePermissions(user: any) {
+  const hasRole = (role: string): boolean => {
     if (!user) return false;
     
-    // Normalisation des rôles pour la comparaison
-    const userRole = String(user.role || "").toUpperCase();
-    const requiredRole = String(role).toUpperCase();
-    
-    console.log("Role check:", { userRole, requiredRole });
-    
-    return userRole === requiredRole;
+    // Get user role from metadata or direct property
+    const userRole = typeof user.role === 'string' 
+      ? user.role.toLowerCase() 
+      : typeof user.user_metadata?.role === 'string' 
+        ? user.user_metadata.role.toLowerCase() 
+        : '';
+        
+    console.log("Checking role:", role, "against user role:", userRole);
+    return userRole === role.toLowerCase();
   };
 
-  // Vérification si l'utilisateur a une certaine permission
   const hasPermission = (permission: Permission): boolean => {
-    // Les administrateurs ont toutes les permissions
+    if (!user) return false;
+    
+    // Admins have all permissions
     if (hasRole(UserRole.ADMIN)) return true;
     
-    // Implémentation de base - à étendre si nécessaire avec une vraie gestion des permissions
-    switch (permission) {
-      case Permission.VIEW_DASHBOARD:
-        return !!user;
-      case Permission.MANAGE_GUESTS:
-        return hasRole(UserRole.CLIENT) || hasRole(UserRole.ADMIN);
-      case Permission.MANAGE_REQUESTS:
-        return hasRole(UserRole.PARTNER) || hasRole(UserRole.ADMIN);
-      case Permission.MANAGE_CLIENTS:
-      case Permission.MANAGE_PARTNERS:
-      case Permission.MANAGE_ADMINS:
-      case Permission.ACCESS_ADVANCED_SECURITY:
-      case Permission.MANAGE_SYSTEM:
-        return hasRole(UserRole.ADMIN);
-      default:
-        return false;
-    }
+    // Check in user permissions if available
+    const userPermissions = user.permissions || user.user_metadata?.permissions;
+    return userPermissions ? userPermissions.includes(permission) : false;
   };
-
-  // Vérification si le partenaire est d'un certain type
-  const hasPartnerType = (partnerType: string): boolean => {
+  
+  const hasPartnerType = (partnerType: PartnerType): boolean => {
     if (!user) return false;
     if (!hasRole(UserRole.PARTNER)) return false;
     
-    // Si l'utilisateur est partenaire, vérifier son type
-    return user.partner_type === partnerType;
+    const userPartnerType = user.partner_type || user.user_metadata?.partner_type;
+    return userPartnerType === partnerType;
   };
 
   return {

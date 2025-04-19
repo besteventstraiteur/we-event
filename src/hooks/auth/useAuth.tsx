@@ -7,7 +7,7 @@ import { AuthContextType, AuthResult, LoginCredentials } from './types';
 import { UserRole } from '@/utils/accessControl';
 import { Profile } from '@/lib/supabase';
 
-// Créer le contexte d'authentification avec des valeurs par défaut
+// Create the authentication context with default values
 const AuthContext = createContext<AuthContextType>({
   user: null,
   session: null,
@@ -23,26 +23,44 @@ const AuthContext = createContext<AuthContextType>({
   updateUser: async () => {},
 });
 
-// Définir les props du fournisseur d'authentification
+// Define the props for the AuthProvider component
 export interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Créer le composant fournisseur d'authentification
+// Create the AuthProvider component
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { user, session, setUser, setSession, isLoading } = useAuthState();
   const { login, loginWithProvider, logout, register } = useAuthMethods(setUser);
   const { hasRole, hasPermission, hasPartnerType } = usePermissions(user);
 
-  // Mise à jour du profil utilisateur
+  // Check if there's a demo user set in localStorage on component mount
+  useEffect(() => {
+    if (!user) {
+      try {
+        const localStorageAuth = localStorage.getItem("supabase.auth.token");
+        if (localStorageAuth) {
+          const authData = JSON.parse(localStorageAuth);
+          if (authData && authData.currentSession && authData.currentSession.user) {
+            console.log("Found demo user in localStorage:", authData.currentSession.user);
+            setUser(authData.currentSession.user);
+          }
+        }
+      } catch (error) {
+        console.error("Error checking for demo user:", error);
+      }
+    }
+  }, []);
+
+  // Update user profile
   const updateUser = async (updatedFields: Partial<Profile>): Promise<void> => {
     if (!user) return;
     
     try {
-      // Dans une implémentation réelle, ceci ferait une requête API
+      // In a real implementation, this would make an API request
       console.log('Updating user profile:', updatedFields);
       
-      // Mise à jour locale de l'état utilisateur
+      // Local update of user state
       setUser({
         ...user,
         ...updatedFields
@@ -75,7 +93,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-// Créer et exporter le hook personnalisé pour utiliser le contexte d'authentification
+// Create and export the custom hook to use the authentication context
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   
