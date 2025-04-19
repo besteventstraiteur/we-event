@@ -37,7 +37,7 @@ const HomePage: React.FC = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            <p>Welcome, {user.user_metadata?.name || user.email}!</p>
+            <p>Welcome, {user.name || user.email}!</p>
             <Button asChild>
               <Link to={getDashboardPath()}>
                 Go to Dashboard
