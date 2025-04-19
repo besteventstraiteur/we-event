@@ -70,7 +70,7 @@ const LoginPage = () => {
     handleResetPassword,
     handleVerifyOTP,
     handleSocialLoginSuccess,
-    handleBiometricLogin,
+    handleBiometricAuth,  // This was previously named incorrectly as handleBiometricLogin
   } = useLoginPageLogic();
 
   const content = (
@@ -105,7 +105,7 @@ const LoginPage = () => {
                 isMobileDevice={isMobileDevice}
                 biometricError={biometricError}
                 isLoading={biometricLoading}
-                onBiometricLogin={handleBiometricLogin}
+                onBiometricLogin={handleBiometricAuth}  // Fixed here - we're using handleBiometricAuth now
               />
 
               <SocialLoginButtons onLoginSuccess={handleSocialLoginSuccess} />
