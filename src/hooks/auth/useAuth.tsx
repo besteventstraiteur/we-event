@@ -1,99 +1,88 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useAuthState } from './useAuthState';
+import { useAuthMethods } from './useAuthMethods';
+import { usePermissions } from './usePermissions';
+import { AuthContextType, AuthResult, LoginCredentials } from './types';
+import { UserRole } from '@/utils/accessControl';
+import { Profile } from '@/lib/supabase';
 
-// Define the Auth Context types
-interface AuthContextType {
-  user: any | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-}
-
-// Create the Auth Context with default values
+// Créer le contexte d'authentification avec des valeurs par défaut
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  isAuthenticated: false,
+  session: null,
   isLoading: true,
-  login: async () => {},
+  isAuthenticated: false,
+  login: async () => ({ success: false }),
+  loginWithProvider: async () => ({ success: false }),
   logout: async () => {},
+  register: async () => ({ success: false }),
+  hasPermission: () => false,
+  hasRole: () => false,
+  hasPartnerType: () => false,
+  updateUser: async () => {},
 });
 
-// Create a provider component for the Auth Context
+// Définir les props du fournisseur d'authentification
 interface AuthProviderProps {
   children: ReactNode;
 }
 
+// Créer le composant fournisseur d'authentification
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<any | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, session, setUser, setSession, isLoading } = useAuthState();
+  const { login, loginWithProvider, logout, register } = useAuthMethods(setUser);
+  const { hasRole, hasPermission, hasPartnerType } = usePermissions(user);
 
-  useEffect(() => {
-    // Simulate checking for an existing session
-    const checkAuthStatus = async () => {
-      try {
-        // Here you would typically check for an existing session with your auth provider
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-      } catch (error) {
-        console.error('Auth status check failed:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuthStatus();
-  }, []);
-
-  const login = async (email: string, password: string) => {
-    setIsLoading(true);
+  // Mise à jour du profil utilisateur
+  const updateUser = async (updatedFields: Partial<Profile>): Promise<void> => {
+    if (!user) return;
+    
     try {
-      // Mock authentication
-      const mockUser = { id: '1', email, name: 'Test User' };
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
+      // Dans une implémentation réelle, ceci ferait une requête API
+      console.log('Updating user profile:', updatedFields);
+      
+      // Mise à jour locale de l'état utilisateur
+      setUser({
+        ...user,
+        ...updatedFields
+      });
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('Error updating user profile:', error);
       throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = async () => {
-    setIsLoading(true);
-    try {
-      // Clear user data
-      setUser(null);
-      localStorage.removeItem('user');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      isAuthenticated: !!user, 
-      isLoading, 
-      login, 
-      logout 
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        session,
+        isLoading,
+        isAuthenticated: !!user,
+        login,
+        loginWithProvider,
+        logout,
+        register,
+        hasPermission,
+        hasRole,
+        hasPartnerType,
+        updateUser
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Create a custom hook to use the Auth Context
-export const useAuth = () => {
+// Créer et exporter le hook personnalisé pour utiliser le contexte d'authentification
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
+  
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth doit être utilisé à l\'intérieur d\'un AuthProvider');
   }
+  
   return context;
 };
 
