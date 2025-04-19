@@ -113,7 +113,7 @@ export const useLoginPageLogic = () => {
         setResetSent(true);
         toast({
           title: "Email envoyé",
-          description: "Instructions de récupération envoyées à votre adresse email",
+          description: "Instructions de récupération envoyées �� votre adresse email",
         });
       }, 1000);
     } catch (error) {
@@ -139,7 +139,7 @@ export const useLoginPageLogic = () => {
     return false;
   };
 
-  const handleSocialLoginSuccess = async (provider: string, userData?: any) => {
+  const handleSocialLoginSuccess = async (provider: "google" | "facebook" | "github") => {
     try {
       console.log("Social login attempt with provider:", provider);
       const result = await loginWithProvider(provider);
