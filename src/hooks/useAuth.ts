@@ -12,8 +12,20 @@ interface AuthCredentials {
   name?: string;
 }
 
+// Create a type for our demo user that extends the base User type
+type DemoUser = Partial<User> & {
+  id: string;
+  email: string;
+  user_metadata: {
+    email: string;
+    name: string;
+    role: string;
+  };
+  role?: string;
+};
+
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | DemoUser | null>(null);
   const [session, setSession] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -37,7 +49,8 @@ export const useAuth = () => {
           const authData = JSON.parse(localStorageAuth);
           if (authData && authData.currentSession && authData.currentSession.user) {
             console.log("Found demo user in localStorage:", authData.currentSession.user);
-            setUser(authData.currentSession.user);
+            // Cast as DemoUser which is compatible with our state type
+            setUser(authData.currentSession.user as DemoUser);
           }
         }
       } catch (error) {
@@ -100,7 +113,8 @@ export const useAuth = () => {
           role = "partner";
         }
         
-        const demoUser = {
+        // Create a demo user with the DemoUser type
+        const demoUser: DemoUser = {
           id: `demo-${Date.now()}`,
           user_metadata: {
             email: email,
