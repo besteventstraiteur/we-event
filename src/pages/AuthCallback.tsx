@@ -10,8 +10,6 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // With cookie-based auth, Supabase will automatically extract the session from URL
-        // We just need to get the session and user info
         const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError || !sessionData.session) {
@@ -19,7 +17,6 @@ const AuthCallback = () => {
           return;
         }
         
-        // Get user profile
         const { data: userData } = await supabase.auth.getUser();
         
         if (userData.user) {
@@ -29,9 +26,8 @@ const AuthCallback = () => {
             .eq('id', userData.user.id)
             .single();
             
-          // Redirect based on user role
-          if (profile && profile.role) {
-            switch (profile.role) {
+          if (profile?.role) {
+            switch (profile.role as string) {
               case 'ADMIN':
                 navigate('/admin/dashboard');
                 break;
@@ -46,7 +42,6 @@ const AuthCallback = () => {
           }
         }
         
-        // Default redirect if no specific role was found
         navigate('/client/dashboard');
       } catch (err) {
         console.error('Error during authentication callback:', err);

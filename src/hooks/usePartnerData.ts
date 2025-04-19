@@ -1,390 +1,57 @@
 
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { PartnerProfile, PartnerImage, PricingPackage } from '@/models/partnerProfile';
+import { useEffect, useState } from 'react';
+import { useToast } from './use-toast';
+import { supabase } from '@/lib/supabase';
 import type { Database } from '@/types/supabase-db';
-import type { Json } from '@/types/supabase-db';
 
-type Tables = Database['public']['Tables'];
-type Partners = Tables['partners']['Row'];
-type PartnerImages = Tables['partner_images']['Row'];
+type Partner = Database['public']['Tables']['partners']['Row'];
+type PartnerImage = Database['public']['Tables']['partner_images']['Row'];
 
-export function usePartnerData(partnerId?: string) {
-  const [profile, setProfile] = useState<PartnerProfile | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export const usePartnerData = (partnerId: string) => {
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [partner, setPartner] = useState<Partner | null>(null);
+  const [images, setImages] = useState<PartnerImage[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
     const fetchPartnerData = async () => {
-      if (!partnerId) {
-        setIsLoading(false);
-        return;
-      }
-
-      setIsLoading(true);
       try {
-        // Fetch partner data
+        setLoading(true);
         const { data: partnerData, error: partnerError } = await supabase
           .from('partners')
-          .select(`
-            *,
-            user:user_id (
-              email,
-              name,
-              avatar_url,
-              phone
-            )
-          `)
-          .eq('id', partnerId as any)
+          .select('*')
+          .eq('id', partnerId)
           .single();
 
         if (partnerError) throw partnerError;
-        if (!partnerData) {
-          setProfile(null);
-          setError('Partner not found');
-          return;
-        }
 
-        // Fetch partner images
-        const { data: images, error: imagesError } = await supabase
+        const { data: imageData, error: imagesError } = await supabase
           .from('partner_images')
           .select('*')
-          .eq('partner_id', partnerId as any)
-          .order('order_index', { ascending: true });
+          .eq('partner_id', partnerId);
 
         if (imagesError) throw imagesError;
 
-        // Type assertions to ensure we get the correct types
-        const typedPartnerData = partnerData as unknown as Partners & { user: any };
-        const typedImages = images as unknown as PartnerImages[] | null;
-
-        // Process pricing data to ensure it conforms to the expected structure
-        let processedPricing: PartnerProfile['pricing'] = { basePrice: '', packages: [] };
-        if (typedPartnerData.pricing) {
-          if (typeof typedPartnerData.pricing === 'object') {
-            // Handle the case where pricing is an object
-            const pricingObj = typedPartnerData.pricing as Record<string, unknown>;
-            processedPricing = {
-              basePrice: typeof pricingObj.basePrice === 'string' ? pricingObj.basePrice : '',
-              packages: Array.isArray(pricingObj.packages) ? pricingObj.packages as PricingPackage[] : []
-            };
-          }
-        }
-
-        // Process contact data
-        let processedContact: PartnerProfile['contact'] = {
-          email: typedPartnerData.user?.email || '',
-          phone: typedPartnerData.user?.phone || '',
-          website: '',
-          address: ''
-        };
-
-        if (typedPartnerData.contact) {
-          if (typeof typedPartnerData.contact === 'object') {
-            // Handle the case where contact is an object
-            const contactObj = typedPartnerData.contact as Record<string, unknown>;
-            processedContact = {
-              email: (contactObj.email as string) || typedPartnerData.user?.email || '',
-              phone: (contactObj.phone as string) || typedPartnerData.user?.phone || '',
-              website: (contactObj.website as string) || '',
-              address: (contactObj.address as string) || ''
-            };
-          }
-        }
-
-        // Create typed images array
-        const processedImages: PartnerImage[] = typedImages ? typedImages.map(img => ({
-          id: img.id || '',
-          url: img.url || '',
-          alt: img.alt || '',
-          type: (img.type || 'gallery') as 'profile' | 'gallery' | 'logo' | 'background',
-          order: img.order_index || 0,
-          featured: img.featured || false
-        })) : [];
-
-        // Construct the partner profile with proper typings
-        const partnerProfile: PartnerProfile = {
-          id: typedPartnerData.id || '',
-          name: typedPartnerData.name || '',
-          category: typedPartnerData.category || '',
-          description: typedPartnerData.description || '',
-          shortDescription: typedPartnerData.short_description || '',
-          pricing: processedPricing,
-          contact: processedContact,
-          images: processedImages,
-          discount: typedPartnerData.discount || '',
-          services: typedPartnerData.services || [],
-          availability: typedPartnerData.availability || []
-        };
-
-        setProfile(partnerProfile);
-        setError(null);
+        setPartner(partnerData as Partner);
+        setImages(imageData as PartnerImage[]);
       } catch (err) {
-        console.error('Error fetching partner data:', err);
-        setError(err instanceof Error ? err.message : 'Error fetching partner data');
+        const message = err instanceof Error ? err.message : 'Error fetching partner data';
+        setError(message);
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: message
+        });
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
-    fetchPartnerData();
-  }, [partnerId]);
-
-  const updateProfile = async (updatedProfile: Partial<PartnerProfile>) => {
-    if (!profile) return;
-    
-    try {
-      // Convert from our model structure to Supabase's expected structure
-      const supabaseUpdateData = {
-        name: updatedProfile.name,
-        category: updatedProfile.category,
-        description: updatedProfile.description,
-        short_description: updatedProfile.shortDescription,
-        pricing: updatedProfile.pricing,
-        contact: updatedProfile.contact,
-        discount: updatedProfile.discount,
-        services: updatedProfile.services,
-        availability: updatedProfile.availability
-      };
-      
-      const { error } = await supabase
-        .from('partners')
-        .update(supabaseUpdateData as any)
-        .eq('id', profile.id as any);
-      
-      if (error) throw error;
-      
-      // Update local state
-      setProfile(prev => prev ? { ...prev, ...updatedProfile } : null);
-      
-      toast({
-        title: "Profil mis à jour",
-        description: "Vos modifications ont été enregistrées avec succès."
-      });
-    } catch (err) {
-      console.error('Error updating profile:', err);
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: err instanceof Error ? err.message : "Impossible de mettre à jour le profil"
-      });
+    if (partnerId) {
+      fetchPartnerData();
     }
-  };
+  }, [partnerId, toast]);
 
-  // Type assertions for file uploads
-  const updateProfileImage = async (file: File, type: 'profile' | 'gallery' | 'logo' | 'background'): Promise<PartnerImage> => {
-    if (!profile) throw new Error('No profile loaded');
-    
-    try {
-      // Upload file to Supabase Storage
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${profile.id}/${type}_${Date.now()}.${fileExt}`;
-      
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('partner-images')
-        .upload(fileName, file);
-      
-      if (uploadError) throw uploadError;
-      
-      // Get public URL
-      const { data: urlData } = await supabase.storage
-        .from('partner-images')
-        .getPublicUrl(uploadData.path);
-      
-      const url = urlData.publicUrl;
-      
-      // Handle existing featured image if applicable
-      if (type !== 'gallery' && profile.images.some(img => img.type === type && img.featured)) {
-        // If a featured image already exists for this type, we'll make it non-featured
-        const oldImage = profile.images.find(img => img.type === type && img.featured);
-        
-        if (oldImage) {
-          await supabase
-            .from('partner_images')
-            .update({ featured: false } as any)
-            .eq('id', oldImage.id as any);
-        }
-      }
-      
-      // Calculate order index for gallery images
-      const orderIndex = type === 'gallery'
-        ? Math.max(0, ...profile.images.filter(img => img.type === 'gallery').map(img => img.order || 0)) + 1
-        : undefined;
-      
-      // Prepare the data to insert
-      const insertData = {
-        partner_id: profile.id,
-        url,
-        alt: file.name,
-        type,
-        order_index: orderIndex,
-        featured: type !== 'gallery'
-      };
-      
-      // Save image metadata to database
-      const { data: image, error: imageError } = await supabase
-        .from('partner_images')
-        .insert(insertData as any)
-        .select()
-        .single();
-      
-      if (imageError) throw imageError;
-      
-      if (!image) throw new Error('Failed to insert image');
-      
-      // Create new image object with type safety
-      const typedImage = image as unknown as PartnerImages;
-      
-      const newImage: PartnerImage = {
-        id: typedImage.id || '',
-        url,
-        alt: file.name,
-        type,
-        order: typedImage.order_index || 0,
-        featured: typedImage.featured || false
-      };
-      
-      // Update local state
-      setProfile(prev => {
-        if (!prev) return null;
-        
-        // Filter out any existing featured image of the same type if this is a featured image
-        let updatedImages = prev.images.filter(img => 
-          !(img.type === type && newImage.featured && img.featured)
-        );
-        
-        updatedImages = [...updatedImages, newImage];
-        return { ...prev, images: updatedImages };
-      });
-      
-      toast({
-        title: "Image téléchargée",
-        description: "Votre image a été optimisée et ajoutée à votre profil."
-      });
-      
-      return newImage;
-    } catch (err) {
-      console.error('Error uploading image:', err);
-      toast({
-        variant: "destructive", 
-        title: "Erreur",
-        description: err instanceof Error ? err.message : "Impossible de télécharger l'image"
-      });
-      throw err;
-    }
-  };
-
-  const removeProfileImage = async (imageId: string) => {
-    if (!profile) return;
-    
-    try {
-      const image = profile.images.find(img => img.id === imageId);
-      if (!image) throw new Error('Image not found');
-      
-      // Delete from database
-      const { error } = await supabase
-        .from('partner_images')
-        .delete()
-        .eq('id', imageId as any);
-        
-      if (error) throw error;
-      
-      // Update local state
-      setProfile(prev => {
-        if (!prev) return null;
-        return { 
-          ...prev, 
-          images: prev.images.filter(img => img.id !== imageId) 
-        };
-      });
-    } catch (err) {
-      console.error('Error removing image:', err);
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: err instanceof Error ? err.message : "Impossible de supprimer l'image"
-      });
-    }
-  };
-
-  return {
-    profile,
-    isLoading,
-    error,
-    updateProfile,
-    updateProfileImage,
-    removeProfileImage
-  };
-}
-
-// Hook to fetch all partners (useful for admin)
-export function usePartners() {
-  const [partners, setPartners] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchPartners = async (status?: string) => {
-    setIsLoading(true);
-    try {
-      let query = supabase
-        .from('partners')
-        .select(`
-          *,
-          user:user_id (
-            email,
-            name,
-            avatar_url
-          ),
-          images:partner_images(*)
-        `);
-        
-      if (status) {
-        query = query.eq('status', status);
-      }
-      
-      const { data, error: fetchError } = await query;
-        
-      if (fetchError) throw fetchError;
-      setPartners(data || []);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching partners:', err);
-      setError(err instanceof Error ? err.message : 'Error fetching partners');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPartners();
-  }, []);
-
-  const updatePartnerStatus = async (id: string, status: string) => {
-    try {
-      const { error } = await supabase
-        .from('partners')
-        .update({ status })
-        .eq('id', id as any);
-        
-      if (error) throw error;
-      
-      // Refresh data
-      fetchPartners();
-      
-      return true;
-    } catch (err) {
-      console.error('Error updating partner status:', err);
-      return false;
-    }
-  };
-
-  return {
-    partners,
-    isLoading,
-    error,
-    fetchPartners,
-    updatePartnerStatus
-  };
-}
+  return { partner, images, loading, error };
+};
