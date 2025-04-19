@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 // Définir les props du fournisseur d'authentification
-interface AuthProviderProps {
+export interface AuthProviderProps {
   children: ReactNode;
 }
 
