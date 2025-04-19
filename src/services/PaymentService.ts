@@ -1,11 +1,9 @@
-
 // This is a frontend service that communicates with our backend Stripe integration
 // In a production environment, sensitive operations should be handled by a secure backend
 
 import { loadStripe } from '@stripe/stripe-js';
 
-// Initialize Stripe with your publishable key
-// In production, this should be stored in an environment variable
+// Initialize Stripe with publishable key from Supabase
 const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
 export interface PaymentIntent {

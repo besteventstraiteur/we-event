@@ -2,10 +2,7 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/supabase-db';
 
-const SUPABASE_URL = "https://awraiakbiahrzncoeyya.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3cmFpYWtiaWFocnpuY29leXlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1MjYwOTUsImV4cCI6MjA2MDEwMjA5NX0.8da1AC1m6DDwrLbRPlYZ9KHx89pE4xtw2AkTQFbciys";
-
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+const supabase = createClient<Database>("https://awraiakbiahrzncoeyya.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3cmFpYWtiaWFocnpuY29leXlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1MjYwOTUsImV4cCI6MjA2MDEwMjA5NX0.8da1AC1m6DDwrLbRPlYZ9KHx89pE4xtw2AkTQFbciys", {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
@@ -31,41 +28,40 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
           localStorage.removeItem(key);
         }
       }
-    }
-    // Removed cookieOptions as it's not recognized in the type definition
-  },
-  db: {
-    schema: 'public'
-  },
-  global: {
-    fetch: (...args) => {
-      console.debug('Supabase API Call:', {
-        url: args[0],
-        method: (args[1] as RequestInit)?.method || 'GET',
-        timestamp: new Date().toISOString()
-      });
-      
-      return fetch(args[0] as RequestInfo | URL, args[1] as RequestInit | undefined)
-        .then(async (response) => {
-          if (!response.ok) {
-            console.error('Supabase API Error:', {
-              status: response.status,
-              statusText: response.statusText,
-              url: response.url
-            });
-            const errorBody = await response.text();
-            console.error('Error details:', errorBody);
-          }
-          return response;
-        })
-        .catch(err => {
-          console.error('Supabase Network Error:', {
-            message: err.message,
-            type: err.name,
-            stack: err.stack
-          });
-          throw err;
+    },
+    db: {
+      schema: 'public'
+    },
+    global: {
+      fetch: (...args) => {
+        console.debug('Supabase API Call:', {
+          url: args[0],
+          method: (args[1] as RequestInit)?.method || 'GET',
+          timestamp: new Date().toISOString()
         });
+        
+        return fetch(args[0] as RequestInfo | URL, args[1] as RequestInit | undefined)
+          .then(async (response) => {
+            if (!response.ok) {
+              console.error('Supabase API Error:', {
+                status: response.status,
+                statusText: response.statusText,
+                url: response.url
+              });
+              const errorBody = await response.text();
+              console.error('Error details:', errorBody);
+            }
+            return response;
+          })
+          .catch(err => {
+            console.error('Supabase Network Error:', {
+              message: err.message,
+              type: err.name,
+              stack: err.stack
+            });
+            throw err;
+          });
+      }
     }
   }
 });
@@ -116,3 +112,5 @@ export const testDatabaseConnection = async () => {
     };
   }
 };
+
+export { supabase };
