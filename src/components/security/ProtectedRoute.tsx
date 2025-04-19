@@ -20,29 +20,30 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { toast } = useToast();
   const location = useLocation();
   
-  console.log("ProtectedRoute - isAuthenticated:", isAuthenticated, "user:", user, "path:", location.pathname);
+  console.log("ProtectedRoute - Path:", location.pathname, "IsAuthenticated:", isAuthenticated);
 
-  // Effect to log authentication state on mount and path change
   useEffect(() => {
-    console.log("ProtectedRoute mounted/updated - Auth state:", { 
+    console.log("ProtectedRoute - Auth state:", { 
       isAuthenticated, 
       user, 
-      path: location.pathname,
-      hasRequiredRole: requiredRole ? hasRole(requiredRole) : true,
-      hasAllowedRole: allowedRoles ? allowedRoles.some(role => hasRole(role)) : true
+      path: location.pathname
     });
-  }, [isAuthenticated, user, location.pathname, requiredRole, allowedRoles, hasRole]);
+  }, [isAuthenticated, user, location.pathname]);
 
+  // Handle not authenticated case
   if (!isAuthenticated || !user) {
-    console.log("Not authenticated or no user, redirecting to /login");
-    // Store the attempted URL to redirect back after login
+    console.log("Not authenticated, redirecting to /login with path:", location.pathname);
+    
+    // Store the current path for redirect after login
     sessionStorage.setItem("redirectAfterLogin", location.pathname);
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+    
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
-  // Check for allowed roles if provided
+  // Handle role-based access (if roles provided)
   if (allowedRoles && allowedRoles.length > 0) {
     const hasAllowedRole = allowedRoles.some(role => hasRole(role));
+    
     if (!hasAllowedRole) {
       console.log("No allowed role found among:", allowedRoles);
       toast({
@@ -50,12 +51,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         description: "Vous n'avez pas les permissions nécessaires pour accéder à cette page",
         variant: "destructive",
       });
+      
       return <Navigate to="/unauthorized" replace />;
     }
-    return children ? <>{children}</> : <Outlet />;
   }
 
-  // Check for single required role if provided
+  // Handle single required role (if provided)
   if (requiredRole && !hasRole(requiredRole)) {
     console.log("Required role not found:", requiredRole);
     toast({
@@ -63,6 +64,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       description: "Vous n'avez pas les permissions nécessaires pour accéder à cette page",
       variant: "destructive",
     });
+    
     return <Navigate to="/unauthorized" replace />;
   }
 

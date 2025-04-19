@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
@@ -25,35 +26,29 @@ const LoginPage = () => {
   const location = useLocation();
   const { isAuthenticated, user } = useAuth();
   
+  // Effect to redirect authenticated users
   useEffect(() => {
-    console.log("LoginPage - Auth state:", { 
-      isAuthenticated, 
-      user,
-      locationState: location.state,
-      storedRedirect: sessionStorage.getItem("redirectAfterLogin")
-    });
-    
     if (isAuthenticated && user) {
-      // Normaliser le rôle pour la comparaison
-      const userRoleStr = String(user.role || user.user_metadata?.role || '').toLowerCase().trim();
+      console.log("LoginPage - User is authenticated:", user);
       
-      console.log("LoginPage - User role detected:", userRoleStr);
-      
-      // Get the redirect path in order of priority:
-      // 1. From state (direct navigation attempt)
-      // 2. From session storage (saved by ProtectedRoute)
-      // 3. Default based on user role
+      // Determine the redirect path from user role
+      const userRole = String(user.role || user.user_metadata?.role || '').toLowerCase();
       let redirectPath;
       
-      if (location.state?.from) {
-        redirectPath = location.state.from;
-        console.log("Using redirect path from location state:", redirectPath);
-      } else if (sessionStorage.getItem("redirectAfterLogin")) {
-        redirectPath = sessionStorage.getItem("redirectAfterLogin");
+      // First check if there's a redirect path in state or session storage
+      const fromPath = location.state?.from;
+      const storedPath = sessionStorage.getItem("redirectAfterLogin");
+      
+      if (fromPath) {
+        redirectPath = fromPath;
+        console.log("Using path from location state:", redirectPath);
+      } else if (storedPath) {
+        redirectPath = storedPath;
+        sessionStorage.removeItem("redirectAfterLogin"); // Clear it after use
         console.log("Using stored redirect path:", redirectPath);
       } else {
-        // Fallback to role-based dashboard
-        switch (userRoleStr) {
+        // Use default paths based on role
+        switch (userRole) {
           case 'admin':
             redirectPath = '/admin/dashboard';
             break;
@@ -63,19 +58,15 @@ const LoginPage = () => {
           default:
             redirectPath = '/client/dashboard';
         }
-        console.log("Using default role-based redirect:", redirectPath);
+        console.log("Using default role-based path:", redirectPath);
       }
       
-      console.log("User is authenticated, will redirect to:", redirectPath, "Role:", userRoleStr);
+      console.log(`Redirecting to: ${redirectPath} (role: ${userRole})`);
       
-      // Use a slight delay to ensure state updates before navigation
+      // Use a timeout to ensure state updates complete before navigation
       setTimeout(() => {
-        // Clear stored redirect
-        sessionStorage.removeItem("redirectAfterLogin");
-        
-        // Navigate with replace to avoid back-button issues
         navigate(redirectPath, { replace: true });
-      }, 500);
+      }, 800); // Increased delay for more reliable navigation
     }
   }, [isAuthenticated, user, navigate, location.state]);
   

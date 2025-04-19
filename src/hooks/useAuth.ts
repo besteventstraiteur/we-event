@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { notify } from '@/components/ui/notifications';
@@ -17,26 +18,53 @@ export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Load user from session or localStorage on mount
   useEffect(() => {
-    const fetchSession = async () => {
+    const checkUserSession = async () => {
+      // First check Supabase session
       const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      setUser(session?.user || null);
+      
+      if (session) {
+        setSession(session);
+        setUser(session.user || null);
+        return;
+      }
+      
+      // If no Supabase session, check for demo user in localStorage
+      try {
+        const localStorageAuth = localStorage.getItem("supabase.auth.token");
+        if (localStorageAuth) {
+          const authData = JSON.parse(localStorageAuth);
+          if (authData && authData.currentSession && authData.currentSession.user) {
+            console.log("Found demo user in localStorage:", authData.currentSession.user);
+            setUser(authData.currentSession.user);
+          }
+        }
+      } catch (error) {
+        console.error("Error checking for demo user:", error);
+      }
     };
 
-    fetchSession();
+    checkUserSession();
 
-    supabase.auth.onAuthStateChange((event, session) => {
+    // Listen for auth state changes
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, session?.user);
       if (event === 'SIGNED_IN') {
         setUser(session?.user || null);
+        setSession(session);
         notify.success('Connexion réussie', 'Bienvenue sur votre espace');
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
+        setSession(null);
         notify.success('Déconnexion réussie', 'À bientôt!');
         navigate('/login');
       }
-      setSession(session);
     });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, [navigate]);
 
   const isAuthenticated = !!user;
@@ -58,7 +86,53 @@ export const useAuth = () => {
 
   const login = async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
     try {
-      const { email, password } = credentials;
+      const { email, password, rememberMe } = credentials;
+      
+      // Handle demo accounts directly
+      if ((email.includes("admin@") || email.includes("partner@") || email.includes("client@")) && 
+          password === "password123") {
+        
+        console.log("Using demo account for:", email);
+        let role = "client";
+        if (email.includes("admin")) {
+          role = "admin";
+        } else if (email.includes("partner")) {
+          role = "partner";
+        }
+        
+        const demoUser = {
+          id: `demo-${Date.now()}`,
+          user_metadata: {
+            email: email,
+            name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+            role: role
+          },
+          email: email,
+          role: role
+        };
+        
+        // Store demo user information
+        localStorage.setItem("supabase.auth.token", JSON.stringify({
+          currentSession: {
+            user: demoUser
+          }
+        }));
+        
+        if (rememberMe) {
+          localStorage.setItem("weddingPlannerEmail", email);
+          localStorage.setItem("weddingPlannerRememberMe", "true");
+        }
+        
+        setUser(demoUser);
+        
+        // Dispatch the auth-refresh event to notify components
+        window.dispatchEvent(new Event('auth-refresh'));
+        
+        notify.success('Connexion réussie', 'Bienvenue sur votre espace');
+        return { success: true, user: demoUser };
+      }
+      
+      // If not a demo account, proceed with regular authentication
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -79,6 +153,9 @@ export const useAuth = () => {
 
   const logout = async () => {
     try {
+      // Clear demo user data if present
+      localStorage.removeItem("supabase.auth.token");
+      
       await supabase.auth.signOut();
       notify.success('Déconnexion réussie', 'À bientôt!');
       navigate('/login');
