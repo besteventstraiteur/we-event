@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useAuthState } from './useAuthState';
 import { useAuthMethods } from './useAuthMethods';
 import { usePermissions } from './usePermissions';
@@ -33,22 +33,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { user, session, setUser, setSession, isLoading } = useAuthState();
   const { login, loginWithProvider, logout, register } = useAuthMethods(setUser);
   const { hasRole, hasPermission, hasPartnerType } = usePermissions(user);
-  const [lastCheckTimestamp, setLastCheckTimestamp] = useState<number>(0);
-  const checkAttempts = useRef(0);
-  const checkingInProgress = useRef(false);
-  const checkInterval = useRef<number | null>(null);
 
-  // Check for demo user only once on component mount
+  // Check if there's a demo user set in localStorage on component mount
   useEffect(() => {
-    const checkForDemoUser = () => {
-      // Skip if already checking or user is already set
-      if (checkingInProgress.current || user) {
-        return;
-      }
-      
+    if (!user) {
       try {
-        checkingInProgress.current = true;
-        
         const localStorageAuth = localStorage.getItem("supabase.auth.token");
         if (localStorageAuth) {
           try {
@@ -56,58 +45,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             if (authData && authData.currentSession && authData.currentSession.user) {
               console.log("Found demo user in localStorage:", authData.currentSession.user);
               setUser(authData.currentSession.user);
-              // Set session for demo users as well
-              setSession({ 
-                access_token: 'demo-token',
-                refresh_token: 'demo-refresh-token',
-                expires_in: 3600,
-                token_type: 'bearer',
-                user: authData.currentSession.user
-              });
             }
           } catch (e) {
             console.error("Error parsing auth data:", e);
           }
         }
-        
-        // Limit check attempts to prevent excessive checks
-        checkAttempts.current += 1;
-        if (checkAttempts.current >= 3) {
-          // Clear interval after 3 attempts if we haven't found a user
-          if (checkInterval.current) {
-            clearInterval(checkInterval.current);
-            checkInterval.current = null;
-          }
-        }
       } catch (error) {
         console.error("Error checking for demo user:", error);
-      } finally {
-        checkingInProgress.current = false;
       }
-    };
-
-    // Initial check
-    checkForDemoUser();
-
-    // Set up a one-time interval for a few retries (not continuous)
-    checkInterval.current = window.setInterval(() => {
-      if (!user) {
-        checkForDemoUser();
-      } else if (checkInterval.current) {
-        // If we have a user, clear the interval
-        clearInterval(checkInterval.current);
-        checkInterval.current = null;
-      }
-    }, 5000); // Check after 5 seconds
-    
-    // Clean up interval on component unmount
-    return () => {
-      if (checkInterval.current) {
-        clearInterval(checkInterval.current);
-        checkInterval.current = null;
-      }
-    };
-  }, [user, setUser, setSession]);
+    }
+  }, []);
 
   // Update user profile
   const updateUser = async (updatedFields: Partial<Profile>): Promise<void> => {

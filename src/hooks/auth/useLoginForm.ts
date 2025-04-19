@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/auth";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { getRedirectPathForRole } from "./utils/redirectUtils";
 import type { AuthDebugInfo } from "./types/loginTypes";
@@ -9,15 +9,11 @@ import type { AuthDebugInfo } from "./types/loginTypes";
 export const useLoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [authDebugInfo, setAuthDebugInfo] = useState<AuthDebugInfo>({});
-  const [redirecting, setRedirecting] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { login } = useAuth();
 
   const handleLoginSubmit = async (email: string, password: string, rememberMe: boolean) => {
-    // Avoid duplicate login attempts
-    if (isLoading || redirecting) return { success: false };
-    
     setIsLoading(true);
     
     let userType = "client";
@@ -39,29 +35,18 @@ export const useLoginForm = () => {
       if ((email.includes("admin@") || email.includes("partner@") || email.includes("client@")) && 
           password === "password123") {
         
-        // Prevent multiple redirections
-        if (redirecting) {
-          return { success: false };
-        }
-        setRedirecting(true);
-        
         console.log("Using demo account for:", email);
         let role = userType;
         
-        // Clear any existing demo user data to prevent loops
-        localStorage.removeItem("supabase.auth.token");
-        
-        // Create the demo user with a unique ID
         const demoUser = {
           id: `demo-${Date.now()}`,
+          user_metadata: {
+            email: email,
+            name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+            role: role
+          },
           email: email,
-          name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
-          avatar_url: null,
-          role: role.toUpperCase(),
-          partner_type: null,
-          phone: null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          role: role
         };
         
         // Store demo user information (simulating login)
@@ -91,18 +76,8 @@ export const useLoginForm = () => {
           description: "Bienvenue sur votre espace VIP",
         });
         
-        // Use a longer timeout to ensure smooth redirection
-        setTimeout(() => {
-          try {
-            window.location.href = redirectPath;
-          } catch (e) {
-            console.error("Redirection error:", e);
-            navigate(redirectPath, { replace: true });
-          }
-          setIsLoading(false);
-          setRedirecting(false);
-        }, 1000);
-        
+        navigate(redirectPath, { replace: true });
+        setIsLoading(false);
         return { success: true };
       }
       
@@ -113,14 +88,7 @@ export const useLoginForm = () => {
         const requires2FA = email.includes("secure") || localStorage.getItem('2fa_enabled') === 'true';
         
         if (!requires2FA) {
-          // Prevent multiple redirections
-          if (redirecting) {
-            return { success: false };
-          }
-          setRedirecting(true);
-          
-          // Fixed: Access role directly from the user object instead of user_metadata
-          const userRole = result.user?.role?.toLowerCase() || userType;
+          const userRole = String(result.user?.user_metadata?.role || userType).toLowerCase();
           const redirectPath = getRedirectPathForRole(userRole);
           
           setAuthDebugInfo(prev => ({ 
@@ -136,12 +104,7 @@ export const useLoginForm = () => {
             description: "Bienvenue sur votre espace VIP",
           });
           
-          // Force full page reload to ensure all context states are reset and properly initialized
-          setTimeout(() => {
-            window.location.href = redirectPath;
-            setIsLoading(false);
-            setRedirecting(false);
-          }, 1000);
+          navigate(redirectPath, { replace: true });
         }
         
         return { success: true, requires2FA };

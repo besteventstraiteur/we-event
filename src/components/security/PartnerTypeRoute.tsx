@@ -38,7 +38,7 @@ const PartnerTypeRoute: React.FC<PartnerTypeRouteProps> = ({
   const isPartner = hasRole(requiredRole);
   
   if (!isPartner) {
-    console.log("PartnerTypeRoute - User is not a partner:", user.role);
+    console.log("PartnerTypeRoute - User is not a partner:", user.user_metadata?.role);
     return <Navigate to="/unauthorized" replace />;
   }
   
@@ -46,7 +46,7 @@ const PartnerTypeRoute: React.FC<PartnerTypeRouteProps> = ({
     const hasAllowedType = allowedTypes.some(type => hasPartnerType(type));
     
     if (!hasAllowedType) {
-      console.log("PartnerTypeRoute - Partner type not allowed:", user.partner_type);
+      console.log("PartnerTypeRoute - Partner type not allowed:", user.user_metadata?.partner_type);
       return <Navigate to="/unauthorized" replace />;
     }
   }

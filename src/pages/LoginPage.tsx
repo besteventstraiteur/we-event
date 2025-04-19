@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
@@ -24,54 +24,29 @@ const LoginPage = () => {
   const isMobileDevice = deviceType === 'mobile' || deviceType === 'tablet';
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
-  const redirectAttempted = useRef(false);
-  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
   
   useEffect(() => {
-    // Check authentication status once, with a slight delay to ensure auth state is loaded
-    const timer = setTimeout(() => {
-      if (isAuthenticated && user && !redirectAttempted.current) {
-        // Mark that we've attempted redirection to avoid loops
-        redirectAttempted.current = true;
-        
-        // Normalize the role for comparison
-        let userRole = '';
-        
-        // Get the user role directly from user.role
-        if (typeof user.role === 'string') {
-          userRole = user.role.toLowerCase().trim();
-        }
-        
-        // Redirection based on user role
-        let redirectPath;
-        
-        console.log("LoginPage - User is authenticated with role:", userRole);
-        
-        switch (userRole) {
-          case 'admin':
-            redirectPath = '/admin/dashboard';
-            break;
-          case 'partner':
-            redirectPath = '/partner/dashboard';
-            break;
-          default:
-            redirectPath = '/client/dashboard';
-        }
-        
-        console.log("User already authenticated, redirecting to:", redirectPath);
-        
-        try {
-          window.location.href = redirectPath;
-        } catch (e) {
-          console.error("Error during redirection:", e);
-          // Fallback to navigate if window.location fails
-          navigate(redirectPath, { replace: true });
-        }
+    if (isAuthenticated && user) {
+      // Toujours normaliser le rôle pour la comparaison
+      const userRoleStr = String(user.role || '').toLowerCase().trim();
+      
+      // Redirection basée sur le rôle utilisateur
+      let redirectPath;
+      
+      switch (userRoleStr) {
+        case 'admin':
+          redirectPath = '/admin/dashboard';
+          break;
+        case 'partner':
+          redirectPath = '/partner/dashboard';
+          break;
+        default:
+          redirectPath = '/client/dashboard';
       }
-      setHasCheckedAuth(true);
-    }, 500);
-    
-    return () => clearTimeout(timer);
+      
+      console.log("User already authenticated, redirecting to:", redirectPath, "Role:", userRoleStr);
+      navigate(redirectPath, { replace: true });
+    }
   }, [isAuthenticated, user, navigate]);
   
   const {
@@ -95,15 +70,8 @@ const LoginPage = () => {
     handleResetPassword,
     handleVerifyOTP,
     handleSocialLoginSuccess,
-    handleBiometricAuth,
+    handleBiometricAuth,  // This was previously named incorrectly as handleBiometricLogin
   } = useLoginPageLogic();
-
-  // Show loading state while checking auth
-  if (!hasCheckedAuth) {
-    return <div className="flex items-center justify-center h-screen">
-      <div className="animate-pulse">Vérification de l'authentification...</div>
-    </div>;
-  }
 
   const content = (
     <>
@@ -137,7 +105,7 @@ const LoginPage = () => {
                 isMobileDevice={isMobileDevice}
                 biometricError={biometricError}
                 isLoading={biometricLoading}
-                onBiometricLogin={handleBiometricAuth}
+                onBiometricLogin={handleBiometricAuth}  // Fixed here - we're using handleBiometricAuth now
               />
 
               <SocialLoginButtons onLoginSuccess={handleSocialLoginSuccess} />
