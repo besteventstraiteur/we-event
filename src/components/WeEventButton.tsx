@@ -19,7 +19,7 @@ const WeEventButton: React.FC<WeEventButtonProps> = ({
   const baseStyles = "font-body transition-all duration-200 ease-out";
   
   const variantStyles = {
-    default: "bg-we-gold hover:bg-we-gold/90 text-we-white border border-transparent",
+    default: "bg-we-gold hover:bg-we-gold/90 text-we-black border border-transparent",
     outline: "border border-we-gold text-we-gold hover:bg-we-gold/10 bg-transparent",
     subtle: "bg-we-beige hover:bg-we-beige/80 text-we-green border-transparent",
     ghost: "text-we-green hover:bg-we-green/10 border-transparent bg-transparent"

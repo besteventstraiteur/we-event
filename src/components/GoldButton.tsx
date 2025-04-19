@@ -22,9 +22,9 @@ const GoldButton = ({
       variant={variant}
       size={size}
       className={cn(
-        "bg-vip-gold text-vip-black hover:bg-vip-gold/90 transition-all",
-        variant === "outline" && "bg-transparent border-vip-gold text-vip-gold hover:bg-vip-gold/10 hover:text-vip-gold",
-        variant === "link" && "bg-transparent text-vip-gold hover:bg-transparent underline",
+        "bg-we-gold text-we-black hover:bg-we-gold/90 transition-all",
+        variant === "outline" && "bg-transparent border-we-gold text-we-gold hover:bg-we-gold/10 hover:text-we-gold",
+        variant === "link" && "bg-transparent text-we-gold hover:bg-transparent underline",
         className
       )}
       {...props}
