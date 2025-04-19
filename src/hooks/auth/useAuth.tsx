@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import { useAuthState } from './useAuthState';
 import { useAuthMethods } from './useAuthMethods';
 import { usePermissions } from './usePermissions';
@@ -34,19 +34,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { login, loginWithProvider, logout, register } = useAuthMethods(setUser);
   const { hasRole, hasPermission, hasPartnerType } = usePermissions(user);
   const [lastCheckTimestamp, setLastCheckTimestamp] = useState<number>(0);
+  const checkAttempts = useRef(0);
+  const checkingInProgress = useRef(false);
+  const checkInterval = useRef<number | null>(null);
 
-  // Check if there's a demo user set in localStorage on component mount
+  // Check for demo user only once on component mount
   useEffect(() => {
     const checkForDemoUser = () => {
-      // Skip check if user is already set or if less than 3 seconds have passed since last check
-      const now = Date.now();
-      if (user || (now - lastCheckTimestamp < 3000)) {
+      // Skip if already checking or user is already set
+      if (checkingInProgress.current || user) {
         return;
       }
       
-      setLastCheckTimestamp(now);
-      
       try {
+        checkingInProgress.current = true;
+        
         const localStorageAuth = localStorage.getItem("supabase.auth.token");
         if (localStorageAuth) {
           try {
@@ -67,21 +69,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             console.error("Error parsing auth data:", e);
           }
         }
+        
+        // Limit check attempts to prevent excessive checks
+        checkAttempts.current += 1;
+        if (checkAttempts.current >= 3) {
+          // Clear interval after 3 attempts if we haven't found a user
+          if (checkInterval.current) {
+            clearInterval(checkInterval.current);
+            checkInterval.current = null;
+          }
+        }
       } catch (error) {
         console.error("Error checking for demo user:", error);
+      } finally {
+        checkingInProgress.current = false;
       }
     };
 
     // Initial check
     checkForDemoUser();
 
-    // Set up an interval to periodically check for auth changes (helps with demo login)
-    // Reduced check frequency to avoid excessive refreshes
-    const intervalId = setInterval(checkForDemoUser, 3000);
+    // Set up a one-time interval for a few retries (not continuous)
+    checkInterval.current = window.setInterval(() => {
+      if (!user) {
+        checkForDemoUser();
+      } else if (checkInterval.current) {
+        // If we have a user, clear the interval
+        clearInterval(checkInterval.current);
+        checkInterval.current = null;
+      }
+    }, 5000); // Check after 5 seconds
     
     // Clean up interval on component unmount
-    return () => clearInterval(intervalId);
-  }, [user, lastCheckTimestamp]);
+    return () => {
+      if (checkInterval.current) {
+        clearInterval(checkInterval.current);
+        checkInterval.current = null;
+      }
+    };
+  }, [user, setUser, setSession]);
 
   // Update user profile
   const updateUser = async (updatedFields: Partial<Profile>): Promise<void> => {

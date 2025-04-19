@@ -48,6 +48,10 @@ export const useLoginForm = () => {
         console.log("Using demo account for:", email);
         let role = userType;
         
+        // Clear any existing demo user data to prevent loops
+        localStorage.removeItem("supabase.auth.token");
+        
+        // Create the demo user with a unique ID
         const demoUser = {
           id: `demo-${Date.now()}`,
           email: email,
@@ -87,12 +91,17 @@ export const useLoginForm = () => {
           description: "Bienvenue sur votre espace VIP",
         });
         
-        // Force full page reload to ensure all context states are reset and properly initialized
+        // Use a longer timeout to ensure smooth redirection
         setTimeout(() => {
-          window.location.href = redirectPath;
+          try {
+            window.location.href = redirectPath;
+          } catch (e) {
+            console.error("Redirection error:", e);
+            navigate(redirectPath, { replace: true });
+          }
           setIsLoading(false);
           setRedirecting(false);
-        }, 800);
+        }, 1000);
         
         return { success: true };
       }
@@ -132,7 +141,7 @@ export const useLoginForm = () => {
             window.location.href = redirectPath;
             setIsLoading(false);
             setRedirecting(false);
-          }, 800);
+          }, 1000);
         }
         
         return { success: true, requires2FA };

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
@@ -25,43 +25,53 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const redirectAttempted = useRef(false);
+  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
   
   useEffect(() => {
-    if (isAuthenticated && user && !redirectAttempted.current) {
-      // Mark that we've attempted redirection to avoid loops
-      redirectAttempted.current = true;
-      
-      // Normalize the role for comparison
-      let userRole = '';
-      
-      // Get the user role directly from user.role
-      if (typeof user.role === 'string') {
-        userRole = user.role.toLowerCase().trim();
+    // Check authentication status once, with a slight delay to ensure auth state is loaded
+    const timer = setTimeout(() => {
+      if (isAuthenticated && user && !redirectAttempted.current) {
+        // Mark that we've attempted redirection to avoid loops
+        redirectAttempted.current = true;
+        
+        // Normalize the role for comparison
+        let userRole = '';
+        
+        // Get the user role directly from user.role
+        if (typeof user.role === 'string') {
+          userRole = user.role.toLowerCase().trim();
+        }
+        
+        // Redirection based on user role
+        let redirectPath;
+        
+        console.log("LoginPage - User is authenticated with role:", userRole);
+        
+        switch (userRole) {
+          case 'admin':
+            redirectPath = '/admin/dashboard';
+            break;
+          case 'partner':
+            redirectPath = '/partner/dashboard';
+            break;
+          default:
+            redirectPath = '/client/dashboard';
+        }
+        
+        console.log("User already authenticated, redirecting to:", redirectPath);
+        
+        try {
+          window.location.href = redirectPath;
+        } catch (e) {
+          console.error("Error during redirection:", e);
+          // Fallback to navigate if window.location fails
+          navigate(redirectPath, { replace: true });
+        }
       }
-      
-      // Redirection based on user role
-      let redirectPath;
-      
-      console.log("LoginPage - User is authenticated with role:", userRole);
-      
-      switch (userRole) {
-        case 'admin':
-          redirectPath = '/admin/dashboard';
-          break;
-        case 'partner':
-          redirectPath = '/partner/dashboard';
-          break;
-        default:
-          redirectPath = '/client/dashboard';
-      }
-      
-      console.log("User already authenticated, redirecting to:", redirectPath);
-      
-      // Use setTimeout to ensure the redirection happens after the component is fully mounted
-      setTimeout(() => {
-        window.location.href = redirectPath;
-      }, 500);
-    }
+      setHasCheckedAuth(true);
+    }, 500);
+    
+    return () => clearTimeout(timer);
   }, [isAuthenticated, user, navigate]);
   
   const {
@@ -87,6 +97,13 @@ const LoginPage = () => {
     handleSocialLoginSuccess,
     handleBiometricAuth,
   } = useLoginPageLogic();
+
+  // Show loading state while checking auth
+  if (!hasCheckedAuth) {
+    return <div className="flex items-center justify-center h-screen">
+      <div className="animate-pulse">Vérification de l'authentification...</div>
+    </div>;
+  }
 
   const content = (
     <>
