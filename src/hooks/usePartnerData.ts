@@ -31,7 +31,7 @@ export function usePartnerData(partnerId?: string) {
               phone
             )
           `)
-          .eq('id', partnerId as any)
+          .eq('id', partnerId)
           .single();
 
         if (partnerError) throw partnerError;
@@ -45,43 +45,40 @@ export function usePartnerData(partnerId?: string) {
         const { data: images, error: imagesError } = await supabase
           .from('partner_images')
           .select('*')
-          .eq('partner_id', partnerId as any)
+          .eq('partner_id', partnerId)
           .order('order_index', { ascending: true });
 
         if (imagesError) throw imagesError;
 
-        // Add type check to ensure partnerData is not null or undefined and has the expected shape
-        if (partnerData) {
-          // Transform data into expected format
-          const partnerProfile: PartnerProfile = {
-            id: partnerData.id || '',
-            name: partnerData.name || '',
-            category: partnerData.category || '',
-            description: partnerData.description || '',
-            shortDescription: partnerData.short_description || '',
-            pricing: partnerData.pricing || { basePrice: '', packages: [] },
-            contact: partnerData.contact || { 
-              email: partnerData.user?.email || '', 
-              phone: partnerData.user?.phone || '', 
-              website: '', 
-              address: '' 
-            },
-            images: images ? images.map(img => ({
-              id: img?.id || '',
-              url: img?.url || '',
-              alt: img?.alt || '',
-              type: img?.type || 'gallery',
-              order: img?.order_index || 0,
-              featured: img?.featured || false
-            })) : [],
-            discount: partnerData.discount || '',
-            services: partnerData.services || [],
-            availability: partnerData.availability || []
-          };
+        // Transform data into expected format
+        const partnerProfile: PartnerProfile = {
+          id: partnerData?.id || '',
+          name: partnerData?.name || '',
+          category: partnerData?.category || '',
+          description: partnerData?.description || '',
+          shortDescription: partnerData?.short_description || '',
+          pricing: partnerData?.pricing || { basePrice: '', packages: [] },
+          contact: partnerData?.contact || { 
+            email: partnerData?.user?.email || '', 
+            phone: partnerData?.user?.phone || '', 
+            website: '', 
+            address: '' 
+          },
+          images: images ? images.map(img => ({
+            id: img?.id || '',
+            url: img?.url || '',
+            alt: img?.alt || '',
+            type: img?.type || 'gallery',
+            order: img?.order_index || 0,
+            featured: img?.featured || false
+          })) : [],
+          discount: partnerData?.discount || '',
+          services: partnerData?.services || [],
+          availability: partnerData?.availability || []
+        };
 
-          setProfile(partnerProfile);
-          setError(null);
-        }
+        setProfile(partnerProfile);
+        setError(null);
       } catch (err) {
         console.error('Error fetching partner data:', err);
         setError(err instanceof Error ? err.message : 'Error fetching partner data');
@@ -109,8 +106,8 @@ export function usePartnerData(partnerId?: string) {
           discount: updatedProfile.discount,
           services: updatedProfile.services,
           availability: updatedProfile.availability
-        } as any)
-        .eq('id', profile.id as any);
+        })
+        .eq('id', profile.id);
       
       if (error) throw error;
       
@@ -160,8 +157,8 @@ export function usePartnerData(partnerId?: string) {
         if (oldImage) {
           await supabase
             .from('partner_images')
-            .update({ featured: false } as any)
-            .eq('id', oldImage.id as any);
+            .update({ featured: false })
+            .eq('id', oldImage.id);
         }
       }
       
@@ -180,7 +177,7 @@ export function usePartnerData(partnerId?: string) {
           type,
           order_index: orderIndex,
           featured: type !== 'gallery'
-        } as any)
+        })
         .select()
         .single();
       
@@ -239,7 +236,7 @@ export function usePartnerData(partnerId?: string) {
       const { error } = await supabase
         .from('partner_images')
         .delete()
-        .eq('id', imageId as any);
+        .eq('id', imageId);
         
       if (error) throw error;
       
@@ -296,7 +293,7 @@ export function usePartners() {
         `);
         
       if (status) {
-        query = query.eq('status', status as any);
+        query = query.eq('status', status);
       }
       
       const { data, error: fetchError } = await query;
@@ -320,8 +317,8 @@ export function usePartners() {
     try {
       const { error } = await supabase
         .from('partners')
-        .update({ status } as any)
-        .eq('id', id as any);
+        .update({ status })
+        .eq('id', id);
         
       if (error) throw error;
       
