@@ -8,7 +8,11 @@ export const notify = {
       title,
       description,
       variant: "default",
-      icon: <CheckCircle className="h-5 w-5 text-green-500" />
+      action: (
+        <div className="flex items-center">
+          <CheckCircle className="h-5 w-5 text-green-500" />
+        </div>
+      )
     });
   },
 
@@ -17,7 +21,11 @@ export const notify = {
       title,
       description,
       variant: "destructive",
-      icon: <XCircle className="h-5 w-5" />
+      action: (
+        <div className="flex items-center">
+          <XCircle className="h-5 w-5" />
+        </div>
+      )
     });
   },
 
@@ -26,7 +34,11 @@ export const notify = {
       title,
       description,
       variant: "default",
-      icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />
+      action: (
+        <div className="flex items-center">
+          <AlertTriangle className="h-5 w-5 text-yellow-500" />
+        </div>
+      )
     });
   },
 
@@ -35,7 +47,11 @@ export const notify = {
       title,
       description,
       variant: "default",
-      icon: <Info className="h-5 w-5 text-blue-500" />
+      action: (
+        <div className="flex items-center">
+          <Info className="h-5 w-5 text-blue-500" />
+        </div>
+      )
     });
   }
 };

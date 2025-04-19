@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -35,13 +34,10 @@ export const useLoginPageLogic = () => {
     handleBiometricAuth
   } = useBiometricLogin();
 
-  // Suppression de cet effet - c'est LoginPage qui gère cette redirection
-  // Le double effet crée des problèmes de redirection
-
   const handleLoginSubmit = async (email: string, password: string, rememberMe: boolean) => {
     setIsLoading(true);
     
-    // Détecter le type d'utilisateur basé sur l'email
+    // Detect user type based on email
     let userType = "client";
     if (email.includes("admin")) {
       userType = "admin";
@@ -68,8 +64,8 @@ export const useLoginPageLogic = () => {
             description: "Veuillez entrer le code de sécurité envoyé à votre appareil.",
           });
         } else {
-          // Utiliser le rôle de l'utilisateur retourné par l'API
-          const userRole = String(result.user?.role || userType).toLowerCase();
+          // Use the role from user metadata or fallback to detected type
+          const userRole = String(result.user?.user_metadata?.role || userType).toLowerCase();
           
           let redirectPath = getRedirectPathForRole(userRole);
           
@@ -185,7 +181,7 @@ export const useLoginPageLogic = () => {
       });
       
       if (loginResult.success && loginResult.user) {
-        const userRole = String(loginResult.user.role || "client").toLowerCase();
+        const userRole = String(loginResult.user.user_metadata?.role || "client").toLowerCase();
         const redirectPath = getRedirectPathForRole(userRole);
         console.log("Biometric login successful, redirecting to:", redirectPath);
         navigate(redirectPath, { replace: true });
@@ -194,7 +190,7 @@ export const useLoginPageLogic = () => {
   };
 
   const getRedirectPathForRole = (role: string): string => {
-    // Normaliser le rôle pour une comparaison cohérente
+    // Normalize the role for consistent comparison
     const normalizedRole = String(role).toLowerCase().trim();
     
     console.log("Getting redirect path for role:", normalizedRole);

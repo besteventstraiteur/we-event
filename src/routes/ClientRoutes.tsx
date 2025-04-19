@@ -1,4 +1,3 @@
-
 import React, { Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
@@ -38,7 +37,7 @@ const ClientRoutes: React.FC = () => {
       <Route
         element={
           <Suspense fallback={<LoadingFallback />}>
-            <ProtectedRoute allowedRoles={[UserRole.CLIENT]} />
+            <ProtectedRoute requiredRole={UserRole.CLIENT} />
           </Suspense>
         }
       >

@@ -2,7 +2,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { notify } from '@/components/ui/notifications';
 import { useNavigate } from 'react-router-dom';
-import { User, UserCredentials } from '@supabase/supabase-js';
+import { User } from '@supabase/supabase-js';
+
+interface AuthCredentials {
+  email: string;
+  password: string;
+  role?: string; 
+  name?: string;
+}
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -36,14 +43,22 @@ export const useAuth = () => {
 
   const hasRole = useCallback((role: string) => {
     if (!user) return false;
-    // Assurez-vous que user.role est défini et est une chaîne avant de le normaliser
-    const userRole = typeof user.role === 'string' ? user.role.toLowerCase() : '';
+    const userRole = typeof user.user_metadata?.role === 'string' ? user.user_metadata.role.toLowerCase() : '';
     const requiredRole = role.toLowerCase();
     return userRole === requiredRole;
   }, [user]);
 
-  const login = async (email: string, password: string) => {
+  const hasPartnerType = useCallback((partnerType: string) => {
+    if (!user) return false;
+    if (!hasRole('partner')) return false;
+    
+    const userPartnerType = user.user_metadata?.partner_type;
+    return userPartnerType === partnerType;
+  }, [user, hasRole]);
+
+  const login = async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
     try {
+      const { email, password } = credentials;
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -75,7 +90,7 @@ export const useAuth = () => {
     }
   };
 
-  const register = async (credentials: UserCredentials & { role: string, name: string }) => {
+  const register = async (credentials: AuthCredentials) => {
     try {
       setIsLoading(true);
       const { email, password, role, name } = credentials;
@@ -94,7 +109,6 @@ export const useAuth = () => {
         throw authError;
       }
   
-      // Auto sign-in after registration
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -164,17 +178,23 @@ export const useAuth = () => {
     }
   };
 
+  const loginWithProvider = async (provider: "google" | "facebook" | "github") => {
+    return signInWithSocialProvider(provider);
+  };
+
   return {
     user,
     session,
     isAuthenticated,
     hasRole,
+    hasPartnerType,
     isLoading,
     login,
     logout,
     register,
     resetPassword,
     updatePassword,
-    signInWithSocialProvider
+    signInWithSocialProvider,
+    loginWithProvider
   };
 };
