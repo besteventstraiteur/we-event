@@ -1,14 +1,16 @@
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import './App.css';
 import AppWrapper from './AppWrapper';
-import { Outlet } from 'react-router-dom';
+import { LazyLoadingFallback } from '@/components/shared/LazyLoadingFallback';
 import AppRouter from './components/AppRouter';
 
 function App() {
   return (
     <AppWrapper>
-      <AppRouter />
+      <Suspense fallback={<LazyLoadingFallback />}>
+        <AppRouter />
+      </Suspense>
     </AppWrapper>
   );
 }
