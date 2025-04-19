@@ -76,8 +76,11 @@ export const useLoginForm = () => {
           description: "Bienvenue sur votre espace VIP",
         });
         
-        navigate(redirectPath, { replace: true });
-        setIsLoading(false);
+        // Force refresh of auth state before navigation
+        window.setTimeout(() => {
+          navigate(redirectPath, { replace: true });
+          setIsLoading(false);
+        }, 100);
         return { success: true };
       }
       
@@ -104,7 +107,10 @@ export const useLoginForm = () => {
             description: "Bienvenue sur votre espace VIP",
           });
           
-          navigate(redirectPath, { replace: true });
+          // Force refresh of auth state before navigation
+          window.setTimeout(() => {
+            navigate(redirectPath, { replace: true });
+          }, 100);
         }
         
         return { success: true, requires2FA };

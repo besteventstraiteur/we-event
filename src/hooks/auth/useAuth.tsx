@@ -45,6 +45,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             if (authData && authData.currentSession && authData.currentSession.user) {
               console.log("Found demo user in localStorage:", authData.currentSession.user);
               setUser(authData.currentSession.user);
+              // Set session for demo users as well
+              setSession({ user: authData.currentSession.user });
             }
           } catch (e) {
             console.error("Error parsing auth data:", e);

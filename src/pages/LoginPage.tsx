@@ -27,13 +27,22 @@ const LoginPage = () => {
   
   useEffect(() => {
     if (isAuthenticated && user) {
-      // Toujours normaliser le rôle pour la comparaison
-      const userRoleStr = String(user.role || '').toLowerCase().trim();
+      // Normalize the role for comparison
+      let userRole = '';
       
-      // Redirection basée sur le rôle utilisateur
+      // Get the user role from all possible locations
+      if (typeof user.role === 'string') {
+        userRole = user.role.toLowerCase().trim();
+      } else if (user.user_metadata?.role) {
+        userRole = String(user.user_metadata.role).toLowerCase().trim();
+      }
+      
+      // Redirection based on user role
       let redirectPath;
       
-      switch (userRoleStr) {
+      console.log("LoginPage - User is authenticated with role:", userRole);
+      
+      switch (userRole) {
         case 'admin':
           redirectPath = '/admin/dashboard';
           break;
@@ -44,7 +53,7 @@ const LoginPage = () => {
           redirectPath = '/client/dashboard';
       }
       
-      console.log("User already authenticated, redirecting to:", redirectPath, "Role:", userRoleStr);
+      console.log("User already authenticated, redirecting to:", redirectPath);
       navigate(redirectPath, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
@@ -70,7 +79,7 @@ const LoginPage = () => {
     handleResetPassword,
     handleVerifyOTP,
     handleSocialLoginSuccess,
-    handleBiometricAuth,  // This was previously named incorrectly as handleBiometricLogin
+    handleBiometricAuth,
   } = useLoginPageLogic();
 
   const content = (
@@ -105,7 +114,7 @@ const LoginPage = () => {
                 isMobileDevice={isMobileDevice}
                 biometricError={biometricError}
                 isLoading={biometricLoading}
-                onBiometricLogin={handleBiometricAuth}  // Fixed here - we're using handleBiometricAuth now
+                onBiometricLogin={handleBiometricAuth}
               />
 
               <SocialLoginButtons onLoginSuccess={handleSocialLoginSuccess} />

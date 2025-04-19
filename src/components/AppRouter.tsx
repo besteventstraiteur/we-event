@@ -34,7 +34,7 @@ const AppRouter: React.FC = () => {
         <Route 
           path="/admin/*" 
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredRole="admin">
               <PrivateRoutes />
             </ProtectedRoute>
           } 
@@ -43,7 +43,7 @@ const AppRouter: React.FC = () => {
         <Route 
           path="/partner/*" 
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredRole="partner">
               <PrivateRoutes />
             </ProtectedRoute>
           } 
@@ -52,7 +52,7 @@ const AppRouter: React.FC = () => {
         <Route 
           path="/client/*" 
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredRole="client">
               <PrivateRoutes />
             </ProtectedRoute>
           } 
