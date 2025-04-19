@@ -32,7 +32,10 @@ export function useLoginMethods(setUser: Function) {
           name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
           avatar_url: null,
           role: role.toUpperCase(),
-          created_at: new Date().toISOString()
+          partner_type: null,
+          phone: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         };
         
         // Store these only for demo accounts
