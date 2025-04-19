@@ -10,11 +10,12 @@ import TokenRefresher from "@/components/security/TokenRefresher";
 import SessionTimeout from "@/components/security/SessionTimeout";
 import { NetworkStatus } from "./components/app/NetworkStatus";
 
+// Ajout de l'interface pour typer correctement les props
 interface AppWrapperProps {
   children: React.ReactNode;
 }
 
-const AppWrapper = ({ children }: AppWrapperProps) => {
+const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
   return (
     <Router>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
@@ -37,4 +38,3 @@ const AppWrapper = ({ children }: AppWrapperProps) => {
 };
 
 export default AppWrapper;
-
