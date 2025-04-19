@@ -1,44 +1,46 @@
 
 import React from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import GoldButton from "@/components/GoldButton";
+import { useRequests } from "@/hooks/useRequests";
 
-interface RequestFormProps {
-  newRequest: {
-    title: string;
-    description: string;
-    category: string;
-    budget: string;
-    deadline: string;
-  };
-  setNewRequest: React.Dispatch<React.SetStateAction<{
-    title: string;
-    description: string;
-    category: string;
-    budget: string;
-    deadline: string;
-  }>>;
-  handleSubmit: (e: React.FormEvent) => void;
-  isLoading: boolean;
-}
+const formSchema = z.object({
+  title: z.string().min(1, "Le titre est requis"),
+  description: z.string().min(1, "La description est requise"),
+  category: z.string().min(1, "La catégorie est requise"),
+  budget: z.string().optional(),
+  deadline: z.string().optional(),
+});
 
-const RequestForm: React.FC<RequestFormProps> = ({
-  newRequest,
-  setNewRequest,
-  handleSubmit,
-  isLoading
-}) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setNewRequest(prev => ({ ...prev, [id]: value }));
-  };
+type FormValues = z.infer<typeof formSchema>;
 
-  const handleSelectChange = (value: string) => {
-    setNewRequest(prev => ({ ...prev, category: value }));
+const RequestForm = () => {
+  const { createRequest, isLoading } = useRequests();
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      category: "",
+      budget: "",
+      deadline: ""
+    }
+  });
+
+  const onSubmit = async (data: FormValues) => {
+    await createRequest({
+      ...data,
+      budget: data.budget ? parseFloat(data.budget) : undefined,
+      deadline: data.deadline || undefined
+    });
+    form.reset();
   };
 
   return (
@@ -49,96 +51,119 @@ const RequestForm: React.FC<RequestFormProps> = ({
           Décrivez votre besoin pour recevoir des propositions de nos partenaires VIP
         </CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium text-vip-gray-300 mb-1">
-              Titre de votre demande
-            </label>
-            <Input 
-              id="title"
-              placeholder="Ex: Recherche DJ pour mariage"
-              className="bg-vip-gray-800 border-vip-gray-700"
-              value={newRequest.title}
-              onChange={handleChange}
-              required
+      
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-vip-gray-300">Titre de votre demande</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Ex: Recherche DJ pour mariage" 
+                      className="bg-vip-gray-800 border-vip-gray-700"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label htmlFor="category" className="block text-sm font-medium text-vip-gray-300 mb-1">
-                Catégorie
-              </label>
-              <Select 
-                value={newRequest.category} 
-                onValueChange={handleSelectChange}
-                required
-              >
-                <SelectTrigger className="bg-vip-gray-800 border-vip-gray-700">
-                  <SelectValue placeholder="Sélectionner" />
-                </SelectTrigger>
-                <SelectContent className="bg-vip-gray-800 border-vip-gray-700">
-                  <SelectItem value="Lieu">Lieu</SelectItem>
-                  <SelectItem value="Traiteur">Traiteur</SelectItem>
-                  <SelectItem value="Animation">Animation</SelectItem>
-                  <SelectItem value="Photographie">Photographie</SelectItem>
-                  <SelectItem value="Décoration">Décoration</SelectItem>
-                  <SelectItem value="Autre">Autre</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
             
-            <div>
-              <label htmlFor="budget" className="block text-sm font-medium text-vip-gray-300 mb-1">
-                Budget (€)
-              </label>
-              <Input 
-                id="budget"
-                type="number"
-                placeholder="Votre budget"
-                className="bg-vip-gray-800 border-vip-gray-700"
-                value={newRequest.budget}
-                onChange={handleChange}
-                required
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-vip-gray-300">Catégorie</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-vip-gray-800 border-vip-gray-700">
+                          <SelectValue placeholder="Sélectionner" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-vip-gray-800 border-vip-gray-700">
+                        <SelectItem value="Lieu">Lieu</SelectItem>
+                        <SelectItem value="Traiteur">Traiteur</SelectItem>
+                        <SelectItem value="Animation">Animation</SelectItem>
+                        <SelectItem value="Photographie">Photographie</SelectItem>
+                        <SelectItem value="Décoration">Décoration</SelectItem>
+                        <SelectItem value="Autre">Autre</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="budget"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-vip-gray-300">Budget (€)</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="number"
+                        placeholder="Votre budget"
+                        className="bg-vip-gray-800 border-vip-gray-700"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="deadline"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-vip-gray-300">Date limite</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="date"
+                        className="bg-vip-gray-800 border-vip-gray-700"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
             
-            <div>
-              <label htmlFor="deadline" className="block text-sm font-medium text-vip-gray-300 mb-1">
-                Date limite
-              </label>
-              <Input 
-                id="deadline"
-                type="date"
-                className="bg-vip-gray-800 border-vip-gray-700"
-                value={newRequest.deadline}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
-          
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-vip-gray-300 mb-1">
-              Description détaillée
-            </label>
-            <Textarea 
-              id="description"
-              placeholder="Décrivez votre besoin en détail..."
-              className="bg-vip-gray-800 border-vip-gray-700 min-h-[150px]"
-              value={newRequest.description}
-              onChange={handleChange}
-              required
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-vip-gray-300">Description détaillée</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      placeholder="Décrivez votre besoin en détail..."
+                      className="bg-vip-gray-800 border-vip-gray-700 min-h-[150px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-        </CardContent>
-        <CardFooter>
-          <GoldButton type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Envoi en cours..." : "Envoyer ma demande"}
-          </GoldButton>
-        </CardFooter>
-      </form>
+          </CardContent>
+          
+          <CardFooter>
+            <GoldButton type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Envoi en cours..." : "Envoyer ma demande"}
+            </GoldButton>
+          </CardFooter>
+        </form>
+      </Form>
     </Card>
   );
 };

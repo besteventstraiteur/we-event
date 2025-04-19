@@ -7,14 +7,7 @@ import RequestList from "@/components/client-requests/RequestList";
 import { useClientRequests } from "@/hooks/useClientRequests";
 
 const ClientRequests = () => {
-  const { 
-    requests, 
-    newRequest, 
-    setNewRequest, 
-    isLoading, 
-    handleSubmit, 
-    navigateToNewTab 
-  } = useClientRequests();
+  const { requests, isLoading } = useClientRequests();
 
   return (
     <DashboardLayout type="client">
@@ -23,24 +16,20 @@ const ClientRequests = () => {
         
         <Tabs defaultValue="list" className="w-full">
           <TabsList className="mb-6 bg-vip-gray-100">
-            <TabsTrigger value="list" className="data-[state=active]:bg-white">Mes demandes</TabsTrigger>
-            <TabsTrigger value="new" className="data-[state=active]:bg-white">Nouvelle demande</TabsTrigger>
+            <TabsTrigger value="list" className="data-[state=active]:bg-white">
+              Mes demandes
+            </TabsTrigger>
+            <TabsTrigger value="new" className="data-[state=active]:bg-white">
+              Nouvelle demande
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="list" className="bg-white">
-            <RequestList 
-              requests={requests}
-              navigateToNewTab={navigateToNewTab}
-            />
+            <RequestList requests={requests} isLoading={isLoading} />
           </TabsContent>
           
           <TabsContent value="new" className="bg-white">
-            <RequestForm
-              newRequest={newRequest}
-              setNewRequest={setNewRequest}
-              handleSubmit={handleSubmit}
-              isLoading={isLoading}
-            />
+            <RequestForm />
           </TabsContent>
         </Tabs>
       </div>

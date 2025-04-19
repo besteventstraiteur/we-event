@@ -255,6 +255,131 @@ export type Database = {
           },
         ]
       }
+      request_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          request_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          request_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          request_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "request_messages_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "request_messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      request_partners: {
+        Row: {
+          created_at: string | null
+          id: string
+          partner_id: string
+          request_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          partner_id: string
+          request_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          partner_id?: string
+          request_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "request_partners_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "request_partners_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      requests: {
+        Row: {
+          budget: number | null
+          category: string
+          client_id: string
+          created_at: string | null
+          deadline: string | null
+          description: string | null
+          id: string
+          status: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          budget?: number | null
+          category: string
+          client_id: string
+          created_at?: string | null
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          status?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          budget?: number | null
+          category?: string
+          client_id?: string
+          created_at?: string | null
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "requests_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       talkshows: {
         Row: {
           category: string
