@@ -23,12 +23,13 @@ const MobileOptimizedLayout: React.FC<MobileOptimizedLayoutProps> = ({
       aria-label="Contenu principal"
       className={cn(
         "w-full max-w-full overflow-x-hidden",
-        "focus:outline-none", // Remove focus ring from non-interactive element
-        isMobile && "mobile-view px-3",
+        "focus:outline-none",
+        "px-4 sm:px-6 md:px-8",
+        isMobile && "mobile-view safe-area-top safe-area-bottom",
         fullHeight && "min-h-screen",
         className
       )}
-      tabIndex={-1} // Makes it programmatically focusable
+      tabIndex={-1}
     >
       {children}
     </div>
