@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -39,7 +38,10 @@ const quoteFormSchema = z.object({
   totalAmount: z.coerce.number().positive("Le montant doit être positif"),
   status: z.enum(["draft", "sent", "accepted", "rejected", "expired"]),
   issueDate: z.date(),
-  expiryDate: z.date()
+  expiryDate: z.date(),
+  eventDate: z.date({
+    required_error: "La date de l'événement est requise",
+  }),
 });
 
 type QuoteFormValues = z.infer<typeof quoteFormSchema>;
@@ -51,14 +53,14 @@ const QuoteForm: React.FC<QuoteFormProps> = ({
 }) => {
   const isEditing = !!quote;
   
-  // Parse dates from string to Date objects for the form
   const defaultValues: QuoteFormValues = {
     reference: quote?.reference || "",
     clientName: quote?.clientName || "",
     totalAmount: quote?.totalAmount || 0,
     status: quote?.status || "draft",
     issueDate: quote ? new Date(quote.issueDate.split('/').reverse().join('-')) : new Date(),
-    expiryDate: quote ? new Date(quote.expiryDate.split('/').reverse().join('-')) : new Date(new Date().setMonth(new Date().getMonth() + 1))
+    expiryDate: quote ? new Date(quote.expiryDate.split('/').reverse().join('-')) : new Date(new Date().setMonth(new Date().getMonth() + 1)),
+    eventDate: quote ? new Date(quote.eventDate.split('/').reverse().join('-')) : new Date()
   };
 
   const form = useForm<QuoteFormValues>({
@@ -67,7 +69,6 @@ const QuoteForm: React.FC<QuoteFormProps> = ({
   });
 
   const onSubmit = (data: QuoteFormValues) => {
-    // Format dates back to DD/MM/YYYY format
     const formattedQuote: Omit<Quote, "id"> = {
       reference: data.reference,
       clientName: data.clientName,
@@ -75,6 +76,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({
       status: data.status,
       issueDate: format(data.issueDate, "dd/MM/yyyy"),
       expiryDate: format(data.expiryDate, "dd/MM/yyyy"),
+      eventDate: format(data.eventDate, "dd/MM/yyyy"),
     };
     onSave(formattedQuote);
   };
@@ -208,6 +210,44 @@ const QuoteForm: React.FC<QuoteFormProps> = ({
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Date d'expiration</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={`w-full pl-3 text-left font-normal ${!field.value && "text-muted-foreground"}`}
+                      >
+                        {field.value ? (
+                          format(field.value, "dd/MM/yyyy")
+                        ) : (
+                          <span>Sélectionner une date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                      locale={fr}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="eventDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Date de l'événement</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>

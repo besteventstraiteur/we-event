@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Table,
@@ -31,9 +30,9 @@ export interface Quote {
   status: "draft" | "sent" | "accepted" | "rejected" | "expired";
   issueDate: string;
   expiryDate: string;
+  eventDate?: Date;
 }
 
-// Données de démo pour l'interface
 const mockQuotes: Quote[] = [
   {
     id: "q1",
@@ -109,18 +108,25 @@ const QuotesList = () => {
   
   const handleSaveQuote = (quoteData: Omit<Quote, "id">) => {
     if (editingQuote) {
-      // Updating existing quote
       setQuotes(quotes.map(q => 
         q.id === editingQuote.id 
           ? { ...quoteData, id: editingQuote.id } 
           : q
       ));
+      
+      if (quoteData.status === "accepted") {
+        createCalendarEvent({
+          title: `Devis accepté - ${quoteData.reference}`,
+          description: `Client: ${quoteData.clientName}\nMontant: ${quoteData.totalAmount}€`,
+          date: quoteData.eventDate,
+        });
+      }
+      
       toast({
         title: "Devis mis à jour",
         description: `Le devis ${quoteData.reference} a été mis à jour`,
       });
     } else {
-      // Creating new quote
       const newQuote: Quote = {
         ...quoteData,
         id: `q${quotes.length + 1}`,
@@ -145,12 +151,34 @@ const QuotesList = () => {
       sent: { label: "Envoyé", variant: "default" as const },
       accepted: { label: "Accepté", variant: "success" as const },
       rejected: { label: "Refusé", variant: "destructive" as const },
-      expired: { label: "Expiré", variant: "default" as const }, // Changed from "warning"
+      expired: { label: "Expiré", variant: "default" as const },
     };
     
     return <Badge variant={statusConfig[status].variant}>{statusConfig[status].label}</Badge>;
   };
   
+  const createCalendarEvent = async (eventData: {
+    title: string;
+    description: string;
+    date: Date;
+  }) => {
+    try {
+      console.log("Création d'un événement:", eventData);
+      
+      toast({
+        title: "Événement créé",
+        description: "L'événement a été ajouté à votre calendrier",
+      });
+    } catch (error) {
+      console.error("Erreur lors de la création de l'événement:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de créer l'événement dans le calendrier",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
