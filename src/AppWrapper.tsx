@@ -14,7 +14,7 @@ interface AppWrapperProps {
   children: ReactNode;
 }
 
-const AppWrapper = ({ children }: AppWrapperProps) => {
+const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
   return (
     <Router>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
