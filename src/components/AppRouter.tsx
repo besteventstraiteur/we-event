@@ -1,6 +1,6 @@
 
 import React, { Suspense, useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
 import LoadingFallback from "@/components/LoadingFallback";
 import { useDeviceType } from "@/hooks/use-mobile";
@@ -19,24 +19,22 @@ const AppRouter: React.FC = () => {
   }, [deviceType]);
 
   return (
-    <BrowserRouter>
-      <Suspense fallback={<LoadingFallback />}>
-        <Routes>
-          {/* Public guest access route */}
-          <Route 
-            path="/guest" 
-            element={
-              <GuestAccess />
-            } 
-          />
+    <Suspense fallback={<LoadingFallback />}>
+      <Routes>
+        {/* Public guest access route */}
+        <Route 
+          path="/guest" 
+          element={
+            <GuestAccess />
+          } 
+        />
 
-          <Route path="/*" element={<PublicRoutes isMobileInterface={isMobileInterface} />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/app/*" element={<PrivateRoutes />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+        <Route path="/*" element={<PublicRoutes isMobileInterface={isMobileInterface} />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/app/*" element={<PrivateRoutes />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 };
 
