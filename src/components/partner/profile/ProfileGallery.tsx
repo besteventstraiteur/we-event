@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,6 +6,7 @@ import { PartnerImage } from "@/models/partnerProfile";
 import { usePartnerProfile } from "@/hooks/usePartnerProfile";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { compressImage } from '@/utils/imageCompression';
 
 interface ProfileGalleryProps {
   images: PartnerImage[];
@@ -30,10 +30,10 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = ({ images, onUpdate }) => 
       const file = files[0];
       
       // Vérification de la taille
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > 10 * 1024 * 1024) {
         toast({
           title: "Fichier trop volumineux",
-          description: "L'image ne doit pas dépasser 5Mo.",
+          description: "L'image ne doit pas dépasser 10Mo.",
           variant: "destructive",
         });
         return;
@@ -49,9 +49,17 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = ({ images, onUpdate }) => 
         return;
       }
 
-      await updateProfileImage(file, uploadType);
+      // Compression de l'image
+      const { compressedFile, compressionRate } = await compressImage(file);
       
-      // Réinitialiser l'input pour permettre de télécharger à nouveau le même fichier
+      await updateProfileImage(compressedFile, uploadType);
+      
+      toast({
+        title: "Image optimisée",
+        description: `Image compressée de ${compressionRate}% sans perte visible de qualité`,
+      });
+      
+      // Réinitialiser l'input
       if (fileInputRef.current) fileInputRef.current.value = '';
       
     } catch (error) {
