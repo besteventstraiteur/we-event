@@ -1,58 +1,58 @@
 
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
-export interface FeatureFlags {
-  photos: boolean;
-  playlists: boolean;
-  menus: boolean;
-  guests: boolean;
-  floorPlan: boolean;
-  pinterbest: boolean;
-  requests: boolean;
-  miniSite: boolean;
-  talkshows: boolean;
-  podcasts: boolean;
+interface FeatureFlagsState {
+  features: {
+    guests: boolean;
+    floorPlan: boolean;
+    menus: boolean;
+    pinterbest: boolean;
+    photos: boolean;
+    playlists: boolean;
+    talkshows: boolean;
+    podcasts: boolean;
+    requests: boolean;
+    miniSite: boolean;
+    stats: boolean;
+    recommendations: boolean;
+    gamification: boolean;
+    training: boolean;
+    partnerTypes: boolean;
+    subscriptions: boolean;
+    mlm: boolean;
+    venues: boolean;
+    weddingPackages: boolean;
+    ratings: boolean;
+    presentations: boolean;
+  };
+  setFeature: (feature: keyof FeatureFlagsState['features'], value: boolean) => void;
 }
 
-interface FeatureFlagsStore {
-  features: FeatureFlags;
-  toggleFeature: (feature: keyof FeatureFlags) => void;
-  setFeatures: (features: Partial<FeatureFlags>) => void;
-}
-
-export const useFeatureFlags = create<FeatureFlagsStore>()(
-  persist(
-    (set) => ({
-      features: {
-        photos: true,
-        playlists: true,
-        menus: true,
-        guests: true,
-        floorPlan: true,
-        pinterbest: true,
-        requests: true,
-        miniSite: true,
-        talkshows: true,
-        podcasts: true,
-      },
-      toggleFeature: (feature) =>
-        set((state) => ({
-          features: {
-            ...state.features,
-            [feature]: !state.features[feature],
-          },
-        })),
-      setFeatures: (newFeatures) =>
-        set((state) => ({
-          features: {
-            ...state.features,
-            ...newFeatures,
-          },
-        })),
-    }),
-    {
-      name: 'feature-flags-storage',
-    }
-  )
-);
+export const useFeatureFlags = create<FeatureFlagsState>((set) => ({
+  features: {
+    guests: true,
+    floorPlan: false,
+    menus: false,
+    pinterbest: false,
+    photos: false,
+    playlists: false,
+    talkshows: false,
+    podcasts: false,
+    requests: true,
+    miniSite: false,
+    stats: false,
+    recommendations: false,
+    gamification: false,
+    training: false,
+    partnerTypes: false,
+    subscriptions: false,
+    mlm: false,
+    venues: false,
+    weddingPackages: false,
+    ratings: false,
+    presentations: false,
+  },
+  setFeature: (feature, value) => set((state) => ({
+    features: { ...state.features, [feature]: value }
+  })),
+}));

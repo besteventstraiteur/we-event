@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
@@ -10,11 +11,13 @@ import {
 import { useAccessControl } from "@/hooks/useAccessControl";
 import { PartnerType } from "@/utils/accessControl";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 const PartnerNavigation = () => {
   const location = useLocation();
   const { currentUser } = useAccessControl();
   const { t } = useLanguage();
+  const { features } = useFeatureFlags();
   
   const partnerType = currentUser?.partnerType || PartnerType.GENERAL;
   
@@ -69,34 +72,46 @@ const PartnerNavigation = () => {
       >
         {t('partner.clientRequests')}
       </NavItem>
-      <NavItem
-        href="/partner/stats"
-        icon={<BarChart size={18} />}
-        active={location.pathname === "/partner/stats"}
-      >
-        {t('partner.statistics')}
-      </NavItem>
-      <NavItem
-        href="/partner/recommendations"
-        icon={<Users size={18} />}
-        active={location.pathname === "/partner/recommendations"}
-      >
-        {t('partner.recommendations')}
-      </NavItem>
-      <NavItem
-        href="/partner/gamification"
-        icon={<Trophy size={18} />}
-        active={location.pathname === "/partner/gamification"}
-      >
-        {t('partner.loyaltyProgram')}
-      </NavItem>
-      <NavItem
-        href="/partner/best-awards"
-        icon={<Award size={18} />}
-        active={location.pathname === "/partner/best-awards"}
-      >
-        {t('partner.bestAwards')}
-      </NavItem>
+      
+      {features.stats && (
+        <NavItem
+          href="/partner/stats"
+          icon={<BarChart size={18} />}
+          active={location.pathname === "/partner/stats"}
+        >
+          {t('partner.statistics')}
+        </NavItem>
+      )}
+      
+      {features.recommendations && (
+        <NavItem
+          href="/partner/recommendations"
+          icon={<Users size={18} />}
+          active={location.pathname === "/partner/recommendations"}
+        >
+          {t('partner.recommendations')}
+        </NavItem>
+      )}
+      
+      {features.gamification && (
+        <>
+          <NavItem
+            href="/partner/gamification"
+            icon={<Trophy size={18} />}
+            active={location.pathname === "/partner/gamification"}
+          >
+            {t('partner.loyaltyProgram')}
+          </NavItem>
+          <NavItem
+            href="/partner/best-awards"
+            icon={<Award size={18} />}
+            active={location.pathname === "/partner/best-awards"}
+          >
+            {t('partner.bestAwards')}
+          </NavItem>
+        </>
+      )}
+      
       <NavItem
         href="/partner/calendar"
         icon={<Calendar size={18} />}
@@ -105,16 +120,18 @@ const PartnerNavigation = () => {
         {t('partner.calendar')}
       </NavItem>
 
-      <NavItem
-        href="/partner/training"
-        icon={<GraduationCap size={18} />}
-        active={location.pathname === "/partner/training"}
-      >
-        {t('partner.training')}
-      </NavItem>
+      {features.training && (
+        <NavItem
+          href="/partner/training"
+          icon={<GraduationCap size={18} />}
+          active={location.pathname === "/partner/training"}
+        >
+          {t('partner.training')}
+        </NavItem>
+      )}
 
       {/* Photo section - only for photographers */}
-      {(partnerType === PartnerType.PHOTOGRAPHER || partnerType === PartnerType.GENERAL) && (
+      {(partnerType === PartnerType.PHOTOGRAPHER || partnerType === PartnerType.GENERAL) && features.photos && (
         <NavItem
           href="/partner/photos"
           icon={<Image size={18} />}
@@ -125,7 +142,7 @@ const PartnerNavigation = () => {
       )}
 
       {/* Music section - only for DJs */}
-      {(partnerType === PartnerType.DJ || partnerType === PartnerType.GENERAL) && (
+      {(partnerType === PartnerType.DJ || partnerType === PartnerType.GENERAL) && features.playlists && (
         <NavItem
           href="/partner/playlists"
           icon={<Music size={18} />}
@@ -136,7 +153,7 @@ const PartnerNavigation = () => {
       )}
 
       {/* Menu section - only for caterers */}
-      {(partnerType === PartnerType.CATERER || partnerType === PartnerType.GENERAL) && (
+      {(partnerType === PartnerType.CATERER || partnerType === PartnerType.GENERAL) && features.menus && (
         <NavItem
           href="/partner/menus"
           icon={<FileText size={18} />}
@@ -147,7 +164,7 @@ const PartnerNavigation = () => {
       )}
       
       {/* Floor Plans - only for venues */}
-      {(partnerType === PartnerType.VENUE || partnerType === PartnerType.GENERAL) && (
+      {(partnerType === PartnerType.VENUE || partnerType === PartnerType.GENERAL) && features.floorPlan && (
         <NavItem
           href="/partner/floor-plans"
           icon={<Grid3X3 size={18} />}
@@ -158,20 +175,25 @@ const PartnerNavigation = () => {
       )}
 
       {/* Media content available to all partners */}
-      <NavItem
-        href="/partner/podcasts"
-        icon={<HeadphonesIcon size={18} />}
-        active={location.pathname === "/partner/podcasts"}
-      >
-        {t('partner.podcasts')}
-      </NavItem>
-      <NavItem
-        href="/partner/talkshows"
-        icon={<Video size={18} />}
-        active={location.pathname === "/partner/talkshows"}
-      >
-        {t('partner.talkshows')}
-      </NavItem>
+      {features.talkshows && (
+        <NavItem
+          href="/partner/talkshows"
+          icon={<Video size={18} />}
+          active={location.pathname === "/partner/talkshows"}
+        >
+          {t('partner.talkshows')}
+        </NavItem>
+      )}
+      
+      {features.podcasts && (
+        <NavItem
+          href="/partner/podcasts"
+          icon={<HeadphonesIcon size={18} />}
+          active={location.pathname === "/partner/podcasts"}
+        >
+          {t('partner.podcasts')}
+        </NavItem>
+      )}
     </>
   );
 };
