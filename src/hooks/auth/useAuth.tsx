@@ -50,6 +50,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           } catch (e) {
             console.error("Error parsing auth data:", e);
           }
+        } else {
+          console.log("No auth data found in localStorage");
         }
       } catch (error) {
         console.error("Error checking for user:", error);
@@ -71,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           try {
             const authData = JSON.parse(localStorageAuth);
             if (authData && authData.currentSession && authData.currentSession.user) {
-              console.log("Found demo user in localStorage:", authData.currentSession.user);
+              console.log("Found user in localStorage:", authData.currentSession.user);
               setUser(authData.currentSession.user);
             }
           } catch (e) {
@@ -79,7 +81,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
         }
       } catch (error) {
-        console.error("Error checking for demo user:", error);
+        console.error("Error checking for user:", error);
       }
     }
   }, [user, setUser]);

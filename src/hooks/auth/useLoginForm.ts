@@ -61,7 +61,9 @@ export const useLoginForm = () => {
           localStorage.setItem("weddingPlannerRememberMe", "true");
         }
         
-        const redirectPath = getRedirectPathForRole(role);
+        // Check for stored redirect path
+        const storedRedirect = sessionStorage.getItem("redirectAfterLogin");
+        const redirectPath = storedRedirect || getRedirectPathForRole(role);
         
         setAuthDebugInfo(prev => ({ 
           ...prev, 
@@ -69,33 +71,27 @@ export const useLoginForm = () => {
           redirectAttempted: true
         }));
         
-        console.log("Demo login successful for", role, "user, attempting redirect to:", redirectPath);
+        console.log("Demo login successful, redirecting to:", redirectPath);
         
         toast({
           title: "Connexion réussie",
           description: "Bienvenue sur votre espace VIP",
         });
+
+        // Force a refresh of the auth state before redirecting
+        window.dispatchEvent(new Event('auth-refresh'));
         
-        // Check for stored redirect path
-        const storedRedirect = sessionStorage.getItem("redirectAfterLogin");
-        const finalRedirectPath = storedRedirect || redirectPath;
-        
-        console.log("Final redirect path:", finalRedirectPath);
-        
-        // Add a longer delay to ensure state updates before navigation
+        // Add a clear delay before navigation
         setTimeout(() => {
-          // Clear local storage first to avoid any race conditions
+          // Clear the stored redirect path if it exists
           if (storedRedirect) {
             sessionStorage.removeItem("redirectAfterLogin");
           }
           
-          // Force a refresh of the auth state before redirecting
-          window.dispatchEvent(new Event('auth-refresh'));
-          
           // Navigate with replace to avoid back-button issues
-          navigate(finalRedirectPath, { replace: true });
-        }, 300);
-
+          navigate(redirectPath, { replace: true });
+        }, 500); // Longer delay for more reliable navigation
+        
         setIsLoading(false);
         return { success: true };
       }
@@ -108,7 +104,10 @@ export const useLoginForm = () => {
         
         if (!requires2FA) {
           const userRole = String(result.user?.user_metadata?.role || userType).toLowerCase();
-          const redirectPath = getRedirectPathForRole(userRole);
+          
+          // Check for stored redirect path
+          const storedRedirect = sessionStorage.getItem("redirectAfterLogin");
+          const redirectPath = storedRedirect || getRedirectPathForRole(userRole);
           
           setAuthDebugInfo(prev => ({ 
             ...prev, 
@@ -116,31 +115,23 @@ export const useLoginForm = () => {
             redirectAttempted: true
           }));
           
-          console.log("Login successful for", userType, "user, attempting redirect to:", redirectPath);
+          console.log("Login successful, redirecting to:", redirectPath);
           
           toast({
             title: "Connexion réussie",
             description: "Bienvenue sur votre espace VIP",
           });
           
-          // Check for stored redirect path
-          const storedRedirect = sessionStorage.getItem("redirectAfterLogin");
-          const finalRedirectPath = storedRedirect || redirectPath;
-          
-          console.log("Final redirect path:", finalRedirectPath);
-          
-          // Add a slight delay to ensure state updates before navigation
+          // Add a clear delay before navigation
           setTimeout(() => {
-            // Clear stored redirect
+            // Clear the stored redirect path if it exists
             if (storedRedirect) {
               sessionStorage.removeItem("redirectAfterLogin");
             }
             
-            // Force a refresh of the auth state before redirecting
-            window.dispatchEvent(new Event('auth-refresh'));
-            
-            navigate(finalRedirectPath, { replace: true });
-          }, 300);
+            // Navigate with replace to avoid back-button issues
+            navigate(redirectPath, { replace: true });
+          }, 500); // Longer delay for more reliable navigation
         }
         
         return { success: true, requires2FA };

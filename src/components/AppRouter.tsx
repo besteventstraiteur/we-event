@@ -24,6 +24,16 @@ const AppRouter: React.FC = () => {
   // Debug auth state on router mount
   useEffect(() => {
     console.log("AppRouter - Auth state:", { isAuthenticated, user });
+    
+    // Listen for auth updates
+    const handleAuthRefresh = () => {
+      console.log("AppRouter - Auth refresh event detected");
+    };
+    
+    window.addEventListener('auth-refresh', handleAuthRefresh);
+    return () => {
+      window.removeEventListener('auth-refresh', handleAuthRefresh);
+    };
   }, [isAuthenticated, user]);
 
   return (
@@ -65,7 +75,7 @@ const AppRouter: React.FC = () => {
           } 
         />
 
-        {/* Add a debug route for unauthorized access */}
+        {/* Debug route for unauthorized access */}
         <Route 
           path="/unauthorized" 
           element={
