@@ -2,7 +2,7 @@
 import { Permission, UserRole, PartnerType } from "@/utils/accessControl";
 
 export function usePermissions(user: any) {
-  const hasRole = (role: string): boolean => {
+  const hasRole = (role: UserRole): boolean => {
     if (!user) return false;
     
     // Get user role from all possible locations

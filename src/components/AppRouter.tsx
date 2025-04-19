@@ -8,6 +8,7 @@ import GuestAccess from "@/pages/GuestAccess";
 import PublicRoutes from '@/routes/PublicRoutes';
 import PrivateRoutes from '@/routes/PrivateRoutes';
 import NotFound from '@/pages/NotFound';
+import { UserRole } from "@/utils/accessControl";
 
 const AppRouter: React.FC = () => {
   const deviceType = useDeviceType();
@@ -34,7 +35,7 @@ const AppRouter: React.FC = () => {
         <Route 
           path="/admin/*" 
           element={
-            <ProtectedRoute requiredRole="admin">
+            <ProtectedRoute requiredRole={UserRole.ADMIN}>
               <PrivateRoutes />
             </ProtectedRoute>
           } 
@@ -43,7 +44,7 @@ const AppRouter: React.FC = () => {
         <Route 
           path="/partner/*" 
           element={
-            <ProtectedRoute requiredRole="partner">
+            <ProtectedRoute requiredRole={UserRole.PARTNER}>
               <PrivateRoutes />
             </ProtectedRoute>
           } 
@@ -52,7 +53,7 @@ const AppRouter: React.FC = () => {
         <Route 
           path="/client/*" 
           element={
-            <ProtectedRoute requiredRole="client">
+            <ProtectedRoute requiredRole={UserRole.CLIENT}>
               <PrivateRoutes />
             </ProtectedRoute>
           } 
