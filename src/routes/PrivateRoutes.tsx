@@ -1,9 +1,10 @@
 
 import React, { Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { LazyLoadingFallback } from "@/components/shared/LazyLoadingFallback";
 import { UserRole } from "@/utils/accessControl";
-import ProtectedRoute from "@/components/security/ProtectedRoute";
+import LoadingFallback from "@/components/LoadingFallback";
+import NotFound from "@/pages/NotFound";
 
 // Lazy loading client routes
 const ClientRoutes = React.lazy(() => 
@@ -21,48 +22,32 @@ const AdminRoutes = React.lazy(() =>
 );
 
 const PrivateRoutes: React.FC = () => {
-  return (
-    <Routes>
-      {/* Client routes */}
-      <Route 
-        path="/client/*" 
-        element={
-          <ProtectedRoute requiredRole={UserRole.CLIENT}>
-            <Suspense fallback={<LazyLoadingFallback />}>
-              <ClientRoutes />
-            </Suspense>
-          </ProtectedRoute>
-        } 
-      />
-      
-      {/* Partner routes */}
-      <Route 
-        path="/partner/*" 
-        element={
-          <ProtectedRoute requiredRole={UserRole.PARTNER}>
-            <Suspense fallback={<LazyLoadingFallback />}>
-              <PartnerRoutes />
-            </Suspense>
-          </ProtectedRoute>
-        } 
-      />
-      
-      {/* Admin routes */}
-      <Route 
-        path="/admin/*" 
-        element={
-          <ProtectedRoute requiredRole={UserRole.ADMIN}>
-            <Suspense fallback={<LazyLoadingFallback />}>
-              <AdminRoutes />
-            </Suspense>
-          </ProtectedRoute>
-        } 
-      />
-      
-      {/* Default route redirects to client dashboard */}
-      <Route path="/*" element={<ClientRoutes />} />
-    </Routes>
-  );
+  const location = useLocation();
+  const path = location.pathname;
+  
+  // Determine which route type to render based on the path
+  if (path.startsWith('/admin')) {
+    return (
+      <Suspense fallback={<LoadingFallback />}>
+        <AdminRoutes />
+      </Suspense>
+    );
+  } else if (path.startsWith('/partner')) {
+    return (
+      <Suspense fallback={<LoadingFallback />}>
+        <PartnerRoutes />
+      </Suspense>
+    );
+  } else if (path.startsWith('/client')) {
+    return (
+      <Suspense fallback={<LoadingFallback />}>
+        <ClientRoutes />
+      </Suspense>
+    );
+  }
+  
+  // Fallback for any other paths
+  return <NotFound />;
 };
 
 export default PrivateRoutes;

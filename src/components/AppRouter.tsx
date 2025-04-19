@@ -7,6 +7,7 @@ import { useDeviceType } from "@/hooks/use-mobile";
 import GuestAccess from "@/pages/GuestAccess";
 import PublicRoutes from '@/routes/PublicRoutes';
 import PrivateRoutes from '@/routes/PrivateRoutes';
+import NotFound from '@/pages/NotFound';
 
 const AppRouter: React.FC = () => {
   const deviceType = useDeviceType();
@@ -29,10 +30,39 @@ const AppRouter: React.FC = () => {
           } 
         />
 
+        {/* Handle all private routes */}
+        <Route 
+          path="/admin/*" 
+          element={
+            <ProtectedRoute>
+              <PrivateRoutes />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/partner/*" 
+          element={
+            <ProtectedRoute>
+              <PrivateRoutes />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/client/*" 
+          element={
+            <ProtectedRoute>
+              <PrivateRoutes />
+            </ProtectedRoute>
+          } 
+        />
+
+        {/* Public routes */}
         <Route path="/*" element={<PublicRoutes isMobileInterface={isMobileInterface} />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/app/*" element={<PrivateRoutes />} />
-        </Route>
+        
+        {/* Catch any unmatched routes */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );
