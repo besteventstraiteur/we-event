@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/auth";
@@ -91,7 +92,8 @@ export const useLoginForm = () => {
         const requires2FA = email.includes("secure") || localStorage.getItem('2fa_enabled') === 'true';
         
         if (!requires2FA) {
-          const userRole = String(result.user?.user_metadata?.role || userType).toLowerCase();
+          // Fixed: Access role directly from the user object instead of user_metadata
+          const userRole = result.user?.role?.toLowerCase() || userType;
           const redirectPath = getRedirectPathForRole(userRole);
           
           setAuthDebugInfo(prev => ({ 
@@ -143,3 +145,4 @@ export const useLoginForm = () => {
     handleLoginSubmit
   };
 };
+
