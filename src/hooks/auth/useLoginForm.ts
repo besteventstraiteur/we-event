@@ -39,13 +39,14 @@ export const useLoginForm = () => {
         
         const demoUser = {
           id: `demo-${Date.now()}`,
-          user_metadata: {
-            email: email,
-            name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
-            role: role
-          },
           email: email,
-          role: role
+          name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+          avatar_url: null,
+          role: role.toUpperCase(),
+          partner_type: null,
+          phone: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         };
         
         // Store demo user information (simulating login)
