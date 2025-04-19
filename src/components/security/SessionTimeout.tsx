@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ReactNode } from 'react';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,11 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
 const WARN_BEFORE_MS = 5 * 60 * 1000; // 5 minutes before timeout
 
-export const SessionTimeout: React.FC = () => {
+interface SessionTimeoutProps {
+  children?: ReactNode;
+}
+
+export const SessionTimeout: React.FC<SessionTimeoutProps> = ({ children }) => {
   const { logout, isAuthenticated } = useAuth();
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [showWarning, setShowWarning] = useState(false);
@@ -54,26 +58,31 @@ export const SessionTimeout: React.FC = () => {
     setShowWarning(false);
   };
 
-  if (!showWarning) return null;
+  if (!showWarning) {
+    return <>{children}</>;
+  }
 
   return (
-    <AlertDialog open={showWarning}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Votre session va bientôt expirer</AlertDialogTitle>
-          <AlertDialogDescription>
-            Votre session se termine dans {timeRemaining} minute{timeRemaining !== 1 ? 's' : ''}.
-            Voulez-vous prolonger votre session ?
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={logout}>Se déconnecter</AlertDialogCancel>
-          <AlertDialogAction onClick={handleExtendSession}>
-            Prolonger la session
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <>
+      {children}
+      <AlertDialog open={showWarning}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Votre session va bientôt expirer</AlertDialogTitle>
+            <AlertDialogDescription>
+              Votre session se termine dans {timeRemaining} minute{timeRemaining !== 1 ? 's' : ''}.
+              Voulez-vous prolonger votre session ?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={logout}>Se déconnecter</AlertDialogCancel>
+            <AlertDialogAction onClick={handleExtendSession}>
+              Prolonger la session
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
 
