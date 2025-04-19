@@ -82,12 +82,19 @@ export const useLoginForm = () => {
         
         console.log("Final redirect path:", finalRedirectPath);
         
-        // Add a slight delay to ensure state updates before navigation
+        // Add a longer delay to ensure state updates before navigation
         setTimeout(() => {
+          // Clear local storage first to avoid any race conditions
+          if (storedRedirect) {
+            sessionStorage.removeItem("redirectAfterLogin");
+          }
+          
+          // Force a refresh of the auth state before redirecting
+          window.dispatchEvent(new Event('auth-refresh'));
+          
+          // Navigate with replace to avoid back-button issues
           navigate(finalRedirectPath, { replace: true });
-          // Clear stored redirect
-          sessionStorage.removeItem("redirectAfterLogin");
-        }, 100);
+        }, 300);
 
         setIsLoading(false);
         return { success: true };
@@ -124,10 +131,16 @@ export const useLoginForm = () => {
           
           // Add a slight delay to ensure state updates before navigation
           setTimeout(() => {
-            navigate(finalRedirectPath, { replace: true });
             // Clear stored redirect
-            sessionStorage.removeItem("redirectAfterLogin");
-          }, 100);
+            if (storedRedirect) {
+              sessionStorage.removeItem("redirectAfterLogin");
+            }
+            
+            // Force a refresh of the auth state before redirecting
+            window.dispatchEvent(new Event('auth-refresh'));
+            
+            navigate(finalRedirectPath, { replace: true });
+          }, 300);
         }
         
         return { success: true, requires2FA };

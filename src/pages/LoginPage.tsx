@@ -42,10 +42,12 @@ const LoginPage = () => {
       // Redirection basée sur le rôle utilisateur ou le chemin précédent
       let redirectPath;
       
-      if (fromPath) {
-        redirectPath = fromPath;
-      } else if (storedRedirect) {
+      if (storedRedirect) {
         redirectPath = storedRedirect;
+        console.log("Redirecting to stored path:", storedRedirect);
+      } else if (fromPath) {
+        redirectPath = fromPath;
+        console.log("Redirecting to from path:", fromPath);
       } else {
         // Fallback to role-based dashboard
         switch (userRoleStr) {
@@ -58,16 +60,17 @@ const LoginPage = () => {
           default:
             redirectPath = '/client/dashboard';
         }
+        console.log("Redirecting to role-based dashboard:", redirectPath);
       }
       
-      console.log("User already authenticated, redirecting to:", redirectPath, "Role:", userRoleStr);
+      console.log("User is authenticated, redirecting to:", redirectPath, "Role:", userRoleStr);
       
       // Add a slight delay to ensure state updates before navigation
       setTimeout(() => {
         navigate(redirectPath, { replace: true });
         // Clear stored redirect
         sessionStorage.removeItem("redirectAfterLogin");
-      }, 100);
+      }, 200);
     }
   }, [isAuthenticated, user, navigate, location.state]);
   

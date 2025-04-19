@@ -12,7 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const AppRouter: React.FC = () => {
   const deviceType = useDeviceType();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [isMobileInterface, setIsMobileInterface] = useState(
     deviceType === "mobile" || deviceType === "tablet"
   );
@@ -23,8 +23,8 @@ const AppRouter: React.FC = () => {
 
   // Debug auth state on router mount
   useEffect(() => {
-    console.log("AppRouter - Auth state:", { isAuthenticated });
-  }, [isAuthenticated]);
+    console.log("AppRouter - Auth state:", { isAuthenticated, user });
+  }, [isAuthenticated, user]);
 
   return (
     <Suspense fallback={<LoadingFallback />}>

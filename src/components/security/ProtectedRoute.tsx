@@ -8,7 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 interface ProtectedRouteProps {
   requiredRole?: UserRole;
   children?: React.ReactNode;
-  // Add support for multiple roles
   allowedRoles?: UserRole[];
 }
 
@@ -34,8 +33,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     });
   }, [isAuthenticated, user, location.pathname, requiredRole, allowedRoles, hasRole]);
 
-  if (!isAuthenticated) {
-    console.log("Not authenticated, redirecting to /login");
+  if (!isAuthenticated || !user) {
+    console.log("Not authenticated or no user, redirecting to /login");
     // Store the attempted URL to redirect back after login
     sessionStorage.setItem("redirectAfterLogin", location.pathname);
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
