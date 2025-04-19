@@ -5,6 +5,10 @@ import { useToast } from '@/hooks/use-toast';
 import { PartnerProfile, PartnerImage } from '@/models/partnerProfile';
 import type { Database } from '@/types/supabase-db';
 
+type Tables = Database['public']['Tables'];
+type Partners = Tables['partners']['Row'];
+type PartnerImages = Tables['partner_images']['Row'];
+
 export function usePartnerData(partnerId?: string) {
   const [profile, setProfile] = useState<PartnerProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +36,7 @@ export function usePartnerData(partnerId?: string) {
               phone
             )
           `)
-          .eq('id', partnerId)
+          .eq('id', partnerId as string)
           .single();
 
         if (partnerError) throw partnerError;
@@ -46,26 +50,29 @@ export function usePartnerData(partnerId?: string) {
         const { data: images, error: imagesError } = await supabase
           .from('partner_images')
           .select('*')
-          .eq('partner_id', partnerId)
+          .eq('partner_id', partnerId as string)
           .order('order_index', { ascending: true });
 
         if (imagesError) throw imagesError;
 
         // Transform data into expected format with type safety
+        const typedPartnerData = partnerData as Partners & { user: any };
+        const typedImages = images as PartnerImages[] | null;
+
         const partnerProfile: PartnerProfile = {
-          id: partnerData.id || '',
-          name: partnerData.name || '',
-          category: partnerData.category || '',
-          description: partnerData.description || '',
-          shortDescription: partnerData.short_description || '',
-          pricing: partnerData.pricing || { basePrice: '', packages: [] },
-          contact: partnerData.contact || { 
-            email: partnerData.user?.email || '', 
-            phone: partnerData.user?.phone || '', 
+          id: typedPartnerData.id || '',
+          name: typedPartnerData.name || '',
+          category: typedPartnerData.category || '',
+          description: typedPartnerData.description || '',
+          shortDescription: typedPartnerData.short_description || '',
+          pricing: typedPartnerData.pricing || { basePrice: '', packages: [] },
+          contact: typedPartnerData.contact || { 
+            email: typedPartnerData.user?.email || '', 
+            phone: typedPartnerData.user?.phone || '', 
             website: '', 
             address: '' 
           },
-          images: images ? images.map(img => ({
+          images: typedImages ? typedImages.map(img => ({
             id: img.id || '',
             url: img.url || '',
             alt: img.alt || '',
@@ -73,9 +80,9 @@ export function usePartnerData(partnerId?: string) {
             order: img.order_index || 0,
             featured: img.featured || false
           })) : [],
-          discount: partnerData.discount || '',
-          services: partnerData.services || [],
-          availability: partnerData.availability || []
+          discount: typedPartnerData.discount || '',
+          services: typedPartnerData.services || [],
+          availability: typedPartnerData.availability || []
         };
 
         setProfile(partnerProfile);
@@ -161,7 +168,7 @@ export function usePartnerData(partnerId?: string) {
         if (oldImage) {
           await supabase
             .from('partner_images')
-            .update({ featured: false })
+            .update({ featured: false } as any) // Type assertion needed here
             .eq('id', oldImage.id);
         }
       }
@@ -184,7 +191,7 @@ export function usePartnerData(partnerId?: string) {
       // Save image metadata to database
       const { data: image, error: imageError } = await supabase
         .from('partner_images')
-        .insert(insertData)
+        .insert(insertData as any) // Type assertion needed here
         .select()
         .single();
       
@@ -193,13 +200,15 @@ export function usePartnerData(partnerId?: string) {
       if (!image) throw new Error('Failed to insert image');
       
       // Create new image object
+      const typedImage = image as PartnerImages;
+      
       const newImage: PartnerImage = {
-        id: image.id || '',
+        id: typedImage.id || '',
         url,
         alt: file.name,
         type,
-        order: image.order_index || 0,
-        featured: image.featured || false
+        order: typedImage.order_index || 0,
+        featured: typedImage.featured || false
       };
       
       // Update local state
