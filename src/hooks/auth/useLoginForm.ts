@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/auth/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { getRedirectPathForRole } from "./utils/redirectUtils";
 import type { AuthDebugInfo } from "./types/loginTypes";

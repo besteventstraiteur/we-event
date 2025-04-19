@@ -8,7 +8,7 @@ import GuestAccess from "@/pages/GuestAccess";
 import PublicRoutes from '@/routes/PublicRoutes';
 import PrivateRoutes from '@/routes/PrivateRoutes';
 import NotFound from '@/pages/NotFound';
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 const AppRouter: React.FC = () => {
   const deviceType = useDeviceType();

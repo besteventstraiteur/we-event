@@ -4,14 +4,17 @@ import './App.css';
 import AppWrapper from './AppWrapper';
 import { LazyLoadingFallback } from '@/components/shared/LazyLoadingFallback';
 import AppRouter from './components/AppRouter';
+import { AuthProvider } from '@/hooks/auth/useAuth';
 
 function App() {
   return (
-    <AppWrapper>
-      <Suspense fallback={<LazyLoadingFallback />}>
-        <AppRouter />
-      </Suspense>
-    </AppWrapper>
+    <AuthProvider>
+      <AppWrapper>
+        <Suspense fallback={<LazyLoadingFallback />}>
+          <AppRouter />
+        </Suspense>
+      </AppWrapper>
+    </AuthProvider>
   );
 }
 

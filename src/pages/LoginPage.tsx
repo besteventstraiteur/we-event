@@ -17,7 +17,7 @@ import LoginDebugInfo from "@/components/auth/LoginDebugInfo";
 
 // Custom hook
 import { useLoginPageLogic } from "@/hooks/useLoginPageLogic";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 const LoginPage = () => {
   const deviceType = useDeviceType();
