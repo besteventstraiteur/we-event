@@ -79,9 +79,10 @@ export const useLoginForm = () => {
         
         // Force refresh of auth state before navigation
         window.setTimeout(() => {
-          navigate(redirectPath, { replace: true });
+          // Force a page reload to ensure all context states are updated
+          window.location.href = redirectPath;
           setIsLoading(false);
-        }, 100);
+        }, 300);
         return { success: true };
       }
       
@@ -145,4 +146,3 @@ export const useLoginForm = () => {
     handleLoginSubmit
   };
 };
-

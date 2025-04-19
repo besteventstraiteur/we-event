@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
@@ -51,7 +52,11 @@ const LoginPage = () => {
       }
       
       console.log("User already authenticated, redirecting to:", redirectPath);
-      navigate(redirectPath, { replace: true });
+      
+      // Use setTimeout to ensure the redirection happens after the component is fully mounted
+      setTimeout(() => {
+        navigate(redirectPath, { replace: true });
+      }, 100);
     }
   }, [isAuthenticated, user, navigate]);
   
