@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
@@ -30,11 +29,9 @@ const LoginPage = () => {
       // Normalize the role for comparison
       let userRole = '';
       
-      // Get the user role from all possible locations
+      // Get the user role directly from user.role
       if (typeof user.role === 'string') {
         userRole = user.role.toLowerCase().trim();
-      } else if (user.user_metadata?.role) {
-        userRole = String(user.user_metadata.role).toLowerCase().trim();
       }
       
       // Redirection based on user role
