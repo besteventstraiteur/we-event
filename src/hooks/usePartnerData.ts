@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { PartnerProfile, PartnerImage } from '@/models/partnerProfile';
 
@@ -19,7 +19,7 @@ export function usePartnerData(partnerId?: string) {
 
       setIsLoading(true);
       try {
-        // Fetch partner data
+        // Fetch partner data using type assertion for the ID
         const { data: partnerData, error: partnerError } = await supabase
           .from('partners')
           .select(`
@@ -31,7 +31,7 @@ export function usePartnerData(partnerId?: string) {
               phone
             )
           `)
-          .eq('id', partnerId)
+          .eq('id', partnerId as any)
           .single();
 
         if (partnerError) throw partnerError;
@@ -41,16 +41,16 @@ export function usePartnerData(partnerId?: string) {
           return;
         }
 
-        // Fetch partner images
+        // Fetch partner images with type assertion for partner_id
         const { data: images, error: imagesError } = await supabase
           .from('partner_images')
           .select('*')
-          .eq('partner_id', partnerId)
+          .eq('partner_id', partnerId as any)
           .order('order_index', { ascending: true });
 
         if (imagesError) throw imagesError;
 
-        // Transform data into expected format
+        // Transform data into expected format with null checking
         const partnerProfile: PartnerProfile = {
           id: partnerData?.id || '',
           name: partnerData?.name || '',
@@ -94,20 +94,23 @@ export function usePartnerData(partnerId?: string) {
     if (!profile) return;
     
     try {
+      // Convert from our model structure to Supabase's expected structure
+      const supabaseUpdateData: any = {
+        name: updatedProfile.name,
+        category: updatedProfile.category,
+        description: updatedProfile.description,
+        short_description: updatedProfile.shortDescription,
+        pricing: updatedProfile.pricing,
+        contact: updatedProfile.contact,
+        discount: updatedProfile.discount,
+        services: updatedProfile.services,
+        availability: updatedProfile.availability
+      };
+      
       const { error } = await supabase
         .from('partners')
-        .update({
-          name: updatedProfile.name,
-          category: updatedProfile.category,
-          description: updatedProfile.description,
-          short_description: updatedProfile.shortDescription,
-          pricing: updatedProfile.pricing,
-          contact: updatedProfile.contact,
-          discount: updatedProfile.discount,
-          services: updatedProfile.services,
-          availability: updatedProfile.availability
-        })
-        .eq('id', profile.id);
+        .update(supabaseUpdateData)
+        .eq('id', profile.id as any);
       
       if (error) throw error;
       
@@ -158,7 +161,7 @@ export function usePartnerData(partnerId?: string) {
           await supabase
             .from('partner_images')
             .update({ featured: false })
-            .eq('id', oldImage.id);
+            .eq('id', oldImage.id as any);
         }
       }
       
@@ -171,7 +174,7 @@ export function usePartnerData(partnerId?: string) {
       const { data: image, error: imageError } = await supabase
         .from('partner_images')
         .insert({
-          partner_id: profile.id,
+          partner_id: profile.id as any,
           url,
           alt: file.name,
           type,
@@ -236,7 +239,7 @@ export function usePartnerData(partnerId?: string) {
       const { error } = await supabase
         .from('partner_images')
         .delete()
-        .eq('id', imageId);
+        .eq('id', imageId as any);
         
       if (error) throw error;
       
@@ -318,7 +321,7 @@ export function usePartners() {
       const { error } = await supabase
         .from('partners')
         .update({ status })
-        .eq('id', id);
+        .eq('id', id as any);
         
       if (error) throw error;
       
