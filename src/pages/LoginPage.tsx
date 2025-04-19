@@ -55,8 +55,8 @@ const LoginPage = () => {
       
       // Use setTimeout to ensure the redirection happens after the component is fully mounted
       setTimeout(() => {
-        navigate(redirectPath, { replace: true });
-      }, 100);
+        window.location.href = redirectPath;
+      }, 300);
     }
   }, [isAuthenticated, user, navigate]);
   

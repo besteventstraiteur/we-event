@@ -36,32 +36,43 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Check if there's a demo user set in localStorage on component mount
   useEffect(() => {
-    if (!user) {
-      try {
-        const localStorageAuth = localStorage.getItem("supabase.auth.token");
-        if (localStorageAuth) {
-          try {
-            const authData = JSON.parse(localStorageAuth);
-            if (authData && authData.currentSession && authData.currentSession.user) {
-              console.log("Found demo user in localStorage:", authData.currentSession.user);
-              setUser(authData.currentSession.user);
-              // Set session for demo users as well
-              setSession({ 
-                access_token: 'demo-token',
-                refresh_token: 'demo-refresh-token',
-                expires_in: 3600,
-                token_type: 'bearer',
-                user: authData.currentSession.user
-              });
+    const checkForDemoUser = () => {
+      if (!user) {
+        try {
+          const localStorageAuth = localStorage.getItem("supabase.auth.token");
+          if (localStorageAuth) {
+            try {
+              const authData = JSON.parse(localStorageAuth);
+              if (authData && authData.currentSession && authData.currentSession.user) {
+                console.log("Found demo user in localStorage:", authData.currentSession.user);
+                setUser(authData.currentSession.user);
+                // Set session for demo users as well
+                setSession({ 
+                  access_token: 'demo-token',
+                  refresh_token: 'demo-refresh-token',
+                  expires_in: 3600,
+                  token_type: 'bearer',
+                  user: authData.currentSession.user
+                });
+              }
+            } catch (e) {
+              console.error("Error parsing auth data:", e);
             }
-          } catch (e) {
-            console.error("Error parsing auth data:", e);
           }
+        } catch (error) {
+          console.error("Error checking for demo user:", error);
         }
-      } catch (error) {
-        console.error("Error checking for demo user:", error);
       }
-    }
+    };
+
+    // Initial check
+    checkForDemoUser();
+
+    // Set up an interval to periodically check for auth changes (helps with demo login)
+    const intervalId = setInterval(checkForDemoUser, 1000);
+    
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   // Update user profile

@@ -77,12 +77,12 @@ export const useLoginForm = () => {
           description: "Bienvenue sur votre espace VIP",
         });
         
-        // Force refresh of auth state before navigation
-        window.setTimeout(() => {
-          // Force a page reload to ensure all context states are updated
+        // Force full page reload to ensure all context states are reset and properly initialized
+        setTimeout(() => {
           window.location.href = redirectPath;
           setIsLoading(false);
-        }, 300);
+        }, 500);
+        
         return { success: true };
       }
       
@@ -110,10 +110,11 @@ export const useLoginForm = () => {
             description: "Bienvenue sur votre espace VIP",
           });
           
-          // Force refresh of auth state before navigation
-          window.setTimeout(() => {
-            navigate(redirectPath, { replace: true });
-          }, 100);
+          // Force full page reload to ensure all context states are reset and properly initialized
+          setTimeout(() => {
+            window.location.href = redirectPath;
+            setIsLoading(false);
+          }, 500);
         }
         
         return { success: true, requires2FA };
