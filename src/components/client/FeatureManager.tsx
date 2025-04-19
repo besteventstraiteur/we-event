@@ -2,11 +2,10 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useFeatureFlags, FeatureFlags } from "@/hooks/useFeatureFlags";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
-const featureLabels: Record<keyof FeatureFlags, string> = {
+const featureLabels = {
   photos: "Galerie Photos",
   playlists: "Playlists Musicales",
   menus: "Menus",
@@ -20,7 +19,7 @@ const featureLabels: Record<keyof FeatureFlags, string> = {
 };
 
 const FeatureManager = () => {
-  const { features, toggleFeature } = useFeatureFlags();
+  const { features, setFeature } = useFeatureFlags();
 
   return (
     <Card>
@@ -44,8 +43,8 @@ const FeatureManager = () => {
                   <div className="font-medium">{label}</div>
                 </div>
                 <Switch
-                  checked={features[key as keyof FeatureFlags]}
-                  onCheckedChange={() => toggleFeature(key as keyof FeatureFlags)}
+                  checked={features[key as keyof typeof features]}
+                  onCheckedChange={() => setFeature(key as keyof typeof features, !features[key as keyof typeof features])}
                 />
               </div>
             ))}

@@ -1,12 +1,11 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { RequireAuth } from "@/components/auth/RequireAuth";
-import LoadingFallback from "@/components/shared/LoadingFallback";
+import { RequireAuth } from "@/components/security/ProtectedRoute";
+import LoadingFallback from "@/components/shared/LazyLoadingFallback";
 import { useDeviceType } from "@/hooks/use-mobile";
 import GuestAccess from "@/pages/GuestAccess";
-
-const PublicRoutes = React.lazy(() => import('@/routes/PublicRoutes'));
-const PrivateRoutes = React.lazy(() => import('@/routes/PrivateRoutes'));
+import PublicRoutes from '@/routes/PublicRoutes';
+import PrivateRoutes from '@/routes/PrivateRoutes';
 
 const AppRouter: React.FC = () => {
   const deviceType = useDeviceType();
