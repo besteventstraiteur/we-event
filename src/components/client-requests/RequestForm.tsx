@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +35,9 @@ const RequestForm = () => {
 
   const onSubmit = async (data: FormValues) => {
     await createRequest({
-      ...data,
+      title: data.title,
+      description: data.description,
+      category: data.category,
       budget: data.budget ? parseFloat(data.budget) : undefined,
       deadline: data.deadline || undefined
     });

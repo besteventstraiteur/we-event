@@ -1,9 +1,10 @@
+
 import React from "react";
 import { Heart, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useGuest } from "@/hooks/useGuest";
-import GuestMenuSelection from "@/pages/GuestMenuSelection";
+import GuestMenuSelection from "@/components/guest-menu/GuestMenuSelection";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useParams } from "react-router-dom";
 import { useEvent } from "@/hooks/useEvent";
@@ -18,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 const GuestDashboard = () => {
   const { guestId } = useParams();
   const { guest, isLoading: isGuestLoading } = useGuest(guestId);
-  const { event, isLoading: isEventLoading } = useEvent(guest?.eventId);
+  const { event, isLoading: isEventLoading } = useEvent(guest?.event_id);
   
   const isLoading = isGuestLoading || isEventLoading;
   
@@ -58,8 +59,8 @@ const GuestDashboard = () => {
               })}
             </p>
           </div>
-          <Badge variant={guest.confirmed ? "success" : "outline"}>
-            {guest.confirmed ? "Confirmé" : "En attente"}
+          <Badge variant={guest.rsvp_status === 'confirmed' ? "success" : "outline"}>
+            {guest.rsvp_status === 'confirmed' ? "Confirmé" : "En attente"}
           </Badge>
         </div>
         
@@ -102,7 +103,7 @@ const GuestDashboard = () => {
         
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Sélection du menu</h2>
-          <GuestMenuSelection guestId={guest.id} />
+          <GuestMenuSelection />
         </div>
       </div>
     </DashboardLayout>

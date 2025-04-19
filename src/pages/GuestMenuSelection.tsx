@@ -34,7 +34,7 @@ const GuestMenuSelection: React.FC = () => {
   }, []);
 
   const handleBackToDashboard = () => {
-    navigate(`/guest/${eventId}/${guestId}`);
+    navigate(`/guest/${guestId}`);
   };
 
   return (
@@ -85,7 +85,9 @@ const GuestMenuSelection: React.FC = () => {
               {t('guest.menuDescription')}<br />
               <span className="text-sm">{t('guest.menuDeadlineInfo')}</span>
             </p>
-            <GuestMenuSelectionComponent />
+            <div className="menu-selection-container">
+              <GuestMenuSelectionComponent />
+            </div>
           </>
         )}
       </main>

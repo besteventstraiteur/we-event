@@ -23,7 +23,12 @@ const RequestList: React.FC<RequestListProps> = ({ requests, isLoading }) => {
     return (
       <div className="text-center py-10">
         <p className="text-vip-gray-400 mb-4">Vous n'avez pas encore de demandes</p>
-        <GoldButton onClick={() => document.querySelector('[data-value="new"]')?.click()}>
+        <GoldButton onClick={() => {
+          const newTabTrigger = document.querySelector('[data-value="new"]');
+          if (newTabTrigger) {
+            (newTabTrigger as HTMLElement).click();
+          }
+        }}>
           Créer ma première demande
         </GoldButton>
       </div>
@@ -33,7 +38,20 @@ const RequestList: React.FC<RequestListProps> = ({ requests, isLoading }) => {
   return (
     <div className="space-y-4">
       {requests.map(request => (
-        <RequestCard key={request.id} request={request} />
+        <RequestCard 
+          key={request.id} 
+          request={{
+            id: Number(request.id),
+            title: request.title,
+            description: request.description || '',
+            category: request.category,
+            budget: request.budget?.toString() || '',
+            deadline: request.deadline || '',
+            status: request.status,
+            createdAt: new Date(request.created_at).toLocaleDateString('fr-FR'),
+            messages: []
+          }} 
+        />
       ))}
     </div>
   );

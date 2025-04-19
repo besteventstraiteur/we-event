@@ -3,7 +3,6 @@ import React from 'react';
 import { useSearchParams, Navigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useGuest } from '@/hooks/useGuest';
-import GuestDashboard from './GuestDashboard';
 
 const GuestAccess = () => {
   const [searchParams] = useSearchParams();
@@ -22,7 +21,8 @@ const GuestAccess = () => {
     return <Navigate to="/404" replace />;
   }
 
-  return <GuestDashboard guest={guest} />;
+  // Instead of passing the guest prop directly, we'll use the URL parameter
+  return <Navigate to={`/guest/${guest.id}`} replace />;
 };
 
 export default GuestAccess;

@@ -1,7 +1,8 @@
+
 import React, { Suspense, useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { RequireAuth } from "@/components/security/ProtectedRoute";
-import LoadingFallback from "@/components/shared/LazyLoadingFallback";
+import ProtectedRoute from "@/components/security/ProtectedRoute";
+import LoadingFallback from "@/components/LoadingFallback";
 import { useDeviceType } from "@/hooks/use-mobile";
 import GuestAccess from "@/pages/GuestAccess";
 import PublicRoutes from '@/routes/PublicRoutes';
@@ -30,7 +31,7 @@ const AppRouter: React.FC = () => {
           />
 
           <Route path="/*" element={<PublicRoutes isMobileInterface={isMobileInterface} />} />
-          <Route element={<RequireAuth />}>
+          <Route element={<ProtectedRoute />}>
             <Route path="/app/*" element={<PrivateRoutes />} />
           </Route>
         </Routes>
