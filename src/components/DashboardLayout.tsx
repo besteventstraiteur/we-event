@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -19,11 +18,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => 
   const isMobile = useIsMobile();
   const { logout } = useAuth();
   
-  const handleLogout = () => {
-    // This is now handled by the LogoutButton component
-    // The onLogout prop is still passed to Sidebar but not used
-  };
-  
   const toggleSidebar = () => {
     setSidebarOpen(prev => !prev);
   };
@@ -33,12 +27,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => 
     return (
       <MobileAppWrapper type={type}>
         <div className="flex h-screen overflow-hidden bg-gradient-to-br from-white to-gray-50">
-          {/* Menu latéral pour Mobile */}
           <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
             <SheetContent side="left" className="p-0 w-[280px] border-r shadow-lg">
               <Sidebar 
                 type={type} 
-                onLogout={handleLogout} 
+                onLogout={logout} 
                 mobile={true} 
                 onMenuClose={() => setSidebarOpen(false)}
               />
@@ -52,8 +45,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => 
               onMenuClick={toggleSidebar}
             />
             
-            <main className="flex-1 overflow-y-auto p-4 bg-gradient-to-br from-white to-gray-50">
-              <div className="container mx-auto">
+            <main className="flex-1 overflow-y-auto bg-gradient-to-br from-white to-gray-50">
+              <div className="container mx-auto px-4 py-6">
                 {children}
               </div>
             </main>
@@ -66,13 +59,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, type }) => 
   // Desktop layout
   return (
     <div className="flex h-screen overflow-hidden bg-white">
-      <Sidebar type={type} onLogout={handleLogout} />
+      <Sidebar type={type} onLogout={logout} />
       
       <div className="flex flex-col flex-1 overflow-hidden">
         <Header type={type === "guest" ? "client" : type} />
         
-        <main className="flex-1 overflow-y-auto p-6 bg-gradient-to-br from-white to-gray-50">
-          <div className="container mx-auto">
+        <main className="flex-1 overflow-y-auto bg-gradient-to-br from-white to-gray-50">
+          <div className="container mx-auto px-6 py-8">
             {children}
           </div>
         </main>
