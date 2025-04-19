@@ -10,12 +10,13 @@ import TokenRefresher from "@/components/security/TokenRefresher";
 import SessionTimeout from "@/components/security/SessionTimeout";
 import { NetworkStatus } from "./components/app/NetworkStatus";
 
+// Définition claire de l'interface avec React.ReactNode pour les enfants
 interface AppWrapperProps {
   children: React.ReactNode;
 }
 
-// Utilisation de la notation de fonction fléchée avec typage explicite
-const AppWrapper = ({ children }: AppWrapperProps) => {
+// Utilisation explicite de React.FC pour assurer que TypeScript comprenne children
+const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
   return (
     <Router>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
