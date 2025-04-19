@@ -10,7 +10,7 @@ export function useLogoutMethod(setUser: Function) {
       localStorage.removeItem("weddingPlannerEmail");
       localStorage.removeItem("weddingPlannerRememberMe");
       
-      // Déconnexion Supabase
+      // Déconnexion Supabase - will automatically clear the auth cookie
       await supabase.auth.signOut();
       
       // Mise à jour de l'état utilisateur

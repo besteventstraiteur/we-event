@@ -35,6 +35,7 @@ export function useLoginMethods(setUser: Function) {
           created_at: new Date().toISOString()
         };
         
+        // Store these only for demo accounts
         if (credentials.rememberMe) {
           localStorage.setItem("weddingPlannerEmail", credentials.email);
           localStorage.setItem("weddingPlannerRememberMe", "true");
@@ -75,6 +76,8 @@ export function useLoginMethods(setUser: Function) {
         };
       }
       
+      // For demo accounts compatibility, we still use localStorage but only for the email
+      // not for security-critical information
       if (credentials.rememberMe) {
         localStorage.setItem("weddingPlannerEmail", credentials.email);
         localStorage.setItem("weddingPlannerRememberMe", "true");

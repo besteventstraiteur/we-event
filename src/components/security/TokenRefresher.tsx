@@ -21,6 +21,7 @@ const TokenRefresher = ({ children, refreshInterval = 55 }: TokenRefresherProps)
       try {
         console.log('Attempting to refresh token...');
         
+        // With cookie storage, refreshSession() will automatically update the HTTPOnly cookie
         const { data, error } = await supabase.auth.refreshSession();
         
         if (error) {

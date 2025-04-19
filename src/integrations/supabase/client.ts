@@ -8,11 +8,39 @@ const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiO
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
-    storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
-    flowType: 'pkce'
+    flowType: 'pkce',
+    storage: {
+      getItem: key => {
+        // For compatibility with demo accounts which still use localStorage
+        if (key === 'weddingPlannerEmail' || key === 'weddingPlannerRememberMe') {
+          return localStorage.getItem(key);
+        }
+        return null;
+      },
+      setItem: (key, value) => {
+        // For compatibility with demo accounts which still use localStorage
+        if (key === 'weddingPlannerEmail' || key === 'weddingPlannerRememberMe') {
+          localStorage.setItem(key, value);
+        }
+      },
+      removeItem: key => {
+        // For compatibility with demo accounts which still use localStorage
+        if (key === 'weddingPlannerEmail' || key === 'weddingPlannerRememberMe') {
+          localStorage.removeItem(key);
+        }
+      }
+    },
+    cookieOptions: {
+      name: 'sb-auth-token',
+      lifetime: 60 * 60 * 24 * 7, // 1 week
+      domain: window.location.hostname,
+      path: '/',
+      sameSite: 'lax',
+      secure: window.location.protocol === 'https:'
+    }
   },
   db: {
     schema: 'public'
@@ -96,4 +124,3 @@ export const testDatabaseConnection = async () => {
     };
   }
 };
-

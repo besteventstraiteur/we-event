@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
@@ -11,66 +10,44 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // Extract hash parameters from URL
-        const hashParams = new URLSearchParams(window.location.hash.substring(1));
-        const accessToken = hashParams.get('access_token');
-        const refreshToken = hashParams.get('refresh_token');
+        // With cookie-based auth, Supabase will automatically extract the session from URL
+        // We just need to get the session and user info
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
         
-        if (!accessToken) {
-          // Check if this is an error response
-          const errorDescription = hashParams.get('error_description');
-          
-          if (errorDescription) {
-            setError(errorDescription);
-            return;
-          }
-          
-          // If not an error and no access token, something unexpected happened
-          setError("No access token found in the callback URL");
+        if (sessionError || !sessionData.session) {
+          setError(sessionError?.message || "Failed to retrieve session");
           return;
         }
         
-        // Exchange the hash params for a session
-        const { data, error: sessionError } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken || ''
-        });
+        // Get user profile
+        const { data: userData } = await supabase.auth.getUser();
         
-        if (sessionError) {
-          throw sessionError;
-        }
-        
-        if (data.session) {
-          // Get user profile
-          const { data: userData } = await supabase.auth.getUser();
-          
-          if (userData.user) {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('role')
-              .eq('id', userData.user.id)
-              .single();
-              
-            // Redirect based on user role
-            if (profile && profile.role) {
-              switch (profile.role) {
-                case 'ADMIN':
-                  navigate('/admin/dashboard');
-                  break;
-                case 'PARTNER':
-                  navigate('/partner/dashboard');
-                  break;
-                default:
-                  navigate('/client/dashboard');
-                  break;
-              }
-              return;
+        if (userData.user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', userData.user.id)
+            .single();
+            
+          // Redirect based on user role
+          if (profile && profile.role) {
+            switch (profile.role) {
+              case 'ADMIN':
+                navigate('/admin/dashboard');
+                break;
+              case 'PARTNER':
+                navigate('/partner/dashboard');
+                break;
+              default:
+                navigate('/client/dashboard');
+                break;
             }
+            return;
           }
-          
-          // Default redirect if no specific role was found
-          navigate('/client/dashboard');
         }
+        
+        // Default redirect if no specific role was found
+        navigate('/client/dashboard');
       } catch (err) {
         console.error('Error during authentication callback:', err);
         setError(err instanceof Error ? err.message : 'An unknown error occurred during authentication');
