@@ -2,8 +2,9 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { PartnerProfile, PartnerImage } from '@/models/partnerProfile';
+import { PartnerProfile, PartnerImage, PricingPackage } from '@/models/partnerProfile';
 import type { Database } from '@/types/supabase-db';
+import type { Json } from '@/types/supabase-db';
 
 type Tables = Database['public']['Tables'];
 type Partners = Tables['partners']['Row'];
@@ -36,7 +37,7 @@ export function usePartnerData(partnerId?: string) {
               phone
             )
           `)
-          .eq('id', partnerId as string)
+          .eq('id', partnerId as any)
           .single();
 
         if (partnerError) throw partnerError;
@@ -50,36 +51,69 @@ export function usePartnerData(partnerId?: string) {
         const { data: images, error: imagesError } = await supabase
           .from('partner_images')
           .select('*')
-          .eq('partner_id', partnerId as string)
+          .eq('partner_id', partnerId as any)
           .order('order_index', { ascending: true });
 
         if (imagesError) throw imagesError;
 
-        // Transform data into expected format with type safety
-        const typedPartnerData = partnerData as Partners & { user: any };
-        const typedImages = images as PartnerImages[] | null;
+        // Type assertions to ensure we get the correct types
+        const typedPartnerData = partnerData as unknown as Partners & { user: any };
+        const typedImages = images as unknown as PartnerImages[] | null;
 
+        // Process pricing data to ensure it conforms to the expected structure
+        let processedPricing: PartnerProfile['pricing'] = { basePrice: '', packages: [] };
+        if (typedPartnerData.pricing) {
+          if (typeof typedPartnerData.pricing === 'object') {
+            // Handle the case where pricing is an object
+            const pricingObj = typedPartnerData.pricing as Record<string, unknown>;
+            processedPricing = {
+              basePrice: typeof pricingObj.basePrice === 'string' ? pricingObj.basePrice : '',
+              packages: Array.isArray(pricingObj.packages) ? pricingObj.packages as PricingPackage[] : []
+            };
+          }
+        }
+
+        // Process contact data
+        let processedContact: PartnerProfile['contact'] = {
+          email: typedPartnerData.user?.email || '',
+          phone: typedPartnerData.user?.phone || '',
+          website: '',
+          address: ''
+        };
+
+        if (typedPartnerData.contact) {
+          if (typeof typedPartnerData.contact === 'object') {
+            // Handle the case where contact is an object
+            const contactObj = typedPartnerData.contact as Record<string, unknown>;
+            processedContact = {
+              email: (contactObj.email as string) || typedPartnerData.user?.email || '',
+              phone: (contactObj.phone as string) || typedPartnerData.user?.phone || '',
+              website: (contactObj.website as string) || '',
+              address: (contactObj.address as string) || ''
+            };
+          }
+        }
+
+        // Create typed images array
+        const processedImages: PartnerImage[] = typedImages ? typedImages.map(img => ({
+          id: img.id || '',
+          url: img.url || '',
+          alt: img.alt || '',
+          type: (img.type || 'gallery') as 'profile' | 'gallery' | 'logo' | 'background',
+          order: img.order_index || 0,
+          featured: img.featured || false
+        })) : [];
+
+        // Construct the partner profile with proper typings
         const partnerProfile: PartnerProfile = {
           id: typedPartnerData.id || '',
           name: typedPartnerData.name || '',
           category: typedPartnerData.category || '',
           description: typedPartnerData.description || '',
           shortDescription: typedPartnerData.short_description || '',
-          pricing: typedPartnerData.pricing || { basePrice: '', packages: [] },
-          contact: typedPartnerData.contact || { 
-            email: typedPartnerData.user?.email || '', 
-            phone: typedPartnerData.user?.phone || '', 
-            website: '', 
-            address: '' 
-          },
-          images: typedImages ? typedImages.map(img => ({
-            id: img.id || '',
-            url: img.url || '',
-            alt: img.alt || '',
-            type: img.type || 'gallery',
-            order: img.order_index || 0,
-            featured: img.featured || false
-          })) : [],
+          pricing: processedPricing,
+          contact: processedContact,
+          images: processedImages,
           discount: typedPartnerData.discount || '',
           services: typedPartnerData.services || [],
           availability: typedPartnerData.availability || []
@@ -117,8 +151,8 @@ export function usePartnerData(partnerId?: string) {
       
       const { error } = await supabase
         .from('partners')
-        .update(supabaseUpdateData)
-        .eq('id', profile.id);
+        .update(supabaseUpdateData as any)
+        .eq('id', profile.id as any);
       
       if (error) throw error;
       
@@ -139,6 +173,7 @@ export function usePartnerData(partnerId?: string) {
     }
   };
 
+  // Type assertions for file uploads
   const updateProfileImage = async (file: File, type: 'profile' | 'gallery' | 'logo' | 'background'): Promise<PartnerImage> => {
     if (!profile) throw new Error('No profile loaded');
     
@@ -168,8 +203,8 @@ export function usePartnerData(partnerId?: string) {
         if (oldImage) {
           await supabase
             .from('partner_images')
-            .update({ featured: false } as any) // Type assertion needed here
-            .eq('id', oldImage.id);
+            .update({ featured: false } as any)
+            .eq('id', oldImage.id as any);
         }
       }
       
@@ -191,7 +226,7 @@ export function usePartnerData(partnerId?: string) {
       // Save image metadata to database
       const { data: image, error: imageError } = await supabase
         .from('partner_images')
-        .insert(insertData as any) // Type assertion needed here
+        .insert(insertData as any)
         .select()
         .single();
       
@@ -199,8 +234,8 @@ export function usePartnerData(partnerId?: string) {
       
       if (!image) throw new Error('Failed to insert image');
       
-      // Create new image object
-      const typedImage = image as PartnerImages;
+      // Create new image object with type safety
+      const typedImage = image as unknown as PartnerImages;
       
       const newImage: PartnerImage = {
         id: typedImage.id || '',
@@ -252,7 +287,7 @@ export function usePartnerData(partnerId?: string) {
       const { error } = await supabase
         .from('partner_images')
         .delete()
-        .eq('id', imageId);
+        .eq('id', imageId as any);
         
       if (error) throw error;
       
@@ -331,7 +366,7 @@ export function usePartners() {
       const { error } = await supabase
         .from('partners')
         .update({ status })
-        .eq('id', id);
+        .eq('id', id as any);
         
       if (error) throw error;
       
