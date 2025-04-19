@@ -8,7 +8,15 @@ export function useLoginMethods(setUser: Function) {
     try {
       console.log("Attempting to log in with:", credentials.email);
       
+      // Vérification des comptes de démonstration spécifiques (pour maintenir la compatibilité)
       if (credentials.email.includes("admin@") || credentials.email.includes("partner@") || credentials.email.includes("client@")) {
+        if (credentials.password !== "password123") {
+          return {
+            success: false,
+            message: "Mot de passe incorrect pour le compte de démonstration"
+          };
+        }
+        
         console.log("Using demo login for:", credentials.email);
         
         let role = "client";
@@ -23,7 +31,7 @@ export function useLoginMethods(setUser: Function) {
           email: credentials.email,
           name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
           avatar_url: null,
-          role: role,
+          role: role.toUpperCase(),
           created_at: new Date().toISOString()
         };
         
@@ -42,6 +50,7 @@ export function useLoginMethods(setUser: Function) {
         };
       }
       
+      // Utilisation de l'authentification Supabase
       const { data, error } = await supabase.auth.signInWithPassword({
         email: credentials.email,
         password: credentials.password
@@ -73,6 +82,8 @@ export function useLoginMethods(setUser: Function) {
         localStorage.removeItem("weddingPlannerEmail");
         localStorage.removeItem("weddingPlannerRememberMe");
       }
+      
+      setUser(profile);
       
       return {
         success: true,

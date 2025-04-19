@@ -5,6 +5,8 @@ import AuthLayout from "@/components/AuthLayout";
 import GoldButton from "@/components/GoldButton";
 import InputField from "@/components/InputField";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks/auth/useAuth";
+import { UserRole } from "@/utils/accessControl";
 
 const RegisterClientPage = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +20,7 @@ const RegisterClientPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { register } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -40,14 +43,34 @@ const RegisterClientPage = () => {
     }
 
     try {
-      // Simuler la création de compte
-      setTimeout(() => {
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+      
+      const result = await register({
+        email: formData.email,
+        password: formData.password,
+        role: UserRole.CLIENT,
+        name: fullName
+      });
+      
+      if (result.success) {
         toast({
           title: "Inscription réussie!",
-          description: "Bienvenue sur We Event!",
+          description: result.message || "Bienvenue sur We Event!",
         });
-        navigate("/client/dashboard");
-      }, 1500);
+        
+        if (result.user) {
+          navigate("/client/dashboard");
+        } else {
+          // Si le compte a été créé mais nécessite une confirmation par email
+          navigate("/login");
+        }
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Erreur d'inscription",
+          description: result.message || "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
+        });
+      }
     } catch (error) {
       toast({
         variant: "destructive",

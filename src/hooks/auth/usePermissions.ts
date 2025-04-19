@@ -1,90 +1,53 @@
 
-import { useCallback } from "react";
 import { Profile } from "@/lib/supabase";
-import { UserRole } from "@/utils/accessControl";
+import { UserRole, Permission } from "@/utils/accessControl";
 
 export function usePermissions(user: Profile | null) {
-  /**
-   * Vérifie si l'utilisateur possède un rôle spécifique
-   */
-  const hasRole = useCallback((role: UserRole): boolean => {
+  // Vérification si l'utilisateur a un certain rôle
+  const hasRole = (role: UserRole): boolean => {
     if (!user) return false;
     
-    // Standardiser les deux valeurs pour la comparaison
-    const userRoleStr = String(user.role || '').toLowerCase().trim();
-    const checkRoleStr = String(role || '').toLowerCase().trim();
+    // Normalisation des rôles pour la comparaison
+    const userRole = String(user.role || "").toUpperCase();
+    const requiredRole = String(role).toUpperCase();
     
-    console.log("usePermissions hasRole - Comparing roles:", userRoleStr, checkRoleStr, userRoleStr === checkRoleStr);
+    console.log("Role check:", { userRole, requiredRole });
     
-    return userRoleStr === checkRoleStr;
-  }, [user]);
+    return userRole === requiredRole;
+  };
 
-  /**
-   * Vérifie si l'utilisateur a une permission spécifique
-   * Les permissions sont plus granulaires que les rôles et peuvent être associées à différents rôles
-   */
-  const hasPermission = useCallback((permission: string): boolean => {
-    if (!user) return false;
-    
+  // Vérification si l'utilisateur a une certaine permission
+  const hasPermission = (permission: Permission): boolean => {
     // Les administrateurs ont toutes les permissions
-    if (String(user.role).toLowerCase().trim() === 'admin') return true;
+    if (hasRole(UserRole.ADMIN)) return true;
     
-    // Permissions spécifiques pour les différents modules CRM
-    const crmPermissions = {
-      // Permissions clients
-      'crm.contacts.view': ['admin', 'partner'],
-      'crm.contacts.create': ['admin', 'partner'],
-      'crm.contacts.edit': ['admin', 'partner'],
-      'crm.contacts.delete': ['admin'],
-      
-      // Permissions opportunités
-      'crm.opportunities.view': ['admin', 'partner'],
-      'crm.opportunities.create': ['admin', 'partner'],
-      'crm.opportunities.edit': ['admin', 'partner'],
-      'crm.opportunities.delete': ['admin'],
-      
-      // Permissions devis/factures
-      'crm.quotes.view': ['admin', 'partner'],
-      'crm.quotes.create': ['admin', 'partner'],
-      'crm.quotes.edit': ['admin', 'partner'],
-      'crm.quotes.delete': ['admin'],
-      'crm.invoices.view': ['admin', 'partner'],
-      'crm.invoices.create': ['admin', 'partner'],
-      'crm.invoices.edit': ['admin', 'partner'],
-      'crm.invoices.delete': ['admin'],
-      
-      // Permissions produits/services
-      'crm.products.view': ['admin', 'partner'],
-      'crm.products.create': ['admin', 'partner'],
-      'crm.products.edit': ['admin', 'partner'],
-      'crm.products.delete': ['admin'],
-      
-      // Permissions rapports
-      'crm.reports.view': ['admin', 'partner'],
-      'crm.reports.create': ['admin'],
-      'crm.reports.export': ['admin', 'partner'],
-    };
-    
-    const userRole = String(user.role).toLowerCase().trim();
-    return crmPermissions[permission as keyof typeof crmPermissions]?.includes(userRole) || false;
-  }, [user]);
+    // Implémentation de base - à étendre si nécessaire avec une vraie gestion des permissions
+    switch (permission) {
+      case Permission.VIEW_DASHBOARD:
+        return !!user;
+      case Permission.MANAGE_GUESTS:
+        return hasRole(UserRole.CLIENT) || hasRole(UserRole.ADMIN);
+      case Permission.MANAGE_REQUESTS:
+        return hasRole(UserRole.PARTNER) || hasRole(UserRole.ADMIN);
+      case Permission.MANAGE_CLIENTS:
+      case Permission.MANAGE_PARTNERS:
+      case Permission.MANAGE_ADMINS:
+      case Permission.ACCESS_ADVANCED_SECURITY:
+      case Permission.MANAGE_SYSTEM:
+        return hasRole(UserRole.ADMIN);
+      default:
+        return false;
+    }
+  };
 
-  /**
-   * Vérifie si l'utilisateur est un partenaire d'un type spécifique
-   */
-  const hasPartnerType = useCallback((partnerType: string): boolean => {
+  // Vérification si le partenaire est d'un certain type
+  const hasPartnerType = (partnerType: string): boolean => {
     if (!user) return false;
+    if (!hasRole(UserRole.PARTNER)) return false;
     
-    // Vérifier si l'utilisateur est un partenaire
-    const isPartner = String(user.role || '').toLowerCase().trim() === 'partner';
-    if (!isPartner) return false;
-    
-    // Vérifier le type de partenaire
-    const userPartnerType = String(user.partner_type || '').toLowerCase().trim();
-    const checkPartnerType = String(partnerType || '').toLowerCase().trim();
-    
-    return userPartnerType === checkPartnerType;
-  }, [user]);
+    // Si l'utilisateur est partenaire, vérifier son type
+    return user.partner_type === partnerType;
+  };
 
   return {
     hasRole,

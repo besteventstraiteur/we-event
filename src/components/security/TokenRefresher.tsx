@@ -1,35 +1,46 @@
 
-import React, { useEffect } from 'react';
-import { useAuth } from '@/hooks/auth/useAuth';
+import { useEffect, ReactNode } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/hooks/auth/useAuth';
 
 interface TokenRefresherProps {
-  children: React.ReactNode;
+  children: ReactNode;
+  refreshInterval?: number; // Intervalle de rafraîchissement en minutes
 }
 
-const TokenRefresher: React.FC<TokenRefresherProps> = ({ children }) => {
+const TokenRefresher = ({ children, refreshInterval = 55 }: TokenRefresherProps) => {
   const { session, isAuthenticated } = useAuth();
-
+  
   useEffect(() => {
     if (!isAuthenticated || !session) return;
-
-    const refreshToken = async () => {
+    
+    const refreshIntervalMs = refreshInterval * 60 * 1000; // Conversion en millisecondes
+    
+    // Définir un intervalle pour rafraîchir la session avant son expiration
+    const intervalId = setInterval(async () => {
       try {
-        const { error } = await supabase.auth.refreshSession();
+        console.log('Attempting to refresh token...');
+        
+        const { data, error } = await supabase.auth.refreshSession();
+        
         if (error) {
           console.error('Token refresh failed:', error);
         }
-      } catch (err) {
-        console.error('Unexpected error during token refresh:', err);
+        
+        if (data && data.session) {
+          console.log('Token refreshed successfully');
+        }
+      } catch (error) {
+        console.error('Error during token refresh:', error);
       }
+    }, refreshIntervalMs);
+    
+    // Nettoyer l'intervalle lors du démontage du composant
+    return () => {
+      clearInterval(intervalId);
     };
-
-    // Refresh token 5 minutes before expiration
-    const refreshInterval = setInterval(refreshToken, 25 * 60 * 1000);
-
-    return () => clearInterval(refreshInterval);
-  }, [isAuthenticated, session]);
-
+  }, [isAuthenticated, session, refreshInterval]);
+  
   return <>{children}</>;
 };
 
