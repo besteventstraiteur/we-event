@@ -17,15 +17,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   allowedRoles,
   children 
 }) => {
-  const { isAuthenticated, hasRole } = useAuth();
+  const { isAuthenticated, hasRole, user } = useAuth();
   const { toast } = useToast();
+  
+  console.log("ProtectedRoute - isAuthenticated:", isAuthenticated, "user:", user);
 
   if (!isAuthenticated) {
-    toast({
-      title: "Accès refusé",
-      description: "Veuillez vous connecter pour accéder à cette page",
-      variant: "destructive",
-    });
+    // Don't show toast here to prevent showing it during initial load
     return <Navigate to="/login" replace />;
   }
 

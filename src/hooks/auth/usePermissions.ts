@@ -5,14 +5,23 @@ export function usePermissions(user: any) {
   const hasRole = (role: string): boolean => {
     if (!user) return false;
     
-    // Get user role from metadata or direct property
+    // Get user role from all possible locations
     const userRole = typeof user.role === 'string' 
       ? user.role.toLowerCase() 
       : typeof user.user_metadata?.role === 'string' 
         ? user.user_metadata.role.toLowerCase() 
         : '';
         
-    console.log("Checking role:", role, "against user role:", userRole);
+    // Also check for demo users
+    const isDemoUser = user.id && user.id.startsWith('demo-');
+    
+    console.log("Checking role:", role, "against user role:", userRole, "isDemoUser:", isDemoUser);
+    
+    // For demo users, extract role from user metadata or direct property
+    if (isDemoUser) {
+      return userRole === role.toLowerCase();
+    }
+    
     return userRole === role.toLowerCase();
   };
 
