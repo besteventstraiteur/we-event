@@ -1,6 +1,6 @@
 
 import React, { Suspense, useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
 import LoadingFallback from "@/components/LoadingFallback";
 import { useDeviceType } from "@/hooks/use-mobile";
@@ -8,9 +8,11 @@ import GuestAccess from "@/pages/GuestAccess";
 import PublicRoutes from '@/routes/PublicRoutes';
 import PrivateRoutes from '@/routes/PrivateRoutes';
 import NotFound from '@/pages/NotFound';
+import { useAuth } from "@/hooks/useAuth";
 
 const AppRouter: React.FC = () => {
   const deviceType = useDeviceType();
+  const { isAuthenticated } = useAuth();
   const [isMobileInterface, setIsMobileInterface] = useState(
     deviceType === "mobile" || deviceType === "tablet"
   );
@@ -18,6 +20,11 @@ const AppRouter: React.FC = () => {
   useEffect(() => {
     setIsMobileInterface(deviceType === "mobile" || deviceType === "tablet");
   }, [deviceType]);
+
+  // Debug auth state on router mount
+  useEffect(() => {
+    console.log("AppRouter - Auth state:", { isAuthenticated });
+  }, [isAuthenticated]);
 
   return (
     <Suspense fallback={<LoadingFallback />}>
@@ -55,6 +62,25 @@ const AppRouter: React.FC = () => {
             <ProtectedRoute>
               <PrivateRoutes />
             </ProtectedRoute>
+          } 
+        />
+
+        {/* Add a debug route for unauthorized access */}
+        <Route 
+          path="/unauthorized" 
+          element={
+            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+              <div className="p-8 bg-white rounded-lg shadow-md text-center">
+                <h1 className="text-2xl font-bold text-red-600 mb-4">Accès non autorisé</h1>
+                <p className="mb-6">Vous n'avez pas les permissions nécessaires pour accéder à cette page.</p>
+                <button 
+                  onClick={() => window.history.back()} 
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                >
+                  Retour
+                </button>
+              </div>
+            </div>
           } 
         />
 

@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
 import MobileNavigation from "@/components/mobile/MobileNavigation";
 import { useDeviceType } from "@/hooks/use-mobile";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // Components
 import SocialLoginButtons from "@/components/auth/SocialLoginButtons";
@@ -23,31 +23,53 @@ const LoginPage = () => {
   const deviceType = useDeviceType();
   const isMobileDevice = deviceType === 'mobile' || deviceType === 'tablet';
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated, user } = useAuth();
   
   useEffect(() => {
+    console.log("LoginPage - Auth state:", { isAuthenticated, user });
+    
     if (isAuthenticated && user) {
       // Toujours normaliser le rôle pour la comparaison
-      const userRoleStr = String(user.role || '').toLowerCase().trim();
+      const userRoleStr = String(user.role || user.user_metadata?.role || '').toLowerCase().trim();
       
-      // Redirection basée sur le rôle utilisateur
+      console.log("LoginPage - User role detected:", userRoleStr);
+      
+      // Get the redirect path from state or session storage
+      const fromPath = location.state?.from;
+      const storedRedirect = sessionStorage.getItem("redirectAfterLogin");
+      
+      // Redirection basée sur le rôle utilisateur ou le chemin précédent
       let redirectPath;
       
-      switch (userRoleStr) {
-        case 'admin':
-          redirectPath = '/admin/dashboard';
-          break;
-        case 'partner':
-          redirectPath = '/partner/dashboard';
-          break;
-        default:
-          redirectPath = '/client/dashboard';
+      if (fromPath) {
+        redirectPath = fromPath;
+      } else if (storedRedirect) {
+        redirectPath = storedRedirect;
+      } else {
+        // Fallback to role-based dashboard
+        switch (userRoleStr) {
+          case 'admin':
+            redirectPath = '/admin/dashboard';
+            break;
+          case 'partner':
+            redirectPath = '/partner/dashboard';
+            break;
+          default:
+            redirectPath = '/client/dashboard';
+        }
       }
       
       console.log("User already authenticated, redirecting to:", redirectPath, "Role:", userRoleStr);
-      navigate(redirectPath, { replace: true });
+      
+      // Add a slight delay to ensure state updates before navigation
+      setTimeout(() => {
+        navigate(redirectPath, { replace: true });
+        // Clear stored redirect
+        sessionStorage.removeItem("redirectAfterLogin");
+      }, 100);
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [isAuthenticated, user, navigate, location.state]);
   
   const {
     // State
@@ -70,7 +92,7 @@ const LoginPage = () => {
     handleResetPassword,
     handleVerifyOTP,
     handleSocialLoginSuccess,
-    handleBiometricAuth,  // This was previously named incorrectly as handleBiometricLogin
+    handleBiometricAuth,
   } = useLoginPageLogic();
 
   const content = (
@@ -105,7 +127,7 @@ const LoginPage = () => {
                 isMobileDevice={isMobileDevice}
                 biometricError={biometricError}
                 isLoading={biometricLoading}
-                onBiometricLogin={handleBiometricAuth}  // Fixed here - we're using handleBiometricAuth now
+                onBiometricLogin={handleBiometricAuth}
               />
 
               <SocialLoginButtons onLoginSuccess={handleSocialLoginSuccess} />

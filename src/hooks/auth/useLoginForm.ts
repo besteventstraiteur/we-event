@@ -69,14 +69,26 @@ export const useLoginForm = () => {
           redirectAttempted: true
         }));
         
-        console.log("Demo login successful for", role, "user, redirecting to:", redirectPath);
+        console.log("Demo login successful for", role, "user, attempting redirect to:", redirectPath);
         
         toast({
           title: "Connexion réussie",
           description: "Bienvenue sur votre espace VIP",
         });
         
-        navigate(redirectPath, { replace: true });
+        // Check for stored redirect path
+        const storedRedirect = sessionStorage.getItem("redirectAfterLogin");
+        const finalRedirectPath = storedRedirect || redirectPath;
+        
+        console.log("Final redirect path:", finalRedirectPath);
+        
+        // Add a slight delay to ensure state updates before navigation
+        setTimeout(() => {
+          navigate(finalRedirectPath, { replace: true });
+          // Clear stored redirect
+          sessionStorage.removeItem("redirectAfterLogin");
+        }, 100);
+
         setIsLoading(false);
         return { success: true };
       }
@@ -97,14 +109,25 @@ export const useLoginForm = () => {
             redirectAttempted: true
           }));
           
-          console.log("Login successful for", userType, "user, redirecting to:", redirectPath);
+          console.log("Login successful for", userType, "user, attempting redirect to:", redirectPath);
           
           toast({
             title: "Connexion réussie",
             description: "Bienvenue sur votre espace VIP",
           });
           
-          navigate(redirectPath, { replace: true });
+          // Check for stored redirect path
+          const storedRedirect = sessionStorage.getItem("redirectAfterLogin");
+          const finalRedirectPath = storedRedirect || redirectPath;
+          
+          console.log("Final redirect path:", finalRedirectPath);
+          
+          // Add a slight delay to ensure state updates before navigation
+          setTimeout(() => {
+            navigate(finalRedirectPath, { replace: true });
+            // Clear stored redirect
+            sessionStorage.removeItem("redirectAfterLogin");
+          }, 100);
         }
         
         return { success: true, requires2FA };
