@@ -54,9 +54,9 @@ export function usePartnerData(partnerId?: string) {
         if (partnerData) {
           // Transform data into expected format
           const partnerProfile: PartnerProfile = {
-            id: partnerData.id,
-            name: partnerData.name,
-            category: partnerData.category,
+            id: partnerData.id || '',
+            name: partnerData.name || '',
+            category: partnerData.category || '',
             description: partnerData.description || '',
             shortDescription: partnerData.short_description || '',
             pricing: partnerData.pricing || { basePrice: '', packages: [] },
@@ -67,12 +67,12 @@ export function usePartnerData(partnerId?: string) {
               address: '' 
             },
             images: images ? images.map(img => ({
-              id: img.id,
-              url: img.url,
-              alt: img.alt || '',
-              type: img.type,
-              order: img.order_index,
-              featured: img.featured
+              id: img?.id || '',
+              url: img?.url || '',
+              alt: img?.alt || '',
+              type: img?.type || 'gallery',
+              order: img?.order_index || 0,
+              featured: img?.featured || false
             })) : [],
             discount: partnerData.discount || '',
             services: partnerData.services || [],
@@ -186,14 +186,16 @@ export function usePartnerData(partnerId?: string) {
       
       if (imageError) throw imageError;
       
+      if (!image) throw new Error('Failed to insert image');
+      
       // Create new image object
       const newImage: PartnerImage = {
-        id: image.id,
+        id: image.id || '',
         url,
         alt: file.name,
         type,
-        order: image.order_index,
-        featured: image.featured
+        order: image.order_index || 0,
+        featured: image.featured || false
       };
       
       // Update local state
@@ -294,7 +296,7 @@ export function usePartners() {
         `);
         
       if (status) {
-        query = query.eq('status', status);
+        query = query.eq('status', status as any);
       }
       
       const { data, error: fetchError } = await query;
