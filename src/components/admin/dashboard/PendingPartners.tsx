@@ -31,10 +31,11 @@ const PendingPartners: React.FC<PendingPartnersProps> = ({
 
   const handlePartnerAction = async (partnerId: string, approved: boolean) => {
     try {
+      // Fix: Cast the status as a valid type for the Supabase update function
       const { error } = await supabase
         .from('partners')
-        .update({ status: approved ? 'approved' : 'rejected' })
-        .eq('id', partnerId);
+        .update({ status: approved ? 'approved' : 'rejected' } as any)
+        .eq('id', partnerId as any);
         
       if (error) throw error;
       

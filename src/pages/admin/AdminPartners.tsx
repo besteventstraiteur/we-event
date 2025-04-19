@@ -120,8 +120,8 @@ const AdminPartners = () => {
     try {
       const { error } = await supabase
         .from('partners')
-        .update({ status })
-        .eq('id', partnerId);
+        .update({ status } as any)
+        .eq('id', partnerId as any);
         
       if (error) throw error;
       
