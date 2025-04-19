@@ -1,12 +1,10 @@
-
 import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { notify } from '@/components/ui/notifications';
 import { supabase } from '@/lib/supabase';
 import type { ServiceRequest, RequestMessage } from '@/types/requests';
 
 export const useRequests = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
 
   const createRequest = async (data: Omit<ServiceRequest, 'id' | 'client_id' | 'status' | 'created_at' | 'updated_at'>) => {
     try {
@@ -27,18 +25,17 @@ export const useRequests = () => {
 
       if (error) throw error;
 
-      toast({
-        title: "Demande envoyée",
-        description: "Votre demande a été envoyée avec succès"
-      });
+      notify.success(
+        "Demande envoyée",
+        "Votre demande a été envoyée avec succès"
+      );
 
     } catch (error) {
       console.error('Error creating request:', error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'envoi de votre demande",
-        variant: "destructive"
-      });
+      notify.error(
+        "Erreur",
+        "Une erreur est survenue lors de l'envoi de votre demande"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -65,11 +62,10 @@ export const useRequests = () => {
 
     } catch (error) {
       console.error('Error sending message:', error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'envoi du message",
-        variant: "destructive"
-      });
+      notify.error(
+        "Erreur",
+        "Une erreur est survenue lors de l'envoi du message"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -86,18 +82,17 @@ export const useRequests = () => {
 
       if (error) throw error;
 
-      toast({
-        title: "Statut mis à jour",
-        description: "Le statut de la demande a été mis à jour"
-      });
+      notify.success(
+        "Statut mis à jour",
+        "Le statut de la demande a été mis à jour"
+      );
 
     } catch (error) {
       console.error('Error updating request status:', error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la mise à jour du statut",
-        variant: "destructive"
-      });
+      notify.error(
+        "Erreur",
+        "Une erreur est survenue lors de la mise à jour du statut"
+      );
     } finally {
       setIsLoading(false);
     }

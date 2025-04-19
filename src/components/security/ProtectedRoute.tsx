@@ -1,53 +1,41 @@
 
-import React from "react";
-import { Navigate, useLocation, Outlet } from "react-router-dom";
-import { UserRole } from "@/utils/accessControl";
-import { Loader2 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { UserRole } from '@/utils/accessControl';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProtectedRouteProps {
   requiredRole?: UserRole;
-  allowedRoles?: UserRole[];
-  fallbackPath?: string;
+  children?: React.ReactNode;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
   requiredRole,
-  allowedRoles,
-  fallbackPath = "/login"
+  children 
 }) => {
-  const { user, isLoading, hasRole } = useAuth();
-  const location = useLocation();
+  const { isAuthenticated, hasRole } = useAuth();
+  const { toast } = useToast();
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2">Vérification des accès...</span>
-      </div>
-    );
-  }
-
-  if (!user) {
-    console.log("ProtectedRoute - No current user, redirecting to:", fallbackPath);
-    return <Navigate to={fallbackPath} state={{ from: location.pathname }} replace />;
+  if (!isAuthenticated) {
+    toast({
+      title: "Accès refusé",
+      description: "Veuillez vous connecter pour accéder à cette page",
+      variant: "destructive",
+    });
+    return <Navigate to="/login" replace />;
   }
 
   if (requiredRole && !hasRole(requiredRole)) {
-    console.log("ProtectedRoute - User doesn't have required role:", requiredRole);
+    toast({
+      title: "Accès non autorisé",
+      description: "Vous n'avez pas les permissions nécessaires pour accéder à cette page",
+      variant: "destructive",
+    });
     return <Navigate to="/unauthorized" replace />;
   }
-  
-  if (allowedRoles && allowedRoles.length > 0) {
-    const hasAllowedRole = allowedRoles.some(role => hasRole(role));
-    
-    if (!hasAllowedRole) {
-      console.log("ProtectedRoute - User doesn't have any of the allowed roles:", allowedRoles);
-      return <Navigate to="/unauthorized" replace />;
-    }
-  }
 
-  return <Outlet />;
+  return children ? <>{children}</> : <Outlet />;
 };
 
 export default ProtectedRoute;
