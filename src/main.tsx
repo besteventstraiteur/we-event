@@ -1,15 +1,13 @@
-
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App.tsx';
 import './index.css';
 import './styles/calendar.css'; // Import our calendar styles
-import './mobile-styles.css'; // Import mobile-specific styles
 import { Toaster } from "@/components/ui/toaster";
 import { Capacitor } from '@capacitor/core';
 import LoadingFallback from '@/components/LoadingFallback';
-import { useNetworkStatus } from '@/utils/networkUtils'; // Changed from .tsx to .ts
+import { useNetworkStatus } from '@/utils/networkUtils'; // Keep this import as is
 
 // Pour une gestion correcte de la hauteur de viewport sur mobile
 const setVhProperty = () => {
