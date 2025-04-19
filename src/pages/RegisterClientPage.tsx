@@ -1,55 +1,44 @@
 
-import React, { useState } from "react";
+import React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import GoldButton from "@/components/GoldButton";
-import InputField from "@/components/InputField";
-import { useToast } from "@/components/ui/use-toast";
-import { useAuth } from "@/hooks/auth/useAuth";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { UserRole } from "@/utils/accessControl";
+import { registerClientSchema, type RegisterClientFormValues } from "@/lib/validations/auth";
 
 const RegisterClientPage = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { register } = useAuth();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    // Vérifier que les mots de passe correspondent
-    if (formData.password !== formData.confirmPassword) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Les mots de passe ne correspondent pas.",
-      });
-      setIsLoading(false);
-      return;
+  const form = useForm<RegisterClientFormValues>({
+    resolver: zodResolver(registerClientSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
     }
+  });
 
+  const isLoading = form.formState.isSubmitting;
+
+  const onSubmit = async (values: RegisterClientFormValues) => {
     try {
-      const fullName = `${formData.firstName} ${formData.lastName}`.trim();
-      
       const result = await register({
-        email: formData.email,
-        password: formData.password,
+        email: values.email,
+        password: values.password,
         role: UserRole.CLIENT,
-        name: fullName
+        name: `${values.firstName} ${values.lastName}`.trim()
       });
       
       if (result.success) {
@@ -61,7 +50,6 @@ const RegisterClientPage = () => {
         if (result.user) {
           navigate("/client/dashboard");
         } else {
-          // Si le compte a été créé mais nécessite une confirmation par email
           navigate("/login");
         }
       } else {
@@ -77,8 +65,6 @@ const RegisterClientPage = () => {
         title: "Erreur d'inscription",
         description: "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -87,75 +73,123 @@ const RegisterClientPage = () => {
       title="Inscription Client"
       subtitle="Rejoignez notre plateforme et accédez à des services exclusifs"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField
-            label="Prénom"
-            id="firstName"
-            type="text"
-            placeholder="Prénom"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-          <InputField
-            label="Nom"
-            id="lastName"
-            type="text"
-            placeholder="Nom"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <InputField
-          label="Email"
-          id="email"
-          type="email"
-          placeholder="votre@email.com"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <InputField
-          label="Téléphone"
-          id="phone"
-          type="tel"
-          placeholder="06 12 34 56 78"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-        />
-        <InputField
-          label="Mot de passe"
-          id="password"
-          type="password"
-          placeholder="••••••••"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <InputField
-          label="Confirmer le mot de passe"
-          id="confirmPassword"
-          type="password"
-          placeholder="••••••••"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="Prénom" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="Nom" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <GoldButton type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Inscription en cours..." : "S'inscrire"}
-        </GoldButton>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input 
+                    placeholder="votre@email.com" 
+                    type="email"
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <div className="text-center text-sm text-we-gray-400">
-          Déjà inscrit?{" "}
-          <Link to="/login" className="text-we-gold hover:underline">
-            Se connecter
-          </Link>
-        </div>
-      </form>
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input 
+                    placeholder="06 12 34 56 78" 
+                    type="tel"
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input 
+                    placeholder="Mot de passe" 
+                    type="password"
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input 
+                    placeholder="Confirmer le mot de passe" 
+                    type="password"
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <GoldButton type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Inscription en cours...
+              </>
+            ) : (
+              "S'inscrire"
+            )}
+          </GoldButton>
+
+          <div className="text-center text-sm text-we-gray-400">
+            Déjà inscrit?{" "}
+            <Link to="/login" className="text-we-gold hover:underline">
+              Se connecter
+            </Link>
+          </div>
+        </form>
+      </Form>
     </AuthLayout>
   );
 };
