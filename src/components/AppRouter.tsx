@@ -1,42 +1,42 @@
+import React, { Suspense, useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { RequireAuth } from "@/components/auth/RequireAuth";
+import LoadingFallback from "@/components/shared/LoadingFallback";
+import { useDeviceType } from "@/hooks/use-mobile";
+import GuestAccess from "@/pages/GuestAccess";
 
-import React, { useEffect, useState, Suspense } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
-import { shouldUseMobileInterface } from "@/utils/mobileDetection";
-import { useLanguage } from "@/contexts/LanguageContext";
-import LoadingFallback from "@/components/LoadingFallback";
-import { MapProvider } from "@/components/venues/map/MapContext";
-
-// Lazy loading des modules principaux
-const PublicRoutes = React.lazy(() => import("@/routes/PublicRoutes"));
-const ClientRoutes = React.lazy(() => import("@/routes/ClientRoutes"));
-const PartnerRoutes = React.lazy(() => import("@/routes/PartnerRoutes"));
-const AdminRoutes = React.lazy(() => import("@/routes/AdminRoutes"));
+const PublicRoutes = React.lazy(() => import('@/routes/PublicRoutes'));
+const PrivateRoutes = React.lazy(() => import('@/routes/PrivateRoutes'));
 
 const AppRouter: React.FC = () => {
-  const [isMobileInterface, setIsMobileInterface] = useState(false);
-  const location = useLocation();
-  const { language } = useLanguage();
-  
+  const deviceType = useDeviceType();
+  const [isMobileInterface, setIsMobileInterface] = useState(
+    deviceType === "mobile" || deviceType === "tablet"
+  );
+
   useEffect(() => {
-    const mobileInterface = shouldUseMobileInterface();
-    setIsMobileInterface(mobileInterface);
-  }, []);
-  
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
-  
+    setIsMobileInterface(deviceType === "mobile" || deviceType === "tablet");
+  }, [deviceType]);
+
   return (
-    <MapProvider>
+    <BrowserRouter>
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
+          {/* Public guest access route */}
+          <Route 
+            path="/guest" 
+            element={
+              <GuestAccess />
+            } 
+          />
+
           <Route path="/*" element={<PublicRoutes isMobileInterface={isMobileInterface} />} />
-          <Route path="/client/*" element={<ClientRoutes />} />
-          <Route path="/partner/*" element={<PartnerRoutes />} />
-          <Route path="/admin/*" element={<AdminRoutes />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/app/*" element={<PrivateRoutes />} />
+          </Route>
         </Routes>
       </Suspense>
-    </MapProvider>
+    </BrowserRouter>
   );
 };
 

@@ -9,6 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      guests: {
+        Row: {
+          created_at: string | null
+          dietary_restrictions: string | null
+          email: string | null
+          event_id: string
+          first_name: string
+          id: string
+          last_name: string
+          menu_choice: string | null
+          notes: string | null
+          plus_one: boolean | null
+          rsvp_status: string | null
+          token: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dietary_restrictions?: string | null
+          email?: string | null
+          event_id: string
+          first_name: string
+          id?: string
+          last_name: string
+          menu_choice?: string | null
+          notes?: string | null
+          plus_one?: boolean | null
+          rsvp_status?: string | null
+          token: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dietary_restrictions?: string | null
+          email?: string | null
+          event_id?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          menu_choice?: string | null
+          notes?: string | null
+          plus_one?: boolean | null
+          rsvp_status?: string | null
+          token?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       partner_images: {
         Row: {
           alt: string | null
@@ -444,6 +492,10 @@ export type Database = {
       check_user_role: {
         Args: { user_id: string; required_role: string }
         Returns: boolean
+      }
+      generate_guest_token: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_user_role: {
         Args: { user_id: string }

@@ -1,12 +1,13 @@
-
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { Calendar, Check, MapPin, MenuSquare, User, Gift, Heart } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Calendar, Check, MapPin, MenuSquare, User } from "lucide-react";
 import Logo from "@/components/Logo";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import type { Guest } from "@/types/guest";
+import { useGuest } from "@/hooks/useGuest";
+import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import GuestBook from "@/components/guests/GuestBook";
 import GiftFund from "@/components/guests/GiftFund";
@@ -15,15 +16,29 @@ import { useDeviceType } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
 
-const GuestDashboard = () => {
-  const { eventId, guestId } = useParams();
-  const [attending, setAttending] = useState<boolean | null>(null);
-  const [activeTab, setActiveTab] = useState("info");
+interface GuestDashboardProps {
+  guest: Guest;
+}
+
+const GuestDashboard: React.FC<GuestDashboardProps> = ({ guest }) => {
+  const { updateGuest } = useGuest(guest.token);
+  const [isUpdating, setIsUpdating] = useState(false);
   const deviceType = useDeviceType();
   const isMobile = deviceType === 'mobile' || deviceType === 'tablet';
   const { t } = useLanguage();
+  const [activeTab, setActiveTab] = useState("info");
 
-  // Mock data - in a real app, this would be fetched from an API
+  const handleRSVP = async (attending: boolean) => {
+    setIsUpdating(true);
+    try {
+      await updateGuest({
+        rsvp_status: attending ? 'confirmed' : 'declined'
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   const eventDetails = {
     title: "Mariage de Sophie & Thomas",
     date: "15 juin 2024",
@@ -31,12 +46,6 @@ const GuestDashboard = () => {
     description: "Nous sommes heureux de vous convier à notre mariage. Merci de confirmer votre présence et de choisir votre menu.",
     menuSelection: true,
     menuDeadline: "01 juin 2024"
-  };
-
-  const handleAttendance = (value: boolean) => {
-    setAttending(value);
-    // In a real app, we would post this to an API
-    console.log(`Guest ${guestId} will ${value ? 'attend' : 'not attend'} event ${eventId}`);
   };
 
   const content = (
@@ -95,7 +104,7 @@ const GuestDashboard = () => {
                   </div>
                 </div>
 
-                {attending === null ? (
+                {guest.rsvp_status === 'pending' ? (
                   <div className="bg-amber-50 p-4 rounded-lg mb-6">
                     <h3 className="font-medium text-vip-gold mb-2">Confirmer votre présence</h3>
                     <p className="text-sm text-gray-600 mb-4">
@@ -103,14 +112,16 @@ const GuestDashboard = () => {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3">
                       <Button 
-                        onClick={() => handleAttendance(true)}
+                        onClick={() => handleRSVP(true)}
+                        disabled={isUpdating}
                         className="bg-vip-gold hover:bg-vip-gold/90 text-white"
                       >
                         Je serai présent
                       </Button>
                       <Button 
                         variant="outline" 
-                        onClick={() => handleAttendance(false)}
+                        onClick={() => handleRSVP(false)}
+                        disabled={isUpdating}
                         className="border-vip-gold text-vip-gold hover:bg-vip-gold/10"
                       >
                         Je ne pourrai pas venir
@@ -120,20 +131,20 @@ const GuestDashboard = () => {
                 ) : (
                   <div className="bg-gray-50 p-4 rounded-lg mb-6 border">
                     <div className="flex items-center gap-2">
-                      {attending ? (
+                      {guest.rsvp_status === 'confirmed' ? (
                         <Badge className="bg-green-500">Présent(e)</Badge>
                       ) : (
                         <Badge variant="destructive">Absent(e)</Badge>
                       )}
                       <p className="text-sm text-gray-600">
-                        {attending 
+                        {guest.rsvp_status === 'confirmed'
                           ? "Vous avez confirmé votre présence à cet événement." 
                           : "Vous avez indiqué que vous ne pourrez pas assister à cet événement."}
                       </p>
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        onClick={() => setAttending(null)}
+                        onClick={() => updateGuest({ rsvp_status: 'pending' })}
                         className="ml-auto text-xs"
                       >
                         Modifier
@@ -142,7 +153,7 @@ const GuestDashboard = () => {
                   </div>
                 )}
 
-                {attending && eventDetails.menuSelection && (
+                {guest.rsvp_status === 'confirmed' && eventDetails.menuSelection && (
                   <>
                     <Separator className="my-4" />
                     <div className="mt-4">
@@ -158,7 +169,7 @@ const GuestDashboard = () => {
                       <p className="text-sm text-gray-600 mb-4">
                         Veuillez sélectionner votre menu pour cet événement
                       </p>
-                      <Link to={`/guest/menu/${eventId || "event"}/${guestId || "guest"}`}>
+                      <Link to={`/guest/menu?token=${guest.token}`}>
                         <Button className="w-full bg-vip-gold hover:bg-vip-gold/90 text-white">
                           Choisir mon menu
                         </Button>
