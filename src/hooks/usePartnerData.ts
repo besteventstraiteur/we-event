@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { PartnerProfile, PartnerImage } from '@/models/partnerProfile';
+import type { Database } from '@/types/supabase-db';
 
 export function usePartnerData(partnerId?: string) {
   const [profile, setProfile] = useState<PartnerProfile | null>(null);
@@ -19,7 +20,7 @@ export function usePartnerData(partnerId?: string) {
 
       setIsLoading(true);
       try {
-        // Fetch partner data using type assertion for the ID
+        // Fetch partner data
         const { data: partnerData, error: partnerError } = await supabase
           .from('partners')
           .select(`
@@ -31,7 +32,7 @@ export function usePartnerData(partnerId?: string) {
               phone
             )
           `)
-          .eq('id', partnerId as any)
+          .eq('id', partnerId)
           .single();
 
         if (partnerError) throw partnerError;
@@ -41,40 +42,40 @@ export function usePartnerData(partnerId?: string) {
           return;
         }
 
-        // Fetch partner images with type assertion for partner_id
+        // Fetch partner images
         const { data: images, error: imagesError } = await supabase
           .from('partner_images')
           .select('*')
-          .eq('partner_id', partnerId as any)
+          .eq('partner_id', partnerId)
           .order('order_index', { ascending: true });
 
         if (imagesError) throw imagesError;
 
-        // Transform data into expected format with null checking
+        // Transform data into expected format with type safety
         const partnerProfile: PartnerProfile = {
-          id: partnerData?.id || '',
-          name: partnerData?.name || '',
-          category: partnerData?.category || '',
-          description: partnerData?.description || '',
-          shortDescription: partnerData?.short_description || '',
-          pricing: partnerData?.pricing || { basePrice: '', packages: [] },
-          contact: partnerData?.contact || { 
-            email: partnerData?.user?.email || '', 
-            phone: partnerData?.user?.phone || '', 
+          id: partnerData.id || '',
+          name: partnerData.name || '',
+          category: partnerData.category || '',
+          description: partnerData.description || '',
+          shortDescription: partnerData.short_description || '',
+          pricing: partnerData.pricing || { basePrice: '', packages: [] },
+          contact: partnerData.contact || { 
+            email: partnerData.user?.email || '', 
+            phone: partnerData.user?.phone || '', 
             website: '', 
             address: '' 
           },
           images: images ? images.map(img => ({
-            id: img?.id || '',
-            url: img?.url || '',
-            alt: img?.alt || '',
-            type: img?.type || 'gallery',
-            order: img?.order_index || 0,
-            featured: img?.featured || false
+            id: img.id || '',
+            url: img.url || '',
+            alt: img.alt || '',
+            type: img.type || 'gallery',
+            order: img.order_index || 0,
+            featured: img.featured || false
           })) : [],
-          discount: partnerData?.discount || '',
-          services: partnerData?.services || [],
-          availability: partnerData?.availability || []
+          discount: partnerData.discount || '',
+          services: partnerData.services || [],
+          availability: partnerData.availability || []
         };
 
         setProfile(partnerProfile);
@@ -95,7 +96,7 @@ export function usePartnerData(partnerId?: string) {
     
     try {
       // Convert from our model structure to Supabase's expected structure
-      const supabaseUpdateData: any = {
+      const supabaseUpdateData = {
         name: updatedProfile.name,
         category: updatedProfile.category,
         description: updatedProfile.description,
@@ -110,7 +111,7 @@ export function usePartnerData(partnerId?: string) {
       const { error } = await supabase
         .from('partners')
         .update(supabaseUpdateData)
-        .eq('id', profile.id as any);
+        .eq('id', profile.id);
       
       if (error) throw error;
       
@@ -161,7 +162,7 @@ export function usePartnerData(partnerId?: string) {
           await supabase
             .from('partner_images')
             .update({ featured: false })
-            .eq('id', oldImage.id as any);
+            .eq('id', oldImage.id);
         }
       }
       
@@ -170,17 +171,20 @@ export function usePartnerData(partnerId?: string) {
         ? Math.max(0, ...profile.images.filter(img => img.type === 'gallery').map(img => img.order || 0)) + 1
         : undefined;
       
+      // Prepare the data to insert
+      const insertData = {
+        partner_id: profile.id,
+        url,
+        alt: file.name,
+        type,
+        order_index: orderIndex,
+        featured: type !== 'gallery'
+      };
+      
       // Save image metadata to database
       const { data: image, error: imageError } = await supabase
         .from('partner_images')
-        .insert({
-          partner_id: profile.id as any,
-          url,
-          alt: file.name,
-          type,
-          order_index: orderIndex,
-          featured: type !== 'gallery'
-        })
+        .insert(insertData)
         .select()
         .single();
       
@@ -239,12 +243,9 @@ export function usePartnerData(partnerId?: string) {
       const { error } = await supabase
         .from('partner_images')
         .delete()
-        .eq('id', imageId as any);
+        .eq('id', imageId);
         
       if (error) throw error;
-      
-      // Delete file from storage if possible
-      // Note: This would require extracting the path from URL which depends on your storage setup
       
       // Update local state
       setProfile(prev => {
@@ -321,7 +322,7 @@ export function usePartners() {
       const { error } = await supabase
         .from('partners')
         .update({ status })
-        .eq('id', id as any);
+        .eq('id', id);
         
       if (error) throw error;
       
