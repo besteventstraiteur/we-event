@@ -4,7 +4,7 @@ import { LazyLoadingFallback } from "@/components/shared/LazyLoadingFallback";
 
 // Lazy loading with descriptive chunk names
 const HomePage = React.lazy(() => 
-  import("@/pages/Index" /* webpackChunkName: "home-page" */)
+  import("@/pages/HomePage" /* webpackChunkName: "home-page" */)
 );
 
 const LoginPage = React.lazy(() =>
