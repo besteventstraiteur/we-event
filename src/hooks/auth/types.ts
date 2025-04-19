@@ -17,11 +17,11 @@ export interface AuthResult {
 
 export interface AuthContextType {
   user: Profile | null;
-  session: Session | null;  // Ajout de la propriété session
+  session: Session | null;  // Ajout de la session
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (credentials: LoginCredentials) => Promise<AuthResult>;
-  loginWithProvider: (provider: string) => Promise<AuthResult>;
+  login: (credentials: LoginCredentials) => Promise<AuthResult>;  // Modification du type de login
+  loginWithProvider: (provider: string) => Promise<AuthResult>;  // Ajout de loginWithProvider
   logout: () => void;
   register: (userData: { email: string; password: string; role?: UserRole; name?: string }) => Promise<AuthResult>;
   hasPermission: (permission: string) => boolean;
