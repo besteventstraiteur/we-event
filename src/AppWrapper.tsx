@@ -37,3 +37,4 @@ const AppWrapper = ({ children }: AppWrapperProps) => {
 };
 
 export default AppWrapper;
+
