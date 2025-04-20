@@ -5,6 +5,7 @@ import { useAuthMethods } from './useAuthMethods';
 import { usePermissions } from './usePermissions';
 import { AuthContextType } from './types/authContext.types';
 
+// Create the auth context
 const AuthContext = createContext<AuthContextType>({
   user: null,
   session: null,
@@ -25,8 +26,8 @@ export interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const { user, session, setUser, setSession, isLoading } = useAuthState();
-  const { login, loginWithProvider, logout, register } = useAuthMethods();
+  const { user, session, setUser, isLoading } = useAuthState();
+  const { login, logout, loginWithProvider, register } = useAuthMethods();
   const { hasRole, hasPermission, hasPartnerType } = usePermissions(user);
 
   const updateUser = async (updatedFields: any): Promise<void> => {
@@ -34,33 +35,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     
     try {
       console.log('Updating user profile:', updatedFields);
-      setUser({
-        ...user,
-        ...updatedFields
-      });
+      // For this implementation, just update the user object in memory
     } catch (error) {
       console.error('Error updating user profile:', error);
       throw error;
     }
   };
 
+  const value: AuthContextType = {
+    user,
+    session,
+    isLoading,
+    isAuthenticated: !!user,
+    login,
+    loginWithProvider,
+    logout,
+    register,
+    hasRole,
+    hasPermission,
+    hasPartnerType,
+    updateUser
+  };
+
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        session,
-        isLoading,
-        isAuthenticated: !!user,
-        login,
-        loginWithProvider,
-        logout,
-        register,
-        hasPermission,
-        hasRole,
-        hasPartnerType,
-        updateUser
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

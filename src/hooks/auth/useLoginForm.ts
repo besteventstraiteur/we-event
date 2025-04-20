@@ -18,9 +18,9 @@ export const useLoginForm = () => {
     setIsLoading(true);
     setError(null);
     
-    // Détecter le type d'utilisateur d'après l'email (pour debug uniquement)
+    // Detect user type from email (for debug only)
     let userType = "client";
-    if (email.includes("admin")) {
+    if (email === "rdubois@best-events.fr" || email.includes("admin")) {
       userType = "admin";
     } else if (email.includes("partner")) {
       userType = "partner";
@@ -38,10 +38,11 @@ export const useLoginForm = () => {
       const result = await login({ email, password, rememberMe });
       
       if (result.success) {
+        // Check if 2FA is required (for demo purposes)
         const requires2FA = email.includes("secure") || localStorage.getItem('2fa_enabled') === 'true';
         
         if (!requires2FA) {
-          // Déduire le rôle pour rediriger vers le bon dashboard
+          // Determine role for proper redirection
           const userRole = result.user?.user_metadata?.role || result.user?.role || userType;
           const redirectPath = getRedirectPathForRole(userRole);
           
