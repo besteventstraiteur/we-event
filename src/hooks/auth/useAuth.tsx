@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useAuthState } from './useAuthState';
 import { useAuthMethods } from './useAuthMethods';
