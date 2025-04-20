@@ -27,13 +27,24 @@ const LoginPage = () => {
   
   useEffect(() => {
     if (isAuthenticated && user) {
-      // Toujours normaliser le rôle pour la comparaison
-      const userRole = String(user.role || user.user_metadata?.role || '').toLowerCase().trim();
+      console.log("User authenticated, checking role for redirect:", user);
+      
+      // Détermination du rôle utilisateur (vérifier plusieurs emplacements possibles)
+      const userRole = 
+        user.role || 
+        user.user_metadata?.role || 
+        user.raw_user_meta_data?.role ||
+        'client';
+      
+      console.log("Detected user role:", userRole);
+      
+      // Normaliser le rôle pour la comparaison
+      const normalizedRole = String(userRole).toLowerCase().trim();
       
       // Redirection basée sur le rôle utilisateur
       let redirectPath;
       
-      switch (userRole) {
+      switch (normalizedRole) {
         case 'admin':
           redirectPath = '/admin/dashboard';
           break;
@@ -44,7 +55,7 @@ const LoginPage = () => {
           redirectPath = '/client/dashboard';
       }
       
-      console.log("User already authenticated, redirecting to:", redirectPath, "Role:", userRole);
+      console.log("Redirecting authenticated user to:", redirectPath);
       navigate(redirectPath, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);

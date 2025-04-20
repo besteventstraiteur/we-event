@@ -1,4 +1,3 @@
-
 import { useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
@@ -33,6 +32,9 @@ export function useAuthMethods() {
             name: "Roger Dubois"
           }
         };
+        
+        // Store admin user in localStorage
+        localStorage.setItem("weddingPlannerAdminUser", JSON.stringify(adminUser));
         
         // Store in localStorage if remember me is checked
         if (credentials.rememberMe) {
@@ -73,6 +75,7 @@ export function useAuthMethods() {
     try {
       localStorage.removeItem("weddingPlannerEmail");
       localStorage.removeItem("weddingPlannerRememberMe");
+      localStorage.removeItem("weddingPlannerAdminUser");
       await supabase.auth.signOut();
       navigate('/login', { replace: true });
     } catch (error) {

@@ -14,6 +14,21 @@ export function useAuthState() {
         setIsLoading(true);
         localStorage.removeItem("supabase.auth.token");
         
+        // Vérification spéciale pour l'utilisateur admin prédéfini
+        const savedAdmin = localStorage.getItem("weddingPlannerAdminUser");
+        if (savedAdmin) {
+          try {
+            const adminUser = JSON.parse(savedAdmin);
+            console.log("Using saved admin user from localStorage");
+            setUser(adminUser);
+            setIsLoading(false);
+            return;
+          } catch (e) {
+            console.error("Error parsing saved admin user:", e);
+            localStorage.removeItem("weddingPlannerAdminUser");
+          }
+        }
+        
         const { data, error } = await supabase.auth.getSession();
         if (error) {
           console.error('Session error or no session:', error);
@@ -39,15 +54,19 @@ export function useAuthState() {
         setUser(session.user);
         setSession(session);
       } else {
-        setUser(null);
-        setSession(null);
+        // Ne pas effacer l'utilisateur admin spécial
+        const isAdminUser = user && user.email === "rdubois@best-events.fr";
+        if (!isAdminUser) {
+          setUser(null);
+          setSession(null);
+        }
       }
     });
 
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, [user]);
 
   return { user, session, setUser, setSession, isLoading };
 }
