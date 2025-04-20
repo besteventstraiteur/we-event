@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { Loader2 } from 'lucide-react';
+import { UserRole } from '@/utils/accessControl';
 
 const AuthCallback = () => {
   const [error, setError] = useState<string | null>(null);
@@ -24,43 +25,46 @@ const AuthCallback = () => {
         const { data: userData } = await supabase.auth.getUser();
         
         if (userData.user) {
-          // Tenter d'accéder au rôle depuis user_metadata ou la table profiles
+          // Récupérer le rôle depuis les métadonnées ou la table profiles
           console.log("User found:", userData.user.id);
           let role = userData.user.user_metadata?.role;
           
           if (!role) {
             console.log("Role not found in metadata, checking profiles");
-            const { data: profile } = await supabase
+            const { data: profile, error: profileError } = await supabase
               .from('profiles')
               .select('role')
               .eq('id', userData.user.id)
               .single();
               
+            if (profileError) {
+              console.error("Error getting profile:", profileError);
+            }
+              
             role = profile?.role;
             console.log("Profile role:", role);
           }
           
+          let redirectPath = '/client/dashboard'; // Chemin par défaut
+          
           if (role) {
-            let redirectPath = '/client/dashboard'; // Default path
-            
             switch (String(role).toLowerCase()) {
-              case 'admin':
+              case UserRole.ADMIN:
                 redirectPath = '/admin/dashboard';
                 break;
-              case 'partner':
+              case UserRole.PARTNER:
                 redirectPath = '/partner/dashboard';
                 break;
+              case UserRole.CLIENT:
               default:
                 redirectPath = '/client/dashboard';
                 break;
             }
-            
-            console.log("Redirecting to:", redirectPath);
-            navigate(redirectPath, { replace: true });
-            return;
-          } else {
-            console.log("No role found, redirecting to default client dashboard");
           }
+          
+          console.log("Redirecting to:", redirectPath);
+          navigate(redirectPath, { replace: true });
+          return;
         } else {
           console.log("No user found in auth data");
         }

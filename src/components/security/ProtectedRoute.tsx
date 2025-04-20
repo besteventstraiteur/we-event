@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 interface ProtectedRouteProps {
   requiredRole?: UserRole;
   children?: React.ReactNode;
-  // Add support for multiple roles
+  // Support des rôles multiples
   allowedRoles?: UserRole[];
 }
 
@@ -22,11 +22,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const location = useLocation();
   
   console.log("ProtectedRoute - isAuthenticated:", isAuthenticated, "user:", user, "isLoading:", isLoading);
+  console.log("ProtectedRoute - requiredRole:", requiredRole, "allowedRoles:", allowedRoles);
 
   useEffect(() => {
-    // Log additional details when authentication state changes
+    // Journaliser les détails supplémentaires lorsque l'état d'authentification change
     if (!isLoading) {
       console.log("Auth state resolved - isAuthenticated:", isAuthenticated, "user present:", !!user);
+      if (user) {
+        console.log("User metadata:", user.user_metadata);
+        console.log("User role from metadata:", user.user_metadata?.role);
+      }
     }
   }, [isLoading, isAuthenticated, user]);
 
@@ -39,9 +44,14 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
-  // Check for allowed roles if provided
+  // Vérifier les rôles autorisés si fournis
   if (allowedRoles && allowedRoles.length > 0) {
-    const hasAllowedRole = allowedRoles.some(role => hasRole(role));
+    const hasAllowedRole = allowedRoles.some(role => {
+      const result = hasRole(role);
+      console.log(`Checking if user has role ${role}: ${result}`);
+      return result;
+    });
+    
     if (!hasAllowedRole) {
       toast({
         title: "Accès non autorisé",
@@ -53,14 +63,19 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return children ? <>{children}</> : <Outlet />;
   }
 
-  // Check for single required role if provided
-  if (requiredRole && !hasRole(requiredRole)) {
-    toast({
-      title: "Accès non autorisé",
-      description: "Vous n'avez pas les permissions nécessaires pour accéder à cette page",
-      variant: "destructive",
-    });
-    return <Navigate to="/unauthorized" replace />;
+  // Vérifier un seul rôle requis si fourni
+  if (requiredRole) {
+    const result = hasRole(requiredRole);
+    console.log(`Checking if user has required role ${requiredRole}: ${result}`);
+    
+    if (!result) {
+      toast({
+        title: "Accès non autorisé",
+        description: "Vous n'avez pas les permissions nécessaires pour accéder à cette page",
+        variant: "destructive",
+      });
+      return <Navigate to="/unauthorized" replace />;
+    }
   }
 
   return children ? <>{children}</> : <Outlet />;
