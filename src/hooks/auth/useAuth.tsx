@@ -108,5 +108,4 @@ export const useAuth = (): AuthContextType => {
   return context;
 };
 
-// Export both the AuthProvider and useAuth
-export default useAuth;
+export default useAuth; // This is now the hook, not the AuthProvider
