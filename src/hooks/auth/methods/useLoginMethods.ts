@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { LoginCredentials, AuthResult } from "../types";
+import type { User } from "@supabase/supabase-js";
+import type { Profile } from "@/lib/supabase";
 
 export function useLoginMethods(setUser: Function) {
   const login = async (credentials: LoginCredentials): Promise<AuthResult> => {
@@ -71,8 +73,18 @@ export function useLoginMethods(setUser: Function) {
       
       console.log("Login successful, getting profile for:", data.user.id);
       
-      // Récupération du profil utilisateur (si disponible)
-      let profile = data.user;
+      // Create a base profile with all required fields from the auth user
+      let profile: Profile = {
+        id: data.user.id,
+        email: data.user.email || '',
+        name: data.user.user_metadata?.name || null,
+        avatar_url: data.user.user_metadata?.avatar_url || null,
+        role: data.user.user_metadata?.role || 'CLIENT',
+        partner_type: data.user.user_metadata?.partner_type || null,
+        phone: data.user.user_metadata?.phone || null,
+        created_at: data.user.created_at || new Date().toISOString(),
+        updated_at: data.user.updated_at || new Date().toISOString()
+      };
       
       try {
         const { data: profileData, error: profileError } = await supabase
@@ -83,8 +95,8 @@ export function useLoginMethods(setUser: Function) {
           
         if (!profileError && profileData) {
           console.log("Profile found:", profileData);
-          // Fusionner les données du profil avec l'utilisateur
-          profile = { ...data.user, ...profileData };
+          // Merge profile data with our base profile
+          profile = { ...profile, ...profileData };
         }
       } catch (e) {
         console.error("Error fetching profile:", e);
