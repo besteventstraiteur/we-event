@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "@/components/AuthLayout";
@@ -25,13 +24,14 @@ const RegisterPartnerPage = () => {
     category: "",
     password: "",
     confirmPassword: "",
-    subscriptionTier: "standard", // Default subscription tier
+    subscriptionTier: "standard",
   });
   const [logo, setLogo] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { register } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
@@ -54,7 +54,6 @@ const RegisterPartnerPage = () => {
 
   const handleNextStep = () => {
     if (step === 1) {
-      // Valider le formulaire de la première étape
       if (!formData.companyName || !formData.siret || !formData.address || !formData.email || !formData.phone) {
         toast({
           variant: "destructive",
@@ -78,8 +77,7 @@ const RegisterPartnerPage = () => {
     setIsLoading(true);
 
     try {
-      // Always register as PARTNER role for this page
-      const result = await useAuth().register({
+      const result = await register({
         email: formData.email,
         password: formData.password,
         role: UserRole.PARTNER,
@@ -104,7 +102,6 @@ const RegisterPartnerPage = () => {
     }
   };
 
-  // Catégories de prestataires
   const categories = [
     { value: "photographer", label: "Photographe" },
     { value: "dj", label: "DJ" },
@@ -118,7 +115,6 @@ const RegisterPartnerPage = () => {
     { value: "general", label: "Autre" },
   ];
 
-  // Subscription plans
   const subscriptionPlans = [
     {
       id: "premium",
