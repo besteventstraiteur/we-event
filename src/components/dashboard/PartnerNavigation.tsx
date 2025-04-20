@@ -35,7 +35,7 @@ const PartnerNavigation = () => {
         icon={<UserSquare size={18} />}
         active={location.pathname === "/partner/profile"}
       >
-        Mon profil
+        {t('partner.profile')}
       </NavItem>
       <NavItem
         href="/partner/subscription"
@@ -49,14 +49,14 @@ const PartnerNavigation = () => {
         icon={<Briefcase size={18} />}
         active={location.pathname.startsWith("/partner/crm")}
       >
-        CRM
+        {t('partner.crm')}
       </NavItem>
       <NavItem
         href="/partner/mlm"
         icon={<Network size={18} />}
         active={location.pathname === "/partner/mlm"}
       >
-        Mon réseau
+        {t('partner.network')}
       </NavItem>
       <NavItem
         href="/partner/tasks"
