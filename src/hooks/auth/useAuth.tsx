@@ -33,36 +33,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { user, session, setUser, setSession, isLoading } = useAuthState();
   const { login, loginWithProvider, logout, register } = useAuthMethods(setUser);
   const { hasRole, hasPermission, hasPartnerType } = usePermissions(user);
-  
-  // Add a listener for auth-refresh events
-  useEffect(() => {
-    const handleAuthRefresh = () => {
-      console.log("Auth refresh event detected");
-      try {
-        const localStorageAuth = localStorage.getItem("supabase.auth.token");
-        if (localStorageAuth) {
-          try {
-            const authData = JSON.parse(localStorageAuth);
-            if (authData && authData.currentSession && authData.currentSession.user) {
-              console.log("Auth refresh - found user:", authData.currentSession.user);
-              setUser(authData.currentSession.user);
-            }
-          } catch (e) {
-            console.error("Error parsing auth data:", e);
-          }
-        } else {
-          console.log("No auth data found in localStorage");
-        }
-      } catch (error) {
-        console.error("Error checking for user:", error);
-      }
-    };
-    
-    window.addEventListener('auth-refresh', handleAuthRefresh);
-    return () => {
-      window.removeEventListener('auth-refresh', handleAuthRefresh);
-    };
-  }, [setUser]);
 
   // Check if there's a demo user set in localStorage on component mount
   useEffect(() => {
@@ -73,7 +43,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           try {
             const authData = JSON.parse(localStorageAuth);
             if (authData && authData.currentSession && authData.currentSession.user) {
-              console.log("Found user in localStorage:", authData.currentSession.user);
+              console.log("Found demo user in localStorage:", authData.currentSession.user);
               setUser(authData.currentSession.user);
             }
           } catch (e) {
@@ -81,10 +51,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
         }
       } catch (error) {
-        console.error("Error checking for user:", error);
+        console.error("Error checking for demo user:", error);
       }
     }
-  }, [user, setUser]);
+  }, []);
 
   // Update user profile
   const updateUser = async (updatedFields: Partial<Profile>): Promise<void> => {

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { notify } from '@/components/ui/notifications';
@@ -12,72 +11,32 @@ interface AuthCredentials {
   name?: string;
 }
 
-// Create a type for our demo user that extends the base User type
-type DemoUser = Partial<User> & {
-  id: string;
-  email: string;
-  user_metadata: {
-    email: string;
-    name: string;
-    role: string;
-  };
-  role?: string;
-};
-
 export const useAuth = () => {
-  const [user, setUser] = useState<User | DemoUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Load user from session or localStorage on mount
   useEffect(() => {
-    const checkUserSession = async () => {
-      // First check Supabase session
+    const fetchSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      
-      if (session) {
-        setSession(session);
-        setUser(session.user || null);
-        return;
-      }
-      
-      // If no Supabase session, check for demo user in localStorage
-      try {
-        const localStorageAuth = localStorage.getItem("supabase.auth.token");
-        if (localStorageAuth) {
-          const authData = JSON.parse(localStorageAuth);
-          if (authData && authData.currentSession && authData.currentSession.user) {
-            console.log("Found demo user in localStorage:", authData.currentSession.user);
-            // Cast as DemoUser which is compatible with our state type
-            setUser(authData.currentSession.user as DemoUser);
-          }
-        }
-      } catch (error) {
-        console.error("Error checking for demo user:", error);
-      }
+      setSession(session);
+      setUser(session?.user || null);
     };
 
-    checkUserSession();
+    fetchSession();
 
-    // Listen for auth state changes
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth state changed:", event, session?.user);
+    supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN') {
         setUser(session?.user || null);
-        setSession(session);
         notify.success('Connexion réussie', 'Bienvenue sur votre espace');
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
-        setSession(null);
         notify.success('Déconnexion réussie', 'À bientôt!');
         navigate('/login');
       }
+      setSession(session);
     });
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
   }, [navigate]);
 
   const isAuthenticated = !!user;
@@ -99,54 +58,7 @@ export const useAuth = () => {
 
   const login = async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
     try {
-      const { email, password, rememberMe } = credentials;
-      
-      // Handle demo accounts directly
-      if ((email.includes("admin@") || email.includes("partner@") || email.includes("client@")) && 
-          password === "password123") {
-        
-        console.log("Using demo account for:", email);
-        let role = "client";
-        if (email.includes("admin")) {
-          role = "admin";
-        } else if (email.includes("partner")) {
-          role = "partner";
-        }
-        
-        // Create a demo user with the DemoUser type
-        const demoUser: DemoUser = {
-          id: `demo-${Date.now()}`,
-          user_metadata: {
-            email: email,
-            name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
-            role: role
-          },
-          email: email,
-          role: role
-        };
-        
-        // Store demo user information
-        localStorage.setItem("supabase.auth.token", JSON.stringify({
-          currentSession: {
-            user: demoUser
-          }
-        }));
-        
-        if (rememberMe) {
-          localStorage.setItem("weddingPlannerEmail", email);
-          localStorage.setItem("weddingPlannerRememberMe", "true");
-        }
-        
-        setUser(demoUser);
-        
-        // Dispatch the auth-refresh event to notify components
-        window.dispatchEvent(new Event('auth-refresh'));
-        
-        notify.success('Connexion réussie', 'Bienvenue sur votre espace');
-        return { success: true, user: demoUser };
-      }
-      
-      // If not a demo account, proceed with regular authentication
+      const { email, password } = credentials;
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -167,9 +79,6 @@ export const useAuth = () => {
 
   const logout = async () => {
     try {
-      // Clear demo user data if present
-      localStorage.removeItem("supabase.auth.token");
-      
       await supabase.auth.signOut();
       notify.success('Déconnexion réussie', 'À bientôt!');
       navigate('/login');

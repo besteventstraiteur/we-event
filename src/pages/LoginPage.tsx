@@ -1,10 +1,11 @@
+
 import React, { useEffect } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
 import MobileOptimizedLayout from "@/components/layouts/MobileOptimizedLayout";
 import MobileNavigation from "@/components/mobile/MobileNavigation";
 import { useDeviceType } from "@/hooks/use-mobile";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Components
 import SocialLoginButtons from "@/components/auth/SocialLoginButtons";
@@ -16,58 +17,37 @@ import LoginDebugInfo from "@/components/auth/LoginDebugInfo";
 
 // Custom hook
 import { useLoginPageLogic } from "@/hooks/useLoginPageLogic";
-import { useAuth } from "@/hooks/auth/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 
 const LoginPage = () => {
   const deviceType = useDeviceType();
   const isMobileDevice = deviceType === 'mobile' || deviceType === 'tablet';
   const navigate = useNavigate();
-  const location = useLocation();
   const { isAuthenticated, user } = useAuth();
   
-  // Effect to redirect authenticated users
   useEffect(() => {
     if (isAuthenticated && user) {
-      console.log("LoginPage - User is authenticated:", user);
+      // Toujours normaliser le rôle pour la comparaison
+      const userRoleStr = String(user.role || '').toLowerCase().trim();
       
-      // Determine the redirect path from user role
-      const userRole = String(user.role || '').toLowerCase();
+      // Redirection basée sur le rôle utilisateur
       let redirectPath;
       
-      // First check if there's a redirect path in state or session storage
-      const fromPath = location.state?.from;
-      const storedPath = sessionStorage.getItem("redirectAfterLogin");
-      
-      if (fromPath) {
-        redirectPath = fromPath;
-        console.log("Using path from location state:", redirectPath);
-      } else if (storedPath) {
-        redirectPath = storedPath;
-        sessionStorage.removeItem("redirectAfterLogin"); // Clear it after use
-        console.log("Using stored redirect path:", redirectPath);
-      } else {
-        // Use default paths based on role
-        switch (userRole) {
-          case 'admin':
-            redirectPath = '/admin/dashboard';
-            break;
-          case 'partner':
-            redirectPath = '/partner/dashboard';
-            break;
-          default:
-            redirectPath = '/client/dashboard';
-        }
-        console.log("Using default role-based path:", redirectPath);
+      switch (userRoleStr) {
+        case 'admin':
+          redirectPath = '/admin/dashboard';
+          break;
+        case 'partner':
+          redirectPath = '/partner/dashboard';
+          break;
+        default:
+          redirectPath = '/client/dashboard';
       }
       
-      console.log(`Redirecting to: ${redirectPath} (role: ${userRole})`);
-      
-      // Use a timeout to ensure state updates complete before navigation
-      setTimeout(() => {
-        navigate(redirectPath, { replace: true });
-      }, 800); // Increased delay for more reliable navigation
+      console.log("User already authenticated, redirecting to:", redirectPath, "Role:", userRoleStr);
+      navigate(redirectPath, { replace: true });
     }
-  }, [isAuthenticated, user, navigate, location.state]);
+  }, [isAuthenticated, user, navigate]);
   
   const {
     // State
@@ -90,7 +70,7 @@ const LoginPage = () => {
     handleResetPassword,
     handleVerifyOTP,
     handleSocialLoginSuccess,
-    handleBiometricAuth,
+    handleBiometricAuth,  // This was previously named incorrectly as handleBiometricLogin
   } = useLoginPageLogic();
 
   const content = (
@@ -125,7 +105,7 @@ const LoginPage = () => {
                 isMobileDevice={isMobileDevice}
                 biometricError={biometricError}
                 isLoading={biometricLoading}
-                onBiometricLogin={handleBiometricAuth}
+                onBiometricLogin={handleBiometricAuth}  // Fixed here - we're using handleBiometricAuth now
               />
 
               <SocialLoginButtons onLoginSuccess={handleSocialLoginSuccess} />
