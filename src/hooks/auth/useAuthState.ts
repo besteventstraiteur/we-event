@@ -1,59 +1,44 @@
 
 import { useState, useEffect } from "react";
-import { supabase, getSession, getUserProfile, Profile } from "@/lib/supabase";
-import { Session } from '@supabase/supabase-js';
+import { supabase } from "@/lib/supabase";
+import type { User } from "@supabase/supabase-js";
 
 export function useAuthState() {
-  const [user, setUser] = useState<Profile | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadUser = async () => {
+    const checkSession = async () => {
       try {
         setIsLoading(true);
-        const { session, error: sessionError } = await getSession();
+        localStorage.removeItem("supabase.auth.token");
         
-        if (sessionError || !session) {
-          console.log("Session error or no session:", sessionError);
-          setUser(null);
-          setSession(null);
-          setIsLoading(false);
+        const { data, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Session error or no session:', error);
           return;
         }
         
-        const { profile, error: profileError } = await getUserProfile(session.user.id);
-        
-        if (profileError || !profile) {
-          console.log("Profile error or no profile:", profileError);
-          setUser(null);
-          setSession(null);
-          setIsLoading(false);
-          return;
+        if (data.session) {
+          setUser(data.session.user);
+          setSession(data.session);
         }
-        
-        console.log("User loaded successfully:", profile);
-        setUser(profile);
-        setSession(session);
       } catch (error) {
-        console.error("Error loading user:", error);
-        setUser(null);
-        setSession(null);
+        console.error('Error checking session:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadUser();
+    checkSession();
     
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state changed:", event, session?.user?.id);
-      if (event === 'SIGNED_IN' && session) {
-        const { profile } = await getUserProfile(session.user.id);
-        console.log("Profile after sign in:", profile);
-        setUser(profile);
+      if (session) {
+        setUser(session.user);
         setSession(session);
-      } else if (event === 'SIGNED_OUT') {
+      } else {
         setUser(null);
         setSession(null);
       }
