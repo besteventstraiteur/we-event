@@ -1,37 +1,28 @@
-import React, { ReactNode } from 'react';
-import { BrowserRouter as Router } from "react-router-dom";
-import { LanguageProvider } from "@/contexts/LanguageContext";
-import { Toaster } from "@/components/ui/toaster";
-import { CartProvider } from "@/contexts/CartContext";
-import { ThemeProvider } from "@/components/ui/theme-provider";
-import { AuthProvider } from "@/hooks/auth/AuthProvider";
-import TokenRefresher from "@/components/security/TokenRefresher";
-import SessionTimeout from "@/components/security/SessionTimeout";
-import { NetworkStatus } from "./components/app/NetworkStatus";
+
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from '@/components/ui/theme-provider';
+import { AuthProvider } from '@/hooks/auth/AuthProvider';
+
+// Create a client
+const queryClient = new QueryClient();
 
 interface AppWrapperProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
   return (
-    <Router>
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <LanguageProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
           <AuthProvider>
-            <TokenRefresher>
-              <SessionTimeout>
-                <CartProvider>
-                  {children}
-                  <Toaster />
-                  <NetworkStatus />
-                </CartProvider>
-              </SessionTimeout>
-            </TokenRefresher>
+            {children}
           </AuthProvider>
-        </LanguageProvider>
-      </ThemeProvider>
-    </Router>
+        </ThemeProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 

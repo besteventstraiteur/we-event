@@ -8,6 +8,7 @@ import HomeHeader from '@/components/home/HomeHeader';
 import HomeFooter from '@/components/home/HomeFooter';
 
 const HomePage: React.FC = () => {
+  console.log('HomePage component rendering');
   return (
     <>
       <MetaTags

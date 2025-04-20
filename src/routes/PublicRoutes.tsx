@@ -1,12 +1,10 @@
+
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { LazyLoadingFallback } from "@/components/shared/LazyLoadingFallback";
+import HomePage from "@/pages/HomePage";
 
 // Lazy loading with descriptive chunk names
-const HomePage = React.lazy(() => 
-  import("@/pages/HomePage" /* webpackChunkName: "home-page" */)
-);
-
 const LoginPage = React.lazy(() =>
   import("@/pages/LoginPage" /* webpackChunkName: "login-page" */)
 );
@@ -48,15 +46,13 @@ interface PublicRoutesProps {
 }
 
 const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
+  console.log('PublicRoutes rendering, isMobileInterface:', isMobileInterface);
+  
   return (
     <Routes>
       <Route
-        path="/"
-        element={
-          <Suspense fallback={<LazyLoadingFallback />}>
-            <HomePage />
-          </Suspense>
-        }
+        path="/home"
+        element={<HomePage />}
       />
 
       <Route

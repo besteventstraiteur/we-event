@@ -1,5 +1,6 @@
-import React, { Suspense, useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+
+import React, { Suspense } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
 import LoadingFallback from "@/components/LoadingFallback";
 import { useDeviceType } from "@/hooks/use-mobile";
@@ -11,17 +12,15 @@ import RegisterPage from '@/pages/RegisterPage';
 
 const AppRouter: React.FC = () => {
   const deviceType = useDeviceType();
-  const [isMobileInterface, setIsMobileInterface] = useState(
-    deviceType === "mobile" || deviceType === "tablet"
-  );
-
-  useEffect(() => {
-    setIsMobileInterface(deviceType === "mobile" || deviceType === "tablet");
-  }, [deviceType]);
+  console.log('AppRouter rendering, deviceType:', deviceType);
+  const isMobileInterface = deviceType === "mobile" || deviceType === "tablet";
 
   return (
     <Suspense fallback={<LoadingFallback />}>
       <Routes>
+        {/* Default redirect to home */}
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        
         {/* Public guest access route */}
         <Route 
           path="/guest" 
