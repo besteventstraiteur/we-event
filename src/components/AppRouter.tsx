@@ -1,4 +1,3 @@
-
 import React, { Suspense, useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
@@ -8,6 +7,7 @@ import GuestAccess from "@/pages/GuestAccess";
 import PublicRoutes from '@/routes/PublicRoutes';
 import PrivateRoutes from '@/routes/PrivateRoutes';
 import NotFound from '@/pages/NotFound';
+import RegisterPage from '@/pages/RegisterPage';
 
 const AppRouter: React.FC = () => {
   const deviceType = useDeviceType();
@@ -59,6 +59,7 @@ const AppRouter: React.FC = () => {
         />
 
         {/* Public routes */}
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/*" element={<PublicRoutes isMobileInterface={isMobileInterface} />} />
         
         {/* Catch any unmatched routes */}
