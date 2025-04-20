@@ -1,16 +1,14 @@
-
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { LoginCredentials, AuthResult } from "../types";
-import type { User } from "@supabase/supabase-js";
-import type { Profile } from "@/lib/supabase";
+import { UserRole } from "@/utils/accessControl";
 
 export function useLoginMethods(setUser: Function) {
   const login = async (credentials: LoginCredentials): Promise<AuthResult> => {
     try {
       console.log("Attempting to log in with:", credentials.email);
       
-      // Vérification des comptes de démonstration spécifiques (pour maintenir la compatibilité)
+      // Vérification des comptes de démonstration spécifiques
       if (credentials.email.includes("admin@") || credentials.email.includes("partner@") || credentials.email.includes("client@")) {
         if (credentials.password !== "password123") {
           return {
@@ -21,21 +19,25 @@ export function useLoginMethods(setUser: Function) {
         
         console.log("Using demo login for:", credentials.email);
         
-        let role = "client";
+        let role = "CLIENT";
         if (credentials.email.includes("admin@")) {
-          role = "admin";
+          role = "ADMIN";
         } else if (credentials.email.includes("partner@")) {
-          role = "partner";
+          role = "PARTNER";
         }
         
+        // Créer un utilisateur de démonstration avec toutes les propriétés nécessaires
         const demoUser = {
           id: `demo-${Date.now()}`,
           email: credentials.email,
           name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
           avatar_url: null,
-          role: role.toUpperCase(),
-          user_metadata: { role: role.toUpperCase() },
-          partner_type: null,
+          role: role,
+          user_metadata: { 
+            role: role,
+            partner_type: credentials.email.includes("partner@") ? "GENERAL" : null
+          },
+          partner_type: credentials.email.includes("partner@") ? "GENERAL" : null,
           phone: null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
@@ -47,7 +49,11 @@ export function useLoginMethods(setUser: Function) {
           localStorage.setItem("weddingPlannerRememberMe", "true");
         }
         
+        // Simuler une latence réseau pour le réalisme
         await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Stocker dans localStorage pour persister après rafraîchissement
+        localStorage.setItem("currentUser", JSON.stringify(demoUser));
         
         setUser(demoUser);
         
@@ -57,7 +63,7 @@ export function useLoginMethods(setUser: Function) {
         };
       }
       
-      // Utilisation de l'authentification Supabase
+      // Utilisation de l'authentification Supabase pour les comptes non-démo
       const { data, error } = await supabase.auth.signInWithPassword({
         email: credentials.email,
         password: credentials.password

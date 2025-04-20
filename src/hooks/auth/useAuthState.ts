@@ -13,7 +13,7 @@ export function useAuthState() {
     const checkSession = async () => {
       try {
         setIsLoading(true);
-        localStorage.removeItem("supabase.auth.token");
+        localStorage.removeItem("supabase.auth.token"); // Nettoyage des tokens obsolètes
         
         // Vérification spéciale pour l'utilisateur admin prédéfini
         const savedAdmin = localStorage.getItem("weddingPlannerAdminUser");
@@ -32,6 +32,25 @@ export function useAuthState() {
           }
         }
         
+        // Vérification pour les utilisateurs de démo
+        const demoUser = localStorage.getItem("currentUser");
+        if (demoUser) {
+          try {
+            const parsedUser = JSON.parse(demoUser);
+            if (parsedUser && parsedUser.id && parsedUser.id.startsWith("demo-")) {
+              console.log("Using demo user from localStorage:", parsedUser.email);
+              setUser(parsedUser);
+              setSession({ user: parsedUser });
+              setIsAuthenticated(true);
+              setIsLoading(false);
+              return;
+            }
+          } catch (e) {
+            console.error("Error parsing demo user:", e);
+          }
+        }
+        
+        // Si aucun utilisateur de démo trouvé, tenter de récupérer la session Supabase
         const { data, error } = await supabase.auth.getSession();
         if (error) {
           console.error('Session error or no session:', error);
@@ -65,13 +84,26 @@ export function useAuthState() {
         setSession(newSession);
         setIsAuthenticated(true);
       } else {
-        // Ne pas effacer l'utilisateur admin spécial
+        // Vérifier s'il existe un utilisateur de démo avant de déconnecter
         const adminUser = localStorage.getItem("weddingPlannerAdminUser");
+        const demoUser = localStorage.getItem("currentUser");
+        
         if (adminUser) {
           try {
             const admin = JSON.parse(adminUser);
             setUser(admin);
             setSession({ user: admin });
+            setIsAuthenticated(true);
+          } catch (e) {
+            setUser(null);
+            setSession(null);
+            setIsAuthenticated(false);
+          }
+        } else if (demoUser && JSON.parse(demoUser).id?.startsWith("demo-")) {
+          try {
+            const demo = JSON.parse(demoUser);
+            setUser(demo);
+            setSession({ user: demo });
             setIsAuthenticated(true);
           } catch (e) {
             setUser(null);

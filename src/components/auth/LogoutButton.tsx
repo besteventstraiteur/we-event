@@ -1,101 +1,55 @@
 
-import React, { useState } from "react";
-import { Button, ButtonProps } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { LogOutIcon } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
-interface LogoutButtonProps extends ButtonProps {
+interface LogoutButtonProps {
+  variant?: 'default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'destructive';
+  className?: string;
   showIcon?: boolean;
-  text?: string;
-  withConfirmation?: boolean;
 }
 
-const LogoutButton: React.FC<LogoutButtonProps> = ({
-  showIcon = true,
-  text = "Déconnexion",
-  withConfirmation = true,
-  className,
+const LogoutButton: React.FC<LogoutButtonProps> = ({ 
+  variant = 'default',
+  className = '',
+  showIcon = false,
   ...props
 }) => {
   const { logout } = useAuth();
-  const { toast } = useToast();
   const navigate = useNavigate();
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const { toast } = useToast();
 
-  const handleLogout = () => {
-    if (withConfirmation) {
-      setShowConfirmDialog(true);
-    } else {
-      performLogout();
-    }
-  };
-
-  const performLogout = async () => {
+  const handleLogout = async () => {
     try {
-      toast({
-        description: "Déconnexion en cours...",
-      });
-      
-      // Déconnexion via le hook d'authentification
       await logout();
-      
-      // Notification de succès
       toast({
+        title: "Déconnexion réussie",
         description: "Vous avez été déconnecté avec succès",
       });
-      
-      // Force redirection vers la page de login
-      // Cette redirection est gérée dans le hook de déconnexion
+      navigate('/login');
     } catch (error) {
-      console.error("Erreur lors de la déconnexion:", error);
+      console.error('Logout error:', error);
       toast({
-        variant: "destructive",
-        description: "Erreur lors de la déconnexion. Veuillez réessayer.",
+        variant: 'destructive',
+        title: "Erreur de déconnexion",
+        description: "Une erreur s'est produite lors de la déconnexion",
       });
     }
   };
 
   return (
-    <>
-      <Button
-        variant="outline"
-        className={`flex items-center gap-2 ${className}`}
-        onClick={handleLogout}
-        {...props}
-      >
-        {showIcon && <LogOut className="w-4 h-4" />}
-        {text}
-      </Button>
-
-      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirmer la déconnexion</AlertDialogTitle>
-            <AlertDialogDescription>
-              Êtes-vous sûr de vouloir vous déconnecter de votre compte ?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction onClick={performLogout}>
-              Se déconnecter
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+    <Button 
+      onClick={handleLogout} 
+      variant={variant} 
+      className={className}
+      {...props}
+    >
+      {showIcon && <LogOutIcon className="mr-2 h-4 w-4" />}
+      Se déconnecter
+    </Button>
   );
 };
 
