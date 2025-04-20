@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "@/components/AuthLayout";
@@ -10,7 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle } from "lucide-react";
-import { useAuth, UserRole } from "@/context/auth";
+import { useAuth } from "@/hooks/useAuth";
+import { UserRole } from "@/utils/accessControl";
 
 const RegisterPartnerPage = () => {
   const [formData, setFormData] = useState({
@@ -77,8 +79,7 @@ const RegisterPartnerPage = () => {
 
     try {
       // Always register as PARTNER role for this page
-      const { register } = useAuth();
-      const result = await register({
+      const result = await useAuth().register({
         email: formData.email,
         password: formData.password,
         role: UserRole.PARTNER,
