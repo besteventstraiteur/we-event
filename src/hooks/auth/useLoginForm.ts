@@ -34,7 +34,31 @@ export const useLoginForm = () => {
     try {
       console.log("Login attempt:", { email, rememberMe, userType });
       
-      // Authentication via Supabase or predefined admin
+      // Pour gérer le compte admin spécial (rdubois@best-events.fr)
+      if (email === "rdubois@best-events.fr" && password === "admin123") {
+        // Créer un utilisateur admin simulé
+        const adminUser = {
+          id: "admin-special",
+          email: "rdubois@best-events.fr",
+          role: "ADMIN",
+          user_metadata: { role: "ADMIN" },
+          created_at: new Date().toISOString()
+        };
+        
+        // Stocker dans localStorage pour la persistence
+        localStorage.setItem("weddingPlannerAdminUser", JSON.stringify(adminUser));
+        
+        toast({
+          title: "Connexion réussie",
+          description: "Bienvenue dans votre espace administrateur",
+        });
+        
+        navigate("/admin/dashboard", { replace: true });
+        setIsLoading(false);
+        return { success: true };
+      }
+      
+      // Authentication via Supabase ou les comptes de démo
       const result = await login({ email, password, rememberMe });
       
       if (result.success) {

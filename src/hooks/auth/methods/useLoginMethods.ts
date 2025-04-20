@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { supabase, getUserProfile } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { LoginCredentials, AuthResult } from "../types";
 
 export function useLoginMethods(setUser: Function) {
@@ -32,13 +32,14 @@ export function useLoginMethods(setUser: Function) {
           name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
           avatar_url: null,
           role: role.toUpperCase(),
+          user_metadata: { role: role.toUpperCase() },
           partner_type: null,
           phone: null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         };
         
-        // Store these only for demo accounts
+        // Stocker ces informations uniquement pour les comptes de démonstration
         if (credentials.rememberMe) {
           localStorage.setItem("weddingPlannerEmail", credentials.email);
           localStorage.setItem("weddingPlannerRememberMe", "true");
@@ -69,18 +70,28 @@ export function useLoginMethods(setUser: Function) {
       }
       
       console.log("Login successful, getting profile for:", data.user.id);
-      const { profile, error: profileError } = await getUserProfile(data.user.id);
       
-      if (profileError || !profile) {
-        console.error("Profile error after login:", profileError);
-        return {
-          success: false,
-          message: "Could not load user profile"
-        };
+      // Récupération du profil utilisateur (si disponible)
+      let profile = data.user;
+      
+      try {
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', data.user.id)
+          .single();
+          
+        if (!profileError && profileData) {
+          console.log("Profile found:", profileData);
+          // Fusionner les données du profil avec l'utilisateur
+          profile = { ...data.user, ...profileData };
+        }
+      } catch (e) {
+        console.error("Error fetching profile:", e);
       }
       
-      // For demo accounts compatibility, we still use localStorage but only for the email
-      // not for security-critical information
+      // Pour la compatibilité avec les comptes de démonstration, on utilise toujours localStorage
+      // mais uniquement pour l'email
       if (credentials.rememberMe) {
         localStorage.setItem("weddingPlannerEmail", credentials.email);
         localStorage.setItem("weddingPlannerRememberMe", "true");

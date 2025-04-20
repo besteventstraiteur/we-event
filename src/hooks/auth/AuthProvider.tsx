@@ -35,7 +35,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     
     try {
       console.log('Updating user profile:', updatedFields);
-      // For this implementation, just update the user object in memory
+      // Pour cette implémentation, on met simplement à jour l'objet utilisateur en mémoire
+      // Dans une implémentation complète, il y aurait un appel API ici
     } catch (error) {
       console.error('Error updating user profile:', error);
       throw error;

@@ -21,6 +21,7 @@ export function useAuthState() {
             const adminUser = JSON.parse(savedAdmin);
             console.log("Using saved admin user from localStorage");
             setUser(adminUser);
+            setSession({ user: adminUser });
             setIsLoading(false);
             return;
           } catch (e) {
@@ -32,6 +33,7 @@ export function useAuthState() {
         const { data, error } = await supabase.auth.getSession();
         if (error) {
           console.error('Session error or no session:', error);
+          setIsLoading(false);
           return;
         }
         
@@ -39,20 +41,22 @@ export function useAuthState() {
           setUser(data.session.user);
           setSession(data.session);
         }
+        setIsLoading(false);
       } catch (error) {
         console.error('Error checking session:', error);
-      } finally {
         setIsLoading(false);
       }
     };
 
     checkSession();
     
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth state changed:", event, session?.user?.id);
-      if (session) {
-        setUser(session.user);
-        setSession(session);
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, newSession) => {
+      console.log("Auth state changed:", event, newSession?.user?.id);
+      
+      // Ne pas appeler setUser si on est dans un état de chargement
+      if (newSession) {
+        setUser(newSession.user);
+        setSession(newSession);
       } else {
         // Ne pas effacer l'utilisateur admin spécial
         const isAdminUser = user && user.email === "rdubois@best-events.fr";
@@ -66,7 +70,7 @@ export function useAuthState() {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [user]);
+  }, []); // Retirer user des dépendances pour éviter la boucle infinie
 
   return { user, session, setUser, setSession, isLoading };
 }

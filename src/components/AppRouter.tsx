@@ -9,6 +9,8 @@ import PublicRoutes from '@/routes/PublicRoutes';
 import PrivateRoutes from '@/routes/PrivateRoutes';
 import NotFound from '@/pages/NotFound';
 import RegisterPage from '@/pages/RegisterPage';
+import HomePage from '@/pages/HomePage';
+import LoginPage from '@/pages/LoginPage';
 
 const AppRouter: React.FC = () => {
   const deviceType = useDeviceType();
@@ -18,6 +20,13 @@ const AppRouter: React.FC = () => {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <Routes>
+        {/* Page d'accueil */}
+        <Route path="/home" element={<HomePage />} />
+        
+        {/* Login et Register */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        
         {/* Default redirect to home */}
         <Route path="/" element={<Navigate to="/home" replace />} />
         
@@ -58,7 +67,6 @@ const AppRouter: React.FC = () => {
         />
 
         {/* Public routes */}
-        <Route path="/register" element={<RegisterPage />} />
         <Route path="/*" element={<PublicRoutes isMobileInterface={isMobileInterface} />} />
         
         {/* Catch any unmatched routes */}
