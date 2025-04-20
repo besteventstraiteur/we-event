@@ -64,6 +64,11 @@ const AdminRoutes: React.FC = () => {
             <AdminPresentationManagement />
           </Suspense>
         } />
+        <Route path="presentation" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminPresentationManagement />
+          </Suspense>
+        } />
         <Route path="mlm" element={
           <Suspense fallback={<LoadingFallback />}>
             <AdminMLM />

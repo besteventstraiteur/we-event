@@ -71,11 +71,13 @@ const AdminNavigation = () => {
         />
       )}
       
-      <NavItem
-        icon={<Users size={20} />}
-        title="Guests"
-        href="/admin/guests"
-      />
+      {features.guests && (
+        <NavItem
+          icon={<Users size={20} />}
+          title="Guests"
+          href="/admin/guests"
+        />
+      )}
       
       {features.venues && (
         <NavItem
@@ -129,7 +131,7 @@ const AdminNavigation = () => {
         <NavItem
           icon={<Presentation size={20} />}
           title="Presentation"
-          href="/admin/presentation"
+          href="/admin/presentations"
         />
       )}
     </div>
