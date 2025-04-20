@@ -28,22 +28,22 @@ const TestimonialsSection = () => {
           <div className="bg-white p-6 rounded-lg shadow-sm">
             <div className="text-we-gold mb-2">★★★★★</div>
             <p className="text-gray-600 italic mb-4">
-              "Organiser un événement professionnel n'a jamais été aussi simple. Merci pour votre accompagnement !"
+              "L'organisation de notre séminaire d'entreprise a été un véritable succès grâce à We Event. Un service impeccable !"
             </p>
             <div>
               <p className="font-semibold">Sophie L.</p>
-              <p className="text-sm text-gray-500">Anniversaire d'entreprise</p>
+              <p className="text-sm text-gray-500">Séminaire d'entreprise</p>
             </div>
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-sm">
             <div className="text-we-gold mb-2">★★★★★</div>
             <p className="text-gray-600 italic mb-4">
-              "Des prestataires de qualité et un suivi impeccable. Nous recommandons vivement !"
+              "Une fête d'anniversaire mémorable ! Les prestataires étaient parfaits et la coordination sans faille."
             </p>
             <div>
-              <p className="font-semibold">Thomas & Julie</p>
-              <p className="text-sm text-gray-500">Mariage champêtre</p>
+              <p className="font-semibold">Thomas D.</p>
+              <p className="text-sm text-gray-500">Anniversaire 40 ans</p>
             </div>
           </div>
         </div>

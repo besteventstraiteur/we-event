@@ -13,7 +13,7 @@ const HomePage: React.FC = () => {
     <>
       <MetaTags
         title="Bienvenue sur We Event"
-        description="WeEvent est la plateforme tout-en-un pour organiser votre mariage. Trouvez les meilleurs prestataires, gérez vos invités et créez un événement inoubliable."
+        description="WeEvent est la plateforme tout-en-un pour organiser vos événements. Mariages, anniversaires, séminaires d'entreprise - créez des moments inoubliables avec nos meilleurs prestataires."
       />
       <HomeHeader />
       <main className="min-h-screen bg-[#FAF9F6] text-gray-800">
@@ -21,10 +21,10 @@ const HomePage: React.FC = () => {
         <section className="pt-32 pb-20 px-4">
           <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-5xl md:text-6xl font-serif text-we-green mb-6">
-              Bienvenue sur We Event
+              Créez des Événements Exceptionnels
             </h1>
             <p className="text-xl text-gray-600 mb-12">
-              Planifiez simplement, célébrez pleinement
+              Mariages, anniversaires, séminaires d'entreprise - nous vous accompagnons dans l'organisation de tous vos événements
             </p>
             <div className="flex justify-center gap-4">
               <Link to="/register-client">
@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
               <div className="text-center">
                 <h3 className="text-2xl font-serif text-we-green mb-4">Pour les clients</h3>
                 <p className="text-gray-600 mb-6">
-                  Découvrez toutes les fonctionnalités conçues pour vous aider à organiser votre événement parfait.
+                  Une plateforme intuitive pour organiser vos événements en toute simplicité. Trouvez les meilleurs prestataires et gérez tous les aspects de votre projet.
                 </p>
                 <Link to="/register-client">
                   <Button className="bg-we-gold hover:bg-we-gold/90 text-black">
@@ -62,7 +62,7 @@ const HomePage: React.FC = () => {
               <div className="text-center">
                 <h3 className="text-2xl font-serif text-we-green mb-4">Pour les prestataires</h3>
                 <p className="text-gray-600 mb-6">
-                  Découvrez comment notre plateforme vous aide à mettre en valeur vos services et à développer votre activité.
+                  Développez votre activité en rejoignant notre réseau de professionnels de l'événementiel. Gagnez en visibilité et trouvez de nouveaux clients.
                 </p>
                 <Link to="/register-partner">
                   <Button className="bg-we-gold hover:bg-we-gold/90 text-black">
@@ -74,7 +74,6 @@ const HomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* Testimonials */}
         <TestimonialsSection />
       </main>
       <HomeFooter />
