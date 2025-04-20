@@ -53,7 +53,11 @@ export const useLoginForm = () => {
           description: "Bienvenue dans votre espace administrateur",
         });
         
-        navigate("/admin/dashboard", { replace: true });
+        // Ajout d'un délai avant la redirection pour s'assurer que l'état est mis à jour
+        setTimeout(() => {
+          navigate("/admin/dashboard", { replace: true });
+        }, 100);
+        
         setIsLoading(false);
         return { success: true };
       }
@@ -77,7 +81,10 @@ export const useLoginForm = () => {
             description: "Bienvenue sur votre espace VIP",
           });
           
-          navigate(redirectPath, { replace: true });
+          // Ajout d'un délai avant la redirection pour s'assurer que l'état est mis à jour
+          setTimeout(() => {
+            navigate(redirectPath, { replace: true });
+          }, 100);
         }
         
         return { success: true, requires2FA };

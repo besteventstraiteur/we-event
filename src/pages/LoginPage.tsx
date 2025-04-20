@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
@@ -18,6 +17,7 @@ import LoginDebugInfo from "@/components/auth/LoginDebugInfo";
 // Custom hook
 import { useLoginPageLogic } from "@/hooks/useLoginPageLogic";
 import { useAuth } from "@/hooks/useAuth";
+import { getRedirectPathForRole } from "@/hooks/auth/utils/redirectUtils";
 
 const LoginPage = () => {
   const deviceType = useDeviceType();
@@ -26,10 +26,11 @@ const LoginPage = () => {
   const { isAuthenticated, user } = useAuth();
   
   useEffect(() => {
+    // Check if user is already authenticated
     if (isAuthenticated && user) {
-      console.log("User authenticated, checking role for redirect:", user);
+      console.log("User already authenticated, redirecting:", user);
       
-      // Vérifier le rôle dans les deux emplacements possibles
+      // Déterminer le rôle pour une redirection appropriée
       const userRole = 
         user.role || 
         user.user_metadata?.role ||
@@ -38,25 +39,15 @@ const LoginPage = () => {
       
       console.log("Detected user role:", userRole);
       
-      // Normaliser le rôle pour la comparaison
-      const normalizedRole = String(userRole).toLowerCase().trim();
-      
-      // Redirection basée sur le rôle utilisateur
-      let redirectPath;
-      
-      switch (normalizedRole) {
-        case 'admin':
-          redirectPath = '/admin/dashboard';
-          break;
-        case 'partner':
-          redirectPath = '/partner/dashboard';
-          break;
-        default:
-          redirectPath = '/client/dashboard';
-      }
+      // Obtenir le chemin de redirection basé sur le rôle
+      const redirectPath = getRedirectPathForRole(userRole);
       
       console.log("Redirecting authenticated user to:", redirectPath);
-      navigate(redirectPath, { replace: true });
+      
+      // Rediriger avec un petit délai
+      setTimeout(() => {
+        navigate(redirectPath, { replace: true });
+      }, 100);
     }
   }, [isAuthenticated, user, navigate]);
   
