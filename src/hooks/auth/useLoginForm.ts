@@ -54,12 +54,10 @@ export const useLoginForm = () => {
         });
         
         // Force l'état d'authentification sans attendre le délai
-        login({ email, password, rememberMe });
+        await login({ email, password, rememberMe });
         
-        // Ajout d'un délai plus long avant la redirection
-        setTimeout(() => {
-          navigate("/admin/dashboard", { replace: true });
-        }, 300);
+        // Redirection immédiate
+        navigate("/admin/dashboard", { replace: true });
         
         setIsLoading(false);
         return { success: true };
@@ -84,10 +82,8 @@ export const useLoginForm = () => {
             description: "Bienvenue sur votre espace VIP",
           });
           
-          // Ajout d'un délai plus long avant la redirection
-          setTimeout(() => {
-            navigate(redirectPath, { replace: true });
-          }, 300);
+          // Redirection immédiate
+          navigate(redirectPath, { replace: true });
         }
         
         return { success: true, requires2FA };

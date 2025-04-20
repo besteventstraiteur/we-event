@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { LogOutIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface LogoutButtonProps {
   variant?: 'default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'destructive';
@@ -21,21 +22,24 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({
   const { logout } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleLogout = async () => {
     try {
       await logout();
       toast({
-        title: "Déconnexion réussie",
-        description: "Vous avez été déconnecté avec succès",
+        title: t('auth.logout.success'),
+        description: t('auth.logout.successMessage'),
       });
-      navigate('/login');
+      
+      // Ajout d'une redirection plus immédiate
+      navigate('/login', { replace: true });
     } catch (error) {
       console.error('Logout error:', error);
       toast({
         variant: 'destructive',
-        title: "Erreur de déconnexion",
-        description: "Une erreur s'est produite lors de la déconnexion",
+        title: t('auth.logout.error'),
+        description: t('auth.logout.errorMessage'),
       });
     }
   };
@@ -48,7 +52,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({
       {...props}
     >
       {showIcon && <LogOutIcon className="mr-2 h-4 w-4" />}
-      Se déconnecter
+      {t('auth.logout.button')}
     </Button>
   );
 };

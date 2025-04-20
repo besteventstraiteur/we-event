@@ -1,4 +1,3 @@
-
 export default {
   common: {
     home: "Accueil",
@@ -14,6 +13,7 @@ export default {
     partnerSpace: "Espace partenaire",
     administration: "Administration",
     welcome: "Bienvenue sur We Event",
+    dashboard: 'Tableau de bord',
   },
   partners: {
     title: "Nos partenaires",
@@ -123,6 +123,34 @@ export default {
     },
     social: {
       title: "Suivez-nous"
+    }
+  },
+  partner: {
+    profile: 'Profil',
+    subscription: 'Abonnement',
+    crm: 'CRM',
+    network: 'Réseau',
+    tasks: 'Tâches',
+    clientRequests: 'Demandes clients',
+    statistics: 'Statistiques',
+    loyaltyProgram: 'Programme de fidélité',
+    bestAwards: 'Best Awards',
+    calendar: 'Calendrier',
+    training: 'Formation',
+    photos: 'Photos',
+    playlists: 'Playlists',
+    menus: 'Menus',
+    floorPlans: 'Plans de salle',
+    talkshows: 'Talkshows',
+    podcasts: 'Podcasts'
+  },
+  auth: {
+    logout: {
+      button: 'Se déconnecter',
+      success: 'Déconnexion réussie',
+      successMessage: 'Vous avez été déconnecté avec succès',
+      error: 'Erreur de déconnexion',
+      errorMessage: 'Une erreur s\'est produite lors de la déconnexion',
     }
   }
 };
