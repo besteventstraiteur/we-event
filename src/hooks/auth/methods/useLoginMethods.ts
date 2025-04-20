@@ -1,7 +1,9 @@
+
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { LoginCredentials, AuthResult } from "../types";
 import { UserRole } from "@/utils/accessControl";
+import type { Profile } from "@/lib/supabase";
 
 export function useLoginMethods(setUser: Function) {
   const login = async (credentials: LoginCredentials): Promise<AuthResult> => {
