@@ -1,7 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import PartnersSearch from './PartnersSearch';
+import { Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
 interface PartnerCategoryProps {
   id: string;
@@ -20,15 +24,47 @@ interface PartnersListProps {
   allPartners?: PartnerProps[];
 }
 
-const PartnersList: React.FC<PartnersListProps> = ({ partnerCategories, allPartners }) => {
+const PartnersList: React.FC<PartnersListProps> = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
   return (
     <div className="py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-serif text-we-green mb-4">Nos Prestataires Événementiels</h2>
-          <p className="text-gray-600">
+          <h2 className="text-3xl font-serif text-we-green mb-4">
+            Nos Prestataires Événementiels
+          </h2>
+          <p className="text-gray-600 mb-8">
             Découvrez notre sélection de professionnels pour tous types d'événements
           </p>
+
+          <div className="flex flex-col md:flex-row gap-4 justify-center items-center max-w-2xl mx-auto mb-12">
+            <div className="relative flex-1 w-full">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Input
+                type="search"
+                placeholder="Rechercher un prestataire..."
+                className="pl-10 w-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full md:w-[200px]">
+                <SelectValue placeholder="Toutes les catégories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Toutes les catégories</SelectItem>
+                <SelectItem value="venues">Lieux de réception</SelectItem>
+                <SelectItem value="catering">Traiteurs & Restauration</SelectItem>
+                <SelectItem value="entertainment">Animation & Musique</SelectItem>
+                <SelectItem value="decoration">Décoration & Design</SelectItem>
+                <SelectItem value="photo-video">Photo & Vidéo</SelectItem>
+                <SelectItem value="planners">Services Événementiels</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
