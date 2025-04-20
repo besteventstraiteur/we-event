@@ -1,80 +1,57 @@
 
-import React from "react";
-import { Link } from "react-router-dom";
-import { Star } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import WeEventButton from "@/components/WeEventButton";
-import { useLanguage } from "@/contexts/LanguageContext";
+import React from 'react';
+import { Button } from '@/components/ui/button';
 
-interface Testimonial {
-  name: string;
-  event: string;
-  text: string;
-  rating: number;
-}
-
-interface TestimonialsSectionProps {}
-
-const TestimonialsSection: React.FC<TestimonialsSectionProps> = () => {
-  const { t } = useLanguage();
-
-  const testimonials: Testimonial[] = [
-    {
-      name: t('home.testimonials.person1.name'),
-      event: t('home.testimonials.person1.event'),
-      text: t('home.testimonials.person1.text'),
-      rating: 5
-    },
-    {
-      name: t('home.testimonials.person2.name'),
-      event: t('home.testimonials.person2.event'),
-      text: t('home.testimonials.person2.text'),
-      rating: 4.5
-    },
-    {
-      name: t('home.testimonials.person3.name'),
-      event: t('home.testimonials.person3.event'),
-      text: t('home.testimonials.person3.text'),
-      rating: 5
-    }
-  ];
-
+const TestimonialsSection = () => {
   return (
-    <section className="py-12 sm:py-16 bg-we-beige/30">
-      <div className="container">
-        <div className="text-center mb-10">
-          <h2 className="font-display text-2xl sm:text-3xl mb-2 text-we-green">{t('home.testimonialsTitle')}</h2>
-          <p className="text-we-gray-600">{t('home.testimonialsSubtitle')}</p>
+    <section className="py-20 px-4">
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-serif text-we-green text-center mb-4">
+          Ce qu'ils en disent
+        </h2>
+        <p className="text-center text-gray-600 mb-12">
+          Des événements réussis et des clients satisfaits
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="text-we-gold mb-2">★★★★★</div>
+            <p className="text-gray-600 italic mb-4">
+              "We Event a transformé notre mariage en un moment d'exception. L'équipe est à l'écoute et vraiment professionnelle."
+            </p>
+            <div>
+              <p className="font-semibold">Marie & Pierre</p>
+              <p className="text-sm text-gray-500">Mariage à Paris</p>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="text-we-gold mb-2">★★★★★</div>
+            <p className="text-gray-600 italic mb-4">
+              "Organiser un événement professionnel n'a jamais été aussi simple. Merci pour votre accompagnement !"
+            </p>
+            <div>
+              <p className="font-semibold">Sophie L.</p>
+              <p className="text-sm text-gray-500">Anniversaire d'entreprise</p>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="text-we-gold mb-2">★★★★★</div>
+            <p className="text-gray-600 italic mb-4">
+              "Des prestataires de qualité et un suivi impeccable. Nous recommandons vivement !"
+            </p>
+            <div>
+              <p className="font-semibold">Thomas & Julie</p>
+              <p className="text-sm text-gray-500">Mariage champêtre</p>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <Card key={index} className="border-none shadow-sm">
-              <CardContent className="p-6">
-                <div className="flex items-center mb-3">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      size={16}
-                      className={i < Math.floor(testimonial.rating) ? "text-we-gold" : "text-we-gray-300"}
-                      fill={i < Math.floor(testimonial.rating) ? "currentColor" : "none"}
-                    />
-                  ))}
-                </div>
-                <p className="text-we-gray-700 mb-4 italic">"{testimonial.text}"</p>
-                <div className="font-medium">{testimonial.name}</div>
-                <div className="text-sm text-we-gray-500">{testimonial.event}</div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className="mt-8 text-center">
-          <Link to="/partners">
-            <WeEventButton>
-              {t('home.seeAllReviews')}
-            </WeEventButton>
-          </Link>
+        <div className="text-center">
+          <Button variant="outline" className="border-we-gold text-we-gold hover:bg-we-gold/10">
+            Voir tous les avis
+          </Button>
         </div>
       </div>
     </section>
