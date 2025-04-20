@@ -22,7 +22,11 @@ export const useAuth = () => {
         
         // Vérifier la session Supabase
         const { data, error } = await supabase.auth.getSession();
-        if (error) throw error;
+        if (error) {
+          console.error('Session error:', error);
+          setIsLoading(false);
+          return;
+        }
         
         console.log("Session check result:", data.session ? "Session found" : "No session");
         
@@ -101,6 +105,11 @@ export const useAuth = () => {
       const { email, password } = credentials;
       
       console.log("Login attempt with:", email);
+
+      // Support for demo users - Si c'est un email de démo spécifique
+      if (email.endsWith('@best-events.fr') || email === 'dubois.robin.91@gmail.com') {
+        console.log("Using special login process for known users");
+      }
       
       // Connexion Supabase normale
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -108,9 +117,12 @@ export const useAuth = () => {
         password
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase auth error:", error);
+        throw error;
+      }
       
-      console.log("Login successful with email:", email);
+      console.log("Login successful with email:", email, data);
 
       // Stocker les préférences de connexion si demandé
       if (credentials.rememberMe) {
@@ -121,10 +133,19 @@ export const useAuth = () => {
         localStorage.removeItem("weddingPlannerRememberMe");
       }
 
-      return { success: true, user: data.user };
+      return { success: true, user: data.user, session: data.session };
     } catch (error: any) {
       console.error("Login error:", error);
-      return { success: false, message: error.message || 'Erreur de connexion' };
+      if (error.message === "Invalid login credentials" || error.code === "invalid_credentials") {
+        return { 
+          success: false, 
+          message: "Email ou mot de passe incorrects. Veuillez réessayer." 
+        };
+      }
+      return { 
+        success: false, 
+        message: error.message || 'Erreur de connexion. Veuillez réessayer.'
+      };
     }
   };
 

@@ -9,12 +9,14 @@ import type { AuthDebugInfo } from "./types/loginTypes";
 export const useLoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [authDebugInfo, setAuthDebugInfo] = useState<AuthDebugInfo>({});
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { login } = useAuth();
 
   const handleLoginSubmit = async (email: string, password: string, rememberMe: boolean) => {
     setIsLoading(true);
+    setError(null);
     
     // Détecter le type d'utilisateur d'après l'email (pour debug uniquement)
     let userType = "client";
@@ -64,6 +66,7 @@ export const useLoginForm = () => {
       }
       
       console.error("Login failed:", result.message);
+      setError(result.message || "Identifiants incorrects. Veuillez réessayer.");
       toast({
         variant: "destructive",
         title: "Erreur de connexion",
@@ -71,12 +74,14 @@ export const useLoginForm = () => {
       });
       
       return { success: false };
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error.message || "Une erreur inattendue s'est produite. Veuillez réessayer.";
       console.error("Login error:", error);
+      setError(errorMessage);
       toast({
         variant: "destructive",
         title: "Erreur de connexion",
-        description: "Une erreur inattendue s'est produite. Veuillez réessayer.",
+        description: errorMessage,
       });
       return { success: false };
     } finally {
@@ -86,6 +91,7 @@ export const useLoginForm = () => {
 
   return {
     isLoading,
+    error,
     authDebugInfo,
     handleLoginSubmit
   };

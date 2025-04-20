@@ -56,6 +56,7 @@ const LoginPage = () => {
     resetSent,
     showTwoFactor,
     authDebugInfo,
+    error,
     
     // Biometric
     biometricAttempt,
@@ -122,7 +123,8 @@ const LoginPage = () => {
               <LoginForm 
                 onSubmit={handleLoginSubmit} 
                 onForgotPassword={() => setForgotPassword(true)} 
-                isLoading={isLoading} 
+                isLoading={isLoading}
+                error={error} 
               />
             </>
           ) : (

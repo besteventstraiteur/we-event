@@ -25,6 +25,7 @@ export const useLoginPageLogic = () => {
 
   const {
     isLoading: formLoading,
+    error,
     authDebugInfo,
     handleLoginSubmit: handleFormSubmit
   } = useLoginForm();
@@ -86,6 +87,7 @@ export const useLoginPageLogic = () => {
     resetSent,
     showTwoFactor,
     authDebugInfo,
+    error,
     biometricAttempt,
     isBiometricEnabled,
     isNative,

@@ -14,9 +14,10 @@ interface LoginFormProps {
   onSubmit: (email: string, password: string, rememberMe: boolean) => void;
   onForgotPassword: () => void;
   isLoading: boolean;
+  error?: string;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoading }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoading, error }) => {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -53,6 +54,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoa
                 <Input 
                   placeholder="Email"
                   type="email"
+                  autoComplete="email"
                   {...field}
                 />
               </FormControl>
@@ -70,6 +72,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoa
                 <Input 
                   placeholder="Mot de passe"
                   type="password"
+                  autoComplete="current-password"
                   {...field}
                 />
               </FormControl>
@@ -77,6 +80,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoa
             </FormItem>
           )}
         />
+        
+        {error && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-800 text-sm">
+            {error}
+          </div>
+        )}
         
         <div className="flex items-center justify-between">
           <FormField
@@ -88,6 +97,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoa
                   <Checkbox 
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    id="remember-me"
                   />
                 </FormControl>
                 <label 
@@ -129,6 +139,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoa
           <Link to="/register-partner" className="text-vip-gold hover:underline">
             Inscription Partenaire
           </Link>
+        </div>
+
+        <div className="text-center text-xs text-vip-gray-500 mt-4 border-t pt-4">
+          <p>Comptes de démonstration:</p>
+          <p>Admin: rdubois@best-events.fr</p>
+          <p>Partenaire: contact@best-events.fr</p>
+          <p>Client: dubois.robin.91@gmail.com</p>
+          <p>Mot de passe pour tous les comptes: Tybo2020!@</p>
         </div>
       </form>
     </Form>
