@@ -34,7 +34,7 @@ const ClientNavigation = () => {
       <NavItem
         icon={<ListTodo size={20} />}
         title="To-do list"
-        href="/client/todo"
+        href="/client/todo-list"
       />
       
       <NavItem
@@ -92,7 +92,7 @@ const ClientNavigation = () => {
         <NavItem
           icon={<SquareStack size={20} />}
           title="Playlists"
-          href="/client/music"
+          href="/client/music-playlists"
         />
       )}
       

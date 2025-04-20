@@ -1,6 +1,6 @@
 
 import React, { Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import ProtectedRoute from "@/components/security/ProtectedRoute";
 import LoadingFallback from "@/components/LoadingFallback";
@@ -15,7 +15,6 @@ const PartnerRequests = React.lazy(() => import("@/pages/partner/PartnerRequests
 const PartnerStats = React.lazy(() => import("@/pages/partner/PartnerStats"));
 const PartnerMenus = React.lazy(() => import("@/pages/partner/PartnerMenus"));
 const PartnerBestAwards = React.lazy(() => import("@/pages/partner/PartnerBestAwards"));
-const PartnerMusicPlaylists = React.lazy(() => import("@/pages/partner/PartnerMusicPlaylists"));
 const PartnerPlaylists = React.lazy(() => import("@/pages/partner/PartnerPlaylists"));
 const PartnerFloorPlans = React.lazy(() => import("@/pages/partner/PartnerFloorPlans"));
 const PartnerLiveStreaming = React.lazy(() => import("@/pages/partner/PartnerLiveStreaming"));
@@ -81,11 +80,6 @@ const PartnerRoutes: React.FC = () => {
         <Route path="best-awards" element={
           <Suspense fallback={<LoadingFallback />}>
             <PartnerBestAwards />
-          </Suspense>
-        } />
-        <Route path="music-playlists" element={
-          <Suspense fallback={<LoadingFallback />}>
-            <PartnerMusicPlaylists />
           </Suspense>
         } />
         <Route path="playlists" element={
@@ -175,6 +169,9 @@ const PartnerRoutes: React.FC = () => {
             <CrmReports />
           </Suspense>
         } />
+        
+        {/* Default route redirect */}
+        <Route index element={<Navigate to="dashboard" replace />} />
       </Route>
     </Routes>
   );
