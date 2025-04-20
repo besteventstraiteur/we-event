@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
@@ -44,10 +45,8 @@ const LoginPage = () => {
       
       console.log("Redirecting authenticated user to:", redirectPath);
       
-      // Rediriger avec un petit délai
-      setTimeout(() => {
-        navigate(redirectPath, { replace: true });
-      }, 100);
+      // Rediriger immédiatement
+      navigate(redirectPath, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
   
@@ -75,6 +74,11 @@ const LoginPage = () => {
     handleSocialLoginSuccess,
     handleBiometricAuth,
   } = useLoginPageLogic();
+
+  // Si l'utilisateur est déjà authentifié, ne pas afficher la page de connexion
+  if (isAuthenticated && user) {
+    return null; // Page vide pendant la redirection
+  }
 
   const content = (
     <>

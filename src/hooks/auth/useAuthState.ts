@@ -7,6 +7,7 @@ export function useAuthState() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -22,6 +23,7 @@ export function useAuthState() {
             console.log("Using saved admin user from localStorage");
             setUser(adminUser);
             setSession({ user: adminUser });
+            setIsAuthenticated(true);
             setIsLoading(false);
             return;
           } catch (e) {
@@ -33,6 +35,7 @@ export function useAuthState() {
         const { data, error } = await supabase.auth.getSession();
         if (error) {
           console.error('Session error or no session:', error);
+          setIsAuthenticated(false);
           setIsLoading(false);
           return;
         }
@@ -40,10 +43,14 @@ export function useAuthState() {
         if (data.session) {
           setUser(data.session.user);
           setSession(data.session);
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
         }
         setIsLoading(false);
       } catch (error) {
         console.error('Error checking session:', error);
+        setIsAuthenticated(false);
         setIsLoading(false);
       }
     };
@@ -53,16 +60,28 @@ export function useAuthState() {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, newSession) => {
       console.log("Auth state changed:", event, newSession?.user?.id);
       
-      // Ne pas appeler setUser si on est dans un état de chargement
       if (newSession) {
         setUser(newSession.user);
         setSession(newSession);
+        setIsAuthenticated(true);
       } else {
         // Ne pas effacer l'utilisateur admin spécial
-        const isAdminUser = user && user.email === "rdubois@best-events.fr";
-        if (!isAdminUser) {
+        const adminUser = localStorage.getItem("weddingPlannerAdminUser");
+        if (adminUser) {
+          try {
+            const admin = JSON.parse(adminUser);
+            setUser(admin);
+            setSession({ user: admin });
+            setIsAuthenticated(true);
+          } catch (e) {
+            setUser(null);
+            setSession(null);
+            setIsAuthenticated(false);
+          }
+        } else {
           setUser(null);
           setSession(null);
+          setIsAuthenticated(false);
         }
       }
     });
@@ -70,7 +89,7 @@ export function useAuthState() {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, []); // Retirer user des dépendances pour éviter la boucle infinie
+  }, []);
 
-  return { user, session, setUser, setSession, isLoading };
+  return { user, session, setUser, setSession, isLoading, isAuthenticated };
 }

@@ -1,76 +1,56 @@
 
-import React, { createContext, ReactNode, useContext } from 'react';
-import { useAuthState } from './useAuthState';
-import { useAuthMethods } from './useAuthMethods';
-import { usePermissions } from './usePermissions';
-import { AuthContextType } from './types/authContext.types';
+import React, { createContext, useContext, ReactNode } from "react";
+import { useAuthState } from "./useAuthState";
+import { useAuthMethods } from "./useAuthMethods";
+import { usePermissions } from "./usePermissions";
+import { UserRole } from "@/utils/accessControl";
 
-// Create the auth context
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  session: null,
-  isLoading: true,
-  isAuthenticated: false,
-  login: async () => ({ success: false }),
-  loginWithProvider: async () => ({ success: false }),
-  logout: async () => {},
-  register: async () => ({ success: false }),
-  hasPermission: () => false,
-  hasRole: () => false,
-  hasPartnerType: () => false,
-  updateUser: async () => {},
-});
-
-export interface AuthProviderProps {
-  children: ReactNode;
+interface AuthContextType {
+  user: any;
+  session: any;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  login: (credentials: { email: string; password: string; rememberMe?: boolean }) => Promise<any>;
+  logout: () => Promise<void>;
+  loginWithProvider: (provider: "google" | "facebook" | "github") => Promise<any>;
+  register: (userData: { email: string; password: string; role?: string; name?: string }) => Promise<any>;
+  hasPermission: (permission: string) => boolean;
+  hasRole: (role: string) => boolean;
+  hasPartnerType: (type: string) => boolean;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const { user, session, setUser, isLoading } = useAuthState();
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const { user, session, isLoading, isAuthenticated } = useAuthState();
   const { login, logout, loginWithProvider, register } = useAuthMethods();
-  const { hasRole, hasPermission, hasPartnerType } = usePermissions(user);
-
-  const updateUser = async (updatedFields: any): Promise<void> => {
-    if (!user) return;
-    
-    try {
-      console.log('Updating user profile:', updatedFields);
-      // Pour cette implémentation, on met simplement à jour l'objet utilisateur en mémoire
-      // Dans une implémentation complète, il y aurait un appel API ici
-    } catch (error) {
-      console.error('Error updating user profile:', error);
-      throw error;
-    }
-  };
-
-  const value: AuthContextType = {
-    user,
-    session,
-    isLoading,
-    isAuthenticated: !!user,
-    login,
-    loginWithProvider,
-    logout,
-    register,
-    hasRole,
-    hasPermission,
-    hasPartnerType,
-    updateUser
-  };
+  const { hasPermission, hasRole, hasPartnerType } = usePermissions(user);
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+      value={{
+        user,
+        session,
+        isLoading,
+        isAuthenticated,
+        login,
+        logout,
+        loginWithProvider,
+        register,
+        hasPermission,
+        hasRole,
+        hasPartnerType
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
-  
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  
   return context;
 };
