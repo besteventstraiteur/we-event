@@ -1,9 +1,10 @@
 
-import React, { createContext, ReactNode } from 'react';
+import React, { createContext, ReactNode, useContext } from 'react';
 import { useAuthState } from './useAuthState';
 import { useAuthMethods } from './useAuthMethods';
 import { usePermissions } from './usePermissions';
 import { AuthContextType } from './types/authContext.types';
+import { Profile } from '@/lib/supabase';
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
