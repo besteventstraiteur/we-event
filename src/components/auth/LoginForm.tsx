@@ -130,13 +130,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoa
             Inscription Partenaire
           </Link>
         </div>
-        
-        <div className="text-center mt-4 text-xs text-gray-500">
-          <p>Comptes disponibles dans Supabase:</p>
-          <p>rdubois@best-events.fr</p>
-          <p>contact@best-events.fr</p>
-          <p>dubois.robin.9@gmail.com</p>
-        </div>
       </form>
     </Form>
   );
