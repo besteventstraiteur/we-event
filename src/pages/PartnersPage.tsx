@@ -23,7 +23,7 @@ const PartnersPage: React.FC = () => {
         />
         <HomeHeader />
         <main className={`flex-1 container ${isMobile ? 'py-3 px-3' : 'py-4 md:py-8'}`}>
-          <PartnersList partnerCategories={partnerCategories} allPartners={allPartners} />
+          <PartnersList />
           <VIPPromotion />
         </main>
         <PartnersFooter />

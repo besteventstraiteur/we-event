@@ -3,7 +3,24 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
-const PartnersList = () => {
+interface PartnerCategoryProps {
+  id: string;
+  name: string;
+}
+
+interface PartnerProps {
+  id: number;
+  name: string;
+  category: string;
+  description: string;
+}
+
+interface PartnersListProps {
+  partnerCategories?: PartnerCategoryProps[];
+  allPartners?: PartnerProps[];
+}
+
+const PartnersList: React.FC<PartnersListProps> = ({ partnerCategories, allPartners }) => {
   return (
     <div className="py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
