@@ -34,6 +34,7 @@ const RegisterClientPage = () => {
 
   const onSubmit = async (values: RegisterClientFormValues) => {
     try {
+      // Always register as CLIENT role for this page
       const result = await register({
         email: values.email,
         password: values.password,
