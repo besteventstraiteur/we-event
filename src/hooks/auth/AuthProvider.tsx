@@ -4,7 +4,6 @@ import { useAuthState } from './useAuthState';
 import { useAuthMethods } from './useAuthMethods';
 import { usePermissions } from './usePermissions';
 import { AuthContextType } from './types/authContext.types';
-import { Profile } from '@/lib/supabase';
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -30,7 +29,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { login, loginWithProvider, logout, register } = useAuthMethods();
   const { hasRole, hasPermission, hasPartnerType } = usePermissions(user);
 
-  const updateUser = async (updatedFields: Partial<Profile>): Promise<void> => {
+  const updateUser = async (updatedFields: any): Promise<void> => {
     if (!user) return;
     
     try {

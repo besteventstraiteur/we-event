@@ -28,5 +28,5 @@ export interface AuthContextType {
   hasPermission: (permission: string) => boolean;
   hasRole: (role: UserRole) => boolean;
   hasPartnerType: (partnerType: string) => boolean;
-  updateUser: (user: Partial<Profile>) => Promise<void>;
+  updateUser: (user: any) => Promise<void>;
 }

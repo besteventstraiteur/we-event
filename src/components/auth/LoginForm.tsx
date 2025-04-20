@@ -86,6 +86,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoa
             {error}
           </div>
         )}
+
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-md text-blue-800 text-sm">
+          Pour l'accès admin: email = rdubois@best-events.fr, mot de passe = admin123
+        </div>
         
         <div className="flex items-center justify-between">
           <FormField
