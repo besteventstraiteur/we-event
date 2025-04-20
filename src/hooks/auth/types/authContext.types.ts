@@ -1,6 +1,6 @@
 
 import { Profile } from "@/lib/supabase";
-import { Session } from '@supabase/supabase-js';
+import { Session, User } from '@supabase/supabase-js';
 import { UserRole } from '@/utils/accessControl';
 
 export interface LoginCredentials {
@@ -12,11 +12,12 @@ export interface LoginCredentials {
 export interface AuthResult {
   success: boolean;
   message?: string;
-  user?: Profile;
+  user?: any;
+  data?: any;
 }
 
 export interface AuthContextType {
-  user: Profile | null;
+  user: any;
   session: Session | null;
   isLoading: boolean;
   isAuthenticated: boolean;

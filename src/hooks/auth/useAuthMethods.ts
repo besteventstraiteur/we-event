@@ -3,11 +3,13 @@ import { useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 import { UserRole } from "@/utils/accessControl";
+import { User } from "@supabase/supabase-js";
+import { AuthResult } from "./types/authContext.types";
 
 export function useAuthMethods() {
   const navigate = useNavigate();
 
-  const login = async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
+  const login = async (credentials: { email: string; password: string; rememberMe?: boolean }): Promise<AuthResult> => {
     try {
       const { email, password } = credentials;
       console.log("Login attempt with:", email);
@@ -27,7 +29,7 @@ export function useAuthMethods() {
         localStorage.removeItem("weddingPlannerRememberMe");
       }
 
-      return { success: true, user: data.user };
+      return { success: true, user: data.user as any };
     } catch (error: any) {
       console.error("Login error:", error);
       return { success: false, message: error.message || 'Erreur de connexion' };
@@ -45,7 +47,7 @@ export function useAuthMethods() {
     }
   };
 
-  const loginWithProvider = async (provider: "google" | "facebook" | "github") => {
+  const loginWithProvider = async (provider: "google" | "facebook" | "github"): Promise<AuthResult> => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
@@ -67,7 +69,7 @@ export function useAuthMethods() {
     password: string; 
     role?: UserRole; 
     name?: string 
-  }) => {
+  }): Promise<AuthResult> => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email: userData.email,
@@ -81,7 +83,7 @@ export function useAuthMethods() {
       });
       
       if (error) throw error;
-      return { success: true, user: data.user };
+      return { success: true, user: data.user as any };
     } catch (error: any) {
       console.error("Registration error:", error);
       return { success: false, message: error.message || 'Erreur d\'inscription' };

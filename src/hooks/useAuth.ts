@@ -1,2 +1,3 @@
 
-export { useAuth as default } from './auth/useAuth';
+export { useAuth } from './auth/useAuth';
+export { default } from './auth/useAuth';

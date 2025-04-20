@@ -27,7 +27,7 @@ export interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { user, session, setUser, setSession, isLoading } = useAuthState();
-  const { login, loginWithProvider, logout, register } = useAuthMethods(setUser);
+  const { login, loginWithProvider, logout, register } = useAuthMethods();
   const { hasRole, hasPermission, hasPartnerType } = usePermissions(user);
 
   const updateUser = async (updatedFields: Partial<Profile>): Promise<void> => {
