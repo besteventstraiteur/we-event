@@ -41,30 +41,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoa
     onSubmit(values.email, values.password, values.rememberMe);
   };
 
-  // Quick login helper for development
-  const loginAsRole = (role: string) => {
-    let email = "";
-    
-    switch (role.toLowerCase()) {
-      case "admin":
-        email = "admin@weevent.com";
-        break;
-      case "partner":
-        email = "partner@weevent.com";
-        break;
-      case "client":
-      default:
-        email = "client@weevent.com";
-        break;
-    }
-    
-    form.setValue("email", email);
-    form.setValue("password", "password123");
-    form.setValue("rememberMe", true);
-    
-    onSubmit(email, "password123", true);
-  };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
@@ -154,30 +130,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoa
             Inscription Partenaire
           </Link>
         </div>
-
-        {/* Debug login buttons */}
-        <div className="pt-2 border-t border-gray-200 mt-4">
-          <div className="text-xs text-gray-500 mb-2">Connexion rapide (pour test):</div>
-          <div className="flex gap-2">
-            <button 
-              type="button" 
-              onClick={() => loginAsRole("admin")} 
-              className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
-              Admin
-            </button>
-            <button 
-              type="button" 
-              onClick={() => loginAsRole("partner")} 
-              className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
-              Partenaire
-            </button>
-            <button 
-              type="button" 
-              onClick={() => loginAsRole("client")} 
-              className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
-              Client
-            </button>
-          </div>
+        
+        <div className="text-center mt-4 text-xs text-gray-500">
+          <p>Comptes disponibles dans Supabase:</p>
+          <p>rdubois@best-events.fr</p>
+          <p>contact@best-events.fr</p>
+          <p>dubois.robin.9@gmail.com</p>
         </div>
       </form>
     </Form>

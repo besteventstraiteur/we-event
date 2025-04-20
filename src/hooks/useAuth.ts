@@ -17,26 +17,14 @@ export const useAuth = () => {
       try {
         setIsLoading(true);
         
-        // Vérifier s'il y a un utilisateur de démo dans localStorage
-        const localStorageAuth = localStorage.getItem("supabase.auth.token");
-        if (localStorageAuth) {
-          try {
-            const authData = JSON.parse(localStorageAuth);
-            if (authData && authData.currentSession && authData.currentSession.user) {
-              console.log("Found demo user in localStorage:", authData.currentSession.user);
-              setUser(authData.currentSession.user);
-              setSession(authData.currentSession);
-              setIsLoading(false);
-              return;
-            }
-          } catch (e) {
-            console.error("Error parsing auth data:", e);
-          }
-        }
+        // Nettoyer les données de démo potentiellement conflictuelles
+        localStorage.removeItem("supabase.auth.token");
         
-        // Sinon, vérifier la session Supabase
+        // Vérifier la session Supabase
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
+        
+        console.log("Session check result:", data.session ? "Session found" : "No session");
         
         if (data.session) {
           setUser(data.session.user);
@@ -55,6 +43,7 @@ export const useAuth = () => {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state changed:", event, session?.user?.id);
       if (session) {
+        console.log("Setting user from auth event:", session.user);
         setUser(session.user);
         setSession(session);
       } else {
@@ -109,42 +98,9 @@ export const useAuth = () => {
   // Connexion avec email/password
   const login = async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
     try {
-      const { email, password, rememberMe } = credentials;
+      const { email, password } = credentials;
       
-      // Vérification des comptes de démonstration
-      if ((email.includes("admin@") || email.includes("partner@") || email.includes("client@")) && 
-          password === "password123") {
-        
-        console.log("Using demo account for:", email);
-        let role = email.includes("admin") ? "admin" : email.includes("partner") ? "partner" : "client";
-        
-        const demoUser = {
-          id: `demo-${Date.now()}`,
-          user_metadata: {
-            email: email,
-            name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
-            role: role
-          },
-          email: email,
-          role: role
-        };
-        
-        // Enregistrer l'utilisateur démo (simuler une connexion)
-        localStorage.setItem("supabase.auth.token", JSON.stringify({
-          currentSession: {
-            user: demoUser
-          }
-        }));
-        
-        if (rememberMe) {
-          localStorage.setItem("weddingPlannerEmail", email);
-          localStorage.setItem("weddingPlannerRememberMe", "true");
-        }
-        
-        setUser(demoUser);
-        
-        return { success: true, user: demoUser };
-      }
+      console.log("Login attempt with:", email);
       
       // Connexion Supabase normale
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -153,6 +109,17 @@ export const useAuth = () => {
       });
 
       if (error) throw error;
+      
+      console.log("Login successful with email:", email);
+
+      // Stocker les préférences de connexion si demandé
+      if (credentials.rememberMe) {
+        localStorage.setItem("weddingPlannerEmail", email);
+        localStorage.setItem("weddingPlannerRememberMe", "true");
+      } else {
+        localStorage.removeItem("weddingPlannerEmail");
+        localStorage.removeItem("weddingPlannerRememberMe");
+      }
 
       return { success: true, user: data.user };
     } catch (error: any) {
@@ -164,10 +131,9 @@ export const useAuth = () => {
   // Déconnexion
   const logout = async () => {
     try {
-      // Suppression des données de démonstration stockées
+      // Suppression des données stockées
       localStorage.removeItem("weddingPlannerEmail");
       localStorage.removeItem("weddingPlannerRememberMe");
-      localStorage.removeItem("supabase.auth.token");
       
       // Déconnexion Supabase
       await supabase.auth.signOut();

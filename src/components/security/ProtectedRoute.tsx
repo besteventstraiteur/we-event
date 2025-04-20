@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/utils/accessControl';
 import { useToast } from '@/hooks/use-toast';
@@ -17,14 +17,26 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   allowedRoles,
   children 
 }) => {
-  const { isAuthenticated, hasRole, user } = useAuth();
+  const { isAuthenticated, hasRole, user, isLoading } = useAuth();
   const { toast } = useToast();
+  const location = useLocation();
   
-  console.log("ProtectedRoute - isAuthenticated:", isAuthenticated, "user:", user);
+  console.log("ProtectedRoute - isAuthenticated:", isAuthenticated, "user:", user, "isLoading:", isLoading);
 
-  if (!isAuthenticated) {
-    // Don't show toast here to prevent showing it during initial load
-    return <Navigate to="/login" replace />;
+  useEffect(() => {
+    // Log additional details when authentication state changes
+    if (!isLoading) {
+      console.log("Auth state resolved - isAuthenticated:", isAuthenticated, "user present:", !!user);
+    }
+  }, [isLoading, isAuthenticated, user]);
+
+  if (isLoading) {
+    return <div>Loading authentication state...</div>;
+  }
+
+  if (!isAuthenticated || !user) {
+    console.log("Not authenticated, redirecting to login from:", location.pathname);
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
   // Check for allowed roles if provided

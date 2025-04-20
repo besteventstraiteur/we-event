@@ -11,20 +11,25 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
+        console.log("Auth callback handling initiated");
         const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError || !sessionData.session) {
+          console.error("Session error in callback:", sessionError);
           setError(sessionError?.message || "Failed to retrieve session");
           return;
         }
         
+        console.log("Session found in callback, getting user data");
         const { data: userData } = await supabase.auth.getUser();
         
         if (userData.user) {
           // Tenter d'accéder au rôle depuis user_metadata ou la table profiles
+          console.log("User found:", userData.user.id);
           let role = userData.user.user_metadata?.role;
           
           if (!role) {
+            console.log("Role not found in metadata, checking profiles");
             const { data: profile } = await supabase
               .from('profiles')
               .select('role')
@@ -32,26 +37,36 @@ const AuthCallback = () => {
               .single();
               
             role = profile?.role;
+            console.log("Profile role:", role);
           }
           
           if (role) {
+            let redirectPath = '/client/dashboard'; // Default path
+            
             switch (String(role).toLowerCase()) {
               case 'admin':
-                navigate('/admin/dashboard');
+                redirectPath = '/admin/dashboard';
                 break;
               case 'partner':
-                navigate('/partner/dashboard');
+                redirectPath = '/partner/dashboard';
                 break;
               default:
-                navigate('/client/dashboard');
+                redirectPath = '/client/dashboard';
                 break;
             }
+            
+            console.log("Redirecting to:", redirectPath);
+            navigate(redirectPath, { replace: true });
             return;
+          } else {
+            console.log("No role found, redirecting to default client dashboard");
           }
+        } else {
+          console.log("No user found in auth data");
         }
         
         // Par défaut, rediriger vers le dashboard client
-        navigate('/client/dashboard');
+        navigate('/client/dashboard', { replace: true });
       } catch (err) {
         console.error('Error during authentication callback:', err);
         setError(err instanceof Error ? err.message : 'An unknown error occurred during authentication');
