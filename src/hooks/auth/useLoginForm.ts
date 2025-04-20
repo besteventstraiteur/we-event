@@ -34,7 +34,7 @@ export const useLoginForm = () => {
     try {
       console.log("Login attempt:", { email, rememberMe, userType });
       
-      // Authentication via Supabase
+      // Authentication via Supabase or predefined admin
       const result = await login({ email, password, rememberMe });
       
       if (result.success) {
@@ -42,15 +42,8 @@ export const useLoginForm = () => {
         
         if (!requires2FA) {
           // Déduire le rôle pour rediriger vers le bon dashboard
-          // Normalement, cette information viendrait de l'utilisateur authentifié
-          const userRole = result.user?.user_metadata?.role || userType;
+          const userRole = result.user?.user_metadata?.role || result.user?.role || userType;
           const redirectPath = getRedirectPathForRole(userRole);
-          
-          setAuthDebugInfo(prev => ({ 
-            ...prev, 
-            redirectPath,
-            redirectAttempted: true
-          }));
           
           console.log("Login successful, redirecting to:", redirectPath);
           

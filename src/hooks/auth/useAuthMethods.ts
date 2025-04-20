@@ -1,4 +1,3 @@
-
 import { useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +13,7 @@ export function useAuthMethods() {
       const { email, password } = credentials;
       console.log("Login attempt with:", email);
 
-      // Support for predefined admin accounts
+      // Special case for admin account
       if (email === "rdubois@best-events.fr" && password === "admin123") {
         console.log("Using predefined admin login");
         
