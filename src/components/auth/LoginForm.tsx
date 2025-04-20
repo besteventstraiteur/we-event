@@ -140,14 +140,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onForgotPassword, isLoa
             Inscription Partenaire
           </Link>
         </div>
-
-        <div className="text-center text-xs text-vip-gray-500 mt-4 border-t pt-4">
-          <p>Comptes de démonstration:</p>
-          <p>Admin: rdubois@best-events.fr</p>
-          <p>Partenaire: contact@best-events.fr</p>
-          <p>Client: dubois.robin.91@gmail.com</p>
-          <p>Mot de passe pour tous les comptes: Tybo2020!@</p>
-        </div>
       </form>
     </Form>
   );

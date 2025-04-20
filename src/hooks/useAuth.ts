@@ -23,7 +23,7 @@ export const useAuth = () => {
         // Vérifier la session Supabase
         const { data, error } = await supabase.auth.getSession();
         if (error) {
-          console.error('Session error:', error);
+          console.error('Session error or no session:', error);
           setIsLoading(false);
           return;
         }
@@ -106,11 +106,6 @@ export const useAuth = () => {
       
       console.log("Login attempt with:", email);
 
-      // Support for demo users - Si c'est un email de démo spécifique
-      if (email.endsWith('@best-events.fr') || email === 'dubois.robin.91@gmail.com') {
-        console.log("Using special login process for known users");
-      }
-      
       // Connexion Supabase normale
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
