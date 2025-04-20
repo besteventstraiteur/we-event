@@ -36,9 +36,6 @@ const HomeHeader: React.FC = () => {
             <Link to="/about" className="text-gray-700 hover:text-yellow-500 transition-colors">
               À propos
             </Link>
-            <Link to="/pricing" className="text-gray-700 hover:text-yellow-500 transition-colors">
-              Tarifs
-            </Link>
             <Link to="/contact" className="text-gray-700 hover:text-yellow-500 transition-colors">
               Contact
             </Link>
