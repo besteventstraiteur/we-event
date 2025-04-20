@@ -21,6 +21,10 @@ const PartnersPage = React.lazy(() =>
   import("@/pages/PartnersPage" /* webpackChunkName: "partners-page" */)
 );
 
+const PartnerCategoryPage = React.lazy(() =>
+  import("@/pages/PartnerCategoryPage" /* webpackChunkName: "partner-category-page" */)
+);
+
 const PrivacyPage = React.lazy(() =>
   import("@/pages/PrivacyPage" /* webpackChunkName: "privacy-page" */)
 );
@@ -96,6 +100,15 @@ const PublicRoutes: React.FC<PublicRoutesProps> = ({ isMobileInterface }) => {
         element={
           <Suspense fallback={<LazyLoadingFallback />}>
             <PartnersPage />
+          </Suspense>
+        }
+      />
+      
+      <Route
+        path="/partners/:categoryId"
+        element={
+          <Suspense fallback={<LazyLoadingFallback />}>
+            <PartnerCategoryPage />
           </Suspense>
         }
       />
