@@ -9,7 +9,7 @@ export function usePermissions(user: any) {
     const userRole = 
       user.role || // Champ principal
       user.user_metadata?.role || // Métadonnées normalisées
-      user.raw_user_meta_data?.role; // Métadonnées brutes (format Supabase)
+      user.raw_user_meta_data?.role; // Format brut (ancien)
     
     if (!userRole) return false;
     return String(userRole).toLowerCase() === String(role).toLowerCase();

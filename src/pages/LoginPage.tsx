@@ -29,10 +29,10 @@ const LoginPage = () => {
     if (isAuthenticated && user) {
       console.log("User authenticated, checking role for redirect:", user);
       
-      // Détermination du rôle utilisateur (vérifier plusieurs emplacements possibles)
+      // Vérifier le rôle dans les deux emplacements possibles
       const userRole = 
         user.role || 
-        user.user_metadata?.role || 
+        user.user_metadata?.role ||
         user.raw_user_meta_data?.role ||
         'client';
       
