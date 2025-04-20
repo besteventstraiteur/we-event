@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import AuthLayout from "@/components/AuthLayout";
 import { Separator } from "@/components/ui/separator";
@@ -32,7 +31,7 @@ const LoginPage = () => {
       console.log("LoginPage - User is authenticated:", user);
       
       // Determine the redirect path from user role
-      const userRole = String(user.role || user.user_metadata?.role || '').toLowerCase();
+      const userRole = String(user.role || '').toLowerCase();
       let redirectPath;
       
       // First check if there's a redirect path in state or session storage
