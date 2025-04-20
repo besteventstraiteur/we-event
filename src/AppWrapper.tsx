@@ -1,16 +1,14 @@
-
 import React, { ReactNode } from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Toaster } from "@/components/ui/toaster";
 import { CartProvider } from "@/contexts/CartContext";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { AuthProvider } from "@/hooks/auth/useAuth"; // Using named import from useAuth.tsx
+import { AuthProvider } from "@/hooks/auth/AuthProvider";
 import TokenRefresher from "@/components/security/TokenRefresher";
 import SessionTimeout from "@/components/security/SessionTimeout";
 import { NetworkStatus } from "./components/app/NetworkStatus";
 
-// Define the props interface with ReactNode for children
 interface AppWrapperProps {
   children: ReactNode;
 }
