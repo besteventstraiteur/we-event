@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
@@ -20,18 +21,25 @@ const AuthCallback = () => {
         const { data: userData } = await supabase.auth.getUser();
         
         if (userData.user) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', userData.user.id)
-            .single();
-            
-          if (profile?.role) {
-            switch (profile.role as string) {
-              case 'ADMIN':
+          // Tenter d'accéder au rôle depuis user_metadata ou la table profiles
+          let role = userData.user.user_metadata?.role;
+          
+          if (!role) {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', userData.user.id)
+              .single();
+              
+            role = profile?.role;
+          }
+          
+          if (role) {
+            switch (String(role).toLowerCase()) {
+              case 'admin':
                 navigate('/admin/dashboard');
                 break;
-              case 'PARTNER':
+              case 'partner':
                 navigate('/partner/dashboard');
                 break;
               default:
@@ -42,6 +50,7 @@ const AuthCallback = () => {
           }
         }
         
+        // Par défaut, rediriger vers le dashboard client
         navigate('/client/dashboard');
       } catch (err) {
         console.error('Error during authentication callback:', err);

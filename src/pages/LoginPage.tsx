@@ -28,12 +28,12 @@ const LoginPage = () => {
   useEffect(() => {
     if (isAuthenticated && user) {
       // Toujours normaliser le rôle pour la comparaison
-      const userRoleStr = String(user.role || '').toLowerCase().trim();
+      const userRole = String(user.role || user.user_metadata?.role || '').toLowerCase().trim();
       
       // Redirection basée sur le rôle utilisateur
       let redirectPath;
       
-      switch (userRoleStr) {
+      switch (userRole) {
         case 'admin':
           redirectPath = '/admin/dashboard';
           break;
@@ -44,7 +44,7 @@ const LoginPage = () => {
           redirectPath = '/client/dashboard';
       }
       
-      console.log("User already authenticated, redirecting to:", redirectPath, "Role:", userRoleStr);
+      console.log("User already authenticated, redirecting to:", redirectPath, "Role:", userRole);
       navigate(redirectPath, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
@@ -70,7 +70,7 @@ const LoginPage = () => {
     handleResetPassword,
     handleVerifyOTP,
     handleSocialLoginSuccess,
-    handleBiometricAuth,  // This was previously named incorrectly as handleBiometricLogin
+    handleBiometricAuth,
   } = useLoginPageLogic();
 
   const content = (
@@ -105,7 +105,7 @@ const LoginPage = () => {
                 isMobileDevice={isMobileDevice}
                 biometricError={biometricError}
                 isLoading={biometricLoading}
-                onBiometricLogin={handleBiometricAuth}  // Fixed here - we're using handleBiometricAuth now
+                onBiometricLogin={handleBiometricAuth}
               />
 
               <SocialLoginButtons onLoginSuccess={handleSocialLoginSuccess} />

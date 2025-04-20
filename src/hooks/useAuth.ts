@@ -1,64 +1,152 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
-import { notify } from '@/components/ui/notifications';
 import { useNavigate } from 'react-router-dom';
-import { User } from '@supabase/supabase-js';
-
-interface AuthCredentials {
-  email: string;
-  password: string;
-  role?: string; 
-  name?: string;
-}
+import { UserRole } from '@/utils/accessControl';
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<any>(null);
   const [session, setSession] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Charger l'utilisateur au démarrage et écouter les changements d'auth
   useEffect(() => {
-    const fetchSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      setUser(session?.user || null);
+    // Vérifier s'il y a une session active
+    const checkSession = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Vérifier s'il y a un utilisateur de démo dans localStorage
+        const localStorageAuth = localStorage.getItem("supabase.auth.token");
+        if (localStorageAuth) {
+          try {
+            const authData = JSON.parse(localStorageAuth);
+            if (authData && authData.currentSession && authData.currentSession.user) {
+              console.log("Found demo user in localStorage:", authData.currentSession.user);
+              setUser(authData.currentSession.user);
+              setSession(authData.currentSession);
+              setIsLoading(false);
+              return;
+            }
+          } catch (e) {
+            console.error("Error parsing auth data:", e);
+          }
+        }
+        
+        // Sinon, vérifier la session Supabase
+        const { data, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        
+        if (data.session) {
+          setUser(data.session.user);
+          setSession(data.session);
+        }
+      } catch (error) {
+        console.error('Error checking session:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    fetchSession();
-
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') {
-        setUser(session?.user || null);
-        notify.success('Connexion réussie', 'Bienvenue sur votre espace');
-      } else if (event === 'SIGNED_OUT') {
+    checkSession();
+    
+    // Écouter les changements d'authentification
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, session?.user?.id);
+      if (session) {
+        setUser(session.user);
+        setSession(session);
+      } else {
         setUser(null);
-        notify.success('Déconnexion réussie', 'À bientôt!');
-        navigate('/login');
+        setSession(null);
       }
-      setSession(session);
     });
-  }, [navigate]);
 
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  // Vérifier si l'utilisateur est authentifié
   const isAuthenticated = !!user;
-
-  const hasRole = useCallback((role: string) => {
+  
+  // Vérifier si l'utilisateur a un rôle spécifique
+  const hasRole = useCallback((role: UserRole) => {
     if (!user) return false;
-    const userRole = typeof user.user_metadata?.role === 'string' ? user.user_metadata.role.toLowerCase() : '';
-    const requiredRole = role.toLowerCase();
-    return userRole === requiredRole;
+    
+    // Vérifier dans user ou user.user_metadata selon la structure
+    const userRole = user.role || (user.user_metadata?.role);
+    
+    if (!userRole) return false;
+    
+    return String(userRole).toLowerCase() === String(role).toLowerCase();
   }, [user]);
 
+  // Vérifier si le partenaire a un type spécifique
   const hasPartnerType = useCallback((partnerType: string) => {
-    if (!user) return false;
-    if (!hasRole('partner')) return false;
+    if (!user || !hasRole(UserRole.PARTNER)) return false;
     
-    const userPartnerType = user.user_metadata?.partner_type;
+    const userPartnerType = user.partner_type || user.user_metadata?.partner_type;
     return userPartnerType === partnerType;
   }, [user, hasRole]);
 
+  // Vérifier si l'utilisateur a une permission spécifique
+  const hasPermission = useCallback((permission: string) => {
+    if (!user) return false;
+    
+    // Admin a toutes les permissions
+    if (hasRole(UserRole.ADMIN)) return true;
+    
+    // Trouver les permissions dans la structure appropriée
+    const permissions = user.permissions || user.user_metadata?.permissions;
+    
+    if (!permissions) return false;
+    
+    return Array.isArray(permissions) && permissions.includes(permission);
+  }, [user, hasRole]);
+
+  // Connexion avec email/password
   const login = async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
     try {
-      const { email, password } = credentials;
+      const { email, password, rememberMe } = credentials;
+      
+      // Vérification des comptes de démonstration
+      if ((email.includes("admin@") || email.includes("partner@") || email.includes("client@")) && 
+          password === "password123") {
+        
+        console.log("Using demo account for:", email);
+        let role = email.includes("admin") ? "admin" : email.includes("partner") ? "partner" : "client";
+        
+        const demoUser = {
+          id: `demo-${Date.now()}`,
+          user_metadata: {
+            email: email,
+            name: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+            role: role
+          },
+          email: email,
+          role: role
+        };
+        
+        // Enregistrer l'utilisateur démo (simuler une connexion)
+        localStorage.setItem("supabase.auth.token", JSON.stringify({
+          currentSession: {
+            user: demoUser
+          }
+        }));
+        
+        if (rememberMe) {
+          localStorage.setItem("weddingPlannerEmail", email);
+          localStorage.setItem("weddingPlannerRememberMe", "true");
+        }
+        
+        setUser(demoUser);
+        
+        return { success: true, user: demoUser };
+      }
+      
+      // Connexion Supabase normale
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -66,104 +154,42 @@ export const useAuth = () => {
 
       if (error) throw error;
 
-      notify.success('Connexion réussie', 'Bienvenue sur votre espace');
       return { success: true, user: data.user };
-    } catch (error) {
-      notify.error(
-        'Erreur de connexion',
-        error instanceof Error ? error.message : 'Vérifiez vos identifiants'
-      );
-      return { success: false, message: 'Erreur de connexion' };
+    } catch (error: any) {
+      console.error("Login error:", error);
+      return { success: false, message: error.message || 'Erreur de connexion' };
     }
   };
 
+  // Déconnexion
   const logout = async () => {
     try {
+      // Suppression des données de démonstration stockées
+      localStorage.removeItem("weddingPlannerEmail");
+      localStorage.removeItem("weddingPlannerRememberMe");
+      localStorage.removeItem("supabase.auth.token");
+      
+      // Déconnexion Supabase
       await supabase.auth.signOut();
-      notify.success('Déconnexion réussie', 'À bientôt!');
-      navigate('/login');
+      
+      // Mise à jour de l'état utilisateur
+      setUser(null);
+      setSession(null);
+      
+      // Rediriger vers la page de connexion
+      navigate('/login', { replace: true });
     } catch (error) {
-      notify.error(
-        'Erreur de déconnexion',
-        'Une erreur est survenue lors de la déconnexion'
-      );
+      console.error("Logout error:", error);
     }
   };
 
-  const register = async (credentials: AuthCredentials) => {
-    try {
-      setIsLoading(true);
-      const { email, password, role, name } = credentials;
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            role,
-            name
-          }
-        }
-      });
-  
-      if (authError) {
-        throw authError;
-      }
-  
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-  
-      if (signInError) {
-        throw signInError;
-      }
-  
-      notify.success('Inscription réussie', 'Bienvenue !');
-      return { success: true, user: authData.user, message: 'Inscription réussie' };
-    } catch (error: any) {
-      console.error("Erreur lors de l'inscription:", error);
-      notify.error(
-        'Erreur d\'inscription',
-        error.message || 'Une erreur est survenue lors de l\'inscription'
-      );
-      return { success: false, message: error.message || 'Erreur lors de l\'inscription' };
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const resetPassword = async (email: string) => {
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/update-password`,
-      });
-      if (error) throw error;
-      notify.success('Réinitialisation demandée', 'Un email vous a été envoyé pour réinitialiser votre mot de passe.');
-      return { success: true };
-    } catch (error: any) {
-      notify.error('Erreur', error.message);
-      return { success: false, message: error.message };
-    }
-  };
-
-  const updatePassword = async (password: string) => {
-    try {
-      const { data, error } = await supabase.auth.updateUser({ password });
-      if (error) throw error;
-      notify.success('Mot de passe mis à jour', 'Votre mot de passe a été mis à jour avec succès.');
-      return { success: true, user: data.user };
-    } catch (error: any) {
-      notify.error('Erreur', error.message);
-      return { success: false, message: error.message };
-    }
-  };
-
-  const signInWithSocialProvider = async (provider: "google" | "facebook" | "github") => {
+  // Connexion avec provider social
+  const loginWithProvider = async (provider: "google" | "facebook" | "github") => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: `${window.location.origin}/auth-callback`,
+          redirectTo: `${window.location.origin}/auth/callback`
         }
       });
   
@@ -173,28 +199,52 @@ export const useAuth = () => {
   
       return { success: true, data };
     } catch (error: any) {
-      notify.error('Erreur de connexion', error.message || 'Erreur lors de la connexion avec le provider social');
-      return { success: false, message: error.message };
+      console.error("Social login error:", error);
+      return { success: false, message: error.message || 'Erreur de connexion sociale' };
     }
   };
 
-  const loginWithProvider = async (provider: "google" | "facebook" | "github") => {
-    return signInWithSocialProvider(provider);
+  // Inscription
+  const register = async (userData: { 
+    email: string; 
+    password: string; 
+    role?: UserRole; 
+    name?: string 
+  }) => {
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: userData.email,
+        password: userData.password,
+        options: {
+          data: {
+            role: userData.role || UserRole.CLIENT,
+            name: userData.name
+          }
+        }
+      });
+      
+      if (error) throw error;
+      
+      return { success: true, user: data.user };
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      return { success: false, message: error.message || 'Erreur d\'inscription' };
+    }
   };
 
   return {
     user,
     session,
     isAuthenticated,
+    isLoading,
     hasRole,
     hasPartnerType,
-    isLoading,
+    hasPermission,
     login,
     logout,
-    register,
-    resetPassword,
-    updatePassword,
-    signInWithSocialProvider,
-    loginWithProvider
+    loginWithProvider,
+    register
   };
 };
+
+export default useAuth;
