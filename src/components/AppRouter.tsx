@@ -11,6 +11,7 @@ import NotFound from '@/pages/NotFound';
 import RegisterPage from '@/pages/RegisterPage';
 import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
+import DemoAccessPage from '@/pages/DemoAccessPage';
 
 const AppRouter: React.FC = () => {
   const deviceType = useDeviceType();
@@ -27,8 +28,11 @@ const AppRouter: React.FC = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         
-        {/* Default redirect to home */}
-        <Route path="/" element={<Navigate to="/home" replace />} />
+        {/* Page d'accès démonstration */}
+        <Route path="/demo" element={<DemoAccessPage />} />
+        
+        {/* Default redirect to demo for easier access */}
+        <Route path="/" element={<Navigate to="/demo" replace />} />
         
         {/* Public guest access route */}
         <Route 

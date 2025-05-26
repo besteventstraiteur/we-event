@@ -37,14 +37,12 @@ export function useAuthState() {
         if (demoUser) {
           try {
             const parsedUser = JSON.parse(demoUser);
-            if (parsedUser && parsedUser.id && parsedUser.id.startsWith("demo-")) {
-              console.log("Using demo user from localStorage:", parsedUser.email);
-              setUser(parsedUser);
-              setSession({ user: parsedUser });
-              setIsAuthenticated(true);
-              setIsLoading(false);
-              return;
-            }
+            console.log("Using demo user from localStorage:", parsedUser.email);
+            setUser(parsedUser);
+            setSession({ user: parsedUser });
+            setIsAuthenticated(true);
+            setIsLoading(false);
+            return;
           } catch (e) {
             console.error("Error parsing demo user:", e);
           }
@@ -99,7 +97,7 @@ export function useAuthState() {
             setSession(null);
             setIsAuthenticated(false);
           }
-        } else if (demoUser && JSON.parse(demoUser).id?.startsWith("demo-")) {
+        } else if (demoUser) {
           try {
             const demo = JSON.parse(demoUser);
             setUser(demo);
