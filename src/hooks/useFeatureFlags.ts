@@ -31,26 +31,26 @@ interface FeatureFlagsState {
 export const useFeatureFlags = create<FeatureFlagsState>((set) => ({
   features: {
     guests: true,
-    floorPlan: false,
-    menus: false,
+    floorPlan: true, // Activé pour les plans de salle
+    menus: true, // Activé pour les menus
     pinterbest: false,
-    photos: false,
-    playlists: false,
+    photos: true, // Activé pour les photos
+    playlists: true, // Activé pour les playlists
     talkshows: true,
     podcasts: true,
     requests: true,
-    miniSite: false,
+    miniSite: true, // Activé pour les mini-sites
     stats: true,
     recommendations: true,
     gamification: true,
-    training: true, // Activé pour les formations
+    training: true,
     partnerTypes: true,
     subscriptions: true,
-    mlm: true,
-    venues: true,
-    weddingPackages: true,
-    ratings: true,
-    presentations: true,
+    mlm: true, // Activé pour le MLM
+    venues: true, // Activé pour les lieux
+    weddingPackages: true, // Activé pour les packages mariage
+    ratings: true, // Activé pour les avis
+    presentations: true, // Activé pour les présentations
   },
   setFeature: (feature, value) => set((state) => ({
     features: { ...state.features, [feature]: value }

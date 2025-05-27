@@ -11,8 +11,7 @@ import {
   GraduationCap,
   Trophy,
   Gift,
-  User,
-  Settings
+  User
 } from "lucide-react";
 
 interface CoreNavigationProps {
@@ -100,13 +99,6 @@ const CoreNavigation: React.FC<CoreNavigationProps> = ({
           />
         </>
       )}
-
-      <NavItem
-        href="/partner/subscription"
-        icon={<Settings size={20} />}
-        title="Abonnement"
-        active={location.pathname === "/partner/subscription"}
-      />
     </>
   );
 };
