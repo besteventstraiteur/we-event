@@ -1,13 +1,17 @@
 
 import React from "react";
-import { 
-  BarChart, UserSquare, CreditCard, Briefcase, Network,
-  CheckSquare, MessageSquare, Calendar, Trophy, Award,
-  GraduationCap
-} from "lucide-react";
-import NavigationSection from "./NavigationSection";
 import { useLocation } from "react-router-dom";
-import { useLanguage } from "@/contexts/LanguageContext";
+import NavItem from "../NavItem";
+import { 
+  Home, 
+  Calendar, 
+  CheckSquare, 
+  MessageSquare, 
+  BarChart3, 
+  GraduationCap,
+  Trophy,
+  Gift
+} from "lucide-react";
 
 interface CoreNavigationProps {
   showStats: boolean;
@@ -15,114 +19,77 @@ interface CoreNavigationProps {
   showTraining: boolean;
 }
 
-const CoreNavigation = ({ showStats, showGamification, showTraining }: CoreNavigationProps) => {
+const CoreNavigation: React.FC<CoreNavigationProps> = ({ 
+  showStats, 
+  showGamification, 
+  showTraining 
+}) => {
   const location = useLocation();
-  const { t } = useLanguage();
 
   return (
     <>
-      <NavigationSection
+      <NavItem
         href="/partner/dashboard"
-        icon={<BarChart size={18} />}
-        isActive={location.pathname === "/partner/dashboard"}
-      >
-        {t('common.dashboard')}
-      </NavigationSection>
-
-      <NavigationSection
-        href="/partner/profile"
-        icon={<UserSquare size={18} />}
-        isActive={location.pathname === "/partner/profile"}
-      >
-        {t('partner.profile')}
-      </NavigationSection>
-
-      <NavigationSection
-        href="/partner/subscription"
-        icon={<CreditCard size={18} />}
-        isActive={location.pathname === "/partner/subscription"}
-      >
-        {t('partner.subscription')}
-      </NavigationSection>
-
-      <NavigationSection
-        href="/partner/crm"
-        icon={<Briefcase size={18} />}
-        isActive={location.pathname.startsWith("/partner/crm")}
-      >
-        {t('partner.crm')}
-      </NavigationSection>
-
-      <NavigationSection
-        href="/partner/mlm"
-        icon={<Network size={18} />}
-        isActive={location.pathname === "/partner/mlm"}
-      >
-        {t('partner.network')}
-      </NavigationSection>
-
-      <NavigationSection
+        icon={<Home size={20} />}
+        title="Tableau de bord"
+        active={location.pathname === "/partner/dashboard"}
+      />
+      
+      <NavItem
+        href="/partner/calendar"
+        icon={<Calendar size={20} />}
+        title="Calendrier"
+        active={location.pathname === "/partner/calendar"}
+      />
+      
+      <NavItem
         href="/partner/tasks"
-        icon={<CheckSquare size={18} />}
-        isActive={location.pathname === "/partner/tasks"}
-      >
-        {t('partner.tasks')}
-      </NavigationSection>
-
-      <NavigationSection
+        icon={<CheckSquare size={20} />}
+        title="Tâches"
+        active={location.pathname === "/partner/tasks"}
+      />
+      
+      <NavItem
         href="/partner/requests"
-        icon={<MessageSquare size={18} />}
-        isActive={location.pathname === "/partner/requests"}
-      >
-        {t('partner.clientRequests')}
-      </NavigationSection>
+        icon={<MessageSquare size={20} />}
+        title="Demandes"
+        active={location.pathname === "/partner/requests"}
+      />
 
       {showStats && (
-        <NavigationSection
+        <NavItem
           href="/partner/stats"
-          icon={<BarChart size={18} />}
-          isActive={location.pathname === "/partner/stats"}
-        >
-          {t('partner.statistics')}
-        </NavigationSection>
+          icon={<BarChart3 size={20} />}
+          title="Statistiques"
+          active={location.pathname === "/partner/stats"}
+        />
+      )}
+
+      {showTraining && (
+        <NavItem
+          href="/partner/training"
+          icon={<GraduationCap size={20} />}
+          title="Formation"
+          active={location.pathname === "/partner/training"}
+        />
       )}
 
       {showGamification && (
         <>
-          <NavigationSection
+          <NavItem
             href="/partner/gamification"
-            icon={<Trophy size={18} />}
-            isActive={location.pathname === "/partner/gamification"}
-          >
-            {t('partner.loyaltyProgram')}
-          </NavigationSection>
+            icon={<Trophy size={20} />}
+            title="Gamification"
+            active={location.pathname === "/partner/gamification"}
+          />
           
-          <NavigationSection
+          <NavItem
             href="/partner/best-awards"
-            icon={<Award size={18} />}
-            isActive={location.pathname === "/partner/best-awards"}
-          >
-            {t('partner.bestAwards')}
-          </NavigationSection>
+            icon={<Gift size={20} />}
+            title="Best Awards"
+            active={location.pathname === "/partner/best-awards"}
+          />
         </>
-      )}
-
-      <NavigationSection
-        href="/partner/calendar"
-        icon={<Calendar size={18} />}
-        isActive={location.pathname === "/partner/calendar"}
-      >
-        {t('partner.calendar')}
-      </NavigationSection>
-
-      {showTraining && (
-        <NavigationSection
-          href="/partner/training"
-          icon={<GraduationCap size={18} />}
-          isActive={location.pathname === "/partner/training"}
-        >
-          {t('partner.training')}
-        </NavigationSection>
       )}
     </>
   );

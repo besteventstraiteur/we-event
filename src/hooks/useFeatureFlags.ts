@@ -43,7 +43,7 @@ export const useFeatureFlags = create<FeatureFlagsState>((set) => ({
     stats: true,
     recommendations: true,
     gamification: true,
-    training: false,
+    training: true, // Activé pour les formations
     partnerTypes: true,
     subscriptions: true,
     mlm: true,
