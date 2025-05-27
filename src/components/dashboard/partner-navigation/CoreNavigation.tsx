@@ -10,7 +10,9 @@ import {
   BarChart3, 
   GraduationCap,
   Trophy,
-  Gift
+  Gift,
+  User,
+  Settings
 } from "lucide-react";
 
 interface CoreNavigationProps {
@@ -33,6 +35,13 @@ const CoreNavigation: React.FC<CoreNavigationProps> = ({
         icon={<Home size={20} />}
         title="Tableau de bord"
         active={location.pathname === "/partner/dashboard"}
+      />
+      
+      <NavItem
+        href="/partner/profile"
+        icon={<User size={20} />}
+        title="Profil"
+        active={location.pathname === "/partner/profile"}
       />
       
       <NavItem
@@ -79,7 +88,7 @@ const CoreNavigation: React.FC<CoreNavigationProps> = ({
           <NavItem
             href="/partner/gamification"
             icon={<Trophy size={20} />}
-            title="Gamification"
+            title="Programme de Fidélité"
             active={location.pathname === "/partner/gamification"}
           />
           
@@ -91,6 +100,13 @@ const CoreNavigation: React.FC<CoreNavigationProps> = ({
           />
         </>
       )}
+
+      <NavItem
+        href="/partner/subscription"
+        icon={<Settings size={20} />}
+        title="Abonnement"
+        active={location.pathname === "/partner/subscription"}
+      />
     </>
   );
 };
